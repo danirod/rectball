@@ -28,7 +28,7 @@ public class Score extends Actor {
         Texture numbers = AssetLoader.get().get("scores.png", Texture.class);
         this.numbers = new TextureRegion[10];
         for (int i = 0; i < 10; i++) {
-            this.numbers[i] = new TextureRegion(numbers, 64 * i, 0, 64, 64);
+            this.numbers[i] = new TextureRegion(numbers, 8 * i, 0, 8, 8);
         }
         updateDigits();
     }
@@ -39,6 +39,7 @@ public class Score extends Actor {
 
     public long increment(long howMuch) {
         this.score += howMuch;
+        updateDigits();
         return this.score;
     }
 
@@ -63,9 +64,24 @@ public class Score extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        int height = Gdx.graphics.getHeight();
+        int totalWidth = scale * NUM_CHARS;
+        float baseX = getX();// + getWidth() / 2 - totalWidth / (2 * 6);
         for (int i = 0; i < NUM_CHARS; i++) {
-            batch.draw(digits[i], 64 * i, height - 64, 64, 64);
+            int charSize = 8 * scale;
+            float y = getY();
+            float x = baseX + (i * charSize);
+            batch.draw(digits[i], x, y, charSize, charSize);
         }
+    }
+
+    /** Escala a la que tiene que renderizarse el marcador. */
+    private int scale = 1;
+
+    @Override
+    protected void sizeChanged() {
+        int width = (int) getWidth();
+        int height = (int) getHeight();
+        int min = Math.min(width, height);
+        scale = min / 8;
     }
 }
