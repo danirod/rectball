@@ -1,12 +1,10 @@
 package es.danirod.rectball.model;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Group;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Match extends Group {
@@ -19,17 +17,23 @@ public class Match extends Group {
 
     public Match(int size) {
         this.size = size;
-        this.score = new Score(123);
+
+        this.score = new Score();
+        score.setPosition(0, Gdx.graphics.getHeight() - 80);
+        score.setSize(Gdx.graphics.getWidth(), 80);
+
         this.board = new Ball[size][size];
 
         addActor(score);
+
+        float ballSize = Gdx.graphics.getWidth() / size;
 
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
                 Ball ball = new Ball(BallColor.BLUE, this, x, y);
                 board[x][y] = ball;
                 addActor(board[x][y]);
-                board[x][y].setBounds(50 * x, 50 * y, 50, 50);
+                board[x][y].setBounds(ballSize * x, ballSize * y, ballSize, ballSize);
             }
         }
     }
@@ -51,14 +55,28 @@ public class Match extends Group {
                 rows.add(ball.getRow());
                 cols.add(ball.getCol());
             }
-            int minX, minY, maxX, maxY;
 
             if (!everyBallIsTheSameColor(selected)) {
-                System.out.println("Hay una bola de otro color");
+
             } else if (rows.size() != 2 || cols.size() != 2) {
-                System.out.println("No son válidas porque no es un cuadrado");
+
             } else {
-                System.out.println("MUY BIEN :)");
+                int minX, maxX, minY, maxY;
+                minX = minY = Integer.MAX_VALUE;
+                maxX = maxY = Integer.MIN_VALUE;
+                for (Ball ball : selected) {
+                    minX = Math.min(minX, ball.getRow());
+                    minY = Math.min(minY, ball.getCol());
+                    maxX = Math.max(maxX, ball.getRow());
+                    maxY = Math.max(maxY, ball.getCol());
+                }
+
+                int rowLength = maxY - minY + 1;
+                int colLength = maxX - minX + 1;
+
+                score.increment(rowLength * colLength);
+
+                reload(minX, minY, maxX, maxY);
             }
 
             for (Ball ball : selected) {
@@ -103,11 +121,15 @@ public class Match extends Group {
     }
 
     public void reload() {
+        reload(0, 0, board.length - 1, board.length - 1);
+    }
+
+    public void reload(int x1, int y1, int x2, int y2) {
         BallColor[] allColors = BallColor.values();
         int lastIndex = -1;
         int count = 0;
-        for (int y = 0; y < board.length; y++) {
-            for (int x = 0; x < board.length; x++) {
+        for (int y = y1; y <= y2; y++) {
+            for (int x = x1; x <= x2; x++) {
                 int color = MathUtils.random(allColors.length - 1);
                 if (color == lastIndex) {
                     count++;
