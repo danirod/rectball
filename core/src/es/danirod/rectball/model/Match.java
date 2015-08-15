@@ -15,16 +15,22 @@ public class Match extends Group {
 
     private Score score;
 
+    private Timer timer;
+
     public Match(int size) {
         this.size = size;
 
-        this.score = new Score();
+        score = new Score();
         score.setPosition(0, Gdx.graphics.getHeight() - 80);
         score.setSize(Gdx.graphics.getWidth(), 80);
+        addActor(score);
+
+        timer = new Timer(this, 30);
+        timer.setPosition(0, Gdx.graphics.getHeight() - 100);
+        timer.setSize(Gdx.graphics.getWidth(), 20);
+        addActor(timer);
 
         this.board = new Ball[size][size];
-
-        addActor(score);
 
         float ballSize = Gdx.graphics.getWidth() / size;
 
@@ -75,6 +81,7 @@ public class Match extends Group {
                 int colLength = maxX - minX + 1;
 
                 score.increment(rowLength * colLength);
+                timer.increment(5);
 
                 reload(minX, minY, maxX, maxY);
             }
@@ -146,5 +153,10 @@ public class Match extends Group {
                 board[x][y].setBallColor(ballColor);
             }
         }
+    }
+
+    public void gameOver() {
+        timer.setRunning(false);
+        System.out.println("GAME OVER, MACHO");
     }
 }

@@ -33,6 +33,7 @@ public class RectballGame extends Game {
         manager.load("balls/basic/blue.png", Texture.class);
         manager.load("balls/basic/selected.png", Texture.class);
         manager.load("scores.png", Texture.class);
+        manager.load("timer.png", Texture.class);
         manager.finishLoading();
 
         for (Map.Entry<Integer, AbstractScreen> screen : screens.entrySet()) {

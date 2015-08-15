@@ -50,8 +50,6 @@ public class GameScreen extends AbstractScreen {
         Gdx.input.setInputProcessor(stage);
     }
 
-
-
     @Override
     public void dispose() {
         super.dispose();
