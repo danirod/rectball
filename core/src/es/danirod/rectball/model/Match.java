@@ -3,37 +3,26 @@ package es.danirod.rectball.model;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import es.danirod.rectball.screens.GameScreen;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Match extends Group {
 
+    private GameScreen screen;
+
     private final int size;
 
     private Ball[][] board;
 
-    private Score score;
 
-    private Timer timer;
+    public Match(GameScreen screen, int size) {
+        this.screen = screen;
 
-    public Match(int size) {
         this.size = size;
-
-        score = new Score();
-        score.setPosition(0, Gdx.graphics.getHeight() - 80);
-        score.setSize(Gdx.graphics.getWidth(), 80);
-        addActor(score);
-
-        timer = new Timer(this, 30);
-        timer.setPosition(0, Gdx.graphics.getHeight() - 100);
-        timer.setSize(Gdx.graphics.getWidth(), 20);
-        addActor(timer);
-
         this.board = new Ball[size][size];
-
         float ballSize = Gdx.graphics.getWidth() / size;
-
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
                 Ball ball = new Ball(BallColor.BLUE, this, x, y);
@@ -80,8 +69,8 @@ public class Match extends Group {
                 int rowLength = maxY - minY + 1;
                 int colLength = maxX - minX + 1;
 
-                score.increment(rowLength * colLength);
-                timer.increment(5);
+                screen.score.increment(rowLength * colLength);
+                screen.timer.increment(5);
 
                 reload(minX, minY, maxX, maxY);
             }
@@ -119,10 +108,6 @@ public class Match extends Group {
         return board;
     }
 
-    public Score getScore() {
-        return score;
-    }
-
     public int getSize() {
         return this.size;
     }
@@ -153,10 +138,5 @@ public class Match extends Group {
                 board[x][y].setBallColor(ballColor);
             }
         }
-    }
-
-    public void gameOver() {
-        timer.setRunning(false);
-        System.out.println("GAME OVER, MACHO");
     }
 }

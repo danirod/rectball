@@ -5,13 +5,14 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import es.danirod.rectball.AssetLoader;
+import es.danirod.rectball.screens.GameScreen;
 
 public class Timer extends Actor {
 
     private TextureRegion background, activeBackground;
 
     /** The match where everything happens. */
-    private Match match;
+    private GameScreen screen;
 
     /** Maximum number of seconds the user can play. */
     private float maxSeconds;
@@ -22,8 +23,8 @@ public class Timer extends Actor {
     /** Whether the time goes on or not. */
     private boolean running = true;
 
-    public Timer(Match match, int seconds) {
-        this.match = match;
+    public Timer(GameScreen screen, int seconds) {
+        this.screen = screen;
         maxSeconds = this.seconds = seconds;
 
         Texture tex = AssetLoader.get().get("timer.png", Texture.class);
@@ -52,7 +53,7 @@ public class Timer extends Actor {
         if (running) {
             seconds -= delta;
             if (seconds < 0) {
-                match.gameOver();
+                screen.gameOver();
             }
         }
     }

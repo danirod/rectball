@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import es.danirod.rectball.screens.AbstractScreen;
+import es.danirod.rectball.screens.GameOverScreen;
 import es.danirod.rectball.screens.GameScreen;
 
 /**
@@ -25,6 +26,7 @@ public class RectballGame extends Game {
         this.batch = new SpriteBatch();
         this.screens = new HashMap<>();
         this.addScreen(new GameScreen(this));
+        this.addScreen(new GameOverScreen(this));
 
         AssetManager manager = AssetLoader.get();
         manager.load("balls/basic/red.png", Texture.class);
@@ -34,6 +36,7 @@ public class RectballGame extends Game {
         manager.load("balls/basic/selected.png", Texture.class);
         manager.load("scores.png", Texture.class);
         manager.load("timer.png", Texture.class);
+        manager.load("gameover.png", Texture.class);
         manager.finishLoading();
 
         for (Map.Entry<Integer, AbstractScreen> screen : screens.entrySet()) {

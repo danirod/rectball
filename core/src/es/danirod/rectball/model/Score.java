@@ -7,10 +7,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import es.danirod.rectball.AssetLoader;
+import es.danirod.rectball.screens.GameScreen;
 
 public class Score extends Actor {
 
     private static final int NUM_CHARS = 6;
+
+    private GameScreen screen;
 
     private TextureRegion[] numbers;
 
@@ -18,11 +21,9 @@ public class Score extends Actor {
 
     private long score;
 
-    public Score() {
-        this(0);
-    }
 
-    public Score(long score) {
+    public Score(GameScreen screen, long score) {
+        this.screen = screen;
         digits = new TextureRegion[NUM_CHARS];
         this.score = score;
         Texture numbers = AssetLoader.get().get("scores.png", Texture.class);
