@@ -7,8 +7,8 @@ import es.danirod.rectball.RectballGame;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 480;
-		config.height = 720;
+		config.width = 848;
+		config.height = 400;
 		config.useHDPI = true;
 		new LwjglApplication(new RectballGame(), config);
 	}

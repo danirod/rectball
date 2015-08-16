@@ -4,8 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import es.danirod.rectball.AssetLoader;
 import es.danirod.rectball.RectballGame;
@@ -19,7 +18,7 @@ public class GameScreen extends AbstractScreen {
 
     public Match board;
 
-    public Value value;
+    public Value score;
 
     public Timer timer;
 
@@ -29,32 +28,25 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void show() {
-        v = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        stage = new Stage(v);
-        stage.setDebugAll(true);
+        stage = new Stage(new ScreenViewport());
 
         // Set up the board
         board = new Match(this, 7);
         board.reload();
         stage.addActor(board);
 
-        // Set up the value
+        // Set up the score
         Texture numbers = AssetLoader.get().get("scores.png", Texture.class);
-        value = new Value(numbers, 6, 0);
-        value.setPosition(0, Gdx.graphics.getHeight() - 80);
-        value.setSize(Gdx.graphics.getWidth(), 80);
-        stage.addActor(value);
+        score = new Value(numbers, 6, 0);
+        stage.addActor(score);
 
         // Set up the timer
-        timer = new Timer(this, 5);
-        timer.setPosition(0, Gdx.graphics.getHeight() - 100);
-        timer.setSize(Gdx.graphics.getWidth(), 20);
+        timer = new Timer(this, 30);
         stage.addActor(timer);
 
+        resizeScene(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.input.setInputProcessor(stage);
     }
-
-    Viewport v;
 
     @Override
     public void render(float delta) {
@@ -66,5 +58,50 @@ public class GameScreen extends AbstractScreen {
     public void gameOver() {
         timer.setRunning(false);
         game.setScreen(2);
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        stage.getViewport().update(width, height, true);
+        resizeScene(width, height);
+    }
+
+    private void resizeScene(int width, int height) {
+        if ((float) width / height >= 1.6f) {
+            horizontalResize(width, height);
+        } else {
+            verticalResize(width, height);
+        }
+    }
+
+    private void horizontalResize(int width, int height) {
+        // Put the board on the right.
+        board.setSize(width * 0.5f, height * 0.9f);
+        board.setPosition(width * 0.45f, height * 0.05f);
+
+        // Put the score on the left.
+        score.setSize(width * 0.35f, height / 8);
+        score.setPosition(width * 0.05f, height * 0.6f);
+
+        // Put the timer below the score.
+        timer.setSize(width * 0.35f, height / 16);
+        timer.setPosition(width * 0.05f, score.getY() - timer.getHeight());
+    }
+
+    private void verticalResize(int width, int height) {
+        float scoreWidth = width * 0.9f;
+        float scoreHeight = height / 8 * 0.9f;
+        score.setSize(scoreWidth, scoreHeight);
+        score.setPosition(width * 0.05f, height * 7 / 8);
+
+        float timerWidth = width * 0.9f;
+        float timerHeight = height / 16 * 0.9f;
+        timer.setSize(timerWidth, timerHeight);
+        timer.setPosition(width * 0.05f, score.getY() - timer.getHeight());
+
+        float boardWidth = width * 0.9f;
+        float boardHeight = timer.getY() * 0.9f;
+        board.setSize(boardWidth, boardHeight);
+        board.setPosition(width * 0.05f, height * 0.05f);
     }
 }

@@ -10,7 +10,7 @@ public class Value extends Actor {
 
     /**
      * How many characters have to be rendered. If the number to be rendered
-     * has less digits than this value, it will be padded with zeroes.
+     * has less digits than this score, it will be padded with zeroes.
      */
     private final int length;
 
@@ -87,6 +87,15 @@ public class Value extends Actor {
 
     @Override
     protected void sizeChanged() {
+        updateDigitPosition();
+    }
+
+    @Override
+    protected void positionChanged() {
+        updateDigitPosition();
+    }
+
+    private void updateDigitPosition() {
         // Calculate the scale the digits have to be rendered at.
         float glyphMaxWidth = getWidth() / length;
         float glyphMaxHeight = getHeight();

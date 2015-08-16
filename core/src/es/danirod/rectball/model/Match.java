@@ -33,6 +33,26 @@ public class Match extends Group {
         }
     }
 
+    @Override
+    protected void sizeChanged() {
+        float w = getWidth() / size;
+        float h = getHeight() / size;
+
+        float s = Math.min(w, h);
+
+        float totalSize = s * size;
+
+        float baseX = (getWidth() - totalSize) / 2;
+        float baseY = (getHeight() - totalSize) / 2;
+
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                board[x][y].setPosition(baseX + x * s, baseY + y * s);
+                board[x][y].setSize(s, s);
+            }
+        }
+    }
+
     private int howManyBalls = 0;
 
     public void ballSelected(Ball me) {
@@ -69,7 +89,7 @@ public class Match extends Group {
                 int rowLength = maxY - minY + 1;
                 int colLength = maxX - minX + 1;
 
-                screen.value.increment(rowLength * colLength);
+                screen.score.increment(rowLength * colLength);
                 screen.timer.increment(5);
 
                 reload(minX, minY, maxX, maxY);

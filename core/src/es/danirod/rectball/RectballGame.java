@@ -62,9 +62,4 @@ public class RectballGame extends Game {
     public void addScreen(AbstractScreen screen) {
         screens.put(screen.getID(), screen);
     }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
 }
