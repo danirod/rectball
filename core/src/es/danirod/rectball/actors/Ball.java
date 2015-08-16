@@ -29,6 +29,8 @@ public class Ball extends Actor {
     /** The actual sprite for this ball. */
     private Sprite sprite;
 
+    private boolean blindMode;
+
     private final int row, col;
 
     public int getRow() {
@@ -40,6 +42,7 @@ public class Ball extends Actor {
     }
 
     public Ball(BallColor ballColor, final Match match, int row, int col) {
+        blindMode = false;
         this.ballColor = ballColor;
         this.selected = false;
         this.row = row;
@@ -47,6 +50,20 @@ public class Ball extends Actor {
         addListener(new BallInputListener(this, match));
         texture = AssetLoader.get().get("balls.png");
         sprite = new Sprite(ballColor.getRegion(texture));
+    }
+
+    public boolean isBlindMode() {
+        return blindMode;
+    }
+
+    public void setBlindMode(boolean isColorBlind) {
+        this.blindMode = isColorBlind;
+        if (blindMode) {
+            texture = AssetLoader.get().get("balls.colorblind.png");
+        } else {
+            texture = AssetLoader.get().get("balls.png");
+        }
+        sprite.setRegion(ballColor.getRegion(texture));
     }
 
     public boolean isSelected() {

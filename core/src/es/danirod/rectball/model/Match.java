@@ -13,6 +13,8 @@ public class Match extends Group {
 
     private GameScreen screen;
 
+    private boolean blindMode;
+
     private final int size;
 
     private Ball[][] board;
@@ -29,6 +31,19 @@ public class Match extends Group {
                 board[x][y] = ball;
                 addActor(board[x][y]);
                 board[x][y].setBounds(ballSize * x, ballSize * y, ballSize, ballSize);
+            }
+        }
+    }
+
+    public boolean isBlindMode() {
+        return blindMode;
+    }
+
+    public void setBlindMode(boolean blind) {
+        this.blindMode = blind;
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                board[x][y].setBlindMode(blind);
             }
         }
     }

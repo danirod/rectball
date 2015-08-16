@@ -46,19 +46,19 @@
        inkscape:collect="always"
        id="linearGradient4168">
       <stop
-         style="stop-color:#efffe6;stop-opacity:1"
+         style="stop-color:#56ee00;stop-opacity:1"
          offset="0"
          id="stop4170" />
       <stop
          id="stop4172"
          offset="0.36241296"
-         style="stop-color:#28e200;stop-opacity:1" />
+         style="stop-color:#25d200;stop-opacity:1" />
       <stop
-         style="stop-color:#478103;stop-opacity:1"
+         style="stop-color:#325b02;stop-opacity:1"
          offset="0.8584581"
          id="stop4174" />
       <stop
-         style="stop-color:#1b6500;stop-opacity:1"
+         style="stop-color:#144700;stop-opacity:1"
          offset="1"
          id="stop4176" />
     </linearGradient>
@@ -158,7 +158,7 @@
      inkscape:cx="100.47105"
      inkscape:cy="85.893049"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer3"
      showgrid="false"
      units="px"
      inkscape:window-width="957"
@@ -208,5 +208,54 @@
        style="opacity:1;fill:url(#radialGradient4180);fill-opacity:1;stroke:none"
        rx="49.999992"
        ry="50" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="simbolos"
+     style="display:inline">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:79.81295013px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#808080;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="16.523777"
+       y="175.13643"
+       id="text4785"
+       sodipodi:linespacing="125%"
+       transform="scale(1.0007797,0.9992209)"><tspan
+         sodipodi:role="line"
+         id="tspan4787"
+         x="16.523777"
+         y="175.13643">+</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:92.84873199px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#808080;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="120.41319"
+       y="177.71829"
+       id="text4789"
+       sodipodi:linespacing="125%"
+       transform="scale(1.0155332,0.9847044)"><tspan
+         sodipodi:role="line"
+         id="tspan4791"
+         x="120.41319"
+         y="177.71829">x</tspan></text>
+    <circle
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#bdffaf;stroke-width:7.99999905;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path4797"
+       cx="149.99998"
+       cy="49.999992"
+       r="19.938854" />
+    <circle
+       r="19.938854"
+       cy="49.999992"
+       cx="149.99998"
+       id="circle4799"
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#bdffaf;stroke-width:7.99999905;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#aff7ff;stroke-width:7.45921946;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4801"
+       width="42.540771"
+       height="42.540775"
+       x="28.729607"
+       y="28.729607" />
   </g>
 </svg>
