@@ -1,15 +1,14 @@
-package es.danirod.rectball.model;
+package es.danirod.rectball.actors;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import es.danirod.rectball.AssetLoader;
+import es.danirod.rectball.model.Match;
 
 /**
  * Ball data structure.
@@ -24,37 +23,30 @@ public class Ball extends Actor {
     /** The ball ballColor. */
     private BallColor ballColor;
 
-    /** Selected texture. */
-    private Texture selectedTexture;
+    /** Ball texture. */
+    private Texture texture;
 
-    private Match match;
+    /** The actual sprite for this ball. */
+    private Sprite sprite;
 
-    private int row, col;
-
-    public Ball(BallColor ballColor, final Match match, int row, int col) {
-        this.ballColor = ballColor;
-        this.match = match;
-        this.selected = false;
-        this.row = row;
-        this.col = col;
-        addListener(new BallInputListener(this, match));
-        selectedTexture = AssetLoader.get().get("balls/basic/selected.png");
-    }
+    private final int row, col;
 
     public int getRow() {
         return row;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
     }
 
     public int getCol() {
         return col;
     }
 
-    public void setCol(int col) {
+    public Ball(BallColor ballColor, final Match match, int row, int col) {
+        this.ballColor = ballColor;
+        this.selected = false;
+        this.row = row;
         this.col = col;
+        addListener(new BallInputListener(this, match));
+        texture = AssetLoader.get().get("balls.png");
+        sprite = new Sprite(ballColor.getRegion(texture));
     }
 
     public boolean isSelected() {
@@ -71,15 +63,29 @@ public class Ball extends Actor {
 
     public void setBallColor(BallColor ballColor) {
         this.ballColor = ballColor;
+        sprite.setRegion(ballColor.getRegion(texture));
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        Texture texture = AssetLoader.get().get("balls/basic/" + ballColor.getPath());
-        batch.draw(texture, getX(), getY(), getWidth(), getHeight());
+        // TODO: Implement a shader to make this look better.
+
         if (selected) {
-            batch.draw(selectedTexture, getX(), getY(), getWidth(), getHeight());
+            // If selected make it smaller to make it clear.
+            // Thanks to madtriangle for the suggestion.
+            sprite.setScale(0.8f);
+            sprite.setOriginCenter();
+            sprite.draw(batch, parentAlpha);
+            sprite.setScale(1f);
+        } else {
+            sprite.draw(batch, parentAlpha);
         }
+    }
+
+    @Override
+    public void act(float delta) {
+        sprite.setPosition(getX(), getY());
+        sprite.setSize(getWidth(), getHeight());
     }
 
     private class BallInputListener extends InputListener {

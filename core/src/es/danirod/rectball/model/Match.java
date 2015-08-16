@@ -3,10 +3,11 @@ package es.danirod.rectball.model;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import es.danirod.rectball.actors.Ball;
+import es.danirod.rectball.actors.BallColor;
 import es.danirod.rectball.screens.GameScreen;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Match extends Group {
 
@@ -15,7 +16,6 @@ public class Match extends Group {
     private final int size;
 
     private Ball[][] board;
-
 
     public Match(GameScreen screen, int size) {
         this.screen = screen;

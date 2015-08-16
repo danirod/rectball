@@ -29,11 +29,7 @@ public class RectballGame extends Game {
         this.addScreen(new GameOverScreen(this));
 
         AssetManager manager = AssetLoader.get();
-        manager.load("balls/basic/red.png", Texture.class);
-        manager.load("balls/basic/green.png", Texture.class);
-        manager.load("balls/basic/yellow.png", Texture.class);
-        manager.load("balls/basic/blue.png", Texture.class);
-        manager.load("balls/basic/selected.png", Texture.class);
+        manager.load("balls.png", Texture.class);
         manager.load("scores.png", Texture.class);
         manager.load("timer.png", Texture.class);
         manager.load("gameover.png", Texture.class);

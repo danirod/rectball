@@ -9,6 +9,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 480;
 		config.height = 720;
+		config.useHDPI = true;
 		new LwjglApplication(new RectballGame(), config);
 	}
 }
