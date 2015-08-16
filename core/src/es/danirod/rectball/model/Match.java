@@ -69,7 +69,7 @@ public class Match extends Group {
                 int rowLength = maxY - minY + 1;
                 int colLength = maxX - minX + 1;
 
-                screen.score.increment(rowLength * colLength);
+                screen.value.increment(rowLength * colLength);
                 screen.timer.increment(5);
 
                 reload(minX, minY, maxX, maxY);

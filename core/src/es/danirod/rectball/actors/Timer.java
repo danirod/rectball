@@ -1,4 +1,4 @@
-package es.danirod.rectball.model;
+package es.danirod.rectball.actors;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -9,7 +9,9 @@ import es.danirod.rectball.screens.GameScreen;
 
 public class Timer extends Actor {
 
-    private TextureRegion background, activeBackground;
+    private static final float WARNING_TRIGGER = 0.2f;
+
+    private TextureRegion background, activeBackground, limitBackground;
 
     /** The match where everything happens. */
     private GameScreen screen;
@@ -28,8 +30,9 @@ public class Timer extends Actor {
         maxSeconds = this.seconds = seconds;
 
         Texture tex = AssetLoader.get().get("timer.png", Texture.class);
-        background = new TextureRegion(tex, 0, 0, 10, 20);
-        activeBackground = new TextureRegion(tex, 10, 0, 10, 20);
+        background = new TextureRegion(tex, 0, 0, 10, 10);
+        activeBackground = new TextureRegion(tex, 10, 0, 10, 10);
+        limitBackground = new TextureRegion(tex, 20, 0, 10, 10);
     }
 
     public float getSeconds() {
@@ -70,6 +73,11 @@ public class Timer extends Actor {
 
         float timePercentage = seconds / maxSeconds;
         float activeBarWidth = getWidth() * timePercentage;
-        batch.draw(activeBackground, getX(), getY(), activeBarWidth, getHeight());
+
+        if (timePercentage < WARNING_TRIGGER) {
+            batch.draw(limitBackground, getX(), getY(), activeBarWidth, getHeight());
+        } else {
+            batch.draw(activeBackground, getX(), getY(), activeBarWidth, getHeight());
+        }
     }
 }
