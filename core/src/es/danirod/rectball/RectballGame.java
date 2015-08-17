@@ -1,6 +1,8 @@
 package es.danirod.rectball;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -21,6 +23,8 @@ public class RectballGame extends Game {
 
     private Map<Integer, AbstractScreen> screens;
 
+    public GameState state;
+
     @Override
     public void create() {
         this.batch = new SpriteBatch();
@@ -39,6 +43,9 @@ public class RectballGame extends Game {
         for (Map.Entry<Integer, AbstractScreen> screen : screens.entrySet()) {
             screen.getValue().load();
         }
+
+        Preferences settings = Gdx.app.getPreferences("settings");
+        state = new GameState(settings);
 
         setScreen(1);
     }

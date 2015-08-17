@@ -42,7 +42,7 @@ public class GameScreen extends AbstractScreen {
         stage.addActor(score);
 
         // Set up the timer
-        timer = new Timer(this, 30);
+        timer = new Timer(this, 2);
         stage.addActor(timer);
 
         resizeScene(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -60,6 +60,12 @@ public class GameScreen extends AbstractScreen {
     }
 
     public void gameOver() {
+        long lastScore = score.getValue();
+        game.state.lastScore = lastScore;
+        if (lastScore > game.state.highScore) {
+            game.state.highScore = lastScore;
+        }
+
         timer.setRunning(false);
         game.setScreen(2);
     }

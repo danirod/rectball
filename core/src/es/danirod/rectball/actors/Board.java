@@ -174,8 +174,9 @@ public class Board extends Group {
                 int cols = bounds.maxX - bounds.minX + 1;
                 int rows = bounds.maxY - bounds.minY + 1;
                 int score = cols * rows;
-                // TODO: Add the score.
-                // TODO: Give the user extra time.
+
+                screen.score.setValue(screen.score.getValue() + score);
+                screen.timer.setSeconds(screen.timer.getSeconds() + 5);
 
                 randomize(bounds.minX, bounds.minY, bounds.maxX, bounds.maxY);
             }
