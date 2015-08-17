@@ -9,15 +9,15 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import es.danirod.rectball.AssetLoader;
 import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.actors.Board;
 import es.danirod.rectball.actors.Timer;
 import es.danirod.rectball.actors.Value;
-import es.danirod.rectball.model.*;
 
 public class GameScreen extends AbstractScreen {
 
     private Stage stage;
 
-    public Match board;
+    public Board board;
 
     public Value score;
 
@@ -32,8 +32,8 @@ public class GameScreen extends AbstractScreen {
         stage = new Stage(new ScreenViewport());
 
         // Set up the board
-        board = new Match(this, 7);
-        board.reload();
+        board = new Board(this, 7);
+        board.randomize();
         stage.addActor(board);
 
         // Set up the score
@@ -53,7 +53,7 @@ public class GameScreen extends AbstractScreen {
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         if (Gdx.input.isKeyJustPressed(Input.Keys.B) || Gdx.input.isKeyJustPressed(Input.Keys.VOLUME_UP)) {
-            board.setBlindMode(!board.isBlindMode());
+            board.setColorblind(!board.isColorblind());
         }
         stage.act(delta);
         stage.draw();
