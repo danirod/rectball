@@ -13,6 +13,7 @@ import java.util.Map;
 import es.danirod.rectball.screens.AbstractScreen;
 import es.danirod.rectball.screens.GameOverScreen;
 import es.danirod.rectball.screens.GameScreen;
+import es.danirod.rectball.screens.WelcomeScreen;
 
 /**
  * Main class for the game.
@@ -31,10 +32,14 @@ public class RectballGame extends Game {
         this.screens = new HashMap<>();
         this.addScreen(new GameScreen(this));
         this.addScreen(new GameOverScreen(this));
+        this.addScreen(new WelcomeScreen(this));
 
         AssetManager manager = AssetLoader.get();
         manager.load("board/normal.png", Texture.class);
         manager.load("board/colorblind.png", Texture.class);
+        manager.load("ui/blind.png", Texture.class);
+        manager.load("ui/play.png", Texture.class);
+        manager.load("ui/switch.png", Texture.class);
         manager.load("scores.png", Texture.class);
         manager.load("timer.png", Texture.class);
         manager.load("gameover.png", Texture.class);

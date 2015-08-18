@@ -129,9 +129,9 @@ public class Ball extends Actor {
 
         this.colorblind = colorblind;
         if (colorblind) {
-            texture = AssetLoader.get().get("balls/colorblind.png");
+            texture = AssetLoader.get().get("board/colorblind.png");
         } else {
-            texture = AssetLoader.get().get("balls/normal.png");
+            texture = AssetLoader.get().get("board/normal.png");
         }
         sprite.setRegion(ballColor.getRegion(texture));
     }

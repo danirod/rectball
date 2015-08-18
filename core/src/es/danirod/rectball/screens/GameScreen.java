@@ -42,7 +42,7 @@ public class GameScreen extends AbstractScreen {
         stage.addActor(score);
 
         // Set up the timer
-        timer = new Timer(this, 2);
+        timer = new Timer(this, 30);
         stage.addActor(timer);
 
         resizeScene(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

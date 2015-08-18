@@ -28,5 +28,6 @@ public class GameState {
         preferences.putBoolean("colorblindMode", colorblindMode);
         preferences.putLong("highScore", highScore);
         preferences.putLong("lastScore", lastScore);
+        preferences.flush();
     }
 }
