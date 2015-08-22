@@ -19,7 +19,9 @@ import es.danirod.rectball.settings.Settings;
  */
 public class RectballGame extends Game {
 
-	public SpriteBatch batch;
+    public static final String VERSION = "v0.0.5 ALPHA";
+
+    public SpriteBatch batch;
 
     private Map<Integer, AbstractScreen> screens;
 
