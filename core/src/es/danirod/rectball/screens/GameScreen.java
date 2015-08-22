@@ -24,7 +24,12 @@ public class GameScreen extends AbstractScreen {
     public Timer timer;
 
     public GameScreen(RectballGame game) {
-        super(game, 1);
+        super(game);
+    }
+
+    @Override
+    public int getID() {
+        return 1;
     }
 
     @Override

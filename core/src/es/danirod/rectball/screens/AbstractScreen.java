@@ -8,14 +8,8 @@ public abstract class AbstractScreen implements Screen {
 
     protected RectballGame game;
 
-    /**
-     * The screen ID. Every screen should have an unique identifier.
-     */
-    private int id;
-
-    public AbstractScreen(RectballGame game, int id) {
+    public AbstractScreen(RectballGame game) {
         this.game = game;
-        this.id = id;
     }
 
     @Override
@@ -52,7 +46,5 @@ public abstract class AbstractScreen implements Screen {
 
     }
 
-    public int getID() {
-        return id;
-    }
+    public abstract int getID();
 }

@@ -20,8 +20,13 @@ public class WelcomeScreen extends AbstractScreen {
 
     private Switch blindMode;
 
+    @Override
+    public int getID() {
+        return 3;
+    }
+
     public WelcomeScreen(RectballGame game) {
-        super(game, 3);
+        super(game);
     }
 
     @Override

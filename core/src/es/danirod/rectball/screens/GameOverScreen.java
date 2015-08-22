@@ -24,7 +24,7 @@ public class GameOverScreen extends AbstractScreen {
     private Value score;
 
     public GameOverScreen(RectballGame game) {
-        super(game, 2);
+        super(game);
     }
 
     @Override
@@ -76,5 +76,10 @@ public class GameOverScreen extends AbstractScreen {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height);
+    }
+
+    @Override
+    public int getID() {
+        return 2;
     }
 }
