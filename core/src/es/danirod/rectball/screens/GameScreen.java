@@ -37,7 +37,7 @@ public class GameScreen extends AbstractScreen {
         stage = new Stage(new ScreenViewport());
 
         // Set up the board
-        board = new Board(this, 7);
+        board = new Board(this, game.settings.isColorblind(), 7);
         board.randomize();
         stage.addActor(board);
 
@@ -58,9 +58,6 @@ public class GameScreen extends AbstractScreen {
     public void render(float delta) {
         Gdx.gl.glClearColor(1f, 0.4f, 0.6f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.B) || Gdx.input.isKeyJustPressed(Input.Keys.VOLUME_UP)) {
-            board.setColorblind(!board.isColorblind());
-        }
         stage.act(delta);
         stage.draw();
     }

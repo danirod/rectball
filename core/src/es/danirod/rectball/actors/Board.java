@@ -37,7 +37,6 @@ public class Board extends Group {
      * the balls are rendered using a different sprite sheet that uses
      * shapes to differentiate the colors.
      */
-    // TODO: This should be a global setting held outside of here.
     private boolean colorblind;
 
     /**
@@ -60,9 +59,10 @@ public class Board extends Group {
      * @param screen  the screen this board belongs to.
      * @param size  the size of the board, always square.
      */
-    public Board(GameScreen screen, int size) {
+    public Board(GameScreen screen, boolean colorblind, int size) {
         this.screen = screen;
         this.size = size;
+        this.colorblind = colorblind;
 
         board = setUpBoard();
         updateBoardBounds();
@@ -82,6 +82,7 @@ public class Board extends Group {
             for (int x = 0; x < size; x++) {
                 int index = MathUtils.random(0, colors.length - 1);
                 Ball ball = new Ball(colors[index], this, x, y);
+                ball.setColorblind(colorblind);
                 board[x][y] = ball;
                 addActor(ball);
             }
@@ -116,28 +117,6 @@ public class Board extends Group {
 
     public int getSize() {
         return size;
-    }
-
-    /**
-     * Check whether colorblind mode is enabled or not in this board.
-     * @return whether colorblind mode is enabled in the board or not.
-     */
-    public boolean isColorblind() {
-        return colorblind;
-    }
-
-    /**
-     * Update the blind mode status for the board and notify all the balls.
-     * If the blind mode is enabled, the balls should be rendered using the
-     * special sheet. Otherwise, the normal sheet is used.
-     *
-     * @param colorblind whether blind mode is enabled or not.
-     */
-    public void setColorblind(boolean colorblind) {
-        this.colorblind = colorblind;
-        for (int y = 0; y < size; y++)
-            for (int x = 0; x < size; x++)
-                board[x][y].setColorblind(colorblind);
     }
 
     @Override
