@@ -10,10 +10,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.HashMap;
 import java.util.Map;
 
-import es.danirod.rectball.screens.AbstractScreen;
-import es.danirod.rectball.screens.GameOverScreen;
-import es.danirod.rectball.screens.GameScreen;
-import es.danirod.rectball.screens.WelcomeScreen;
+import es.danirod.rectball.screens.*;
+import es.danirod.rectball.settings.Scores;
+import es.danirod.rectball.settings.Settings;
 
 /**
  * Main class for the game.
@@ -24,7 +23,9 @@ public class RectballGame extends Game {
 
     private Map<Integer, AbstractScreen> screens;
 
-    public GameState state;
+    public Settings settings;
+
+    public Scores scores;
 
     @Override
     public void create() {
@@ -33,6 +34,7 @@ public class RectballGame extends Game {
         this.addScreen(new GameScreen(this));
         this.addScreen(new GameOverScreen(this));
         this.addScreen(new WelcomeScreen(this));
+        this.addScreen(new SettingsScreen(this));
 
         AssetManager manager = AssetLoader.get();
         manager.load("board/normal.png", Texture.class);
@@ -40,6 +42,7 @@ public class RectballGame extends Game {
         manager.load("ui/blind.png", Texture.class);
         manager.load("ui/play.png", Texture.class);
         manager.load("ui/switch.png", Texture.class);
+        manager.load("ui/yellowpatch.png", Texture.class);
         manager.load("scores.png", Texture.class);
         manager.load("timer.png", Texture.class);
         manager.load("gameover.png", Texture.class);
@@ -49,10 +52,10 @@ public class RectballGame extends Game {
             screen.getValue().load();
         }
 
-        Preferences settings = Gdx.app.getPreferences("settings");
-        state = new GameState(settings);
+        settings = new Settings(Gdx.app.getPreferences("rectball"));
+        scores = new Scores();
 
-        setScreen(1);
+        setScreen(3);
     }
 
     @Override

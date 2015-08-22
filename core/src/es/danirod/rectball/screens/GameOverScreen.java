@@ -42,7 +42,7 @@ public class GameOverScreen extends AbstractScreen {
         stage.addActor(over);
 
         Texture sheet = AssetLoader.get().get("scores.png", Texture.class);
-        score = new Value(sheet, 6, game.state.lastScore);
+        score = new Value(sheet, 6, game.scores.getLastScore());
         score.setBounds(60, 100, 360, 100);
         stage.addActor(score);
 

@@ -56,6 +56,7 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void render(float delta) {
+        Gdx.gl.glClearColor(1f, 0.4f, 0.6f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         if (Gdx.input.isKeyJustPressed(Input.Keys.B) || Gdx.input.isKeyJustPressed(Input.Keys.VOLUME_UP)) {
             board.setColorblind(!board.isColorblind());
@@ -65,10 +66,11 @@ public class GameScreen extends AbstractScreen {
     }
 
     public void gameOver() {
+        // Update the score... and the record.
         long lastScore = score.getValue();
-        game.state.lastScore = lastScore;
-        if (lastScore > game.state.highScore) {
-            game.state.highScore = lastScore;
+        game.scores.setLastScore(lastScore);
+        if (lastScore > game.scores.getHighestScore()) {
+            game.scores.setHighestScore(lastScore);
         }
 
         timer.setRunning(false);

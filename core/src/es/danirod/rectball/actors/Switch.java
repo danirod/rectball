@@ -22,8 +22,8 @@ public class Switch extends Actor {
         this.sheet = sheet;
         int width = sheet.getWidth();
         int height = sheet.getHeight() / 2;
-        off = new TextureRegion(sheet, 0, 0, width, height);
-        on = new TextureRegion(sheet, 0, height, width, height);
+        on = new TextureRegion(sheet, 0, 0, width, height);
+        off = new TextureRegion(sheet, 0, height, width, height);
         this.enabled = enabled;
         this.sprite = new Sprite(enabled ? on : off);
         setSize(width, height);
@@ -38,7 +38,6 @@ public class Switch extends Actor {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 setEnabled(!isEnabled());
-                System.out.println(isEnabled());
             }
         });
     }
