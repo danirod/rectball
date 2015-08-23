@@ -1,7 +1,6 @@
 package es.danirod.rectball.model;
 
 import es.danirod.rectball.actors.Ball;
-import es.danirod.rectball.actors.BallColor;
 import es.danirod.rectball.actors.Board;
 
 import java.util.HashSet;

@@ -3,7 +3,7 @@
  * Copyright (C) 2015 Dani Rodríguez
  * All rights reserved.
  */
-package es.danirod.rectball.actors;
+package es.danirod.rectball.model;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -45,4 +45,4 @@ public enum BallColor {
         int ball = source.getWidth() / 2;
         return new TextureRegion(source, ball * col, ball * row, ball, ball);
     }
-};
+}

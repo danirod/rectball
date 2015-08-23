@@ -23,7 +23,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import es.danirod.rectball.AssetLoader;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.actors.Button;
 
 public class WelcomeScreen extends AbstractScreen {
 
