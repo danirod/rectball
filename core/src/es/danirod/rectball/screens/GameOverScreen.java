@@ -28,11 +28,12 @@ public class GameOverScreen extends AbstractScreen {
     @Override
     public void load() {
         batch = new SpriteBatch();
-        gameOver = game.manager.get("gameover.png", Texture.class);
     }
 
     @Override
     public void show() {
+        gameOver = game.manager.get("gameover.png", Texture.class);
+
         stage = new Stage(new FitViewport(480, 640));
 
         Image over = new Image(gameOver);

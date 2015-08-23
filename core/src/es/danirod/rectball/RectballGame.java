@@ -37,6 +37,7 @@ public class RectballGame extends Game {
         this.addScreen(new GameOverScreen(this));
         this.addScreen(new WelcomeScreen(this));
         this.addScreen(new SettingsScreen(this));
+        this.addScreen(new LoadingScreen(this));
 
         manager = new AssetManager();
         manager.load("board/normal.png", Texture.class);
@@ -46,7 +47,6 @@ public class RectballGame extends Game {
         manager.load("scores.png", Texture.class);
         manager.load("timer.png", Texture.class);
         manager.load("gameover.png", Texture.class);
-        manager.finishLoading();
 
         for (Map.Entry<Integer, AbstractScreen> screen : screens.entrySet()) {
             screen.getValue().load();
@@ -55,7 +55,7 @@ public class RectballGame extends Game {
         settings = new Settings(Gdx.app.getPreferences("rectball"));
         scores = new Scores();
 
-        setScreen(3);
+        setScreen(5);
     }
 
     @Override

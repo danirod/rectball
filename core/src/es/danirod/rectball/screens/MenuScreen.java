@@ -44,6 +44,15 @@ public abstract class MenuScreen extends AbstractScreen {
 
     @Override
     public void load() {
+        // Load fonts used in the screen.
+        FileHandle normalFont = Gdx.files.internal("fonts/Play-Regular.ttf");
+        FileHandle boldFont = Gdx.files.internal("fonts/Play-Bold.ttf");
+        fontGenerator = new FreeTypeFontGenerator(normalFont);
+        boldGenerator = new FreeTypeFontGenerator(boldFont);
+    }
+
+    @Override
+    public void show() {
         // Load ninepatches used for buttons.
         Texture tex = game.manager.get("ui/button.png", Texture.class);
         TextureRegion normalRegion = new TextureRegion(tex, 0, 0, 128, 128);
@@ -51,20 +60,11 @@ public abstract class MenuScreen extends AbstractScreen {
         NinePatchDrawable normalPatch = buildPatch(normalRegion, 32);
         NinePatchDrawable hoverPatch = buildPatch(hoverRegion, 32);
 
-        // Load fonts used in the screen.
-        FileHandle normalFont = Gdx.files.internal("fonts/Play-Regular.ttf");
-        FileHandle boldFont = Gdx.files.internal("fonts/Play-Bold.ttf");
-        fontGenerator = new FreeTypeFontGenerator(normalFont);
-        boldGenerator = new FreeTypeFontGenerator(boldFont);
-
         // Set up the generic style.
         BitmapFont genericFont = fontGenerator.generateFont(buildFontStyle(48, 2, 1));
         genericLabelStyle = new LabelStyle(genericFont, Color.WHITE);
         genericButtonStyle = new TextButtonStyle(normalPatch, hoverPatch, hoverPatch, genericFont);
-    }
 
-    @Override
-    public void show() {
         stage = new Stage(new FitViewport(480, 640));
         Gdx.input.setInputProcessor(stage);
         table = new Table();
