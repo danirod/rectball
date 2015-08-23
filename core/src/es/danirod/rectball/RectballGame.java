@@ -20,7 +20,7 @@ import es.danirod.rectball.settings.Settings;
  */
 public class RectballGame extends Game {
 
-    public static final String VERSION = "Rectball v0.0.6";
+    public static final String VERSION = "Rectball v0.0.7";
 
     private Map<Integer, AbstractScreen> screens;
 
