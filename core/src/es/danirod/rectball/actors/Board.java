@@ -77,12 +77,10 @@ public class Board extends Group {
      * @return a new matrix with balls
      */
     private Ball[][] setUpBoard() {
-        BallColor colors[] = BallColor.values();
         Ball[][] board = new Ball[size][size];
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-                int index = MathUtils.random(0, colors.length - 1);
-                Ball ball = new Ball(colors[index], this, sheet);
+                Ball ball = new Ball(BallColor.BLUE, this, sheet);
                 board[x][y] = ball;
                 addActor(ball);
             }
@@ -202,5 +200,11 @@ public class Board extends Group {
                 board[x][y].setBallColor(allColors[index]);
             }
         }
+    }
+
+    public void setBoardColor(BallColor color) {
+        for (int y = 0; y < size; y++)
+            for (int x = 0; x < size; x++)
+                board[x][y].setBallColor(color);
     }
 }

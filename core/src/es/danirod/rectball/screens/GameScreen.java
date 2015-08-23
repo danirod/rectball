@@ -3,13 +3,17 @@ package es.danirod.rectball.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.actors.Ball;
 import es.danirod.rectball.actors.Board;
 import es.danirod.rectball.actors.Timer;
 import es.danirod.rectball.actors.Value;
+import es.danirod.rectball.model.BallColor;
 
 public class GameScreen extends AbstractScreen {
 
@@ -20,6 +24,8 @@ public class GameScreen extends AbstractScreen {
     public Value score;
 
     public Timer timer;
+
+    private Value countdown;
 
     public GameScreen(RectballGame game) {
         super(game);
@@ -38,8 +44,8 @@ public class GameScreen extends AbstractScreen {
         String file = game.settings.isColorblind() ? "colorblind" : "normal";
         Texture sheet = game.manager.get("board/" + file + ".png");
         board = new Board(this, sheet, 7);
-        board.randomize();
         stage.addActor(board);
+        board.randomize();
 
         // Set up the score
         Texture numbers = game.manager.get("scores.png");
@@ -49,7 +55,49 @@ public class GameScreen extends AbstractScreen {
         // Set up the timer
         Texture timerTexture = game.manager.get("timer.png");
         timer = new Timer(this, 30, timerTexture);
+        timer.setRunning(false);
         stage.addActor(timer);
+
+        // Set up the countdown
+        countdown = new Value(numbers, 1, 3);
+        stage.addActor(countdown);
+        countdown.addAction(Actions.sequence(
+                Actions.scaleTo(0, 0, 1f),
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        countdown.setValue(2);
+                    }
+                }),
+                Actions.scaleTo(1, 1),
+                Actions.scaleTo(0, 0, 1f),
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        countdown.setValue(1);
+                    }
+                }),
+                Actions.scaleTo(1, 1),
+                Actions.scaleTo(0, 0, 1f),
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        timer.setRunning(true);
+                        countdown.remove();
+                    }
+                })
+        ));
+
+        Ball[][] allBalls = board.getBoard();
+        for (int y = 0; y < board.getSize(); y++) {
+            for (int x = 0; x < board.getSize(); x++) {
+                allBalls[x][y].addAction(Actions.sequence(
+                        Actions.scaleTo(0, 0),
+                        Actions.delay(MathUtils.random(0.1f, 2.5f)),
+                        Actions.scaleTo(1, 1, 0.5f)
+                ));
+            }
+        }
 
         resizeScene(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.input.setInputProcessor(stage);
@@ -91,6 +139,11 @@ public class GameScreen extends AbstractScreen {
         } else {
             verticalResize(width, height);
         }
+
+        int minSize = Math.min(width, height);
+        countdown.setSize(0.5f * minSize, 0.5f * minSize);
+        countdown.setX((width - countdown.getWidth()) / 2);
+        countdown.setY((height - countdown.getHeight()) / 2);
     }
 
     private void horizontalResize(int width, int height) {

@@ -17,10 +17,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  */
 public enum BallColor {
     // TODO: Test that the provided row and col value is right.
-    BLUE(1, 0),
-    GREEN(1, 1),
-    RED(0, 1),
-    YELLOW(0, 0);
+    BLUE(0, 0),
+    GREEN(0, 1),
+    RED(1, 1),
+    YELLOW(1, 0);
 
     /**
      * Row and column value of the sprite in the sheet. Balls are expected to
