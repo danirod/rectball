@@ -44,12 +44,13 @@ public class GameScreen extends AbstractScreen {
         stage.addActor(board);
 
         // Set up the score
-        Texture numbers = AssetLoader.get().get("scores.png", Texture.class);
+        Texture numbers = AssetLoader.get().get("scores.png");
         score = new Value(numbers, 6, 0);
         stage.addActor(score);
 
         // Set up the timer
-        timer = new Timer(this, 30);
+        Texture timerTexture = AssetLoader.get().get("timer.png");
+        timer = new Timer(this, 30, timerTexture);
         stage.addActor(timer);
 
         resizeScene(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

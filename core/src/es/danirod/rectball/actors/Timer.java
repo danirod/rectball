@@ -94,18 +94,16 @@ public class Timer extends Actor {
      * @param screen  the screen owning this timer.
      * @param seconds  the maximum seconds for this timer.
      */
-    public Timer(GameScreen screen, int seconds) {
+    public Timer(GameScreen screen, int seconds, Texture texture) {
         this.screen = screen;
         this.seconds = seconds;
         this.maxSeconds = seconds;
 
-        // TODO: Texture should be provided using dependency injection.
-        Texture tex = AssetLoader.get().get("timer.png", Texture.class);
-        int width = tex.getWidth() / 3;
-        int height = tex.getHeight();
-        background = new TextureRegion(tex, 0, 0, width, height);
-        remaining = new TextureRegion(tex, height, 0, width, height);
-        warning = new TextureRegion(tex, 2 * height, 0, width, height);
+        int width = texture.getWidth() / 3;
+        int height = texture.getHeight();
+        background = new TextureRegion(texture, 0, 0, width, height);
+        remaining = new TextureRegion(texture, height, 0, width, height);
+        warning = new TextureRegion(texture, 2 * height, 0, width, height);
     }
 
     /**
