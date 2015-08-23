@@ -22,24 +22,23 @@ public class RectballGame extends Game {
 
     public static final String VERSION = "Rectball v0.0.6";
 
-    public SpriteBatch batch;
-
     private Map<Integer, AbstractScreen> screens;
 
     public Settings settings;
 
     public Scores scores;
 
+    public AssetManager manager;
+
     @Override
     public void create() {
-        this.batch = new SpriteBatch();
         this.screens = new HashMap<>();
         this.addScreen(new GameScreen(this));
         this.addScreen(new GameOverScreen(this));
         this.addScreen(new WelcomeScreen(this));
         this.addScreen(new SettingsScreen(this));
 
-        AssetManager manager = AssetLoader.get();
+        manager = new AssetManager();
         manager.load("board/normal.png", Texture.class);
         manager.load("board/colorblind.png", Texture.class);
         manager.load("ui/switch.png", Texture.class);
@@ -61,7 +60,7 @@ public class RectballGame extends Game {
 
     @Override
     public void dispose() {
-        batch.dispose();
+        manager.dispose();
     }
 
     /**

@@ -4,11 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import es.danirod.rectball.AssetLoader;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.Switch;
 
@@ -28,7 +26,7 @@ public class SettingsScreen extends MenuScreen {
         Label colorLabel = newLabel("Colorblind");
         TextButton backButton = newButton("Back");
 
-        Texture switchTex = AssetLoader.get().get("ui/switch.png");
+        Texture switchTex = game.manager.get("ui/switch.png");
         final Switch musicSwitch = new Switch(switchTex, game.settings.isMusic(), true);
         final Switch soundSwitch = new Switch(switchTex, game.settings.isSound(), true);
         final Switch colorSwitch = new Switch(switchTex, game.settings.isColorblind(), false);

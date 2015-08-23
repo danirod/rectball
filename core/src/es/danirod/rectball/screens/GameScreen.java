@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import es.danirod.rectball.AssetLoader;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.Board;
 import es.danirod.rectball.actors.Timer;
@@ -37,18 +36,18 @@ public class GameScreen extends AbstractScreen {
 
         // Set up the board.
         String file = game.settings.isColorblind() ? "colorblind" : "normal";
-        Texture sheet = AssetLoader.get().get("board/" + file + ".png");
+        Texture sheet = game.manager.get("board/" + file + ".png");
         board = new Board(this, sheet, 7);
         board.randomize();
         stage.addActor(board);
 
         // Set up the score
-        Texture numbers = AssetLoader.get().get("scores.png");
+        Texture numbers = game.manager.get("scores.png");
         score = new Value(numbers, 6, 0);
         stage.addActor(score);
 
         // Set up the timer
-        Texture timerTexture = AssetLoader.get().get("timer.png");
+        Texture timerTexture = game.manager.get("timer.png");
         timer = new Timer(this, 30, timerTexture);
         stage.addActor(timer);
 

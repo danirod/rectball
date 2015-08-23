@@ -17,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import es.danirod.rectball.AssetLoader;
 import es.danirod.rectball.RectballGame;
 
 /**
@@ -46,7 +45,7 @@ public abstract class MenuScreen extends AbstractScreen {
     @Override
     public void load() {
         // Load ninepatches used for buttons.
-        Texture tex = AssetLoader.get().get("ui/button.png", Texture.class);
+        Texture tex = game.manager.get("ui/button.png", Texture.class);
         TextureRegion normalRegion = new TextureRegion(tex, 0, 0, 128, 128);
         TextureRegion hoverRegion = new TextureRegion(tex, 128, 0, 128, 128);
         NinePatchDrawable normalPatch = buildPatch(normalRegion, 32);

@@ -2,14 +2,12 @@ package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import es.danirod.rectball.AssetLoader;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.Value;
 
@@ -30,7 +28,7 @@ public class GameOverScreen extends AbstractScreen {
     @Override
     public void load() {
         batch = new SpriteBatch();
-        gameOver = AssetLoader.get().get("gameover.png", Texture.class);
+        gameOver = game.manager.get("gameover.png", Texture.class);
     }
 
     @Override
@@ -41,7 +39,7 @@ public class GameOverScreen extends AbstractScreen {
         over.setBounds(0, 80, 480, 480);
         stage.addActor(over);
 
-        Texture sheet = AssetLoader.get().get("scores.png", Texture.class);
+        Texture sheet = game.manager.get("scores.png", Texture.class);
         score = new Value(sheet, 6, game.scores.getLastScore());
         score.setBounds(60, 100, 360, 100);
         stage.addActor(score);
