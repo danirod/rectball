@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -19,7 +20,7 @@ import es.danirod.rectball.settings.Settings;
  */
 public class RectballGame extends Game {
 
-    public static final String VERSION = "v0.0.5 ALPHA";
+    public static final String VERSION = "Rectball v0.0.6";
 
     public SpriteBatch batch;
 
@@ -42,7 +43,7 @@ public class RectballGame extends Game {
         manager.load("board/normal.png", Texture.class);
         manager.load("board/colorblind.png", Texture.class);
         manager.load("ui/switch.png", Texture.class);
-        manager.load("ui/yellowpatch.png", Texture.class);
+        manager.load("ui/button.png", Texture.class);
         manager.load("scores.png", Texture.class);
         manager.load("timer.png", Texture.class);
         manager.load("gameover.png", Texture.class);

@@ -1,125 +1,66 @@
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import es.danirod.rectball.AssetLoader;
 import es.danirod.rectball.RectballGame;
 
-public class WelcomeScreen extends AbstractScreen {
+public class WelcomeScreen extends MenuScreen {
 
     public WelcomeScreen(RectballGame game) {
         super(game);
     }
 
-    private Stage stage;
-
-    private Table table;
-
     @Override
     public void show() {
-        Texture tex = AssetLoader.get().get("ui/yellowpatch.png", Texture.class);
-        NinePatch ninePatch = new NinePatch(tex, 6, 6, 6, 6);
-        NinePatchDrawable drb = new NinePatchDrawable(ninePatch);
+        super.show();
 
-        FileHandle font = Gdx.files.internal("fonts/Play-Regular.ttf");
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(font);
-        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-        parameter.size = 72;
-        BitmapFont buttonFont = generator.generateFont(parameter);
-        generator.dispose();
+        // Build styles for title and version
+        BitmapFont titleFont = boldGenerator.generateFont(buildFontStyle(100, 4, 2));
+        BitmapFont versionFont = fontGenerator.generateFont(buildFontStyle(25, 0, 1));
+        LabelStyle titleStyle = new LabelStyle(titleFont, Color.WHITE);
+        LabelStyle versionStyle = new LabelStyle(versionFont, Color.WHITE);
 
-        LabelStyle titleStyle = buildTitleStyle();
-        LabelStyle versionStyle = buildVersionStyle();
-
-        TextButtonStyle tbs = new TextButtonStyle(drb, drb, drb, buttonFont);
-
-        Viewport v = new FitViewport(480, 640);
-        stage = new Stage(v);
-        Gdx.input.setInputProcessor(stage);
-
-        table = new Table();
-        stage.addActor(table);
-        table.setFillParent(true);
-
+        // Build the actors.
         Label title = new Label("Rectball", titleStyle);
-        TextButton playButton = new TextButton("PLAY", tbs);
-        TextButton settingsButton = new TextButton("SETTINGS", tbs);
+        TextButton play = newButton("Play");
+        TextButton settings = newButton("Settings");
+        TextButton statistics = newButton("Stats");
         Label version = new Label(RectballGame.VERSION, versionStyle);
 
-        table.add(title).pad(50).align(Align.center).row();
-        table.add(playButton).width(400).height(100).row();
-        table.add(settingsButton).padTop(50).width(400).height(100).row();
-        table.add(version).align(Align.bottomRight).expandY().row();
+        // Position the actors in the screen.
+        table.add(title).pad(20).align(Align.center).row();
+        table.add(play).pad(20).fillX().height(100).row();
+        table.add(settings).pad(20).fillX().height(100).row();
+        table.add(statistics).pad(20).fillX().height(100).row();
+        table.add(version).pad(20).align(Align.bottomRight).expandY().row();
 
-        playButton.addListener(new InputListener() {
+        // Then add the capture listeners for the buttons.
+        play.addCaptureListener(new ChangeListener() {
             @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                return true;
-            }
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+            public void changed(ChangeEvent event, Actor actor) {
                 game.setScreen(1);
             }
         });
-
-        settingsButton.addListener(new InputListener() {
+        settings.addCaptureListener(new ChangeListener() {
             @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                return true;
-            }
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+            public void changed(ChangeEvent event, Actor actor) {
                 game.setScreen(4);
             }
         });
-    }
-
-    private LabelStyle buildTitleStyle() {
-        FreeTypeFontGenerator generator;
-        FreeTypeFontParameter parameter;
-        FileHandle bold = Gdx.files.internal("fonts/Play-Bold.ttf");
-        generator = new FreeTypeFontGenerator(bold);
-        parameter = new FreeTypeFontParameter();
-        parameter.size = 100;
-        BitmapFont titleFont = generator.generateFont(parameter);
-        generator.dispose();
-        return new LabelStyle(titleFont, Color.WHITE);
-    }
-
-    private LabelStyle buildVersionStyle() {
-        FreeTypeFontGenerator generator;
-        FreeTypeFontParameter parameter;
-        FileHandle bold = Gdx.files.internal("fonts/Play-Bold.ttf");
-        generator = new FreeTypeFontGenerator(bold);
-        parameter = new FreeTypeFontParameter();
-        parameter.size = 40;
-        BitmapFont titleFont = generator.generateFont(parameter);
-        generator.dispose();
-        return new LabelStyle(titleFont, Color.WHITE);
-    }
-
-    @Override
-    public int getID() {
-        return 3;
+        statistics.setDisabled(true);
     }
 
     @Override
@@ -132,7 +73,7 @@ public class WelcomeScreen extends AbstractScreen {
     }
 
     @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height);
+    public int getID() {
+        return 3;
     }
 }

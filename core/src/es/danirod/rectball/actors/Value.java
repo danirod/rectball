@@ -158,7 +158,10 @@ public class Value extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         for (int i = 0; i < length; i++) {
+            digits[i].setScale(getScaleX(), getScaleY());
+            digits[i].setOriginCenter();
             digits[i].draw(batch, parentAlpha);
+            digits[i].setScale(1, 1);
         }
     }
 
