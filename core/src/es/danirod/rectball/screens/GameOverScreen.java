@@ -1,23 +1,17 @@
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.Value;
 
-public class GameOverScreen extends AbstractScreen {
-
-    private Texture gameOver;
-
-    private SpriteBatch batch;
-
-    private Stage stage;
+public class GameOverScreen extends MenuScreen {
 
     private Value score;
 
@@ -26,37 +20,33 @@ public class GameOverScreen extends AbstractScreen {
     }
 
     @Override
-    public void load() {
-        batch = new SpriteBatch();
-    }
-
-    @Override
     public void show() {
-        gameOver = game.manager.get("gameover.png", Texture.class);
+        super.show();
 
-        stage = new Stage(new FitViewport(480, 640));
-
-        Image over = new Image(gameOver);
-        over.setBounds(0, 80, 480, 480);
-        stage.addActor(over);
+        Label gameOver = newLabel("GAME OVER");
+        table.add(gameOver).pad(40).colspan(2).expandX().expandY().align(Align.center).row();
 
         Texture sheet = game.manager.get("scores.png", Texture.class);
         score = new Value(sheet, 6, game.scores.getLastScore());
-        score.setBounds(60, 100, 360, 100);
-        stage.addActor(score);
+        table.add(score).pad(40).colspan(2).fillX().height(200).row();
 
-        Gdx.input.setInputProcessor(new InputAdapter() {
+        TextButton replay = newButton("Replay");
+        TextButton menu = newButton("Menu");
+        table.add(replay).pad(40).expandX().height(100);
+        table.add(menu).pad(40).expandX().height(100).row();
+
+        replay.addCaptureListener(new ChangeListener() {
             @Override
-            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+            public void changed(ChangeEvent event, Actor actor) {
                 game.setScreen(1);
-                return true;
             }
         });
-    }
-
-    @Override
-    public void dispose() {
-        batch.dispose();
+        menu.addCaptureListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(3);
+            }
+        });
     }
 
     @Override
@@ -66,15 +56,6 @@ public class GameOverScreen extends AbstractScreen {
 
         stage.act(delta);
         stage.draw();
-
-        /*batch.begin();
-        batch.draw(gameOver, 0, 0);
-        batch.end();*/
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height);
     }
 
     @Override
