@@ -5,6 +5,7 @@
  */
 package es.danirod.rectball.actors;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import es.danirod.rectball.actors.Ball;
@@ -33,11 +34,11 @@ public class Board extends Group {
     private GameScreen screen;
 
     /**
-     * Whether blind mode is enabled or not. If blind mode is enabled, then
-     * the balls are rendered using a different sprite sheet that uses
-     * shapes to differentiate the colors.
+     * The sheet that is used in the board to render the balls. The sheet
+     * is provided as a parameter, which is a nice solution to handle
+     * multiple themes or at least colorblind mode.
      */
-    private boolean colorblind;
+    private Texture sheet;
 
     /**
      * The size of the board. The bigger the board is, the more balls there
@@ -59,10 +60,10 @@ public class Board extends Group {
      * @param screen  the screen this board belongs to.
      * @param size  the size of the board, always square.
      */
-    public Board(GameScreen screen, boolean colorblind, int size) {
+    public Board(GameScreen screen, Texture sheet, int size) {
         this.screen = screen;
+        this.sheet = sheet;
         this.size = size;
-        this.colorblind = colorblind;
 
         board = setUpBoard();
         updateBoardBounds();
@@ -81,8 +82,7 @@ public class Board extends Group {
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
                 int index = MathUtils.random(0, colors.length - 1);
-                Ball ball = new Ball(colors[index], this, x, y);
-                ball.setColorblind(colorblind);
+                Ball ball = new Ball(colors[index], this, sheet);
                 board[x][y] = ball;
                 addActor(ball);
             }

@@ -41,8 +41,6 @@ public class RectballGame extends Game {
         AssetManager manager = AssetLoader.get();
         manager.load("board/normal.png", Texture.class);
         manager.load("board/colorblind.png", Texture.class);
-        manager.load("ui/blind.png", Texture.class);
-        manager.load("ui/play.png", Texture.class);
         manager.load("ui/switch.png", Texture.class);
         manager.load("ui/yellowpatch.png", Texture.class);
         manager.load("scores.png", Texture.class);

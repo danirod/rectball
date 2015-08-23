@@ -13,8 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 
-import es.danirod.rectball.AssetLoader;
-
 /**
  * Actor for representing the state of balls that are in the board.
  * Balls can have a color and they can be clicked. The user interacts
@@ -43,7 +41,7 @@ public class Ball extends Actor {
      * ball color is shuffled again and is passed to the method that builds
      * the sprite.
      */
-    private Texture texture;
+    private Texture sheet;
 
     /**
      * The actual sprite representation of the ball. For the sake of making
@@ -53,87 +51,22 @@ public class Ball extends Actor {
     private Sprite sprite;
 
     /**
-     * Whether colorblind mode is enabled or not. When colorblind mode is
-     * enabled, ball is rendered using a special texture that displays a
-     * shape inside the ball to make it easier to see for colorblind people.
-     */
-    private boolean colorblind = false;
-
-    /**
-     * The row and column position of this ball in the board. I don't feel
-     * comfortable having this class knowing this information but at the
-     * moment I don't know a better way for doing this.
-     */
-    private final int row, col;
-
-    /**
      * Build a new ball. Keep in mind that this method should not be used to
      * change the color of a ball, since it's possible to change the color
      * without instantiating new balls.
      *
      * @param ballColor  initial color of the ball.
      * @param board  the board this ball belongs to.
-     * @param row  the row for this ball in the board table.
-     * @param col  the column for this ball in the board table.
      */
-    public Ball(BallColor ballColor, Board board, int row, int col) {
-        // FIXME: Texture should be a parameter via dependency injection.
+    public Ball(BallColor ballColor, Board board, Texture sheet) {
         // FIXME: Listener should be independent of this structure.
 
         this.ballColor = ballColor;
-        this.row = row;
-        this.col = col;
+        this.sheet = sheet;
 
         // Set up look and feel.
-        texture = AssetLoader.get().get("board/normal.png");
-        sprite = new Sprite(ballColor.getRegion(texture));
+        sprite = new Sprite(ballColor.getRegion(this.sheet));
         addListener(new BallInputListener(this, board));
-    }
-
-
-    /**
-     * Get the row where this ball is.
-     * @return row of the ball.
-     */
-    public int getRow() {
-        return row;
-    }
-
-    /**
-     * Get the column where this ball is.
-     * @return column of the ball.
-     */
-    public int getCol() {
-        return col;
-    }
-
-    /**
-     * Update the colorblindness status for this ball. If colorblind mode is
-     * enabled, the ball will be rendered using a special sheet that uses
-     * shapes instead of colors to make the balls different. Otherwise the
-     * standard ball sheet is used.
-     *
-     * @param colorblind  whether colorblind mode is enabled or not.
-     */
-    public void setColorblind(boolean colorblind) {
-        /*
-         * TODO: This method makes no sense in the final release.
-         *
-         * ¿Por qué me quiero cargar este método? Porque el ajuste para
-         * daltónicos se establece fuera de la partida en las opciones de
-         * juego, por lo que es global para toda la partida. El constructor
-         * de la clase debería recibir la textura apropiada en función de si
-         * el modo para daltónicos está activo o no y no se debería poder
-         * cambiar en toda la partida salvo que la abandone.
-         */
-
-        this.colorblind = colorblind;
-        if (colorblind) {
-            texture = AssetLoader.get().get("board/colorblind.png");
-        } else {
-            texture = AssetLoader.get().get("board/normal.png");
-        }
-        sprite.setRegion(ballColor.getRegion(texture));
     }
 
     /**
@@ -174,7 +107,7 @@ public class Ball extends Actor {
         this.ballColor = ballColor;
 
         // Changing the color also changes the sprite used to render the ball.
-        sprite.setRegion(ballColor.getRegion(texture));
+        sprite.setRegion(ballColor.getRegion(sheet));
     }
 
     @Override

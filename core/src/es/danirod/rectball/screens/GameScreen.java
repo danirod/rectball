@@ -36,8 +36,10 @@ public class GameScreen extends AbstractScreen {
     public void show() {
         stage = new Stage(new ScreenViewport());
 
-        // Set up the board
-        board = new Board(this, game.settings.isColorblind(), 7);
+        // Set up the board.
+        String file = game.settings.isColorblind() ? "colorblind" : "normal";
+        Texture sheet = AssetLoader.get().get("board/" + file + ".png");
+        board = new Board(this, sheet, 7);
         board.randomize();
         stage.addActor(board);
 
