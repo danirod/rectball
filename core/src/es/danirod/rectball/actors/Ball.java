@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import es.danirod.rectball.model.BallColor;
 
 /**
@@ -115,16 +116,11 @@ public class Ball extends Actor {
     public void draw(Batch batch, float parentAlpha) {
         // TODO: Implement a shader to make this look better.
 
-        if (selected) {
-            // If selected make it smaller to make it clear.
-            // Thanks to madtriangle for the suggestion.
-            sprite.setScale(0.8f);
-            sprite.setOriginCenter();
-            sprite.draw(batch, parentAlpha);
-            sprite.setScale(1f);
-        } else {
-            sprite.draw(batch, parentAlpha);
-        }
+        // If selected make it smaller to make it clear.
+        // Thanks to madtriangle for the suggestion.
+        sprite.setScale(getScaleX(), getScaleY());
+        sprite.setOriginCenter();
+        sprite.draw(batch, parentAlpha);
     }
 
     @Override
@@ -136,23 +132,29 @@ public class Ball extends Actor {
     protected void positionChanged() {
         sprite.setPosition(getX(), getY());
     }
+}
 
-    // TODO: Move this outside this class.
-    private class BallInputListener extends InputListener {
-        private final Board board;
+class BallInputListener extends InputListener {
 
-        private final Ball ball;
+    private final Board board;
 
-        public BallInputListener(Ball ball, Board board) {
-            this.ball = ball;
-            this.board = board;
-        }
+    private final Ball ball;
 
-        @Override
-        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            selected = !selected;
-            board.ballSelected(ball);
-            return true;
-        }
+    public BallInputListener(Ball ball, Board board) {
+        this.ball = ball;
+        this.board = board;
     }
+
+    @Override
+    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+        ball.setSelected(!ball.isSelected());
+        if (ball.isSelected()) {
+            ball.addAction(Actions.scaleTo(0.8f, 0.8f, 0.1f));
+        } else {
+            ball.addAction(Actions.scaleTo(1f, 1f, 0.1f));
+        }
+        board.ballSelected(ball);
+        return true;
+    }
+
 }

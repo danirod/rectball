@@ -8,6 +8,7 @@ package es.danirod.rectball.actors;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import es.danirod.rectball.model.BallColor;
 import es.danirod.rectball.model.Bounds;
 import es.danirod.rectball.model.Selection;
@@ -160,6 +161,7 @@ public class Board extends Group {
             }
 
             for (Ball selectedBall : selection) {
+                selectedBall.addAction(Actions.scaleTo(1f, 1f, 0.1f));
                 selectedBall.setSelected(false);
             }
             selection.clear();
