@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -58,6 +59,8 @@ public class GameScreen extends AbstractScreen {
         timer.setRunning(false);
         stage.addActor(timer);
 
+        board.setTouchable(Touchable.disabled);
+
         // Set up the countdown
         countdown = new Value(numbers, 1, 3);
         stage.addActor(countdown);
@@ -84,6 +87,7 @@ public class GameScreen extends AbstractScreen {
                     public void run() {
                         timer.setRunning(true);
                         countdown.remove();
+                        board.setTouchable(Touchable.enabled);
                     }
                 })
         ));
