@@ -3,6 +3,7 @@ package es.danirod.rectball.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -55,7 +56,7 @@ public class GameScreen extends AbstractScreen {
 
         // Set up the timer
         Texture timerTexture = game.manager.get("timer.png");
-        timer = new Timer(this, 30, timerTexture);
+        timer = new Timer(this, 1, timerTexture);
         timer.setRunning(false);
         stage.addActor(timer);
 
@@ -128,7 +129,35 @@ public class GameScreen extends AbstractScreen {
         }
 
         timer.setRunning(false);
-        game.setScreen(2);
+        board.setTouchable(Touchable.disabled);
+
+        float width = Gdx.graphics.getWidth();
+        float height = Gdx.graphics.getHeight();
+        Ball[][] allBalls = board.getBoard();
+        for (int y = 0; y < board.getSize(); y++) {
+            for (int x = 0; x < board.getSize(); x++) {
+                Ball currentBall = allBalls[x][y];
+                float desplX = MathUtils.random(-width / 2, width / 2);
+                float desplY = -height - MathUtils.random(0, height / 4);
+                float scaling = MathUtils.random(0.3f, 0.7f);
+                float desplTime = MathUtils.random(0.5f, 1.5f);
+                currentBall.addAction(Actions.parallel(
+                        Actions.moveBy(desplX, desplY, desplTime),
+                        Actions.scaleBy(scaling, scaling, desplTime)
+                ));
+            }
+        }
+
+        stage.addAction(Actions.sequence(
+                Actions.delay(2),
+                Actions.run(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        game.setScreen(2);
+                    }
+                })
+        ));
     }
 
     @Override

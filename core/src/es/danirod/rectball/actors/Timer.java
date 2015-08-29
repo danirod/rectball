@@ -151,6 +151,7 @@ public class Timer extends Actor {
         if (running) {
             seconds -= delta;
             if (seconds < 0) {
+                seconds = 0;
                 screen.gameOver();
             }
         }
