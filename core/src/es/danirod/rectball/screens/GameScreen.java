@@ -70,7 +70,7 @@ public class GameScreen extends AbstractScreen {
 
         // Set up the timer
         Texture timerTexture = game.manager.get("timer.png");
-        timer = new Timer(this, 2, timerTexture);
+        timer = new Timer(this, 30, timerTexture);
         timer.setRunning(false);
         stage.addActor(timer);
 
