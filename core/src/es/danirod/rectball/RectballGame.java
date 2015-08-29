@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.TextureLoader;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -42,6 +43,11 @@ public class RectballGame extends Game {
         manager = new AssetManager();
         manager.load("board/normal.png", Texture.class);
         manager.load("board/colorblind.png", Texture.class);
+        manager.load("sound/fail.wav", Sound.class);
+        manager.load("sound/gameover.wav", Sound.class);
+        manager.load("sound/select.wav", Sound.class);
+        manager.load("sound/success.wav", Sound.class);
+        manager.load("sound/unselect.wav", Sound.class);
         manager.load("ui/switch.png", Texture.class);
         manager.load("ui/button.png", Texture.class);
         manager.load("scores.png", Texture.class);

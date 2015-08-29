@@ -5,6 +5,7 @@
  */
 package es.danirod.rectball.actors;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -13,6 +14,7 @@ import es.danirod.rectball.model.BallColor;
 import es.danirod.rectball.model.Bounds;
 import es.danirod.rectball.model.Selection;
 import es.danirod.rectball.screens.GameScreen;
+import es.danirod.rectball.utils.SoundPlayer;
 
 import java.util.*;
 
@@ -54,16 +56,20 @@ public class Board extends Group {
      */
     private Ball[][] board;
 
+    private SoundPlayer player;
+
     /**
      * Set up a new board.
      *
      * @param screen  the screen this board belongs to.
      * @param size  the size of the board, always square.
      */
-    public Board(GameScreen screen, Texture sheet, int size) {
+    public Board(GameScreen screen, Texture sheet, int size, SoundPlayer player) {
         this.screen = screen;
         this.sheet = sheet;
         this.size = size;
+
+        this.player = player;
 
         board = setUpBoard();
         updateBoardBounds();
@@ -132,6 +138,7 @@ public class Board extends Group {
     public void ballSelected(Ball me) {
         // The user unselected the ball.
         if (!me.isSelected()) {
+            player.playUnselect();
             selection.remove(me);
             return;
         }
@@ -142,9 +149,9 @@ public class Board extends Group {
             // If there are four balls selected, test for valid selection.
             Selection sel = new Selection(this, selection);
             if (!sel.checkSameColor()) {
-                // TODO: Subtract time.
+                player.playFail();
             } else if (!sel.checkSquare()) {
-                // TODO: Subtract time.
+                player.playFail();
             } else {
                 Bounds bounds = sel.getBounds();
 
@@ -155,6 +162,8 @@ public class Board extends Group {
                 screen.score.setValue(screen.score.getValue() + score);
                 screen.timer.setSeconds(screen.timer.getSeconds() + 5);
 
+                player.playSuccess();
+
                 randomize(bounds.minX, bounds.minY, bounds.maxX, bounds.maxY);
             }
 
@@ -163,6 +172,8 @@ public class Board extends Group {
                 selectedBall.setSelected(false);
             }
             selection.clear();
+        } else {
+            player.playSelect();
         }
     }
 

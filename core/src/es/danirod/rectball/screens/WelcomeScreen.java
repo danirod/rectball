@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.utils.SoundPlayer;
 
 public class WelcomeScreen extends MenuScreen {
 
@@ -42,20 +43,30 @@ public class WelcomeScreen extends MenuScreen {
         table.add(statistics).pad(20).fillX().height(100).row();
         table.add(version).pad(20).align(Align.bottomRight).expandY().row();
 
+        // Add sounds.
+        final SoundPlayer player = new SoundPlayer(game);
+
         // Then add the capture listeners for the buttons.
         play.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                player.playSelect();
                 game.setScreen(1);
             }
         });
         settings.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                player.playSelect();
                 game.setScreen(4);
             }
         });
-        statistics.setDisabled(true);
+        statistics.addCaptureListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                player.playFail();
+            }
+        });
     }
 
     @Override

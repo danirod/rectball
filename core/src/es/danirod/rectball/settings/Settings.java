@@ -8,42 +8,42 @@ public class Settings {
     private Preferences prefs;
 
     /** Whether music is enabled or not. */
-    private boolean music;
+    private boolean musicEnabled;
 
     /** Whether sound is enabled or not. */
-    private boolean sound;
+    private boolean soundEnabled;
 
     /** Whether colorblind mode is on or not. */
     private boolean colorblind;
 
     public Settings(Preferences prefs) {
         this.prefs = prefs;
-        this.music = prefs.getBoolean("music", true);
-        this.sound = prefs.getBoolean("sound", true);
+        this.musicEnabled = prefs.getBoolean("music", true);
+        this.soundEnabled = prefs.getBoolean("sound", true);
         this.colorblind = prefs.getBoolean("colorblind", false);
     }
 
     public void save() {
-        prefs.putBoolean("music", music);
-        prefs.putBoolean("sound", sound);
+        prefs.putBoolean("music", musicEnabled);
+        prefs.putBoolean("sound", soundEnabled);
         prefs.putBoolean("colorblind", colorblind);
         prefs.flush();
     }
 
-    public boolean isMusic() {
-        return music;
+    public boolean isMusicEnabled() {
+        return musicEnabled;
     }
 
-    public void setMusic(boolean music) {
-        this.music = music;
+    public void setMusicEnabled(boolean musicEnabled) {
+        this.musicEnabled = musicEnabled;
     }
 
-    public boolean isSound() {
-        return sound;
+    public boolean isSoundEnabled() {
+        return soundEnabled;
     }
 
-    public void setSound(boolean sound) {
-        this.sound = sound;
+    public void setSoundEnabled(boolean soundEnabled) {
+        this.soundEnabled = soundEnabled;
     }
 
     public boolean isColorblind() {

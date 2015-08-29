@@ -1,9 +1,9 @@
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -15,7 +15,8 @@ import es.danirod.rectball.actors.Ball;
 import es.danirod.rectball.actors.Board;
 import es.danirod.rectball.actors.Timer;
 import es.danirod.rectball.actors.Value;
-import es.danirod.rectball.model.BallColor;
+import es.danirod.rectball.listeners.BallInputListener;
+import es.danirod.rectball.utils.SoundPlayer;
 
 public class GameScreen extends AbstractScreen {
 
@@ -28,6 +29,7 @@ public class GameScreen extends AbstractScreen {
     public Timer timer;
 
     private Value countdown;
+    private SoundPlayer player;
 
     public GameScreen(RectballGame game) {
         super(game);
@@ -42,12 +44,24 @@ public class GameScreen extends AbstractScreen {
     public void show() {
         stage = new Stage(new ScreenViewport());
 
+        // Load sounds.
+        player = new SoundPlayer(game);
+
         // Set up the board.
         String file = game.settings.isColorblind() ? "colorblind" : "normal";
         Texture sheet = game.manager.get("board/" + file + ".png");
-        board = new Board(this, sheet, 7);
+        board = new Board(this, sheet, 7, player);
         stage.addActor(board);
         board.randomize();
+
+        // Set up the listeners for the board.
+        Ball[][] allBalls = board.getBoard();
+        for (int y = 0; y < board.getSize(); y++) {
+            for (int x = 0; x < board.getSize(); x++) {
+                Ball ball = allBalls[x][y];
+                ball.addListener(new BallInputListener(ball, board));
+            }
+        }
 
         // Set up the score
         Texture numbers = game.manager.get("scores.png");
@@ -56,7 +70,7 @@ public class GameScreen extends AbstractScreen {
 
         // Set up the timer
         Texture timerTexture = game.manager.get("timer.png");
-        timer = new Timer(this, 1, timerTexture);
+        timer = new Timer(this, 2, timerTexture);
         timer.setRunning(false);
         stage.addActor(timer);
 
@@ -93,7 +107,6 @@ public class GameScreen extends AbstractScreen {
                 })
         ));
 
-        Ball[][] allBalls = board.getBoard();
         for (int y = 0; y < board.getSize(); y++) {
             for (int x = 0; x < board.getSize(); x++) {
                 allBalls[x][y].addAction(Actions.sequence(
@@ -130,6 +143,8 @@ public class GameScreen extends AbstractScreen {
 
         timer.setRunning(false);
         board.setTouchable(Touchable.disabled);
+
+        player.playGameOver();
 
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();

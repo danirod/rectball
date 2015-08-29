@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.Switch;
+import es.danirod.rectball.utils.SoundPlayer;
 
 public class SettingsScreen extends MenuScreen {
 
@@ -27,8 +28,8 @@ public class SettingsScreen extends MenuScreen {
         TextButton backButton = newButton("Back");
 
         Texture switchTex = game.manager.get("ui/switch.png");
-        final Switch musicSwitch = new Switch(switchTex, game.settings.isMusic(), true);
-        final Switch soundSwitch = new Switch(switchTex, game.settings.isSound(), true);
+        final Switch musicSwitch = new Switch(switchTex, game.settings.isMusicEnabled(), true);
+        final Switch soundSwitch = new Switch(switchTex, game.settings.isSoundEnabled(), false);
         final Switch colorSwitch = new Switch(switchTex, game.settings.isColorblind(), false);
 
         table.add(musicLabel).pad(20).fillX().height(100);
@@ -42,11 +43,14 @@ public class SettingsScreen extends MenuScreen {
         backButton.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.settings.setMusic(musicSwitch.isEnabled());
-                game.settings.setSound(soundSwitch.isEnabled());
+                game.settings.setMusicEnabled(musicSwitch.isEnabled());
+                game.settings.setSoundEnabled(soundSwitch.isEnabled());
                 game.settings.setColorblind(colorSwitch.isEnabled());
                 game.settings.save();
                 game.setScreen(3);
+
+                SoundPlayer player = new SoundPlayer(game);
+                player.playFail();
             }
         });
     }

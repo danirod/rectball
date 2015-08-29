@@ -6,13 +6,12 @@
 
 package es.danirod.rectball.actors;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import es.danirod.rectball.listeners.BallInputListener;
 import es.danirod.rectball.model.BallColor;
 
 /**
@@ -61,14 +60,11 @@ public class Ball extends Actor {
      * @param board  the board this ball belongs to.
      */
     public Ball(BallColor ballColor, Board board, Texture sheet) {
-        // FIXME: Listener should be independent of this structure.
-
         this.ballColor = ballColor;
         this.sheet = sheet;
 
         // Set up look and feel.
         sprite = new Sprite(ballColor.getRegion(this.sheet));
-        addListener(new BallInputListener(this, board));
     }
 
     /**
@@ -134,27 +130,3 @@ public class Ball extends Actor {
     }
 }
 
-class BallInputListener extends InputListener {
-
-    private final Board board;
-
-    private final Ball ball;
-
-    public BallInputListener(Ball ball, Board board) {
-        this.ball = ball;
-        this.board = board;
-    }
-
-    @Override
-    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-        ball.setSelected(!ball.isSelected());
-        if (ball.isSelected()) {
-            ball.addAction(Actions.scaleTo(0.8f, 0.8f, 0.1f));
-        } else {
-            ball.addAction(Actions.scaleTo(1f, 1f, 0.1f));
-        }
-        board.ballSelected(ball);
-        return true;
-    }
-
-}
