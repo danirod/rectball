@@ -1,7 +1,6 @@
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
@@ -16,7 +15,7 @@ import es.danirod.rectball.actors.Board;
 import es.danirod.rectball.actors.Timer;
 import es.danirod.rectball.actors.Value;
 import es.danirod.rectball.listeners.BallInputListener;
-import es.danirod.rectball.utils.SoundPlayer;
+import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
 public class GameScreen extends AbstractScreen {
 
@@ -29,7 +28,6 @@ public class GameScreen extends AbstractScreen {
     public Timer timer;
 
     private Value countdown;
-    private SoundPlayer player;
 
     public GameScreen(RectballGame game) {
         super(game);
@@ -44,13 +42,10 @@ public class GameScreen extends AbstractScreen {
     public void show() {
         stage = new Stage(new ScreenViewport());
 
-        // Load sounds.
-        player = new SoundPlayer(game);
-
         // Set up the board.
         String file = game.settings.isColorblind() ? "colorblind" : "normal";
         Texture sheet = game.manager.get("board/" + file + ".png");
-        board = new Board(this, sheet, 7, player);
+        board = new Board(this, sheet, 7, game.player);
         stage.addActor(board);
         board.randomize();
 
@@ -144,7 +139,7 @@ public class GameScreen extends AbstractScreen {
         timer.setRunning(false);
         board.setTouchable(Touchable.disabled);
 
-        player.playGameOver();
+        game.player.playSound(SoundCode.GAME_OVER);
 
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();

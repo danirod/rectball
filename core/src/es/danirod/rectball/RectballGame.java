@@ -15,6 +15,7 @@ import java.util.Map;
 import es.danirod.rectball.screens.*;
 import es.danirod.rectball.settings.Scores;
 import es.danirod.rectball.settings.Settings;
+import es.danirod.rectball.utils.SoundPlayer;
 
 /**
  * Main class for the game.
@@ -31,6 +32,8 @@ public class RectballGame extends Game {
 
     public AssetManager manager;
 
+    public SoundPlayer player;
+
     @Override
     public void create() {
         this.screens = new HashMap<>();
@@ -43,11 +46,11 @@ public class RectballGame extends Game {
         manager = new AssetManager();
         manager.load("board/normal.png", Texture.class);
         manager.load("board/colorblind.png", Texture.class);
-        manager.load("sound/fail.wav", Sound.class);
-        manager.load("sound/gameover.wav", Sound.class);
-        manager.load("sound/select.wav", Sound.class);
-        manager.load("sound/success.wav", Sound.class);
-        manager.load("sound/unselect.wav", Sound.class);
+        manager.load("sound/fail.ogg", Sound.class);
+        manager.load("sound/gameover.ogg", Sound.class);
+        manager.load("sound/select.ogg", Sound.class);
+        manager.load("sound/success.ogg", Sound.class);
+        manager.load("sound/unselect.ogg", Sound.class);
         manager.load("ui/switch.png", Texture.class);
         manager.load("ui/button.png", Texture.class);
         manager.load("scores.png", Texture.class);
@@ -59,6 +62,7 @@ public class RectballGame extends Game {
 
         settings = new Settings(Gdx.app.getPreferences("rectball"));
         scores = new Scores();
+        player = new SoundPlayer(this);
 
         setScreen(5);
     }

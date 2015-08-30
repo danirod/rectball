@@ -15,6 +15,7 @@ import es.danirod.rectball.model.Bounds;
 import es.danirod.rectball.model.Selection;
 import es.danirod.rectball.screens.GameScreen;
 import es.danirod.rectball.utils.SoundPlayer;
+import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
 import java.util.*;
 
@@ -138,7 +139,7 @@ public class Board extends Group {
     public void ballSelected(Ball me) {
         // The user unselected the ball.
         if (!me.isSelected()) {
-            player.playUnselect();
+            player.playSound(SoundCode.UNSELECT);
             selection.remove(me);
             return;
         }
@@ -149,9 +150,9 @@ public class Board extends Group {
             // If there are four balls selected, test for valid selection.
             Selection sel = new Selection(this, selection);
             if (!sel.checkSameColor()) {
-                player.playFail();
+                player.playSound(SoundCode.FAIL);
             } else if (!sel.checkSquare()) {
-                player.playFail();
+                player.playSound(SoundCode.FAIL);
             } else {
                 Bounds bounds = sel.getBounds();
 
@@ -162,7 +163,7 @@ public class Board extends Group {
                 screen.score.setValue(screen.score.getValue() + score);
                 screen.timer.setSeconds(screen.timer.getSeconds() + 5);
 
-                player.playSuccess();
+                player.playSound(SoundCode.SUCCESS);
 
                 randomize(bounds.minX, bounds.minY, bounds.maxX, bounds.maxY);
             }
@@ -173,7 +174,7 @@ public class Board extends Group {
             }
             selection.clear();
         } else {
-            player.playSelect();
+            player.playSound(SoundCode.SELECT);
         }
     }
 

@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.Switch;
 import es.danirod.rectball.utils.SoundPlayer;
+import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
 public class SettingsScreen extends MenuScreen {
 
@@ -46,11 +47,17 @@ public class SettingsScreen extends MenuScreen {
                 game.settings.setMusicEnabled(musicSwitch.isEnabled());
                 game.settings.setSoundEnabled(soundSwitch.isEnabled());
                 game.settings.setColorblind(colorSwitch.isEnabled());
+
+                /*
+                 * FAIL sound is also the BACK sound. Play it after updating
+                 * the settings because we want to use the new value for sound.
+                 * Play it before saving the settings because we know that
+                 * saving settings is slow on Android.
+                 */
+                game.player.playSound(SoundCode.FAIL);
+
                 game.settings.save();
                 game.setScreen(3);
-
-                SoundPlayer player = new SoundPlayer(game);
-                player.playFail();
             }
         });
     }

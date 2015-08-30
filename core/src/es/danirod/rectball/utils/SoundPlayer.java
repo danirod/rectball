@@ -1,58 +1,38 @@
 package es.danirod.rectball.utils;
 
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.math.MathUtils;
 import es.danirod.rectball.RectballGame;
 
 public class SoundPlayer {
 
-    private Sound gameover;
+    public enum SoundCode {
+        GAME_OVER("sound/gameover.ogg"),
+        SELECT("sound/select.ogg"),
+        UNSELECT("sound/unselect.ogg"),
+        SUCCESS("sound/success.ogg"),
+        FAIL("sound/fail.ogg");
 
-    private Sound select;
+        protected final String internalPath;
 
-    private Sound unselect;
+        SoundCode(String path) {
+            internalPath = path;
+        }
+    }
 
-    private Sound success;
-
-    private Sound fail;
-
-    private boolean soundEnabled;
+    private RectballGame game;
 
     public SoundPlayer(RectballGame game) {
-        soundEnabled = game.settings.isSoundEnabled();
-        gameover = game.manager.get("sound/gameover.wav");
-        select = game.manager.get("sound/select.wav");
-        unselect = game.manager.get("sound/unselect.wav");
-        success = game.manager.get("sound/success.wav");
-        fail = game.manager.get("sound/fail.wav");
+        this.game = game;
     }
 
-    public void playGameOver() {
-        if (soundEnabled) {
-            gameover.play();
+    public void playSound(SoundCode code) {
+        if (!game.settings.isSoundEnabled()) {
+            return;
         }
-    }
 
-    public void playSelect() {
-        if (soundEnabled) {
-            select.play();
-        }
-    }
-
-    public void playUnselect() {
-        if (soundEnabled) {
-            unselect.play();
-        }
-    }
-
-    public void playSuccess() {
-        if (soundEnabled) {
-            success.play();
-        }
-    }
-
-    public void playFail() {
-        if (soundEnabled) {
-            fail.play();
-        }
+        Sound sound = game.manager.get(code.internalPath, Sound.class);
+        float randomPitch = MathUtils.random(0.7f, 1.3f);
+        sound.play(0.7f, randomPitch, 0);
     }
 }

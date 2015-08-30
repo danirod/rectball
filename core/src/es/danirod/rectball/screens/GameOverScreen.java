@@ -10,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.Value;
+import es.danirod.rectball.utils.SoundPlayer;
+import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
 public class GameOverScreen extends MenuScreen {
 
@@ -38,12 +40,14 @@ public class GameOverScreen extends MenuScreen {
         replay.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                game.player.playSound(SoundCode.SUCCESS);
                 game.setScreen(1);
             }
         });
         menu.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                game.player.playSound(SoundCode.FAIL);
                 game.setScreen(3);
             }
         });
