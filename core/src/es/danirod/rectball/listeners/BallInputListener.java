@@ -4,6 +4,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction;
 import es.danirod.rectball.actors.Ball;
 import es.danirod.rectball.actors.Board;
 
@@ -25,6 +26,7 @@ public class BallInputListener extends InputListener {
     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
         ball.setSelected(!ball.isSelected());
         if (ball.isSelected()) {
+            ScaleToAction scale = Actions.scaleTo(0.8f, 0.8f, 0.1f);
             ball.addAction(Actions.scaleTo(0.8f, 0.8f, 0.1f));
         } else {
             ball.addAction(Actions.scaleTo(1f, 1f, 0.1f));

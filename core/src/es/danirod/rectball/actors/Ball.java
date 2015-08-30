@@ -7,6 +7,7 @@
 package es.danirod.rectball.actors;
 
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -110,18 +111,18 @@ public class Ball extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        // TODO: Implement a shader to make this look better.
+        Color col = batch.getColor();
 
-        // If selected make it smaller to make it clear.
-        // Thanks to madtriangle for the suggestion.
-        sprite.setScale(getScaleX(), getScaleY());
-        sprite.setOriginCenter();
-        sprite.draw(batch, parentAlpha);
+        batch.setColor(col.r, col.g, col.b, col.a * parentAlpha);
+        batch.draw(sprite, getX(), getY(), getOriginX(), getOriginY(),
+                getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
+        batch.setColor(col);
     }
 
     @Override
     protected void sizeChanged() {
         sprite.setSize(getWidth(), getHeight());
+        setOrigin(getWidth() / 2, getHeight() / 2);
     }
 
     @Override
