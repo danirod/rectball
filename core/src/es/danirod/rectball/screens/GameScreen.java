@@ -15,6 +15,7 @@ import es.danirod.rectball.actors.Board;
 import es.danirod.rectball.actors.Timer;
 import es.danirod.rectball.actors.Value;
 import es.danirod.rectball.listeners.BallInputListener;
+import es.danirod.rectball.model.BallColor;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
 public class GameScreen extends AbstractScreen {
@@ -47,7 +48,6 @@ public class GameScreen extends AbstractScreen {
         Texture sheet = game.manager.get("board/" + file + ".png");
         board = new Board(this, sheet, 7, game.player);
         stage.addActor(board);
-        board.randomize();
 
         // Set up the listeners for the board.
         Ball[][] allBalls = board.getBoard();
@@ -97,6 +97,7 @@ public class GameScreen extends AbstractScreen {
                     public void run() {
                         timer.setRunning(true);
                         countdown.remove();
+                        board.randomize();
                         board.setTouchable(Touchable.enabled);
                     }
                 })
@@ -138,6 +139,7 @@ public class GameScreen extends AbstractScreen {
 
         timer.setRunning(false);
         board.setTouchable(Touchable.disabled);
+        board.setBoardColor(BallColor.GRAY);
 
         game.player.playSound(SoundCode.GAME_OVER);
 

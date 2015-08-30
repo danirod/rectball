@@ -87,7 +87,7 @@ public class Board extends Group {
         Ball[][] board = new Ball[size][size];
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-                Ball ball = new Ball(BallColor.BLUE, this, sheet);
+                Ball ball = new Ball(BallColor.GRAY, this, sheet);
                 board[x][y] = ball;
                 addActor(ball);
             }
@@ -208,7 +208,7 @@ public class Board extends Group {
         BallColor[] allColors = BallColor.values();
         for (int y = y1; y <= y2; y++) {
             for (int x = x1; x <= x2; x++) {
-                int index = MathUtils.random(allColors.length - 1);
+                int index = MathUtils.random(allColors.length - 2);
                 board[x][y].setBallColor(allColors[index]);
             }
         }
