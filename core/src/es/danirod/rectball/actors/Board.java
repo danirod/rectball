@@ -6,6 +6,7 @@
 package es.danirod.rectball.actors;
 
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -206,17 +207,78 @@ public class Board extends Group {
      */
     public void randomize(int x1, int y1, int x2, int y2) {
         BallColor[] allColors = BallColor.values();
-        for (int y = y1; y <= y2; y++) {
-            for (int x = x1; x <= x2; x++) {
-                int index = MathUtils.random(allColors.length - 2);
-                board[x][y].setBallColor(allColors[index]);
+        do {
+            for (int y = y1; y <= y2; y++) {
+                for (int x = x1; x <= x2; x++) {
+                    int index = MathUtils.random(allColors.length - 2);
+                    board[x][y].setBallColor(allColors[index]);
+                }
             }
-        }
+            if (!existsCombination()) {
+                System.out.println("No se encontró combinación. Refrescando.");
+            }
+        } while (!existsCombination());
     }
 
     public void setBoardColor(BallColor color) {
         for (int y = 0; y < size; y++)
             for (int x = 0; x < size; x++)
                 board[x][y].setBallColor(color);
+    }
+
+    private boolean existsCombination() {
+        return getCombination() != null;
+    }
+
+    /**
+     * This method marks the balls that form a combination. This should only
+     * be called during game over so that the user can see the combination that
+     * he or she missed before the game runs into game over.
+     */
+    public void markCombination() {
+        Bounds unseenBounds = getCombination();
+        if (unseenBounds == null) {
+            return;
+        }
+        for (int x = unseenBounds.minX; x <= unseenBounds.maxX; x++) {
+            for (int y = unseenBounds.minY; y <= unseenBounds.maxY; y++) {
+                board[x][y].addAction(Actions.sequence(
+                        Actions.scaleTo(0.5f, 0.5f),
+                        Actions.delay(1f),
+                        Actions.scaleTo(1f, 1f)
+                ));
+            }
+        }
+    }
+
+    private Bounds getCombination() {
+        for (int y = 0; y < board.length - 1; y++) {
+            for (int x = 0; x < board.length - 1; x++) {
+                int targetX = -1, targetY = -1;
+                BallColor reference = board[x][y].getBallColor();
+                for (int i = x + 1; i < size; i++) {
+                    if (board[i][y].getBallColor() == reference) {
+                        targetX = i;
+                        break;
+                    }
+                }
+                if (targetX == -1) {
+                    continue;
+                }
+                for (int j = y + 1; j < size; j++) {
+                    if (board[x][j].getBallColor() == reference) {
+                        targetY = j;
+                        break;
+                    }
+                }
+                if (targetY == -1) {
+                    continue;
+                }
+                if (board[targetX][targetY].getBallColor() == reference) {
+                    return new Bounds(x, y, targetX, targetY);
+                }
+            }
+        }
+        return null;
     }
 }

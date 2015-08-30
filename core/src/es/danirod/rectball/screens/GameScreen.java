@@ -1,6 +1,7 @@
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -109,7 +110,6 @@ public class GameScreen extends AbstractScreen {
                     }
                 })
         ));
-
         for (int y = 0; y < board.getSize(); y++) {
             for (int x = 0; x < board.getSize(); x++) {
                 allBalls[x][y].addAction(Actions.sequence(
@@ -119,7 +119,6 @@ public class GameScreen extends AbstractScreen {
                 ));
             }
         }
-
         resizeScene(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.input.setInputProcessor(stage);
     }
@@ -147,7 +146,7 @@ public class GameScreen extends AbstractScreen {
 
         timer.setRunning(false);
         board.setTouchable(Touchable.disabled);
-        board.setBoardColor(BallColor.GRAY);
+        board.markCombination();
 
         game.player.playSound(SoundCode.GAME_OVER);
 
@@ -161,15 +160,23 @@ public class GameScreen extends AbstractScreen {
                 float desplY = -height - MathUtils.random(0, height / 4);
                 float scaling = MathUtils.random(0.3f, 0.7f);
                 float desplTime = MathUtils.random(0.5f, 1.5f);
-                currentBall.addAction(Actions.parallel(
-                        Actions.moveBy(desplX, desplY, desplTime),
-                        Actions.scaleBy(scaling, scaling, desplTime)
-                ));
+                currentBall.addAction(Actions.sequence(
+                        Actions.delay(2f),
+                        Actions.run(new Runnable() {
+                            @Override
+                            public void run() {
+                                board.setBoardColor(BallColor.GRAY);
+                            }
+                        }),
+                        Actions.parallel(
+                                Actions.moveBy(desplX, desplY, desplTime),
+                                Actions.scaleBy(scaling, scaling, desplTime)
+                        )));
             }
         }
 
         stage.addAction(Actions.sequence(
-                Actions.delay(2),
+                Actions.delay(4f),
                 Actions.run(new Runnable() {
 
                     @Override
