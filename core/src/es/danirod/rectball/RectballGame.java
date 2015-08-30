@@ -7,6 +7,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.HashMap;
@@ -46,6 +47,7 @@ public class RectballGame extends Game {
         manager = new AssetManager();
         manager.load("board/normal.png", Texture.class);
         manager.load("board/colorblind.png", Texture.class);
+        manager.load("fonts/scores.fnt", BitmapFont.class);
         manager.load("sound/fail.ogg", Sound.class);
         manager.load("sound/gameover.ogg", Sound.class);
         manager.load("sound/select.ogg", Sound.class);

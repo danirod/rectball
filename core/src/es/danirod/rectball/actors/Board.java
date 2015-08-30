@@ -160,7 +160,7 @@ public class Board extends Group {
                 int rows = bounds.maxY - bounds.minY + 1;
                 int score = cols * rows;
 
-                screen.score.setValue(screen.score.getValue() + score);
+                screen.score(score);
                 screen.timer.setSeconds(screen.timer.getSeconds() + 5);
 
                 player.playSound(SoundCode.SUCCESS);

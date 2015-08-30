@@ -1,12 +1,16 @@
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import es.danirod.rectball.RectballGame;
@@ -24,11 +28,13 @@ public class GameScreen extends AbstractScreen {
 
     public Board board;
 
-    public Value score;
+    public Label score;
 
     public Timer timer;
 
     private Value countdown;
+
+    private int valueScore = 0;
 
     public GameScreen(RectballGame game) {
         super(game);
@@ -42,7 +48,7 @@ public class GameScreen extends AbstractScreen {
     @Override
     public void show() {
         stage = new Stage(new ScreenViewport());
-
+        
         // Set up the board.
         String file = game.settings.isColorblind() ? "colorblind" : "normal";
         Texture sheet = game.manager.get("board/" + file + ".png");
@@ -60,7 +66,8 @@ public class GameScreen extends AbstractScreen {
 
         // Set up the score
         Texture numbers = game.manager.get("scores.png");
-        score = new Value(numbers, 6, 0);
+        score = buildScoreLabel();
+        score.setText(buildScore(valueScore, 6));
         stage.addActor(score);
 
         // Set up the timer
@@ -125,13 +132,14 @@ public class GameScreen extends AbstractScreen {
             Gdx.gl.glClearColor(0.8f, 0.5f, 0.6f, 1f);
         }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stage.getViewport().apply();
         stage.act(delta);
         stage.draw();
     }
 
     public void gameOver() {
         // Update the score... and the record.
-        long lastScore = score.getValue();
+        long lastScore = Long.parseLong(score.getText().toString());
         game.scores.setLastScore(lastScore);
         if (lastScore > game.scores.getHighestScore()) {
             game.scores.setHighestScore(lastScore);
@@ -189,6 +197,15 @@ public class GameScreen extends AbstractScreen {
         countdown.setSize(0.5f * minSize, 0.5f * minSize);
         countdown.setX((width - countdown.getWidth()) / 2);
         countdown.setY((height - countdown.getHeight()) / 2);
+
+        // Calculate the height that this has to be rendered at.
+        int fontScale = 1;
+        score.setFontScale(fontScale);
+        while (score.getPrefWidth() <= score.getWidth() * 0.9
+                && score.getPrefHeight() <= score.getHeight() * 0.9) {
+            score.setFontScale(++fontScale);
+        }
+        score.setFontScale(Math.max(1, fontScale - 1));
     }
 
     private void horizontalResize(int width, int height) {
@@ -220,5 +237,26 @@ public class GameScreen extends AbstractScreen {
         float boardHeight = timer.getY() * 0.9f;
         board.setSize(boardWidth, boardHeight);
         board.setPosition(width * 0.05f, height * 0.05f);
+    }
+
+    private Label buildScoreLabel() {
+        BitmapFont font = game.manager.get("fonts/scores.fnt");
+        Label.LabelStyle style = new Label.LabelStyle(font, Color.WHITE);
+        Label label = new Label("0", style);
+        label.setAlignment(Align.center);
+        return label;
+    }
+
+    private String buildScore(int value, int digits) {
+        String strValue = Integer.toString(value);
+        while (strValue.length() < digits) {
+            strValue = "0" + strValue;
+        }
+        return strValue;
+    }
+
+    public void score(int score) {
+        valueScore += score;
+        this.score.setText(buildScore(valueScore, 6));
     }
 }
