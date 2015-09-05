@@ -131,6 +131,12 @@ public class GameScreen extends AbstractScreen {
             Gdx.gl.glClearColor(0.8f, 0.5f, 0.6f, 1f);
         }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // Cheto
+        if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
+            board.markCombination();
+        }
+
         stage.getViewport().apply();
         stage.act(delta);
         stage.draw();
