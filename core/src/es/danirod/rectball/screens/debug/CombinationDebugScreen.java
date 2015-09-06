@@ -103,11 +103,7 @@ public class CombinationDebugScreen extends GameScreen {
     }
 
     protected void test() {
-        if (board.markCombination()) {
-            game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
-        } else {
-            game.player.playSound(SoundPlayer.SoundCode.FAIL);
-        }
+        board.markCombination();
     }
 
     @Override
