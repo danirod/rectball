@@ -35,7 +35,7 @@ public class GameScreen extends AbstractScreen {
 
     private Value countdown;
 
-    private int valueScore = 0;
+    private int valueScore;
 
     public GameScreen(RectballGame game) {
         super(game);
@@ -48,6 +48,9 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void show() {
+        // Reset score
+        valueScore = 0;
+
         stage = new Stage(new ScreenViewport());
         
         // Set up the board.
@@ -73,7 +76,7 @@ public class GameScreen extends AbstractScreen {
 
         // Set up the timer
         Texture timerTexture = game.manager.get("timer.png");
-        timer = new Timer(this, 30, timerTexture);
+        timer = new Timer(this, 10, timerTexture);
         timer.setRunning(false);
         stage.addActor(timer);
 
