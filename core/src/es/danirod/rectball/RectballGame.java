@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import es.danirod.rectball.screens.*;
+import es.danirod.rectball.screens.debug.CombinationDebugScreen;
+import es.danirod.rectball.screens.debug.DebugScreen;
 import es.danirod.rectball.settings.Scores;
 import es.danirod.rectball.settings.Settings;
 import es.danirod.rectball.utils.SoundPlayer;
@@ -43,6 +45,8 @@ public class RectballGame extends Game {
         this.addScreen(new WelcomeScreen(this));
         this.addScreen(new SettingsScreen(this));
         this.addScreen(new LoadingScreen(this));
+        this.addScreen(new DebugScreen(this));
+        this.addScreen(new CombinationDebugScreen(this));
 
         manager = new AssetManager();
         manager.load("board/normal.png", Texture.class);

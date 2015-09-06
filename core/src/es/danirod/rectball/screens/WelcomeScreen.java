@@ -1,6 +1,8 @@
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -11,18 +13,41 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.utils.KonamiCodeListener;
+import es.danirod.rectball.utils.KonamiCodeProcessor;
 import es.danirod.rectball.utils.SoundPlayer;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
-public class WelcomeScreen extends MenuScreen {
+public class WelcomeScreen extends MenuScreen implements KonamiCodeListener {
 
     public WelcomeScreen(RectballGame game) {
         super(game);
     }
 
+    private static final int[] DEBUG_KEYS = new int[] {
+            Input.Keys.UP,
+            Input.Keys.UP,
+            Input.Keys.DOWN,
+            Input.Keys.DOWN,
+            Input.Keys.LEFT,
+            Input.Keys.RIGHT,
+            Input.Keys.LEFT,
+            Input.Keys.RIGHT,
+            Input.Keys.B,
+            Input.Keys.A
+    };
+
+    private int debugStatus = 0;
+
     @Override
     public void show() {
         super.show();
+
+        // Prepare Konami Code.
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(new KonamiCodeProcessor(this));
+        multiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(multiplexer);
 
         // Build styles for title and version
         BitmapFont titleFont = boldGenerator.generateFont(buildFontStyle(100, 4, 2));
@@ -79,5 +104,11 @@ public class WelcomeScreen extends MenuScreen {
     @Override
     public int getID() {
         return 3;
+    }
+
+    @Override
+    public void onKonamiCodePressed() {
+        System.out.println("Código Konami Presionado.");
+        game.setScreen(10);
     }
 }
