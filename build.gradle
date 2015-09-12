@@ -11,8 +11,11 @@ buildscript {
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
+    apply plugin: "maven"
 
-    version = '1.0'
+    archivesBaseName = 'rectball'
+    version = '0.0.10'
+
     ext {
         appName = 'Rectball'
         gdxVersion = '1.6.4'
