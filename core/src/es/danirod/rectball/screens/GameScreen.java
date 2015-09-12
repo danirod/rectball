@@ -65,6 +65,9 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void show() {
+        // Capture Back button so that the game doesn't minimize on Android.
+        Gdx.input.setCatchBackKey(true);
+
         // Reset score
         valueScore = 0;
 
@@ -141,6 +144,12 @@ public class GameScreen extends AbstractScreen {
         }
         resizeScene(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.input.setInputProcessor(stage);
+    }
+
+    @Override
+    public void hide() {
+        // Restore original back button functionality.
+        Gdx.input.setCatchBackKey(false);
     }
 
     @Override

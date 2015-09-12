@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import es.danirod.rectball.model.BallColor;
 import es.danirod.rectball.model.Bounds;
+import es.danirod.rectball.model.CombinationFinder;
 import es.danirod.rectball.model.Selection;
 import es.danirod.rectball.screens.GameScreen;
 import es.danirod.rectball.utils.SoundPlayer;
@@ -264,33 +265,7 @@ public class Board extends Group {
     }
 
     private Bounds getCombination() {
-        for (int y = 0; y < board.length - 1; y++) {
-            for (int x = 0; x < board.length - 1; x++) {
-                int targetX = -1, targetY = -1;
-                BallColor reference = board[x][y].getBallColor();
-                for (int i = x + 1; i < size; i++) {
-                    if (board[i][y].getBallColor() == reference) {
-                        targetX = i;
-                        break;
-                    }
-                }
-                if (targetX == -1) {
-                    continue;
-                }
-                for (int j = y + 1; j < size; j++) {
-                    if (board[x][j].getBallColor() == reference) {
-                        targetY = j;
-                        break;
-                    }
-                }
-                if (targetY == -1) {
-                    continue;
-                }
-                if (board[targetX][targetY].getBallColor() == reference) {
-                    return new Bounds(x, y, targetX, targetY);
-                }
-            }
-        }
-        return null;
+        CombinationFinder finder = new CombinationFinder(board);
+        return finder.getCombination();
     }
 }
