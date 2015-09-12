@@ -42,7 +42,7 @@ import es.danirod.rectball.utils.SoundPlayer;
  */
 public class RectballGame extends Game {
 
-    public static final String VERSION = "Rectball v0.0.7";
+    public static final String VERSION = "Rectball 0.0.10";
 
     private Map<Integer, AbstractScreen> screens;
 
