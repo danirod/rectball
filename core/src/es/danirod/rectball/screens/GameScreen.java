@@ -155,7 +155,6 @@ public class GameScreen extends AbstractScreen {
 
         timer.setRunning(false);
         board.setTouchable(Touchable.disabled);
-        board.markCombination();
 
         game.player.playSound(SoundCode.GAME_OVER);
 
@@ -170,7 +169,6 @@ public class GameScreen extends AbstractScreen {
                 float scaling = MathUtils.random(0.3f, 0.7f);
                 float desplTime = MathUtils.random(0.5f, 1.5f);
                 currentBall.addAction(Actions.sequence(
-                        Actions.delay(2f),
                         Actions.run(new Runnable() {
                             @Override
                             public void run() {
@@ -185,7 +183,7 @@ public class GameScreen extends AbstractScreen {
         }
 
         stage.addAction(Actions.sequence(
-                Actions.delay(4f),
+                Actions.delay(2f),
                 Actions.run(new Runnable() {
 
                     @Override
