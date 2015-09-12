@@ -25,6 +25,17 @@ task dist(type: Jar) {
     }
 }
 
+task zipDist(type: Zip, dependsOn: dist) {
+    from fileTree(".."), {
+        include 'COPYING'
+        include 'AUTHORS'
+        include 'README.md'
+    }
+    from fileTree("build/libs/") {
+        include '*.jar'
+    }
+}
+
 dist.dependsOn classes
 
 eclipse {
