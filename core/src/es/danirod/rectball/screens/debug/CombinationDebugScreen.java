@@ -54,19 +54,14 @@ public class CombinationDebugScreen extends GameScreen {
 
     private BitmapFont font;
 
-    protected static NinePatchDrawable buildPatch(TextureRegion r, int margin) {
-        NinePatch patch = new NinePatch(r, margin, margin, margin, margin);
-        return new NinePatchDrawable(patch);
-    }
-
     @Override
     public void show() {
         // Set up button style.
         Texture buttonTex = game.manager.get("ui/button.png", Texture.class);
         TextureRegion normal = new TextureRegion(buttonTex, 0, 0, 128, 128);
         TextureRegion hold = new TextureRegion(buttonTex, 128, 0, 128, 128);
-        NinePatchDrawable normalPatch = buildPatch(normal, 32);
-        NinePatchDrawable holdPatch = buildPatch(hold, 32);
+        NinePatchDrawable normalPatch = game.style.buildPatch(normal, 32);
+        NinePatchDrawable holdPatch = game.style.buildPatch(hold, 32);
         FileHandle normalFont = Gdx.files.internal("fonts/Play-Regular.ttf");
         FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(normalFont);
         FreeTypeFontParameter fpar = new FreeTypeFontParameter();

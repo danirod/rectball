@@ -35,6 +35,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.utils.StyleFactory;
 
 /**
  * Abstract base screen that should use screens related to menus, such as
@@ -74,13 +75,11 @@ public abstract class MenuScreen extends AbstractScreen {
         Texture tex = game.manager.get("ui/button.png", Texture.class);
         TextureRegion normalRegion = new TextureRegion(tex, 0, 0, 128, 128);
         TextureRegion hoverRegion = new TextureRegion(tex, 128, 0, 128, 128);
-        NinePatchDrawable normalPatch = buildPatch(normalRegion, 32);
-        NinePatchDrawable hoverPatch = buildPatch(hoverRegion, 32);
 
         // Set up the generic style.
-        BitmapFont genericFont = fontGenerator.generateFont(buildFontStyle(48, 2, 1));
-        genericLabelStyle = new LabelStyle(genericFont, Color.WHITE);
-        genericButtonStyle = new TextButtonStyle(normalPatch, hoverPatch, hoverPatch, genericFont);
+        BitmapFont font = StyleFactory.buildFont("fonts/Play-Regular.ttf", StyleFactory.buildFontStyle(48, 2, 1));
+        genericLabelStyle = new LabelStyle(font, Color.WHITE);
+        genericButtonStyle = StyleFactory.buildTextButtonStyle(normalRegion, hoverRegion, 32, font);
 
         stage = new Stage(new FitViewport(480, 640));
         Gdx.input.setInputProcessor(stage);
@@ -104,37 +103,6 @@ public abstract class MenuScreen extends AbstractScreen {
     public void dispose() {
         fontGenerator.dispose();
         boldGenerator.dispose();
-    }
-
-    /**
-     * This method builds a NinePatch from a texture region. The margin is
-     * the same for all the borders of the texture region so this should be
-     * used with buttons.
-     *
-     * @param r  texture region to make the nine patch from.
-     * @param margin  margin used to select the areas from the patch.
-     * @return  drawable ninepatch for the given region
-     */
-    protected static NinePatchDrawable buildPatch(TextureRegion r, int margin) {
-        NinePatch patch = new NinePatch(r, margin, margin, margin, margin);
-        return new NinePatchDrawable(patch);
-    }
-
-    /**
-     * This method builds the parameter for setting up fonts.
-     *
-     * @param size  size of the font
-     * @param shadow  size of the shadow
-     * @param border  size of the border
-     * @return  font parameters for the given properties.
-     */
-    protected static FreeTypeFontParameter buildFontStyle(int size, int shadow, int border) {
-        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-        parameter.borderColor = parameter.shadowColor = Color.BLACK;
-        parameter.shadowOffsetX = parameter.shadowOffsetY = shadow;
-        parameter.borderWidth = border;
-        parameter.size = size;
-        return parameter;
     }
 
     /**

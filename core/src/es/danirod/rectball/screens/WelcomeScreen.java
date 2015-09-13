@@ -34,6 +34,7 @@ import es.danirod.rectball.utils.KonamiCodeListener;
 import es.danirod.rectball.utils.KonamiCodeProcessor;
 import es.danirod.rectball.utils.SoundPlayer;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
+import es.danirod.rectball.utils.StyleFactory;
 
 public class WelcomeScreen extends MenuScreen implements KonamiCodeListener {
 
@@ -67,8 +68,8 @@ public class WelcomeScreen extends MenuScreen implements KonamiCodeListener {
         Gdx.input.setInputProcessor(multiplexer);
 
         // Build styles for title and version
-        BitmapFont titleFont = boldGenerator.generateFont(buildFontStyle(100, 4, 2));
-        BitmapFont versionFont = fontGenerator.generateFont(buildFontStyle(25, 0, 1));
+        BitmapFont titleFont = boldGenerator.generateFont(StyleFactory.buildFontStyle(100, 4, 2));
+        BitmapFont versionFont = fontGenerator.generateFont(StyleFactory.buildFontStyle(25, 0, 1));
         LabelStyle titleStyle = new LabelStyle(titleFont, Color.WHITE);
         LabelStyle versionStyle = new LabelStyle(versionFont, Color.WHITE);
 

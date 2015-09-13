@@ -36,6 +36,7 @@ import es.danirod.rectball.screens.debug.DebugScreen;
 import es.danirod.rectball.settings.Scores;
 import es.danirod.rectball.settings.Settings;
 import es.danirod.rectball.utils.SoundPlayer;
+import es.danirod.rectball.utils.StyleFactory;
 
 /**
  * Main class for the game.
@@ -53,6 +54,8 @@ public class RectballGame extends Game {
     public AssetManager manager;
 
     public SoundPlayer player;
+
+    public StyleFactory style;
 
     @Override
     public void create() {
