@@ -54,6 +54,8 @@ public class GameScreen extends AbstractScreen {
 
     private int valueScore;
 
+    private boolean paused;
+
     public GameScreen(RectballGame game) {
         super(game);
     }
@@ -164,6 +166,12 @@ public class GameScreen extends AbstractScreen {
         // Cheto
         if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
             board.markCombination();
+        }
+
+        // Pause the game when you press BACK or ESCAPE.
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) ||
+                Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            setPaused(!paused);
         }
 
         stage.getViewport().apply();
@@ -298,5 +306,17 @@ public class GameScreen extends AbstractScreen {
     public void score(int score) {
         valueScore += score;
         this.score.setText(buildScore(valueScore, 6));
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
+        timer.setRunning(!paused);
+        board.setMasked(paused);
+        board.setTouchable(paused ? Touchable.disabled : Touchable.enabled);
+    }
+
+    @Override
+    public void pause() {
+        setPaused(true);
     }
 }

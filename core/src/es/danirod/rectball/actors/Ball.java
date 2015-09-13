@@ -43,6 +43,11 @@ public class Ball extends Actor {
     private boolean selected = false;
 
     /**
+     * Should the ball be hidden?
+     */
+    private boolean masked = false;
+
+    /**
      * The current color of the ball. The value of this field might change
      * during the game as the user makes rectangles, since making a rectangle
      * shuffles the contents of the enclosed area.
@@ -98,6 +103,19 @@ public class Ball extends Actor {
         this.selected = selected;
     }
 
+    public boolean isMasked() {
+        return masked;
+    }
+
+    public void setMasked(boolean masked) {
+        this.masked = masked;
+        if (masked) {
+            sprite.setRegion(BallColor.GRAY.getRegion(sheet));
+        } else {
+            sprite.setRegion(ballColor.getRegion(sheet));
+        }
+    }
+
     /**
      * Get the color that this ball has at this very moment.
      * @return the current color of this ball.
@@ -117,7 +135,11 @@ public class Ball extends Actor {
         this.ballColor = ballColor;
 
         // Changing the color also changes the sprite used to render the ball.
-        sprite.setRegion(ballColor.getRegion(sheet));
+        if (masked) {
+            sprite.setRegion(BallColor.GRAY.getRegion(sheet));
+        } else {
+            sprite.setRegion(ballColor.getRegion(sheet));
+        }
     }
 
     @Override

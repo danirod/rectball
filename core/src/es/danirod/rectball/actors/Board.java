@@ -110,6 +110,21 @@ public class Board extends Group {
     }
 
     /**
+     * Set whether the board should be masked or not. If the board is masked,
+     * it will be rendered gray. Else, it will be rendered using the actual
+     * colors of the ball.
+     *
+     * @param masked  whether the board should be masked or not.
+     */
+    public void setMasked(boolean masked) {
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                board[x][y].setMasked(masked);
+            }
+        }
+    }
+
+    /**
      * Update the bounds of every ball form this ball using current width and
      * height, and position from the board itself. This method has to be
      * called after the bounds of the board change.
