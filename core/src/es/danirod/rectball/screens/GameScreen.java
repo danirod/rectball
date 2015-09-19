@@ -23,11 +23,23 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -39,6 +51,7 @@ import es.danirod.rectball.actors.Value;
 import es.danirod.rectball.listeners.BallInputListener;
 import es.danirod.rectball.model.BallColor;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
+import es.danirod.rectball.utils.StyleFactory;
 
 public class GameScreen extends AbstractScreen {
 
@@ -56,6 +69,8 @@ public class GameScreen extends AbstractScreen {
 
     private boolean paused;
 
+    private Dialog pauseDialog;
+
     public GameScreen(RectballGame game) {
         super(game);
     }
@@ -70,8 +85,9 @@ public class GameScreen extends AbstractScreen {
         // Capture Back button so that the game doesn't minimize on Android.
         Gdx.input.setCatchBackKey(true);
 
-        // Reset score
+        // Reset data
         valueScore = 0;
+        paused = false;
 
         stage = new Stage(new ScreenViewport());
         
@@ -103,6 +119,46 @@ public class GameScreen extends AbstractScreen {
         stage.addActor(timer);
 
         board.setTouchable(Touchable.disabled);
+
+        // Set up the pause dialog.
+        Texture dialogTex = new Texture("ui/button.png");
+        TextureRegion dialogReg = new TextureRegion(dialogTex, 0, 0, 128, 128);
+        TextureRegion selectedButton = new TextureRegion(dialogTex, 128, 0, 128, 128);
+        NinePatchDrawable dialogBg = StyleFactory.buildPatch(dialogReg, 32);
+        FreeTypeFontParameter titlePar = StyleFactory.buildFontStyle(32, 0, 2);
+        BitmapFont titleFont = StyleFactory.buildFont("fonts/Play-Bold.ttf", titlePar);
+        WindowStyle pauseStyle = new WindowStyle(titleFont,
+                Color.WHITE, dialogBg);
+        BitmapFont regularFont = StyleFactory.buildFont("fonts/Play-Regular.ttf", titlePar);
+
+        // Create buttons.
+        TextButtonStyle leaveButtonStyle = StyleFactory.buildTextButtonStyle(dialogReg,
+                selectedButton, 32, regularFont);
+
+        TextButton yesQuit = new TextButton("Yes", leaveButtonStyle);
+        TextButton noQuit = new TextButton("No", leaveButtonStyle);
+
+        yesQuit.addCaptureListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                timer.setRunning(false);
+                gameOver();
+            }
+        });
+
+        noQuit.addCaptureListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                setPaused(false);
+            }
+        });
+
+        pauseDialog = new Dialog("Leave game?", pauseStyle);
+        pauseDialog.add(yesQuit).expandX();
+        pauseDialog.add(noQuit).expandX().row();
+
+        stage.addActor(pauseDialog);
+        pauseDialog.setVisible(false);
 
         // Set up the countdown
         countdown = new Value(numbers, 1, 3);
@@ -254,6 +310,12 @@ public class GameScreen extends AbstractScreen {
             score.setFontScale(++fontScale);
         }
         score.setFontScale(Math.max(1, fontScale - 1));
+
+        // The pause dialog should be centered and have enough size
+        // to let the button and the labels fit.
+        pauseDialog.setSize(400, 200);
+        pauseDialog.setX(width / 2 - pauseDialog.getWidth() / 2);
+        pauseDialog.setY(height / 2 - pauseDialog.getHeight() / 2);
     }
 
     private void horizontalResize(int width, int height) {
@@ -289,7 +351,7 @@ public class GameScreen extends AbstractScreen {
 
     private Label buildScoreLabel() {
         BitmapFont font = game.manager.get("fonts/scores.fnt");
-        Label.LabelStyle style = new Label.LabelStyle(font, Color.WHITE);
+        LabelStyle style = new LabelStyle(font, Color.WHITE);
         Label label = new Label("0", style);
         label.setAlignment(Align.center);
         return label;
@@ -313,6 +375,7 @@ public class GameScreen extends AbstractScreen {
         timer.setRunning(!paused);
         board.setMasked(paused);
         board.setTouchable(paused ? Touchable.disabled : Touchable.enabled);
+        pauseDialog.setVisible(paused);
     }
 
     @Override
