@@ -81,6 +81,7 @@ public class RectballGame extends Game {
         manager.load("ui/button.png", Texture.class);
         manager.load("scores.png", Texture.class);
         manager.load("timer.png", Texture.class);
+        manager.load("ui/leave.png", Texture.class);
 
         for (Map.Entry<Integer, AbstractScreen> screen : screens.entrySet()) {
             screen.getValue().load();

@@ -40,6 +40,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -90,6 +91,7 @@ public class GameScreen extends AbstractScreen {
         paused = false;
 
         stage = new Stage(new ScreenViewport());
+        //stage.setDebugAll(true);
 
         // Set up the board.
         String file = game.settings.isColorblind() ? "colorblind" : "normal";
@@ -121,18 +123,20 @@ public class GameScreen extends AbstractScreen {
         board.setTouchable(Touchable.disabled);
 
         // Set up the pause dialog.
-        Texture dialogTex = new Texture("ui/button.png");
-        TextureRegion dialogReg = new TextureRegion(dialogTex, 0, 0, 128, 128);
-        TextureRegion selectedButton = new TextureRegion(dialogTex, 128, 0, 128, 128);
-        NinePatchDrawable dialogBg = StyleFactory.buildPatch(dialogReg, 32);
-        FreeTypeFontParameter titlePar = StyleFactory.buildFontStyle(32, 0, 2);
+        Texture dialogTexture = new Texture("ui/leave.png");
+        TextureRegion dialogRegion = new TextureRegion(dialogTexture);
+        TextureRegionDrawable dialogDrawable = new TextureRegionDrawable(dialogRegion);
+
+        Texture buttonTexture = new Texture("ui/button.png");
+        TextureRegion normalButton = new TextureRegion(buttonTexture, 0, 0, 128, 128);
+        TextureRegion selectedButton = new TextureRegion(buttonTexture, 128, 0, 128, 128);
+        FreeTypeFontParameter titlePar = StyleFactory.buildFontStyle(36, 0, 0);
         BitmapFont titleFont = StyleFactory.buildFont("fonts/Play-Bold.ttf", titlePar);
-        WindowStyle pauseStyle = new WindowStyle(titleFont,
-                Color.WHITE, dialogBg);
+        WindowStyle pauseStyle = new WindowStyle(titleFont, Color.WHITE, dialogDrawable);
         BitmapFont regularFont = StyleFactory.buildFont("fonts/Play-Regular.ttf", titlePar);
 
         // Create buttons.
-        TextButtonStyle leaveButtonStyle = StyleFactory.buildTextButtonStyle(dialogReg,
+        TextButtonStyle leaveButtonStyle = StyleFactory.buildTextButtonStyle(normalButton,
                 selectedButton, 32, regularFont);
 
         TextButton yesQuit = new TextButton("Yes", leaveButtonStyle);
@@ -153,9 +157,16 @@ public class GameScreen extends AbstractScreen {
             }
         });
 
-        pauseDialog = new Dialog("Leave game?", pauseStyle);
-        pauseDialog.add(yesQuit).expandX();
-        pauseDialog.add(noQuit).expandX().row();
+        pauseDialog = new Dialog("", pauseStyle);
+
+        LabelStyle titleStyle = new LabelStyle(titleFont, Color.WHITE);
+        Label titleLabel = new Label("Leave game?", titleStyle);
+        pauseDialog.pad(20).padTop(0);
+        pauseDialog.row();
+        pauseDialog.add(titleLabel).colspan(2).expandX().expandY().row();
+
+        pauseDialog.add(yesQuit).expandX().height(80);
+        pauseDialog.add(noQuit).expandX().height(80).row();
 
         stage.addActor(pauseDialog);
         pauseDialog.setVisible(false);
@@ -184,7 +195,7 @@ public class GameScreen extends AbstractScreen {
                 Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        timer.setRunning(true);
+                        timer.setRunning(!paused);
                         countdown.remove();
                         board.randomize();
                         board.setTouchable(Touchable.enabled);
