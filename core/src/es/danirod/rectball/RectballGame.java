@@ -43,7 +43,7 @@ import es.danirod.rectball.utils.StyleFactory;
  */
 public class RectballGame extends Game {
 
-    public static final String VERSION = "Rectball 0.0.11";
+    public static final String VERSION = "Rectball 0.1.0";
 
     private Map<Integer, AbstractScreen> screens;
 

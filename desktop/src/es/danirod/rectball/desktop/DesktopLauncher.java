@@ -17,6 +17,7 @@
  */
 package es.danirod.rectball.desktop;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import es.danirod.rectball.RectballGame;
@@ -26,6 +27,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 480;
 		config.height = 640;
+		config.title = RectballGame.VERSION;
 		config.useHDPI = true;
 		new LwjglApplication(new RectballGame(), config);
 	}
