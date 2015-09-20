@@ -90,7 +90,7 @@ public class GameScreen extends AbstractScreen {
         paused = false;
 
         stage = new Stage(new ScreenViewport());
-        
+
         // Set up the board.
         String file = game.settings.isColorblind() ? "colorblind" : "normal";
         Texture sheet = game.manager.get("board/" + file + ".png");
@@ -368,6 +368,30 @@ public class GameScreen extends AbstractScreen {
     public void score(int score) {
         valueScore += score;
         this.score.setText(buildScore(valueScore, 6));
+
+        BitmapFont font = game.manager.get("fonts/scores.fnt");
+        LabelStyle style = new LabelStyle(font, Color.WHITE);
+        final Label scorelabel = new Label(Integer.toString(score), style);
+        scorelabel.setAlignment(Align.center);
+
+        float ballSize = board.getWidth() / board.getSize();
+        scorelabel.setSize(ballSize, ballSize);
+        scorelabel.setX(Gdx.graphics.getWidth() / 2 - scorelabel.getWidth() / 2);
+        scorelabel.setY(Gdx.graphics.getHeight() / 2 - scorelabel.getHeight() / 2);
+        scorelabel.setFontScale(5);
+        scorelabel.addAction(Actions.sequence(
+                Actions.parallel(
+                        Actions.moveBy(0, 100, 1),
+                        Actions.fadeOut(1)
+                ),
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        scorelabel.remove();
+                    }
+                })
+        ));
+        stage.addActor(scorelabel);
     }
 
     public void setPaused(boolean paused) {
