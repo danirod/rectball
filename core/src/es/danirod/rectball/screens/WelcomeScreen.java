@@ -81,10 +81,10 @@ public class WelcomeScreen extends MenuScreen implements KonamiCodeListener {
         Label version = new Label(RectballGame.VERSION, versionStyle);
 
         // Position the actors in the screen.
-        table.add(title).pad(20).align(Align.center).row();
+        table.add(title).pad(20).padBottom(100).align(Align.center).row();
         table.add(play).pad(20).fillX().height(100).row();
         table.add(settings).pad(20).fillX().height(100).row();
-        table.add(statistics).pad(20).fillX().height(100).row();
+        // table.add(statistics).pad(20).fillX().height(100).row();
         table.add(version).pad(20).align(Align.bottomRight).expandY().row();
 
         // Then add the capture listeners for the buttons.
