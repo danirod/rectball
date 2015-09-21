@@ -141,6 +141,10 @@ public class GameScreen extends AbstractScreen {
         pauseDialog.addYesButtonCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                // make dialog invisible
+                PauseDialog dialog = (PauseDialog)actor.getParent();
+                dialog.setVisible(false);
+
                 timer.setRunning(false);
                 gameOver();
             }
@@ -148,6 +152,10 @@ public class GameScreen extends AbstractScreen {
         pauseDialog.addNoButtonCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                // force uncheck
+                TextButton button = (TextButton)actor;
+                button.setChecked(false);
+
                 setPaused(false);
             }
         });
