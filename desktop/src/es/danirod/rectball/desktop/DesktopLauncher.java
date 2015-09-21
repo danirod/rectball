@@ -29,6 +29,7 @@ public class DesktopLauncher {
 		config.height = 640;
 		config.title = RectballGame.VERSION;
 		config.useHDPI = true;
+		config.addIcon("icon.png", Files.FileType.Internal);
 		new LwjglApplication(new RectballGame(), config);
 	}
 }
