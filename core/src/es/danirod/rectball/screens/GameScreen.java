@@ -24,22 +24,18 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -49,6 +45,7 @@ import es.danirod.rectball.actors.Ball;
 import es.danirod.rectball.actors.Board;
 import es.danirod.rectball.actors.Timer;
 import es.danirod.rectball.actors.Value;
+import es.danirod.rectball.dialogs.PauseDialog;
 import es.danirod.rectball.listeners.BallInputListener;
 import es.danirod.rectball.model.BallColor;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
@@ -70,7 +67,7 @@ public class GameScreen extends AbstractScreen {
 
     private boolean paused;
 
-    private Dialog pauseDialog;
+    private PauseDialog pauseDialog;
 
     public GameScreen(RectballGame game) {
         super(game);
@@ -138,35 +135,22 @@ public class GameScreen extends AbstractScreen {
         // Create buttons.
         TextButtonStyle leaveButtonStyle = StyleFactory.buildTextButtonStyle(normalButton,
                 selectedButton, 32, regularFont);
+        LabelStyle titleStyle = new LabelStyle(titleFont, Color.WHITE);
 
-        TextButton yesQuit = new TextButton("Yes", leaveButtonStyle);
-        TextButton noQuit = new TextButton("No", leaveButtonStyle);
-
-        yesQuit.addCaptureListener(new ChangeListener() {
+        pauseDialog = new PauseDialog(pauseStyle, titleStyle, leaveButtonStyle);
+        pauseDialog.addYesButtonCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 timer.setRunning(false);
                 gameOver();
             }
         });
-
-        noQuit.addCaptureListener(new ChangeListener() {
+        pauseDialog.addNoButtonCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 setPaused(false);
             }
         });
-
-        pauseDialog = new Dialog("", pauseStyle);
-
-        LabelStyle titleStyle = new LabelStyle(titleFont, Color.WHITE);
-        Label titleLabel = new Label("Leave game?", titleStyle);
-        pauseDialog.pad(20).padTop(0);
-        pauseDialog.row();
-        pauseDialog.add(titleLabel).colspan(2).expandX().expandY().row();
-
-        pauseDialog.add(yesQuit).expandX().height(80);
-        pauseDialog.add(noQuit).expandX().height(80).row();
 
         stage.addActor(pauseDialog);
         pauseDialog.setVisible(false);
