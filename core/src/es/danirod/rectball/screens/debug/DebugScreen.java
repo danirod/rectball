@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.screens.MenuScreen;
+import es.danirod.rectball.screens.Screens;
 import es.danirod.rectball.utils.SoundPlayer;
 
 public class DebugScreen extends MenuScreen {
@@ -46,7 +47,7 @@ public class DebugScreen extends MenuScreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
-                game.setScreen(11);
+                game.setScreen(Screens.COMBINATION_TEST);
             }
         });
 
@@ -55,7 +56,7 @@ public class DebugScreen extends MenuScreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.player.playSound(SoundPlayer.SoundCode.FAIL);
-                game.setScreen(3);
+                game.setScreen(Screens.MAIN_MENU);
             }
         });
 
@@ -66,7 +67,7 @@ public class DebugScreen extends MenuScreen {
 
     @Override
     public int getID() {
-        return 10;
+        return Screens.DEBUG;
     }
 
     @Override

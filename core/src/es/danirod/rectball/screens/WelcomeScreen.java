@@ -32,7 +32,6 @@ import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.utils.KonamiCodeListener;
 import es.danirod.rectball.utils.KonamiCodeProcessor;
-import es.danirod.rectball.utils.SoundPlayer;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 import es.danirod.rectball.utils.StyleFactory;
 
@@ -92,14 +91,14 @@ public class WelcomeScreen extends MenuScreen implements KonamiCodeListener {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.player.playSound(SoundCode.SUCCESS);
-                game.setScreen(1);
+                game.setScreen(Screens.GAME);
             }
         });
         settings.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.player.playSound(SoundCode.SUCCESS);
-                game.setScreen(4);
+                game.setScreen(Screens.SETTINGS);
             }
         });
         statistics.addCaptureListener(new ChangeListener() {
@@ -121,12 +120,12 @@ public class WelcomeScreen extends MenuScreen implements KonamiCodeListener {
 
     @Override
     public int getID() {
-        return 3;
+        return Screens.MAIN_MENU;
     }
 
     @Override
     public void onKonamiCodePressed() {
         System.out.println("Código Konami Presionado.");
-        game.setScreen(10);
+        game.setScreen(Screens.DEBUG);
     }
 }

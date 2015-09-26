@@ -23,7 +23,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
@@ -38,6 +37,7 @@ import es.danirod.rectball.actors.Ball;
 import es.danirod.rectball.actors.Board;
 import es.danirod.rectball.listeners.DebugBallListener;
 import es.danirod.rectball.screens.GameScreen;
+import es.danirod.rectball.screens.Screens;
 import es.danirod.rectball.utils.SoundPlayer;
 
 public class CombinationDebugScreen extends GameScreen {
@@ -85,7 +85,7 @@ public class CombinationDebugScreen extends GameScreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.player.playSound(SoundPlayer.SoundCode.UNSELECT);
-                game.setScreen(10);
+                game.setScreen(Screens.DEBUG);
             }
         });
         testButton.addCaptureListener(new ChangeListener() {
@@ -125,7 +125,7 @@ public class CombinationDebugScreen extends GameScreen {
 
     @Override
     public int getID() {
-        return 11;
+        return Screens.COMBINATION_TEST;
     }
 
     @Override

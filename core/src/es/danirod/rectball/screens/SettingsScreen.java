@@ -26,7 +26,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.Switch;
-import es.danirod.rectball.utils.SoundPlayer;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
 public class SettingsScreen extends MenuScreen {
@@ -74,14 +73,14 @@ public class SettingsScreen extends MenuScreen {
                 game.player.playSound(SoundCode.FAIL);
 
                 game.settings.save();
-                game.setScreen(3);
+                game.setScreen(Screens.MAIN_MENU);
             }
         });
     }
 
     @Override
     public int getID() {
-        return 4;
+        return Screens.SETTINGS;
     }
 
     @Override

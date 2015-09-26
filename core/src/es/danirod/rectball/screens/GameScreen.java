@@ -77,7 +77,7 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public int getID() {
-        return 1;
+        return Screens.GAME;
     }
 
     @Override
@@ -294,7 +294,7 @@ public class GameScreen extends AbstractScreen {
 
                     @Override
                     public void run() {
-                        game.setScreen(2);
+                        game.setScreen(Screens.GAME_OVER);
                     }
                 })
         ));
