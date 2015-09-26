@@ -18,7 +18,6 @@
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -40,21 +39,6 @@ public class WelcomeScreen extends MenuScreen implements KonamiCodeListener {
     public WelcomeScreen(RectballGame game) {
         super(game);
     }
-
-    private static final int[] DEBUG_KEYS = new int[] {
-            Input.Keys.UP,
-            Input.Keys.UP,
-            Input.Keys.DOWN,
-            Input.Keys.DOWN,
-            Input.Keys.LEFT,
-            Input.Keys.RIGHT,
-            Input.Keys.LEFT,
-            Input.Keys.RIGHT,
-            Input.Keys.B,
-            Input.Keys.A
-    };
-
-    private int debugStatus = 0;
 
     @Override
     public void show() {
@@ -125,7 +109,6 @@ public class WelcomeScreen extends MenuScreen implements KonamiCodeListener {
 
     @Override
     public void onKonamiCodePressed() {
-        System.out.println("Código Konami Presionado.");
         game.setScreen(Screens.DEBUG);
     }
 }
