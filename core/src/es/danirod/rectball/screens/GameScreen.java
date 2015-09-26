@@ -87,6 +87,7 @@ public class GameScreen extends AbstractScreen {
 
         // Reset data
         valueScore = 0;
+        game.aliveTime = 0;
         paused = false;
 
         stage = new Stage(new ScreenViewport());
@@ -229,6 +230,10 @@ public class GameScreen extends AbstractScreen {
             board.markCombination();
         }
 
+        if (timer.isRunning()) {
+            game.aliveTime += delta;
+        }
+
         // Pause the game when you press BACK or ESCAPE.
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) ||
                 Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -243,10 +248,7 @@ public class GameScreen extends AbstractScreen {
     public void gameOver() {
         // Update the score... and the record.
         long lastScore = Long.parseLong(score.getText().toString());
-        game.scores.setLastScore(lastScore);
-        if (lastScore > game.scores.getHighestScore()) {
-            game.scores.setHighestScore(lastScore);
-        }
+        game.scores.addScore(lastScore);
 
         timer.setRunning(false);
         board.setTouchable(Touchable.disabled);

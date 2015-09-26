@@ -45,6 +45,12 @@ public class GameOverScreen extends MenuScreen {
         Label gameOver = newLabel("GAME OVER");
         table.add(gameOver).pad(40).colspan(2).expandX().expandY().align(Align.center).row();
 
+        Label aliveTime = newLabel("Alive: " + (int) game.aliveTime + " s");
+        table.add(aliveTime).pad(20).colspan(2).expandX().expandY().align(Align.center).row();
+
+        Label hiScore = newLabel("High Score: " + game.scores.getHighestScore());
+        table.add(hiScore).pad(20).colspan(2).expandX().expandY().align(Align.center).row();
+
         Texture sheet = game.manager.get("scores.png", Texture.class);
         score = new Value(sheet, 6, game.scores.getLastScore());
         table.add(score).pad(40).colspan(2).fillX().height(200).row();
@@ -68,6 +74,8 @@ public class GameOverScreen extends MenuScreen {
                 game.setScreen(3);
             }
         });
+
+        game.saveState();
     }
 
     @Override

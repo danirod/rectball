@@ -23,6 +23,7 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -30,6 +31,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.utils.Base64Coder;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonWriter;
+import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import es.danirod.rectball.screens.*;
 import es.danirod.rectball.screens.debug.CombinationDebugScreen;
 import es.danirod.rectball.screens.debug.DebugScreen;
@@ -56,6 +61,8 @@ public class RectballGame extends Game {
     public SoundPlayer player;
 
     public StyleFactory style;
+
+    public float aliveTime;
 
     @Override
     public void create() {
@@ -88,7 +95,7 @@ public class RectballGame extends Game {
         }
 
         settings = new Settings(Gdx.app.getPreferences("rectball"));
-        scores = new Scores();
+        scores = loadState();
         player = new SoundPlayer(this);
 
         setScreen(5);
@@ -113,5 +120,35 @@ public class RectballGame extends Game {
      */
     public void addScreen(AbstractScreen screen) {
         screens.put(screen.getID(), screen);
+    }
+
+    public void saveState() {
+        Json json = new Json();
+        json.setOutputType(OutputType.json);
+        String jsonData = json.toJson(scores);
+
+        String encodedJson = Base64Coder.encodeString(jsonData);
+        FileHandle handlepore = Gdx.files.local("scores");
+        handlepore.writeString(encodedJson, false);
+    }
+
+    public Scores loadState() {
+        FileHandle handlepore = Gdx.files.local("scores");
+
+        // If the file does not exists then is because there is no scores file.
+        if (!handlepore.exists()) {
+            return new Scores();
+        }
+
+        // Otherwise, just try to decode the file.
+        try {
+            String encodedJson = handlepore.readString();
+            String decodeJson = Base64Coder.decodeString(encodedJson);
+            Json json = new Json();
+            return json.fromJson(Scores.class, decodeJson);
+        } catch (Exception e) {
+            // Fail silently.
+            return new Scores();
+        }
     }
 }
