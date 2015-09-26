@@ -27,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.Value;
+import es.danirod.rectball.settings.ScoreIO;
 import es.danirod.rectball.utils.SoundPlayer;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
@@ -75,7 +76,7 @@ public class GameOverScreen extends MenuScreen {
             }
         });
 
-        game.saveState();
+        ScoreIO.save(game.scores);
     }
 
     @Override

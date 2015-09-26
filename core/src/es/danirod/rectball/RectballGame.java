@@ -38,6 +38,7 @@ import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import es.danirod.rectball.screens.*;
 import es.danirod.rectball.screens.debug.CombinationDebugScreen;
 import es.danirod.rectball.screens.debug.DebugScreen;
+import es.danirod.rectball.settings.ScoreIO;
 import es.danirod.rectball.settings.Scores;
 import es.danirod.rectball.settings.Settings;
 import es.danirod.rectball.utils.SoundPlayer;
@@ -95,7 +96,7 @@ public class RectballGame extends Game {
         }
 
         settings = new Settings(Gdx.app.getPreferences("rectball"));
-        scores = loadState();
+        scores = ScoreIO.load();
         player = new SoundPlayer(this);
 
         setScreen(5);
@@ -120,35 +121,5 @@ public class RectballGame extends Game {
      */
     public void addScreen(AbstractScreen screen) {
         screens.put(screen.getID(), screen);
-    }
-
-    public void saveState() {
-        Json json = new Json();
-        json.setOutputType(OutputType.json);
-        String jsonData = json.toJson(scores);
-
-        String encodedJson = Base64Coder.encodeString(jsonData);
-        FileHandle handlepore = Gdx.files.local("scores");
-        handlepore.writeString(encodedJson, false);
-    }
-
-    public Scores loadState() {
-        FileHandle handlepore = Gdx.files.local("scores");
-
-        // If the file does not exists then is because there is no scores file.
-        if (!handlepore.exists()) {
-            return new Scores();
-        }
-
-        // Otherwise, just try to decode the file.
-        try {
-            String encodedJson = handlepore.readString();
-            String decodeJson = Base64Coder.decodeString(encodedJson);
-            Json json = new Json();
-            return json.fromJson(Scores.class, decodeJson);
-        } catch (Exception e) {
-            // Fail silently.
-            return new Scores();
-        }
     }
 }
