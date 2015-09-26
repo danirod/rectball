@@ -1,6 +1,21 @@
+apply plugin: "com.android.application"
+
+configurations {
+    natives
+}
+
+dependencies {
+    compile project(":core")
+    compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
+}
+
 android {
-    buildToolsVersion "22.0.1"
-    compileSdkVersion 22
+    buildToolsVersion project.androidToolsVersion
+    compileSdkVersion project.androidSdkVersion.toInteger()
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -20,7 +35,29 @@ android {
 // called every time gradle gets executed, takes the native dependencies of
 // the natives configuration, and extracts them to the proper libs/ folders
 // so they get packed with the APK.
-task copyAndroidNatives() { 
+task copyAndroidNatives() {
+    copy {
+        from("cfg/AndroidManifest.xml") {
+            filter { line ->
+                line.replaceAll(/PACKAGE/, packageName);
+            }
+            filter { line ->
+                line.replaceAll(/ANDROID_VERSION_CODE/, androidVersionCode);
+            }
+            filter { line ->
+                line.replaceAll(/ANDROID_VERSION_NAME/, version);
+            }
+            filter { line ->
+                line.replaceAll(/ANDROID_SDK_VERSION/, androidSdkVersion);
+            }
+            filter { line ->
+                line.replaceAll(/ANDROID_SCREEN_ORIENTATION/, androidScreenOrientation);
+            }
+        }
+
+        into("./")
+    }
+
     file("libs/armeabi/").mkdirs();
     file("libs/armeabi-v7a/").mkdirs();
     file("libs/x86/").mkdirs();
@@ -59,7 +96,7 @@ task run(type: Exec) {
     }
 
     def adb = path + "/platform-tools/adb"
-    commandLine "$adb", 'shell', 'am', 'start', '-n', 'es.danirod.rectball.android/es.danirod.rectball.android.AndroidLauncher'
+    commandLine "$adb", 'shell', 'am', 'start', '-n', packageName + '.android/.AndroidLauncher'
 }
 
 // sets up the Android Eclipse project, using the old Ant based build.
@@ -78,8 +115,8 @@ eclipse {
     }
 
     classpath {
-        plusConfigurations += [ project.configurations.compile ]        
-        containers 'com.android.ide.eclipse.adt.ANDROID_FRAMEWORK', 'com.android.ide.eclipse.adt.LIBRARIES'       
+        plusConfigurations += [ project.configurations.compile ]
+        containers 'com.android.ide.eclipse.adt.ANDROID_FRAMEWORK', 'com.android.ide.eclipse.adt.LIBRARIES'
     }
 
     project {
@@ -97,7 +134,7 @@ eclipse {
 idea {
     module {
         sourceDirs += file("src");
-        scopes = [ COMPILE: [plus:[project.configurations.compile]]]        
+        scopes = [ COMPILE: [plus:[project.configurations.compile]]]
 
         iml {
             withXml {
