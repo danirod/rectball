@@ -17,6 +17,9 @@
  */
 package es.danirod.rectball.settings;
 
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonWriter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,23 +44,32 @@ public class Scores {
         this.highestScore = highestScore;
     }
 
-    public List<Long> getScores() {
-        return scores;
+    /**
+     * Add a score to the system. This method should be invoked when you lose
+     * a game so that the system can register the score.
+     *
+     * @param score  score for the current match
+     */
+    public void addScore(long score) {
+        lastScore = score;
+        totalScore += score;
+        highestScore = Math.max(score, highestScore);
+        scores.add(score);
     }
 
-    public long getLastScore() {
-        return lastScore;
-    }
-
-    public void setLastScore(long lastScore) {
-        this.lastScore = lastScore;
+    public long getTotalScore() {
+        return totalScore;
     }
 
     public long getHighestScore() {
         return highestScore;
     }
 
-    public void setHighestScore(long highestScore) {
-        this.highestScore = highestScore;
+    public long getLastScore() {
+        return lastScore;
+    }
+
+    public List<Long> getScores() {
+        return scores;
     }
 }

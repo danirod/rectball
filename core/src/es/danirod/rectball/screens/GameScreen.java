@@ -48,6 +48,8 @@ import es.danirod.rectball.actors.Value;
 import es.danirod.rectball.dialogs.PauseDialog;
 import es.danirod.rectball.listeners.BallInputListener;
 import es.danirod.rectball.model.BallColor;
+import es.danirod.rectball.model.Bounds;
+import es.danirod.rectball.model.CombinationFinder;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 import es.danirod.rectball.utils.StyleFactory;
 
@@ -85,6 +87,7 @@ public class GameScreen extends AbstractScreen {
 
         // Reset data
         valueScore = 0;
+        game.aliveTime = 0;
         paused = false;
 
         stage = new Stage(new ScreenViewport());
@@ -227,6 +230,10 @@ public class GameScreen extends AbstractScreen {
             board.markCombination();
         }
 
+        if (timer.isRunning()) {
+            game.aliveTime += delta;
+        }
+
         // Pause the game when you press BACK or ESCAPE.
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) ||
                 Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -241,22 +248,28 @@ public class GameScreen extends AbstractScreen {
     public void gameOver() {
         // Update the score... and the record.
         long lastScore = Long.parseLong(score.getText().toString());
-        game.scores.setLastScore(lastScore);
-        if (lastScore > game.scores.getHighestScore()) {
-            game.scores.setHighestScore(lastScore);
-        }
+        game.scores.addScore(lastScore);
 
         timer.setRunning(false);
         board.setTouchable(Touchable.disabled);
 
         game.player.playSound(SoundCode.GAME_OVER);
 
+        // Get a combination that the user didn't find.
+        CombinationFinder finder = new CombinationFinder(board.getBoard());
+        Bounds combination = finder.getCombination();
+
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
         Ball[][] allBalls = board.getBoard();
         for (int y = 0; y < board.getSize(); y++) {
             for (int x = 0; x < board.getSize(); x++) {
-                Ball currentBall = allBalls[x][y];
+                if ((x >= combination.minX && x <= combination.maxX) &&
+                        (y >= combination.minY && y <= combination.maxY)) {
+                    continue;
+                }
+
+                final Ball currentBall = allBalls[x][y];
                 float desplX = MathUtils.random(-width / 2, width / 2);
                 float desplY = -height - MathUtils.random(0, height / 4);
                 float scaling = MathUtils.random(0.3f, 0.7f);
@@ -265,7 +278,7 @@ public class GameScreen extends AbstractScreen {
                         Actions.run(new Runnable() {
                             @Override
                             public void run() {
-                                board.setBoardColor(BallColor.GRAY);
+                                currentBall.setBallColor(BallColor.GRAY);
                             }
                         }),
                         Actions.parallel(
