@@ -21,13 +21,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.utils.KonamiCodeListener;
 import es.danirod.rectball.utils.KonamiCodeProcessor;
@@ -36,8 +39,6 @@ import es.danirod.rectball.utils.StyleFactory;
 
 public class MainMenuScreen extends MenuScreen implements KonamiCodeListener {
 
-    private LabelStyle titleStyle;
-
     public MainMenuScreen(RectballGame game) {
         super(game);
     }
@@ -45,10 +46,6 @@ public class MainMenuScreen extends MenuScreen implements KonamiCodeListener {
     @Override
     public void load() {
         super.load();
-
-        // Build styles for title and version
-        BitmapFont titleFont = boldGenerator.generateFont(StyleFactory.buildFontStyle(100, 4, 2));
-        titleStyle = new LabelStyle(titleFont, Color.WHITE);
     }
 
     @Override
@@ -62,15 +59,16 @@ public class MainMenuScreen extends MenuScreen implements KonamiCodeListener {
         Gdx.input.setInputProcessor(multiplexer);
 
         // Build the actors.
-        Label title = new Label("Rectball", titleStyle);
+        Image title = new Image(game.manager.get("logo.png", Texture.class));
+        title.setScaling(Scaling.fit);
         TextButton play = newButton("Play");
         TextButton settings = newButton("Settings");
         TextButton statistics = newButton("Stats");
 
         // Position the actors in the screen.
-        table.add(title).pad(20).padBottom(100).align(Align.center).row();
-        table.add(play).pad(20).fillX().height(100).row();
-        table.add(settings).pad(20).fillX().height(100).row();
+        table.add(title).pad(40).row();
+        table.add(play).pad(20).fillX().height(150).row();
+        table.add(settings).pad(20).fillX().height(150).row();
         // table.add(statistics).pad(20).fillX().height(100).row();
 
         // Then add the capture listeners for the buttons.

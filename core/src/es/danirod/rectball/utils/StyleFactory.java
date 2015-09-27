@@ -3,6 +3,8 @@ package es.danirod.rectball.utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -45,6 +47,7 @@ public class StyleFactory {
         parameter.shadowOffsetX = parameter.shadowOffsetY = shadow;
         parameter.borderWidth = border;
         parameter.size = size;
+        parameter.minFilter = parameter.magFilter = TextureFilter.Linear;
         return parameter;
     }
 

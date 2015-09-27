@@ -17,6 +17,7 @@
  */
 package es.danirod.rectball.screens;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -33,6 +34,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.utils.StyleFactory;
@@ -50,7 +53,7 @@ public abstract class MenuScreen extends AbstractScreen {
 
     protected Table table;
 
-    protected FreeTypeFontGenerator fontGenerator, boldGenerator;
+    protected FreeTypeFontGenerator boldGenerator;
 
     private LabelStyle genericLabelStyle;
 
@@ -63,10 +66,12 @@ public abstract class MenuScreen extends AbstractScreen {
     @Override
     public void load() {
         // Load fonts used in the screen.
-        FileHandle normalFont = Gdx.files.internal("fonts/Play-Regular.ttf");
         FileHandle boldFont = Gdx.files.internal("fonts/Play-Bold.ttf");
-        fontGenerator = new FreeTypeFontGenerator(normalFont);
         boldGenerator = new FreeTypeFontGenerator(boldFont);
+
+        // Set up the generic style.
+        BitmapFont font = StyleFactory.buildFont("fonts/Play-Regular.ttf", StyleFactory.buildFontStyle(64, 2, 1));
+        genericLabelStyle = new LabelStyle(font, Color.WHITE);
     }
 
     @Override
@@ -75,13 +80,9 @@ public abstract class MenuScreen extends AbstractScreen {
         Texture tex = game.manager.get("ui/button.png", Texture.class);
         TextureRegion normalRegion = new TextureRegion(tex, 0, 0, 128, 128);
         TextureRegion hoverRegion = new TextureRegion(tex, 128, 0, 128, 128);
+        genericButtonStyle = StyleFactory.buildTextButtonStyle(normalRegion, hoverRegion, 32, genericLabelStyle.font);
 
-        // Set up the generic style.
-        BitmapFont font = StyleFactory.buildFont("fonts/Play-Regular.ttf", StyleFactory.buildFontStyle(48, 2, 1));
-        genericLabelStyle = new LabelStyle(font, Color.WHITE);
-        genericButtonStyle = StyleFactory.buildTextButtonStyle(normalRegion, hoverRegion, 32, font);
-
-        stage = new Stage(new FitViewport(480, 640));
+        stage = new Stage(new FitViewport(540, 960));
         Gdx.input.setInputProcessor(stage);
         table = new Table();
         stage.addActor(table);
@@ -91,6 +92,7 @@ public abstract class MenuScreen extends AbstractScreen {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height);
+        stage.getCamera().update();
     }
 
     @Override
@@ -101,7 +103,6 @@ public abstract class MenuScreen extends AbstractScreen {
 
     @Override
     public void dispose() {
-        fontGenerator.dispose();
         boldGenerator.dispose();
     }
 

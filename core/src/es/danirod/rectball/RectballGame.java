@@ -17,12 +17,16 @@
  */
 package es.danirod.rectball;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.TextureLoader;
+import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import java.util.HashMap;
@@ -46,7 +50,7 @@ public class RectballGame extends Game {
 
     public static final String VERSION = "Rectball 0.1.2-SNAPSHOT";
 
-    private Map<Integer, AbstractScreen> screens;
+    private Map<Integer, AbstractScreen> screens = new HashMap<>();
 
     public Settings settings;
 
@@ -62,7 +66,10 @@ public class RectballGame extends Game {
 
     @Override
     public void create() {
-        this.screens = new HashMap<>();
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
+        Gdx.app.debug("RectballGame", "Welcome to " + VERSION);
+
+        Gdx.app.debug("RectballGame", "Adding Game Screens...");
         this.addScreen(new GameScreen(this));
         this.addScreen(new GameOverScreen(this));
         this.addScreen(new MainMenuScreen(this));
@@ -71,29 +78,39 @@ public class RectballGame extends Game {
         this.addScreen(new DebugScreen(this));
         this.addScreen(new CombinationDebugScreen(this));
 
+        Gdx.app.debug("RectballGame", "Adding assets to the manager...");
         manager = new AssetManager();
-        manager.load("board/normal.png", Texture.class);
-        manager.load("board/colorblind.png", Texture.class);
+
+        TextureParameter linearParameters = new TextureParameter();
+        linearParameters.minFilter = linearParameters.magFilter = TextureFilter.Linear;
+
+        manager.load("logo.png", Texture.class, linearParameters);
+        manager.load("board/normal.png", Texture.class, linearParameters);
+        manager.load("board/colorblind.png", Texture.class, linearParameters);
         manager.load("fonts/scores.fnt", BitmapFont.class);
         manager.load("sound/fail.ogg", Sound.class);
         manager.load("sound/gameover.ogg", Sound.class);
         manager.load("sound/select.ogg", Sound.class);
         manager.load("sound/success.ogg", Sound.class);
         manager.load("sound/unselect.ogg", Sound.class);
-        manager.load("ui/switch.png", Texture.class);
-        manager.load("ui/button.png", Texture.class);
+        manager.load("ui/switch.png", Texture.class, linearParameters);
+        manager.load("ui/button.png", Texture.class, linearParameters);
         manager.load("scores.png", Texture.class);
         manager.load("timer.png", Texture.class);
         manager.load("ui/leave.png", Texture.class);
 
+        Gdx.app.debug("RectballGame", "Loading screens...");
         for (Map.Entry<Integer, AbstractScreen> screen : screens.entrySet()) {
+            Gdx.app.debug("RectballGame", "Loading screen " + screen.getValue().getID() + "...");
             screen.getValue().load();
         }
 
+        Gdx.app.debug("RectballGame", "Reading settings...");
         settings = new Settings(Gdx.app.getPreferences("rectball"));
         scores = loadState();
         player = new SoundPlayer(this);
 
+        Gdx.app.debug("RectballGame", "Loading assets...");
         setScreen(5);
     }
 
