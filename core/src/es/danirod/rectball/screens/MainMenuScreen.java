@@ -36,8 +36,19 @@ import es.danirod.rectball.utils.StyleFactory;
 
 public class MainMenuScreen extends MenuScreen implements KonamiCodeListener {
 
+    private LabelStyle titleStyle;
+
     public MainMenuScreen(RectballGame game) {
         super(game);
+    }
+
+    @Override
+    public void load() {
+        super.load();
+
+        // Build styles for title and version
+        BitmapFont titleFont = boldGenerator.generateFont(StyleFactory.buildFontStyle(100, 4, 2));
+        titleStyle = new LabelStyle(titleFont, Color.WHITE);
     }
 
     @Override
@@ -50,25 +61,17 @@ public class MainMenuScreen extends MenuScreen implements KonamiCodeListener {
         multiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(multiplexer);
 
-        // Build styles for title and version
-        BitmapFont titleFont = boldGenerator.generateFont(StyleFactory.buildFontStyle(100, 4, 2));
-        BitmapFont versionFont = fontGenerator.generateFont(StyleFactory.buildFontStyle(25, 0, 1));
-        LabelStyle titleStyle = new LabelStyle(titleFont, Color.WHITE);
-        LabelStyle versionStyle = new LabelStyle(versionFont, Color.WHITE);
-
         // Build the actors.
         Label title = new Label("Rectball", titleStyle);
         TextButton play = newButton("Play");
         TextButton settings = newButton("Settings");
         TextButton statistics = newButton("Stats");
-        Label version = new Label(RectballGame.VERSION, versionStyle);
 
         // Position the actors in the screen.
         table.add(title).pad(20).padBottom(100).align(Align.center).row();
         table.add(play).pad(20).fillX().height(100).row();
         table.add(settings).pad(20).fillX().height(100).row();
         // table.add(statistics).pad(20).fillX().height(100).row();
-        table.add(version).pad(20).align(Align.bottomRight).expandY().row();
 
         // Then add the capture listeners for the buttons.
         play.addCaptureListener(new ChangeListener() {
