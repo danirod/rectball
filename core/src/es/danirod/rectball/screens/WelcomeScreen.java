@@ -32,7 +32,6 @@ import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.utils.KonamiCodeListener;
 import es.danirod.rectball.utils.KonamiCodeProcessor;
-import es.danirod.rectball.utils.SoundPlayer;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 import es.danirod.rectball.utils.StyleFactory;
 
@@ -41,21 +40,6 @@ public class WelcomeScreen extends MenuScreen implements KonamiCodeListener {
     public WelcomeScreen(RectballGame game) {
         super(game);
     }
-
-    private static final int[] DEBUG_KEYS = new int[] {
-            Input.Keys.UP,
-            Input.Keys.UP,
-            Input.Keys.DOWN,
-            Input.Keys.DOWN,
-            Input.Keys.LEFT,
-            Input.Keys.RIGHT,
-            Input.Keys.LEFT,
-            Input.Keys.RIGHT,
-            Input.Keys.B,
-            Input.Keys.A
-    };
-
-    private int debugStatus = 0;
 
     @Override
     public void show() {
