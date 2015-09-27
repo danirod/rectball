@@ -15,7 +15,10 @@
    id="svg6465"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="rectball.svg">
+   sodipodi:docname="rectball.svg"
+   inkscape:export-filename="/Users/danirod/Desarrollo/Rectball/android/assets/logo.png"
+   inkscape:export-xdpi="85.119011"
+   inkscape:export-ydpi="85.119011">
   <defs
      id="defs6467" />
   <sodipodi:namedview
@@ -26,7 +29,7 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.7"
-     inkscape:cx="150.85233"
+     inkscape:cx="127.2809"
      inkscape:cy="-178.92946"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -61,39 +64,45 @@
      transform="translate(34.850425,-40.166213)">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:222.37774658px;line-height:0%;font-family:Play;-inkscape-font-specification:'Play Bold';letter-spacing:-6.70822096px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:0;stroke-dasharray:none;stroke-opacity:1"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:222.37774658px;line-height:0%;font-family:Play;-inkscape-font-specification:'Play Bold';letter-spacing:-6.70822096px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:0;stroke-dasharray:none;stroke-opacity:1;"
        x="21.783541"
        y="272.69678"
        id="text7013"
-       sodipodi:linespacing="0%"><tspan
+       sodipodi:linespacing="0%"
+       inkscape:export-filename="/Users/danirod/Desarrollo/Rectball/android/assets/logo@2x.png"
+       inkscape:export-xdpi="142.0309"
+       inkscape:export-ydpi="142.0309"><tspan
          sodipodi:role="line"
          id="tspan7015"
          x="21.783541"
          y="272.69678"
-         style="letter-spacing:-4.47214746px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke-width:0;stroke-linecap:round;stroke-miterlimit:0;stroke-dasharray:none"><tspan
-   style="letter-spacing:-13.41644192px;fill:#ffffff;fill-opacity:1;stroke-width:0;stroke-linecap:round;stroke-miterlimit:0;stroke-dasharray:none"
+         style="letter-spacing:-4.47214746px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke-width:0;stroke-linecap:round;stroke-miterlimit:0;stroke-dasharray:none;"><tspan
+   style="letter-spacing:-13.41644192px;fill:#000000;fill-opacity:1;stroke-width:0;stroke-linecap:round;stroke-miterlimit:0;stroke-dasharray:none;"
    id="tspan7135">r</tspan><tspan
    id="tspan7145"
-   style="letter-spacing:-20.1246624px;fill:#ffffff;fill-opacity:1;stroke-width:0;stroke-linecap:round;stroke-miterlimit:0;stroke-dasharray:none">e</tspan>c<tspan
-   style="letter-spacing:-13.41644192px;fill:#ffffff;fill-opacity:1;stroke-width:0;stroke-linecap:round;stroke-miterlimit:0;stroke-dasharray:none"
+   style="letter-spacing:-20.1246624px;fill:#000000;fill-opacity:1;stroke-width:0;stroke-linecap:round;stroke-miterlimit:0;stroke-dasharray:none;">e</tspan>c<tspan
+   style="letter-spacing:-13.41644192px;fill:#000000;fill-opacity:1;stroke-width:0;stroke-linecap:round;stroke-miterlimit:0;stroke-dasharray:none;"
    id="tspan7149">tball</tspan></tspan></text>
     <text
        sodipodi:linespacing="0%"
        id="text7171"
        y="266.69678"
        x="21.783541"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:222.37774658px;line-height:0%;font-family:Play;-inkscape-font-specification:'Play Bold';letter-spacing:-6.70822096px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:0;stroke-dasharray:none;stroke-opacity:1"
-       xml:space="preserve"><tspan
-         style="letter-spacing:-4.47214746px;word-spacing:0px;stroke-width:0;stroke-linecap:round;stroke-miterlimit:0;stroke-dasharray:none"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:222.37774658px;line-height:0%;font-family:Play;-inkscape-font-specification:'Play Bold';letter-spacing:-6.70822096px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:0;stroke-dasharray:none;stroke-opacity:1;"
+       xml:space="preserve"
+       inkscape:export-filename="/Users/danirod/Desarrollo/Rectball/android/assets/logo@2x.png"
+       inkscape:export-xdpi="142.0309"
+       inkscape:export-ydpi="142.0309"><tspan
+         style="letter-spacing:-4.47214746px;word-spacing:0px;stroke-width:0;stroke-linecap:round;stroke-miterlimit:0;stroke-dasharray:none;fill:#ffffff;fill-opacity:1;"
          y="266.69678"
          x="21.783541"
          id="tspan7173"
          sodipodi:role="line"><tspan
    id="tspan7175"
-   style="letter-spacing:-13.41644192px;stroke-width:0;stroke-linecap:round;stroke-miterlimit:0;stroke-dasharray:none">r</tspan><tspan
-   style="letter-spacing:-20.1246624px;stroke-width:0;stroke-linecap:round;stroke-miterlimit:0;stroke-dasharray:none"
+   style="letter-spacing:-13.41644192px;stroke-width:0;stroke-linecap:round;stroke-miterlimit:0;stroke-dasharray:none;fill:#ffffff;fill-opacity:1;">r</tspan><tspan
+   style="letter-spacing:-20.1246624px;stroke-width:0;stroke-linecap:round;stroke-miterlimit:0;stroke-dasharray:none;fill:#ffffff;fill-opacity:1;"
    id="tspan7177">e</tspan>c<tspan
    id="tspan7179"
-   style="letter-spacing:-13.41644192px;stroke-width:0;stroke-linecap:round;stroke-miterlimit:0;stroke-dasharray:none">tball</tspan></tspan></text>
+   style="letter-spacing:-13.41644192px;stroke-width:0;stroke-linecap:round;stroke-miterlimit:0;stroke-dasharray:none;fill:#ffffff;fill-opacity:1;">tball</tspan></tspan></text>
   </g>
 </svg>
