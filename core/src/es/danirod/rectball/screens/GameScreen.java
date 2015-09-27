@@ -262,14 +262,17 @@ public class GameScreen extends AbstractScreen {
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
         Ball[][] allBalls = board.getBoard();
+        BallColor refColor = allBalls[combination.minX][combination.minY].getBallColor();
         for (int y = 0; y < board.getSize(); y++) {
             for (int x = 0; x < board.getSize(); x++) {
+                final Ball currentBall = allBalls[x][y];
+
                 if ((x >= combination.minX && x <= combination.maxX) &&
                         (y >= combination.minY && y <= combination.maxY)) {
+                    currentBall.setBallColor(refColor);
                     continue;
                 }
 
-                final Ball currentBall = allBalls[x][y];
                 float desplX = MathUtils.random(-width / 2, width / 2);
                 float desplY = -height - MathUtils.random(0, height / 4);
                 float scaling = MathUtils.random(0.3f, 0.7f);
