@@ -21,7 +21,6 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
@@ -36,8 +35,6 @@ import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import es.danirod.rectball.screens.*;
-import es.danirod.rectball.screens.debug.CombinationDebugScreen;
-import es.danirod.rectball.screens.debug.DebugScreen;
 import es.danirod.rectball.settings.Scores;
 import es.danirod.rectball.settings.Settings;
 import es.danirod.rectball.utils.SoundPlayer;
@@ -75,8 +72,6 @@ public class RectballGame extends Game {
         this.addScreen(new MainMenuScreen(this));
         this.addScreen(new SettingsScreen(this));
         this.addScreen(new LoadingScreen(this));
-        this.addScreen(new DebugScreen(this));
-        this.addScreen(new CombinationDebugScreen(this));
 
         Gdx.app.debug("RectballGame", "Adding assets to the manager...");
         manager = new AssetManager();

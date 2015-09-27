@@ -18,26 +18,17 @@
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.utils.KonamiCodeListener;
-import es.danirod.rectball.utils.KonamiCodeProcessor;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
-import es.danirod.rectball.utils.StyleFactory;
 
-public class MainMenuScreen extends MenuScreen implements KonamiCodeListener {
+public class MainMenuScreen extends MenuScreen {
 
     public MainMenuScreen(RectballGame game) {
         super(game);
@@ -51,12 +42,6 @@ public class MainMenuScreen extends MenuScreen implements KonamiCodeListener {
     @Override
     public void show() {
         super.show();
-
-        // Prepare Konami Code.
-        InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(new KonamiCodeProcessor(this));
-        multiplexer.addProcessor(stage);
-        Gdx.input.setInputProcessor(multiplexer);
 
         // Build the actors.
         Image title = new Image(game.manager.get("logo.png", Texture.class));
@@ -106,10 +91,5 @@ public class MainMenuScreen extends MenuScreen implements KonamiCodeListener {
     @Override
     public int getID() {
         return Screens.MAIN_MENU;
-    }
-
-    @Override
-    public void onKonamiCodePressed() {
-        game.setScreen(Screens.DEBUG);
     }
 }
