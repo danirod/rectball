@@ -73,7 +73,7 @@ public abstract class MenuScreen extends AbstractScreen {
         TextureRegion hoverRegion = new TextureRegion(tex, 128, 0, 128, 128);
         genericButtonStyle = StyleFactory.buildTextButtonStyle(normalRegion, hoverRegion, 32, normalFont);
 
-        stage = new Stage(new FitViewport(540, 960));
+        stage = new Stage(new FitViewport(600, 960));
         Gdx.input.setInputProcessor(stage);
         table = new Table();
         stage.addActor(table);
@@ -99,6 +99,12 @@ public abstract class MenuScreen extends AbstractScreen {
      */
     protected Label newLabel(CharSequence text) {
         return new Label(text, genericLabelStyle);
+    }
+
+    protected Label boldLabel(CharSequence text) {
+        BitmapFont boldFont = game.manager.get("boldFont.ttf");
+        LabelStyle boldStyle = new LabelStyle(boldFont, Color.WHITE);
+        return new Label(text, boldStyle);
     }
 
     /**

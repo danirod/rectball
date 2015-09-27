@@ -134,6 +134,16 @@ public class RectballGame extends Game {
         normalFont.fontParameters.shadowOffsetY = 2;
         manager.load("normalFont.ttf", BitmapFont.class, normalFont);
 
+        // Load TTF font for bold text
+        FreeTypeFontLoaderParameter boldFont = new FreeTypeFontLoaderParameter();
+        boldFont.fontFileName = "fonts/Play-Bold.ttf";
+        boldFont.fontParameters.size = 64;
+        boldFont.fontParameters.minFilter = TextureFilter.Linear;
+        boldFont.fontParameters.magFilter = TextureFilter.Linear;
+        boldFont.fontParameters.shadowOffsetX = 2;
+        boldFont.fontParameters.shadowOffsetY = 2;
+        manager.load("boldFont.ttf", BitmapFont.class, boldFont);
+
         // Load TTF font for big text
         FreeTypeFontLoaderParameter bigFont = new FreeTypeFontLoaderParameter();
         bigFont.fontFileName = "fonts/Play-Regular.ttf";
@@ -143,7 +153,7 @@ public class RectballGame extends Game {
         bigFont.fontParameters.borderWidth = 2;
         bigFont.fontParameters.shadowOffsetX = 4;
         bigFont.fontParameters.shadowOffsetY = 4;
-        manager.load("bigFont.ttf", BitmapFont.class, normalFont);
+        manager.load("bigFont.ttf", BitmapFont.class, bigFont);
 
         // Load sounds
         manager.load("sound/fail.ogg", Sound.class);

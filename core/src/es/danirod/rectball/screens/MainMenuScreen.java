@@ -81,7 +81,7 @@ public class MainMenuScreen extends MenuScreen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.3f, 0.3f, 0.8f, 1f);
+        Gdx.gl.glClearColor(0.5f, 0.6f, 0.6f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.act();
