@@ -33,39 +33,6 @@ public class StyleFactory {
         return new NinePatchDrawable(patch);
     }
 
-    /**
-     * This method builds the parameter for setting up fonts.
-     *
-     * @param size  size of the font
-     * @param shadow  size of the shadow
-     * @param border  size of the border
-     * @return  font parameters for the given properties.
-     */
-    public static FreeTypeFontParameter buildFontStyle(int size, int shadow, int border) {
-        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-        parameter.borderColor = parameter.shadowColor = Color.BLACK;
-        parameter.shadowOffsetX = parameter.shadowOffsetY = shadow;
-        parameter.borderWidth = border;
-        parameter.size = size;
-        parameter.minFilter = parameter.magFilter = TextureFilter.Linear;
-        return parameter;
-    }
-
-    /**
-     * This method builds a bitmap font from a text file and some parameter.
-     *
-     * @param file string with the font name.
-     * @param par  font parameter
-     * @return  bitmap font
-     */
-    public static BitmapFont buildFont(String file, FreeTypeFontParameter par) {
-        FileHandle handle = Gdx.files.internal(file);
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(handle);
-        BitmapFont font = generator.generateFont(par);
-        generator.dispose();
-        return font;
-    }
-
     public static TextButtonStyle buildTextButtonStyle(TextureRegion normal, TextureRegion hover, int margin, BitmapFont font) {
         NinePatchDrawable normalDrawable = buildPatch(normal, margin);
         NinePatchDrawable hoverDrawable = buildPatch(hover, margin);

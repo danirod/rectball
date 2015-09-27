@@ -130,10 +130,9 @@ public class GameScreen extends AbstractScreen {
         Texture buttonTexture = new Texture("ui/button.png");
         TextureRegion normalButton = new TextureRegion(buttonTexture, 0, 0, 128, 128);
         TextureRegion selectedButton = new TextureRegion(buttonTexture, 128, 0, 128, 128);
-        FreeTypeFontParameter titlePar = StyleFactory.buildFontStyle(36, 0, 0);
-        BitmapFont titleFont = StyleFactory.buildFont("fonts/Play-Bold.ttf", titlePar);
+        BitmapFont titleFont = game.manager.get("bigFont.ttf");
+        BitmapFont regularFont = game.manager.get("normalFont.ttf");
         WindowStyle pauseStyle = new WindowStyle(titleFont, Color.WHITE, dialogDrawable);
-        BitmapFont regularFont = StyleFactory.buildFont("fonts/Play-Regular.ttf", titlePar);
 
         // Create buttons.
         TextButtonStyle leaveButtonStyle = StyleFactory.buildTextButtonStyle(normalButton,
