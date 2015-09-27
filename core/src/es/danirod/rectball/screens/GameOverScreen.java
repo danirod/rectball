@@ -28,7 +28,6 @@ import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.Value;
 import es.danirod.rectball.settings.ScoreIO;
-import es.danirod.rectball.utils.SoundPlayer;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
 public class GameOverScreen extends MenuScreen {
@@ -65,14 +64,14 @@ public class GameOverScreen extends MenuScreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.player.playSound(SoundCode.SUCCESS);
-                game.setScreen(1);
+                game.setScreen(Screens.GAME);
             }
         });
         menu.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.player.playSound(SoundCode.FAIL);
-                game.setScreen(3);
+                game.setScreen(Screens.MAIN_MENU);
             }
         });
 
@@ -90,6 +89,6 @@ public class GameOverScreen extends MenuScreen {
 
     @Override
     public int getID() {
-        return 2;
+        return Screens.GAME_OVER;
     }
 }

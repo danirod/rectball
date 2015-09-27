@@ -42,7 +42,7 @@ public class LoadingScreen extends AbstractScreen {
 
     @Override
     public int getID() {
-        return 5;
+        return Screens.LOADING;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class LoadingScreen extends AbstractScreen {
 
         if (game.manager.update()) {
             // Finish loading.
-            game.setScreen(3);
+            game.setScreen(Screens.MAIN_MENU);
         } else {
             float progress = game.manager.getProgress();
             shaper.setAutoShapeType(true);

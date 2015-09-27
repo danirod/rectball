@@ -24,9 +24,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.Switch;
-import es.danirod.rectball.utils.SoundPlayer;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
 public class SettingsScreen extends MenuScreen {
@@ -40,53 +40,41 @@ public class SettingsScreen extends MenuScreen {
         super.show();
 
         // Build stage entities.
-        Label musicLabel = newLabel("Music");
-        Label soundLabel = newLabel("Sound");
-        Label colorLabel = newLabel("Colorblind");
         TextButton backButton = newButton("Back");
 
         Texture switchTex = game.manager.get("ui/switch.png");
-        final Switch musicSwitch = new Switch(switchTex, game.settings.isMusicEnabled(), true);
         final Switch soundSwitch = new Switch(switchTex, game.settings.isSoundEnabled(), false);
         final Switch colorSwitch = new Switch(switchTex, game.settings.isColorblind(), false);
 
-        table.add(musicLabel).pad(20).fillX().height(100);
-        table.add(musicSwitch).pad(25).width(150).height(50).row();
-        table.add(soundLabel).pad(20).fillX().height(100);
-        table.add(soundSwitch).pad(25).width(150).height(50).row();
-        table.add(colorLabel).pad(20).fillX().height(100);
-        table.add(colorSwitch).pad(25).width(150).height(50).row();
-        table.add(backButton).pad(20).fillX().height(100).colspan(2).row();
+        table.pad(20);
+        table.add(boldLabel("Settings")).expandX().align(Align.center).colspan(2).height(100).row();
+        table.add(newLabel("Sound")).expandX().align(Align.left).height(100);
+        table.add(soundSwitch).width(150).height(50).row();
+        table.add(newLabel("Colorblind")).expandX().align(Align.left).height(100);
+        table.add(colorSwitch).width(150).height(50).row();
+        table.add(backButton).fillX().expandY().height(125).align(Align.bottom).colspan(2).row();
 
         backButton.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.settings.setMusicEnabled(musicSwitch.isEnabled());
                 game.settings.setSoundEnabled(soundSwitch.isEnabled());
                 game.settings.setColorblind(colorSwitch.isEnabled());
-
-                /*
-                 * FAIL sound is also the BACK sound. Play it after updating
-                 * the settings because we want to use the new value for sound.
-                 * Play it before saving the settings because we know that
-                 * saving settings is slow on Android.
-                 */
                 game.player.playSound(SoundCode.FAIL);
 
                 game.settings.save();
-                game.setScreen(3);
+                game.setScreen(Screens.MAIN_MENU);
             }
         });
     }
 
     @Override
     public int getID() {
-        return 4;
+        return Screens.SETTINGS;
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.2f, 0.7f, 0.3f, 1f);
+        Gdx.gl.glClearColor(0.5f, 0.6f, 0.6f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.act();

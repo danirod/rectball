@@ -25,7 +25,7 @@ import es.danirod.rectball.RectballGame;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 480;
+		config.width = 400;
 		config.height = 640;
 		config.title = RectballGame.VERSION;
 		config.useHDPI = true;

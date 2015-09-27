@@ -18,26 +18,19 @@
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.utils.KonamiCodeListener;
-import es.danirod.rectball.utils.KonamiCodeProcessor;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
-import es.danirod.rectball.utils.StyleFactory;
 
-public class WelcomeScreen extends MenuScreen implements KonamiCodeListener {
+public class MainMenuScreen extends MenuScreen {
 
-    public WelcomeScreen(RectballGame game) {
+    public MainMenuScreen(RectballGame game) {
         super(game);
     }
 
@@ -45,45 +38,32 @@ public class WelcomeScreen extends MenuScreen implements KonamiCodeListener {
     public void show() {
         super.show();
 
-        // Prepare Konami Code.
-        InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(new KonamiCodeProcessor(this));
-        multiplexer.addProcessor(stage);
-        Gdx.input.setInputProcessor(multiplexer);
-
-        // Build styles for title and version
-        BitmapFont titleFont = boldGenerator.generateFont(StyleFactory.buildFontStyle(100, 4, 2));
-        BitmapFont versionFont = fontGenerator.generateFont(StyleFactory.buildFontStyle(25, 0, 1));
-        LabelStyle titleStyle = new LabelStyle(titleFont, Color.WHITE);
-        LabelStyle versionStyle = new LabelStyle(versionFont, Color.WHITE);
-
         // Build the actors.
-        Label title = new Label("Rectball", titleStyle);
+        Image title = new Image(game.manager.get("logo.png", Texture.class));
+        title.setScaling(Scaling.fit);
         TextButton play = newButton("Play");
         TextButton settings = newButton("Settings");
         TextButton statistics = newButton("Stats");
-        Label version = new Label(RectballGame.VERSION, versionStyle);
 
         // Position the actors in the screen.
-        table.add(title).pad(20).padBottom(100).align(Align.center).row();
-        table.add(play).pad(20).fillX().height(100).row();
-        table.add(settings).pad(20).fillX().height(100).row();
+        table.add(title).pad(40).row();
+        table.add(play).pad(20).fillX().height(150).row();
+        table.add(settings).pad(20).fillX().height(150).row();
         // table.add(statistics).pad(20).fillX().height(100).row();
-        table.add(version).pad(20).align(Align.bottomRight).expandY().row();
 
         // Then add the capture listeners for the buttons.
         play.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.player.playSound(SoundCode.SUCCESS);
-                game.setScreen(1);
+                game.setScreen(Screens.GAME);
             }
         });
         settings.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.player.playSound(SoundCode.SUCCESS);
-                game.setScreen(4);
+                game.setScreen(Screens.SETTINGS);
             }
         });
         statistics.addCaptureListener(new ChangeListener() {
@@ -96,7 +76,7 @@ public class WelcomeScreen extends MenuScreen implements KonamiCodeListener {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.3f, 0.3f, 0.8f, 1f);
+        Gdx.gl.glClearColor(0.5f, 0.6f, 0.6f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.act();
@@ -105,12 +85,6 @@ public class WelcomeScreen extends MenuScreen implements KonamiCodeListener {
 
     @Override
     public int getID() {
-        return 3;
-    }
-
-    @Override
-    public void onKonamiCodePressed() {
-        System.out.println("Código Konami Presionado.");
-        game.setScreen(10);
+        return Screens.MAIN_MENU;
     }
 }
