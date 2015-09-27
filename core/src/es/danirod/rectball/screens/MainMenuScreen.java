@@ -34,9 +34,9 @@ import es.danirod.rectball.utils.KonamiCodeProcessor;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 import es.danirod.rectball.utils.StyleFactory;
 
-public class WelcomeScreen extends MenuScreen implements KonamiCodeListener {
+public class MainMenuScreen extends MenuScreen implements KonamiCodeListener {
 
-    public WelcomeScreen(RectballGame game) {
+    public MainMenuScreen(RectballGame game) {
         super(game);
     }
 

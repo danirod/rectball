@@ -19,21 +19,17 @@ package es.danirod.rectball;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonWriter;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import es.danirod.rectball.screens.*;
 import es.danirod.rectball.screens.debug.CombinationDebugScreen;
@@ -69,7 +65,7 @@ public class RectballGame extends Game {
         this.screens = new HashMap<>();
         this.addScreen(new GameScreen(this));
         this.addScreen(new GameOverScreen(this));
-        this.addScreen(new WelcomeScreen(this));
+        this.addScreen(new MainMenuScreen(this));
         this.addScreen(new SettingsScreen(this));
         this.addScreen(new LoadingScreen(this));
         this.addScreen(new DebugScreen(this));
