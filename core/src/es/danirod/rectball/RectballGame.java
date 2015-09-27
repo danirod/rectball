@@ -36,6 +36,7 @@ import es.danirod.rectball.screens.*;
 import es.danirod.rectball.settings.ScoreIO;
 import es.danirod.rectball.settings.Scores;
 import es.danirod.rectball.settings.Settings;
+import es.danirod.rectball.statistics.Statistics;
 import es.danirod.rectball.utils.SoundPlayer;
 import es.danirod.rectball.utils.StyleFactory;
 
@@ -55,11 +56,11 @@ public class RectballGame extends Game {
 
     public Scores scores;
 
+    public Statistics statistics;
+
     public AssetManager manager;
 
     public SoundPlayer player;
-
-    public StyleFactory style;
 
     public float aliveTime;
 
@@ -87,6 +88,7 @@ public class RectballGame extends Game {
         Gdx.app.debug("RectballGame", "Reading settings...");
         settings = new Settings(Gdx.app.getPreferences("rectball"));
         scores = ScoreIO.load();
+        statistics = Statistics.loadStats();
         player = new SoundPlayer(this);
 
         Gdx.app.debug("RectballGame", "Loading assets...");
