@@ -75,6 +75,7 @@ public class RectballGame extends Game {
         this.addScreen(new MainMenuScreen(this));
         this.addScreen(new SettingsScreen(this));
         this.addScreen(new LoadingScreen(this));
+        this.addScreen(new StatisticsScreen(this));
 
         Gdx.app.debug("RectballGame", "Adding assets to the manager...");
         manager = createManager();
