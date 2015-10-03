@@ -15,6 +15,8 @@ public class Screens {
 
     public static final int LOADING = 5;
 
+    public static final int STATISTICS = 6;
+
     public static final int DEBUG = 10;
 
     public static final int COMBINATION_TEST = 11;
