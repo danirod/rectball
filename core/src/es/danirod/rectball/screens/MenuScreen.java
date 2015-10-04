@@ -17,26 +17,14 @@
  */
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.utils.StyleFactory;
 
@@ -49,10 +37,6 @@ import es.danirod.rectball.utils.StyleFactory;
  */
 public abstract class MenuScreen extends AbstractScreen {
 
-    protected Stage stage;
-
-    protected Table table;
-
     private LabelStyle genericLabelStyle;
 
     private TextButtonStyle genericButtonStyle;
@@ -61,43 +45,14 @@ public abstract class MenuScreen extends AbstractScreen {
         super(game);
     }
 
-    @Override
-    public void show() {
-        // Load the fonts used in the screen.
-        BitmapFont normalFont = game.manager.get("normalFont.ttf");
-        genericLabelStyle = new LabelStyle(normalFont, Color.WHITE);
-
-        // Load ninepatches used for buttons.
-        Texture tex = game.manager.get("ui/button.png", Texture.class);
-        TextureRegion normalRegion = new TextureRegion(tex, 0, 0, 128, 128);
-        TextureRegion hoverRegion = new TextureRegion(tex, 128, 0, 128, 128);
-        genericButtonStyle = StyleFactory.buildTextButtonStyle(normalRegion, hoverRegion, 32, normalFont);
-
-        stage = new Stage(new FitViewport(600, 960));
-        Gdx.input.setInputProcessor(stage);
-        table = new Table();
-        stage.addActor(table);
-        table.setFillParent(true);
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height);
-        stage.getCamera().update();
-    }
-
-    @Override
-    public void hide() {
-        Gdx.input.setInputProcessor(null);
-        stage.dispose();
-    }
-
     /**
      * Factory method used to build a new label using the default style.
      * @param text  text to put in the label
      * @return  the label as created.
      */
     protected Label newLabel(CharSequence text) {
+        BitmapFont normalFont = game.manager.get("normalFont.ttf");
+        LabelStyle genericLabelStyle = new LabelStyle(normalFont, Color.WHITE);
         return new Label(text, genericLabelStyle);
     }
 
@@ -113,6 +68,11 @@ public abstract class MenuScreen extends AbstractScreen {
      * @return  the button as created.
      */
     protected TextButton newButton(CharSequence text) {
+        BitmapFont normalFont = game.manager.get("normalFont.ttf");
+        Texture tex = game.manager.get("ui/button.png", Texture.class);
+        TextureRegion normalRegion = new TextureRegion(tex, 0, 0, 128, 128);
+        TextureRegion hoverRegion = new TextureRegion(tex, 128, 0, 128, 128);
+        TextButtonStyle genericButtonStyle = StyleFactory.buildTextButtonStyle(normalRegion, hoverRegion, 32, normalFont);
         return new TextButton(text.toString(), genericButtonStyle);
     }
 }
