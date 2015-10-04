@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
@@ -33,6 +34,9 @@ import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
 public class GameOverScreen extends MenuScreen {
 
+    private Label aliveTime;
+
+    private Label highScore;
     private Value score;
 
     public GameOverScreen(RectballGame game) {
@@ -40,21 +44,18 @@ public class GameOverScreen extends MenuScreen {
     }
 
     @Override
-    public void show() {
-        super.show();
-
+    public void setUpInterface(Table table) {
         Label gameOver = newLabel("GAME OVER");
-        table.add(gameOver).pad(40).colspan(2).expandX().expandY().align(Align.center).row();
-
-        Label aliveTime = newLabel("Alive: " + (int) game.aliveTime + " s");
-        table.add(aliveTime).pad(20).colspan(2).expandX().expandY().align(Align.center).row();
-
-        Label hiScore = newLabel("High Score: " + game.scores.getHighestScore());
-        table.add(hiScore).pad(20).colspan(2).expandX().expandY().align(Align.center).row();
+        aliveTime = newLabel("Alive: " + (int) game.aliveTime + " s");
+        highScore = newLabel("High Score: " + game.scores.getHighestScore());
 
         Texture sheet = game.manager.get("scores.png", Texture.class);
         score = new Value(sheet, 6, game.scores.getLastScore());
         table.add(score).pad(40).colspan(2).fillX().height(200).row();
+
+        table.add(gameOver).pad(40).colspan(2).expandX().expandY().align(Align.center).row();
+        table.add(aliveTime).pad(20).colspan(2).expandX().expandY().align(Align.center).row();
+        table.add(highScore).pad(20).colspan(2).expandX().expandY().align(Align.center).row();
 
         TextButton replay = newButton("Replay");
         TextButton menu = newButton("Menu");
@@ -75,21 +76,20 @@ public class GameOverScreen extends MenuScreen {
                 game.setScreen(Screens.MAIN_MENU);
             }
         });
-
-        game.statistics.getTotalData().incrementValue("games");
-        game.statistics.getTotalData().incrementValue("time", (int) game.aliveTime);
-
-        ScoreIO.save(game.scores);
-        Statistics.saveStats(game.statistics);
     }
 
     @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0.1f, 0.3f, 0.8f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    public void show() {
+        super.show();
 
-        stage.act(delta);
-        stage.draw();
+        aliveTime.setText("Alive: " + (int) game.aliveTime + " s");
+        highScore.setText("High Score: " + game.scores.getHighestScore());
+        score.setValue(game.scores.getLastScore());
+
+        game.statistics.getTotalData().incrementValue("games");
+        game.statistics.getTotalData().incrementValue("time", (int) game.aliveTime);
+        ScoreIO.save(game.scores);
+        Statistics.saveStats(game.statistics);
     }
 
     @Override

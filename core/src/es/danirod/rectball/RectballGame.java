@@ -17,7 +17,6 @@
  */
 package es.danirod.rectball;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -38,7 +37,6 @@ import es.danirod.rectball.settings.Scores;
 import es.danirod.rectball.settings.Settings;
 import es.danirod.rectball.statistics.Statistics;
 import es.danirod.rectball.utils.SoundPlayer;
-import es.danirod.rectball.utils.StyleFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,34 +64,34 @@ public class RectballGame extends Game {
 
     @Override
     public void create() {
-        Gdx.app.setLogLevel(Application.LOG_DEBUG);
-        Gdx.app.debug("RectballGame", "Welcome to " + VERSION);
+        // Add the screens.
+        addScreen(new GameScreen(this));
+        addScreen(new GameOverScreen(this));
+        addScreen(new MainMenuScreen(this));
+        addScreen(new SettingsScreen(this));
+        addScreen(new LoadingScreen(this));
+        addScreen(new StatisticsScreen(this));
 
-        Gdx.app.debug("RectballGame", "Adding Game Screens...");
-        this.addScreen(new GameScreen(this));
-        this.addScreen(new GameOverScreen(this));
-        this.addScreen(new MainMenuScreen(this));
-        this.addScreen(new SettingsScreen(this));
-        this.addScreen(new LoadingScreen(this));
-        this.addScreen(new StatisticsScreen(this));
-
-        Gdx.app.debug("RectballGame", "Adding assets to the manager...");
+        // Load the resources.
         manager = createManager();
+        screens.get(Screens.LOADING).load();
+        setScreen(Screens.LOADING);
+    }
 
-        Gdx.app.debug("RectballGame", "Loading screens...");
-        for (Map.Entry<Integer, AbstractScreen> screen : screens.entrySet()) {
-            Gdx.app.debug("RectballGame", "Loading screen " + screen.getValue().getID() + "...");
-            screen.getValue().load();
-        }
-
-        Gdx.app.debug("RectballGame", "Reading settings...");
+    public void finishLoading() {
+        // Load the remaining data.
         settings = new Settings(Gdx.app.getPreferences("rectball"));
         scores = ScoreIO.load();
         statistics = Statistics.loadStats();
         player = new SoundPlayer(this);
 
-        Gdx.app.debug("RectballGame", "Loading assets...");
-        setScreen(5);
+        // Load the screens.
+        for (Map.Entry<Integer, AbstractScreen> screen : screens.entrySet()) {
+            screen.getValue().load();
+        }
+
+        // Enter main menu.
+        setScreen(Screens.MAIN_MENU);
     }
 
     private AssetManager createManager() {

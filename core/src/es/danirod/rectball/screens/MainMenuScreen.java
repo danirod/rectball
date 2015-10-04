@@ -17,17 +17,13 @@
  */
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Scaling;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.utils.SoundPlayer.SoundCode;
+import es.danirod.rectball.listeners.ScreenJumper;
 
 public class MainMenuScreen extends MenuScreen {
 
@@ -36,9 +32,7 @@ public class MainMenuScreen extends MenuScreen {
     }
 
     @Override
-    public void show() {
-        super.show();
-
+    public void setUpInterface(Table table) {
         // Build the actors.
         Image title = new Image(game.manager.get("logo.png", Texture.class));
         title.setScaling(Scaling.fit);
@@ -53,49 +47,9 @@ public class MainMenuScreen extends MenuScreen {
         table.add(statistics).pad(20).fillX().height(150).row();
 
         // Then add the capture listeners for the buttons.
-        play.addCaptureListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                transitionScreen(Screens.GAME);
-            }
-        });
-        settings.addCaptureListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                transitionScreen(Screens.SETTINGS);
-            }
-        });
-        statistics.addCaptureListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                transitionScreen(Screens.STATISTICS);
-            }
-        });
-    }
-
-    private void transitionScreen(final int screenID) {
-        stage.getRoot().addAction(
-                Actions.sequence(
-                        Actions.fadeOut(0.25f),
-                        Actions.run(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                game.player.playSound(SoundCode.SUCCESS);
-                                game.setScreen(screenID);
-                            }
-                        })
-                )
-        );
-    }
-
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0.5f, 0.6f, 0.6f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        stage.act();
-        stage.draw();
+        play.addCaptureListener(new ScreenJumper(game, Screens.GAME));
+        settings.addCaptureListener(new ScreenJumper(game, Screens.SETTINGS));
+        statistics.addCaptureListener(new ScreenJumper(game, Screens.STATISTICS));
     }
 
     @Override
