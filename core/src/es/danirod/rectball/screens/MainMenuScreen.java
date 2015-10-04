@@ -21,6 +21,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -32,11 +33,6 @@ public class MainMenuScreen extends MenuScreen {
 
     public MainMenuScreen(RectballGame game) {
         super(game);
-    }
-
-    @Override
-    public void load() {
-        super.load();
     }
 
     @Override
@@ -54,29 +50,43 @@ public class MainMenuScreen extends MenuScreen {
         table.add(title).pad(40).row();
         table.add(play).pad(20).fillX().height(150).row();
         table.add(settings).pad(20).fillX().height(150).row();
-        // table.add(statistics).pad(20).fillX().height(100).row();
+        table.add(statistics).pad(20).fillX().height(150).row();
 
         // Then add the capture listeners for the buttons.
         play.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.player.playSound(SoundCode.SUCCESS);
-                game.setScreen(Screens.GAME);
+                transitionScreen(Screens.GAME);
             }
         });
         settings.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.player.playSound(SoundCode.SUCCESS);
-                game.setScreen(Screens.SETTINGS);
+                transitionScreen(Screens.SETTINGS);
             }
         });
         statistics.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.player.playSound(SoundCode.FAIL);
+                transitionScreen(Screens.STATISTICS);
             }
         });
+    }
+
+    private void transitionScreen(final int screenID) {
+        stage.getRoot().addAction(
+                Actions.sequence(
+                        Actions.fadeOut(0.25f),
+                        Actions.run(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                game.player.playSound(SoundCode.SUCCESS);
+                                game.setScreen(screenID);
+                            }
+                        })
+                )
+        );
     }
 
     @Override

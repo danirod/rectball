@@ -33,7 +33,7 @@ project(":android") {
     ext {
         androidToolsVersion = "22.0.1"
         androidSdkVersion = "22"
-        androidVersionCode = "1"
+        androidVersionCode = "14"
         androidScreenOrientation = "portrait"
     }
 }

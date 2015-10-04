@@ -27,6 +27,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.Value;
+import es.danirod.rectball.settings.ScoreIO;
+import es.danirod.rectball.statistics.Statistics;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
 public class GameOverScreen extends MenuScreen {
@@ -74,7 +76,11 @@ public class GameOverScreen extends MenuScreen {
             }
         });
 
-        game.saveState();
+        game.statistics.getTotalData().incrementValue("games");
+        game.statistics.getTotalData().incrementValue("time", (int) game.aliveTime);
+
+        ScoreIO.save(game.scores);
+        Statistics.saveStats(game.statistics);
     }
 
     @Override

@@ -22,30 +22,26 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
-import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
-import com.badlogic.gdx.utils.Base64Coder;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import es.danirod.rectball.screens.*;
+import es.danirod.rectball.settings.ScoreIO;
 import es.danirod.rectball.settings.Scores;
 import es.danirod.rectball.settings.Settings;
+import es.danirod.rectball.statistics.Statistics;
 import es.danirod.rectball.utils.SoundPlayer;
 import es.danirod.rectball.utils.StyleFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Main class for the game.
@@ -60,11 +56,11 @@ public class RectballGame extends Game {
 
     public Scores scores;
 
+    public Statistics statistics;
+
     public AssetManager manager;
 
     public SoundPlayer player;
-
-    public StyleFactory style;
 
     public float aliveTime;
 
@@ -79,6 +75,7 @@ public class RectballGame extends Game {
         this.addScreen(new MainMenuScreen(this));
         this.addScreen(new SettingsScreen(this));
         this.addScreen(new LoadingScreen(this));
+        this.addScreen(new StatisticsScreen(this));
 
         Gdx.app.debug("RectballGame", "Adding assets to the manager...");
         manager = createManager();
@@ -91,7 +88,8 @@ public class RectballGame extends Game {
 
         Gdx.app.debug("RectballGame", "Reading settings...");
         settings = new Settings(Gdx.app.getPreferences("rectball"));
-        scores = loadState();
+        scores = ScoreIO.load();
+        statistics = Statistics.loadStats();
         player = new SoundPlayer(this);
 
         Gdx.app.debug("RectballGame", "Loading assets...");
@@ -184,35 +182,5 @@ public class RectballGame extends Game {
      */
     public void addScreen(AbstractScreen screen) {
         screens.put(screen.getID(), screen);
-    }
-
-    public void saveState() {
-        Json json = new Json();
-        json.setOutputType(OutputType.json);
-        String jsonData = json.toJson(scores);
-
-        String encodedJson = Base64Coder.encodeString(jsonData);
-        FileHandle handlepore = Gdx.files.local("scores");
-        handlepore.writeString(encodedJson, false);
-    }
-
-    public Scores loadState() {
-        FileHandle handlepore = Gdx.files.local("scores");
-
-        // If the file does not exists then is because there is no scores file.
-        if (!handlepore.exists()) {
-            return new Scores();
-        }
-
-        // Otherwise, just try to decode the file.
-        try {
-            String encodedJson = handlepore.readString();
-            String decodeJson = Base64Coder.decodeString(encodedJson);
-            Json json = new Json();
-            return json.fromJson(Scores.class, decodeJson);
-        } catch (Exception e) {
-            // Fail silently.
-            return new Scores();
-        }
     }
 }
