@@ -50,7 +50,7 @@ public class GameOverScreen extends MenuScreen {
         highScore = newLabel("High Score: " + game.scores.getHighestScore());
 
         Texture sheet = game.manager.get("scores.png", Texture.class);
-        score = new Value(sheet, 6, game.scores.getLastScore());
+        score = new Value(sheet, 4, game.scores.getLastScore());
         table.add(score).pad(40).colspan(2).fillX().height(200).row();
 
         table.add(gameOver).pad(40).colspan(2).expandX().expandY().align(Align.center).row();
