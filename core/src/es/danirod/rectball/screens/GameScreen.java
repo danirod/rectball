@@ -111,7 +111,7 @@ public class GameScreen extends AbstractScreen {
         // Set up the score
         Texture numbers = game.manager.get("scores.png");
         score = buildScoreLabel();
-        score.setText(buildScore(valueScore, 6));
+        score.setText(buildScore(valueScore, 4));
         stage.addActor(score);
 
         // Set up the timer
