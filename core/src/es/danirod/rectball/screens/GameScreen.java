@@ -383,7 +383,15 @@ public class GameScreen extends AbstractScreen {
         return strValue;
     }
 
-    public void score(int score) {
+    public void score(int score, BallColor color, int rows, int cols) {
+        // Store this information in the statistics.
+        String size = Math.max(rows, cols) + "x" + Math.min(rows, cols);
+        game.statistics.getTotalData().incrementValue("balls", rows * cols);
+        game.statistics.getTotalData().incrementValue("score", score);
+        game.statistics.getTotalData().incrementValue("combinations");
+        game.statistics.getColorData().incrementValue(color.toString().toLowerCase());
+        game.statistics.getSizesData().incrementValue(size);
+
         valueScore += score;
         this.score.setText(buildScore(valueScore, 6));
 
