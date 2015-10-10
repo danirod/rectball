@@ -54,6 +54,10 @@ public class SettingsScreen extends AbstractScreen {
         backButton.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                // FIXME: I'm duplicate code!!
+                TextButton button = (TextButton)actor;
+                button.setChecked(false);
+
                 game.settings.setSoundEnabled(soundSwitch.isEnabled());
                 game.settings.setColorblind(colorSwitch.isEnabled());
                 game.player.playSound(SoundCode.FAIL);
