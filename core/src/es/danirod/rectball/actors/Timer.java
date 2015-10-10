@@ -21,7 +21,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import es.danirod.rectball.screens.GameScreen;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * TODO: Separate the timer logic into a separate class or interface.
@@ -37,6 +39,23 @@ import es.danirod.rectball.screens.GameScreen;
  * @author danirod
  */
 public class Timer extends Actor {
+
+    /**
+     * This interface uses the Subscriber pattern to be notified when the timer
+     * runs out of time. Make your subscriber class implement this interface,
+     * then pass your subscriber to this timer when you create it. It will be
+     * notified that the time is over.
+     */
+    public static interface TimerCallback {
+
+        /**
+         * This is the method that receives the message that the time is over.
+         */
+        public void onTimeOut();
+
+    }
+
+    private List<TimerCallback> subscribers = new ArrayList<>();
 
     /**
      * Warning region. When the remaining time percentage is not greater than
@@ -69,14 +88,6 @@ public class Timer extends Actor {
     private TextureRegion warning;
 
     /**
-     * The game screen owning this timer. This screen will be notified when the
-     * time is over so that it can handle what happens after the time is over,
-     * for instance, displaying a game over.
-     */
-    private GameScreen screen;
-    // TODO: Change GameScreen into a lightweight interface (TimerCallback).
-
-    /**
      * The maximum number of seconds this timer can have. When filled with
      * seconds, the value of the timer will always be clamped so that it's
      * never bigger than this. Aditionally this is used as the maximum value
@@ -102,11 +113,9 @@ public class Timer extends Actor {
     /**
      * Set up a new timer.
      *
-     * @param screen  the screen owning this timer.
      * @param seconds  the maximum seconds for this timer.
      */
-    public Timer(GameScreen screen, int seconds, Texture texture) {
-        this.screen = screen;
+    public Timer(int seconds, Texture texture) {
         this.seconds = seconds;
         this.maxSeconds = seconds;
 
@@ -115,6 +124,17 @@ public class Timer extends Actor {
         background = new TextureRegion(texture, 0, 0, width, height);
         remaining = new TextureRegion(texture, height, 0, width, height);
         warning = new TextureRegion(texture, 2 * height, 0, width, height);
+    }
+
+    /**
+     * Add a new subscriber to this timer. It will be notified when the time
+     * is over so that it can define its own functionality. For instance, the
+     * screen might display a game over message.
+     *
+     * @param subscriber  the subscriber that is going to be added.
+     */
+    public void addSubscriber(TimerCallback subscriber) {
+        subscribers.add(subscriber);
     }
 
     /**
@@ -164,7 +184,9 @@ public class Timer extends Actor {
             seconds -= delta;
             if (seconds < 0) {
                 seconds = 0;
-                screen.gameOver();
+                for (TimerCallback subscriber : subscribers) {
+                    subscriber.onTimeOut();
+                }
             }
         }
     }

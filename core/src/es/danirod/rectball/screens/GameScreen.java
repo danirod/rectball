@@ -24,7 +24,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -44,6 +43,7 @@ import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.Ball;
 import es.danirod.rectball.actors.Board;
 import es.danirod.rectball.actors.Timer;
+import es.danirod.rectball.actors.Timer.TimerCallback;
 import es.danirod.rectball.actors.Value;
 import es.danirod.rectball.dialogs.PauseDialog;
 import es.danirod.rectball.listeners.BallInputListener;
@@ -53,7 +53,7 @@ import es.danirod.rectball.model.CombinationFinder;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 import es.danirod.rectball.utils.StyleFactory;
 
-public class GameScreen extends AbstractScreen {
+public class GameScreen extends AbstractScreen implements TimerCallback {
 
     private Stage stage;
 
@@ -116,7 +116,8 @@ public class GameScreen extends AbstractScreen {
 
         // Set up the timer
         Texture timerTexture = game.manager.get("timer.png");
-        timer = new Timer(this, 30, timerTexture);
+        timer = new Timer(30, timerTexture);
+        timer.addSubscriber(this);
         timer.setRunning(false);
         stage.addActor(timer);
 
@@ -148,7 +149,7 @@ public class GameScreen extends AbstractScreen {
                 dialog.setVisible(false);
 
                 timer.setRunning(false);
-                gameOver();
+                onTimeOut();
             }
         });
         pauseDialog.addNoButtonCaptureListener(new ChangeListener() {
@@ -240,7 +241,8 @@ public class GameScreen extends AbstractScreen {
         stage.draw();
     }
 
-    public void gameOver() {
+    @Override
+    public void onTimeOut() {
         // Update the score... and the record.
         long lastScore = Long.parseLong(score.getText().toString());
         game.scores.addScore(lastScore);
