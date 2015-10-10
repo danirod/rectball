@@ -44,10 +44,10 @@ public class SettingsScreen extends AbstractScreen {
         final Switch colorSwitch = new Switch(switchTex, game.settings.isColorblind(), false);
 
         table.pad(20);
-        table.add(boldLabel("Settings")).expandX().align(Align.center).colspan(2).height(100).row();
-        table.add(newLabel("Sound")).expandX().align(Align.left).height(100);
+        table.add(new Label("Settings", game.getSkin(), "bold")).expandX().align(Align.center).colspan(2).height(100).row();
+        table.add(new Label("Sound", game.getSkin())).expandX().align(Align.left).height(100);
         table.add(soundSwitch).width(150).height(50).row();
-        table.add(newLabel("Colorblind")).expandX().align(Align.left).height(100);
+        table.add(new Label("Colorblind", game.getSkin())).expandX().align(Align.left).height(100);
         table.add(colorSwitch).width(150).height(50).row();
         table.add(backButton).fillX().expandY().height(125).align(Align.bottom).colspan(2).row();
 
@@ -71,23 +71,5 @@ public class SettingsScreen extends AbstractScreen {
     @Override
     public int getID() {
         return Screens.SETTINGS;
-    }
-
-    /**
-     * Adapter method for legacy bold label creation.
-     * @param text the text for the label.
-     * @return the bold label.
-     */
-    private Label boldLabel(CharSequence text) {
-        return new Label(text, game.getSkin(), "bold");
-    }
-
-    /**
-     * Adapter method for legacy label creation.
-     * @param text  the text for the label.
-     * @return  the label.
-     */
-    private Label newLabel(CharSequence text) {
-        return new Label(text, game.getSkin());
     }
 }
