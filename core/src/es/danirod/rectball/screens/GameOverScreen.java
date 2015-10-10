@@ -17,8 +17,6 @@
  */
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -32,7 +30,7 @@ import es.danirod.rectball.settings.ScoreIO;
 import es.danirod.rectball.statistics.Statistics;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
-public class GameOverScreen extends MenuScreen {
+public class GameOverScreen extends AbstractScreen {
 
     private Label aliveTime;
 
@@ -45,9 +43,9 @@ public class GameOverScreen extends MenuScreen {
 
     @Override
     public void setUpInterface(Table table) {
-        Label gameOver = newLabel("GAME OVER");
-        aliveTime = newLabel("Alive: " + (int) game.aliveTime + " s");
-        highScore = newLabel("High Score: " + game.scores.getHighestScore());
+        Label gameOver = new Label("GAME OVER", game.getSkin());
+        aliveTime = new Label("Alive: " + (int) game.aliveTime + " s", game.getSkin());
+        highScore = new Label("High Score: " + game.scores.getHighestScore(), game.getSkin());
 
         Texture sheet = game.manager.get("scores.png", Texture.class);
         score = new Value(sheet, 4, game.scores.getLastScore());
@@ -57,8 +55,8 @@ public class GameOverScreen extends MenuScreen {
         table.add(aliveTime).pad(20).colspan(2).expandX().expandY().align(Align.center).row();
         table.add(highScore).pad(20).colspan(2).expandX().expandY().align(Align.center).row();
 
-        TextButton replay = newButton("Replay");
-        TextButton menu = newButton("Menu");
+        TextButton replay = new TextButton("Replay", game.getSkin());
+        TextButton menu = new TextButton("Menu", game.getSkin());
         table.add(replay).pad(40).expandX().height(100);
         table.add(menu).pad(40).expandX().height(100).row();
 

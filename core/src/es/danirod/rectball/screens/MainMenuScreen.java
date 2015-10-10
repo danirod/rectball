@@ -25,7 +25,9 @@ import com.badlogic.gdx.utils.Scaling;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.listeners.ScreenJumper;
 
-public class MainMenuScreen extends MenuScreen {
+import static es.danirod.rectball.Constants.STAGE_PADDING;
+
+public class MainMenuScreen extends AbstractScreen {
 
     public MainMenuScreen(RectballGame game) {
         super(game);
@@ -36,15 +38,15 @@ public class MainMenuScreen extends MenuScreen {
         // Build the actors.
         Image title = new Image(game.manager.get("logo.png", Texture.class));
         title.setScaling(Scaling.fit);
-        TextButton play = newButton("Play");
-        TextButton settings = newButton("Settings");
-        TextButton statistics = newButton("Stats");
+        TextButton play = new TextButton("Play", game.getSkin());
+        TextButton settings = new TextButton("Settings", game.getSkin());
+        TextButton statistics = new TextButton("Stats", game.getSkin());
 
         // Position the actors in the screen.
         table.add(title).pad(40).row();
-        table.add(play).pad(20).fillX().height(150).row();
-        table.add(settings).pad(20).fillX().height(150).row();
-        table.add(statistics).pad(20).fillX().height(150).row();
+        table.add(play).padBottom(STAGE_PADDING).fillX().height(150).row();
+        table.add(settings).padBottom(STAGE_PADDING).fillX().height(150).row();
+        table.add(statistics).padBottom(STAGE_PADDING).fillX().height(150).row();
 
         // Then add the capture listeners for the buttons.
         play.addCaptureListener(new ScreenJumper(game, Screens.GAME));

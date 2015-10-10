@@ -12,7 +12,7 @@ import es.danirod.rectball.listeners.ScreenJumper;
 /**
  * Statistics screen.
  */
-public class StatisticsScreen extends MenuScreen {
+public class StatisticsScreen extends AbstractScreen {
 
     public StatisticsScreen(RectballGame game) {
         super(game);
@@ -20,8 +20,8 @@ public class StatisticsScreen extends MenuScreen {
 
     @Override
     public void setUpInterface(Table table) {
-        final TextButton backButton = newButton("Back");
-        final Label stats = newLabel("Stats");
+        final TextButton backButton = new TextButton("Back", game.getSkin());
+        final Label stats = new Label("Stats", game.getSkin());
 
         table.pad(20);
         table.add(backButton).align(Align.left).expandX();

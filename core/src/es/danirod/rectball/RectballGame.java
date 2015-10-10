@@ -31,11 +31,13 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import es.danirod.rectball.screens.*;
 import es.danirod.rectball.settings.ScoreIO;
 import es.danirod.rectball.settings.Scores;
 import es.danirod.rectball.settings.Settings;
 import es.danirod.rectball.statistics.Statistics;
+import es.danirod.rectball.utils.RectballSkin;
 import es.danirod.rectball.utils.SoundPlayer;
 
 import java.util.HashMap;
@@ -48,6 +50,8 @@ public class RectballGame extends Game {
 
     public static final String VERSION = "Rectball 0.1.2-SNAPSHOT";
 
+    /* FIXME: Privatize this. */
+
     private Map<Integer, AbstractScreen> screens = new HashMap<>();
 
     public Settings settings;
@@ -59,6 +63,8 @@ public class RectballGame extends Game {
     public AssetManager manager;
 
     public SoundPlayer player;
+
+    private Skin uiSkin;
 
     public float aliveTime;
 
@@ -84,6 +90,7 @@ public class RectballGame extends Game {
         scores = ScoreIO.load();
         statistics = Statistics.loadStats();
         player = new SoundPlayer(this);
+        uiSkin = new RectballSkin(this);
 
         // Load the screens.
         for (Map.Entry<Integer, AbstractScreen> screen : screens.entrySet()) {
@@ -180,5 +187,13 @@ public class RectballGame extends Game {
      */
     public void addScreen(AbstractScreen screen) {
         screens.put(screen.getID(), screen);
+    }
+
+    /**
+     * Get the skin used by Scene2D UI to display things.
+     * @return  the skin the game should use.
+     */
+    public Skin getSkin() {
+        return uiSkin;
     }
 }

@@ -25,14 +25,27 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
 
+import static es.danirod.rectball.Constants.STAGE_PADDING;
+import static es.danirod.rectball.Constants.VIEWPORT_HEIGHT;
+import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
+
+/**
+ * This is the base screen every screen has to inherit. It contains common
+ * boilerplate code such as a stage and a table widget for add child widgets.
+ *
+ * @author danirod
+ */
 public abstract class AbstractScreen implements Screen {
 
     protected RectballGame game;
 
+    /** Common stage. */
     private Stage stage;
 
+    /** Common table. */
     private Table table;
 
     public AbstractScreen(RectballGame game) {
@@ -45,17 +58,26 @@ public abstract class AbstractScreen implements Screen {
     }
 
     public void load() {
-        Viewport viewport = new FitViewport(500, 800);
+        Viewport viewport = new FitViewport(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
         stage = new Stage(viewport);
         table = new Table();
         table.setFillParent(true);
+        table.pad(STAGE_PADDING);
         setUpInterface(table);
         stage.addActor(table);
     }
 
+    /**
+     * This method sets up the visual layout for this screen. Child classes
+     * have to override this method and add to the provided table the widgets
+     * they want to show in the screen.
+     *
+     * @param table  table that has been assigned to this screen.
+     */
     public void setUpInterface(Table table) {
-        // Override this method in subclasses.
-        // Don't make this abstract until the refactor has finished to avoid bugs.
+        // FIXME: This method should be abstract.
+        // However, I cannot make it abstract until I refactor every class
+        // or errors may happen.
     }
 
     @Override
