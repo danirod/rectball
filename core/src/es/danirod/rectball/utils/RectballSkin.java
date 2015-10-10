@@ -100,6 +100,12 @@ public class RectballSkin extends Skin {
         this.add("timer_background", background);
         this.add("timer_remaining", remaining);
         this.add("timer_warning", warning);
+
+        // Texture region for the icons.
+        Texture icons = game.manager.get("ui/icons.png");
+        TextureRegion[][] iconRegions = TextureRegion.split(icons, 256, 256);
+        add("iconClock", iconRegions[0][0]);
+        add("iconCrown", iconRegions[0][1]);
     }
 
     private void addPixmapStyles() {

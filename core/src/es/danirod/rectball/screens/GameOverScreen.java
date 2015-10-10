@@ -17,15 +17,16 @@
  */
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.actors.Value;
+import es.danirod.rectball.listeners.ScreenJumper;
 import es.danirod.rectball.settings.ScoreIO;
 import es.danirod.rectball.statistics.Statistics;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
@@ -40,18 +41,18 @@ public class GameOverScreen extends AbstractScreen {
     private Label aliveTime;
 
     /**
-     * The highest score the player has ever had on Rectball. I need to save
+     * The highest lastScore the player has ever had on Rectball. I need to save
      * a reference to this label in case the value changes when the user
      * enters this screen after losing a game.
      */
     private Label highScore;
 
     /**
-     * The score of the last game. I need to save a reference to this label
+     * The lastScore of the last game. I need to save a reference to this label
      * because every time the player enters this screen, the value will
      * probably change.
      */
-    private Value score;
+    private Label lastScore;
 
     public GameOverScreen(RectballGame game) {
         super(game);
@@ -59,40 +60,34 @@ public class GameOverScreen extends AbstractScreen {
 
     @Override
     public void setUpInterface(Table table) {
-        Label gameOver = new Label("GAME OVER", game.getSkin());
-
         // These labels have to be updated when show() is called because every
         // time the player enters this screen their values might have changed.
-        aliveTime = new Label("", game.getSkin());
+        lastScore = new Label("", game.getSkin(), "monospace");
         highScore = new Label("", game.getSkin());
+        aliveTime = new Label("", game.getSkin());
 
-        Texture sheet = game.manager.get("scores.png", Texture.class);
-        score = new Value(sheet, 4, game.scores.getLastScore());
-        table.add(score).pad(40).colspan(2).fillX().height(200).row();
+        lastScore.setFontScale(10f);
+        lastScore.setAlignment(Align.center);
 
-        table.add(gameOver).pad(40).colspan(2).expandX().expandY().align(Align.center).row();
-        table.add(aliveTime).pad(20).colspan(2).expandX().expandY().align(Align.center).row();
-        table.add(highScore).pad(20).colspan(2).expandX().expandY().align(Align.center).row();
+        // Icon drawables.
+        Drawable clockDrawable = game.getSkin().newDrawable("iconClock");
+        Drawable crownDrawable = game.getSkin().newDrawable("iconCrown");
+
+        // Populate the table.
+        table.add(new Label("GAME OVER", game.getSkin())).colspan(2).expandX().row();
+        table.add(lastScore).fillX().expand().colspan(2).align(Align.center).row();
+        table.add(new Image(clockDrawable)).size(80).expandX().align(Align.right).padRight(20);
+        table.add(aliveTime).expandX().align(Align.left).padLeft(20).row();
+        table.add(new Image(crownDrawable)).size(80).expandX().align(Align.right).padRight(20);
+        table.add(highScore).expandX().align(Align.left).padLeft(20).row();
 
         TextButton replay = new TextButton("Replay", game.getSkin());
         TextButton menu = new TextButton("Menu", game.getSkin());
-        table.add(replay).pad(40).expandX().height(100);
-        table.add(menu).pad(40).expandX().height(100).row();
+        table.add(replay).colspan(2).fillX().height(100).padTop(30).row();
+        table.add(menu).colspan(2).fillX().height(100).padTop(30).row();
 
-        replay.addCaptureListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                game.player.playSound(SoundCode.SUCCESS);
-                game.setScreen(Screens.GAME);
-            }
-        });
-        menu.addCaptureListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                game.player.playSound(SoundCode.FAIL);
-                game.setScreen(Screens.MAIN_MENU);
-            }
-        });
+        replay.addCaptureListener(new ScreenJumper(game, Screens.GAME));
+        menu.addCaptureListener(new ScreenJumper(game, Screens.MAIN_MENU));
     }
 
     @Override
@@ -101,9 +96,15 @@ public class GameOverScreen extends AbstractScreen {
 
         int aliveSeconds = (int) game.getCurrentGame().getTime();
 
-        aliveTime.setText("Alive: " + aliveSeconds + " s");
-        highScore.setText("High Score: " + game.scores.getHighestScore());
-        score.setValue(game.scores.getLastScore());
+        aliveTime.setText(Integer.toString(aliveSeconds) + " s");
+        highScore.setText(Long.toString(game.scores.getHighestScore()));
+
+        // Set the last lastScore.
+        String stringScore = Integer.toString(game.getCurrentGame().getScore());
+        while (stringScore.length() < 4) {
+            stringScore = "0" + stringScore;
+        }
+        lastScore.setText(stringScore);
 
         game.statistics.getTotalData().incrementValue("games");
         game.statistics.getTotalData().incrementValue("time", aliveSeconds);
