@@ -1,6 +1,7 @@
 package es.danirod.rectball.utils;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
@@ -33,6 +34,7 @@ public class RectballSkin extends Skin {
         addTextButtonStyles();
         addNinePatchesStyles();
         addTextureRegionStyles();
+        addPixmapStyles();
     }
 
     /**
@@ -49,6 +51,11 @@ public class RectballSkin extends Skin {
         BitmapFont boldFont = game.manager.get("boldFont.ttf");
         LabelStyle boldStyle = new LabelStyle(boldFont, Color.WHITE);
         this.add("bold", boldStyle);
+
+        // Build the monospace style
+        BitmapFont monospaceFont = game.manager.get("monospace.ttf");
+        LabelStyle monospaceStyle = new LabelStyle(monospaceFont, Color.WHITE);
+        this.add("monospace", monospaceStyle);
     }
 
     private void addTextButtonStyles() {
@@ -82,5 +89,12 @@ public class RectballSkin extends Skin {
         this.add("timer_background", background);
         this.add("timer_remaining", remaining);
         this.add("timer_warning", warning);
+    }
+
+    private void addPixmapStyles() {
+        Pixmap pixel = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pixel.setColor(Color.WHITE);
+        pixel.fill();
+        this.add("pixel", new Texture(pixel));
     }
 }

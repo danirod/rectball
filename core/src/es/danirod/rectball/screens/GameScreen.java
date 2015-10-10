@@ -39,6 +39,7 @@ import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.Ball;
 import es.danirod.rectball.actors.Board;
+import es.danirod.rectball.actors.ScoreActor;
 import es.danirod.rectball.actors.Timer;
 import es.danirod.rectball.actors.Timer.TimerCallback;
 import es.danirod.rectball.dialogs.PauseDialog;
@@ -49,15 +50,17 @@ import es.danirod.rectball.model.CombinationFinder;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 import es.danirod.rectball.utils.StyleFactory;
 
+import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
+
 public class GameScreen extends AbstractScreen implements TimerCallback {
 
     public Board board;
 
-    public Label score;
-
     public Timer timer;
 
-    private int valueScore;
+    private ScoreActor scoreLabel;
+
+    private int scoreValue;
 
     private boolean paused;
 
@@ -83,12 +86,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
             }
         }
 
-        // Set up the score
-        Texture numbers = game.manager.get("scores.png");
-        score = buildScoreLabel();
-
         timer = new Timer(30, game.getSkin());
         timer.addSubscriber(this);
+
+        scoreLabel = new ScoreActor(game.getSkin());
 
         super.load();
     }
@@ -106,14 +107,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         Gdx.input.setCatchBackKey(true);
 
         // Reset data
-        valueScore = 0;
+        scoreValue = 0;
         game.aliveTime = 0;
         paused = false;
 
         // Reset data
         board.setTouchable(Touchable.disabled);
-        score.setFontScale(6f);
-        score.setText(buildScore(valueScore, 4));
         timer.setRunning(false);
 
         // Set up the pause dialog.
@@ -184,9 +183,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
 
     @Override
     public void setUpInterface(Table table) {
-        table.setDebug(true);
-        table.add(score).fillX().height(100).row();
-        table.add(timer).fillX().height(60).padTop(20).padBottom(20).row();
+        table.add(timer).fillX().height(50).padTop(20).padBottom(10).row();
+        table.add(scoreLabel).width(VIEWPORT_WIDTH / 2).height(65).padBottom(60).row();
         table.add(board).expand().fill().row();
     }
 
@@ -213,9 +211,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
 
     @Override
     public void onTimeOut() {
-        // Update the score... and the record.
-        long lastScore = Long.parseLong(score.getText().toString());
-        game.scores.addScore(lastScore);
+        // Update the scoreLabel... and the record.
+        game.scores.addScore(scoreValue);
 
         timer.setRunning(false);
         board.setTouchable(Touchable.disabled);
@@ -270,14 +267,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         ));
     }
 
-    private Label buildScoreLabel() {
-        BitmapFont font = game.manager.get("fonts/scores.fnt");
-        LabelStyle style = new LabelStyle(font, Color.WHITE);
-        Label label = new Label("0", style);
-        label.setAlignment(Align.center);
-        return label;
-    }
-
     private String buildScore(int value, int digits) {
         String strValue = Integer.toString(value);
         while (strValue.length() < digits) {
@@ -290,13 +279,14 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         // Store this information in the statistics.
         String size = Math.max(rows, cols) + "x" + Math.min(rows, cols);
         game.statistics.getTotalData().incrementValue("balls", rows * cols);
-        game.statistics.getTotalData().incrementValue("score", score);
+        game.statistics.getTotalData().incrementValue("scoreLabel", score);
         game.statistics.getTotalData().incrementValue("combinations");
         game.statistics.getColorData().incrementValue(color.toString().toLowerCase());
         game.statistics.getSizesData().incrementValue(size);
 
-        valueScore += score;
-        this.score.setText(buildScore(valueScore, 4));
+        // Increment the score.
+        scoreValue += score;
+        scoreLabel.setValue(scoreValue);
 
         BitmapFont font = game.manager.get("fonts/scores.fnt");
         LabelStyle style = new LabelStyle(font, Color.WHITE);

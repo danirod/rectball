@@ -173,7 +173,7 @@ public class Timer extends Actor {
     public void draw(Batch batch, float parentAlpha) {
         // Render the timer background.
         NinePatch yellowpatch = skin.get("yellowpatch", NinePatch.class);
-        yellowpatch.draw(batch, getX() - 5, getY() - 5, getWidth() + 10, getHeight() + 10);
+        yellowpatch.draw(batch, getX() - 10, getY() - 10, getWidth() + 20, getHeight() + 20);
 
         // Render the timer inner-background.
         batch.draw(skin.getRegion("timer_background"), getX(), getY(), getWidth(), getHeight());
