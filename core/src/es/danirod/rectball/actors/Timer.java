@@ -17,6 +17,7 @@
  */
 package es.danirod.rectball.actors;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
@@ -171,22 +172,21 @@ public class Timer extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        // Render the timer background.
         NinePatch yellowpatch = skin.get("yellowpatch", NinePatch.class);
-        yellowpatch.draw(batch, getX() - 10, getY() - 10, getWidth() + 20, getHeight() + 20);
+        Texture progress = skin.get("progress", Texture.class);
 
-        // Render the timer inner-background.
-        batch.draw(skin.getRegion("timer_background"), getX(), getY(), getWidth(), getHeight());
+        // Render the timer background.
+        yellowpatch.draw(batch, getX() - 10, getY() - 10, getWidth() + 20, getHeight() + 20);
+        batch.draw(progress, getX(), getY(), getWidth(), getHeight());
 
         // Calculate the remaining percentage of time.
         float percentage = seconds / maxSeconds;
         float remainingSize = getWidth() * percentage;
 
-        // Render the remaining time.
-        if (percentage < WARNING_TRIGGER) {
-            batch.draw(skin.getRegion("timer_warning"), getX(), getY(), remainingSize, getHeight());
-        } else {
-            batch.draw(skin.getRegion("timer_remaining"), getX(), getY(), remainingSize, getHeight());
-        }
+        // Render the remaining time using the appropiate color.
+        Color originalColor = batch.getColor();
+        batch.setColor(percentage < WARNING_TRIGGER ? Color.RED : Color.GREEN);
+        batch.draw(progress, getX(), getY(), remainingSize, getHeight());
+        batch.setColor(originalColor);
     }
 }

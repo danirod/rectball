@@ -91,21 +91,15 @@ public class RectballSkin extends Skin {
     }
 
     private void addTextureRegionStyles() {
-        // Texture regions for the timer.
-        Texture timer = game.manager.get("timer.png");
-        int width = timer.getWidth() / 3, height = timer.getHeight();
-        TextureRegion background = new TextureRegion(timer, 0, 0, width, height);
-        TextureRegion remaining = new TextureRegion(timer, height, 0, width, height);
-        TextureRegion warning = new TextureRegion(timer, 2 * height, 0, width, height);
-        this.add("timer_background", background);
-        this.add("timer_remaining", remaining);
-        this.add("timer_warning", warning);
-
         // Texture region for the icons.
         Texture icons = game.manager.get("ui/icons.png");
         TextureRegion[][] iconRegions = TextureRegion.split(icons, 256, 256);
         add("iconClock", iconRegions[0][0]);
         add("iconCrown", iconRegions[0][1]);
+
+        // Texture region for the progress.
+        Texture progress = game.manager.get("ui/progress.png");
+        add("progress", progress);
     }
 
     private void addPixmapStyles() {

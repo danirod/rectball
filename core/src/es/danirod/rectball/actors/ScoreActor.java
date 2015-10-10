@@ -48,7 +48,7 @@ public class ScoreActor extends Group {
         label = new Label(getScore(), skin, "monospace");
         label.setAlignment(Align.bottom);
         label.setFillParent(true);
-        label.setFontScale(6f);
+        label.setFontScale(7f);
         addActor(label);
     }
 

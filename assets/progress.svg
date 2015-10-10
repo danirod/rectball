@@ -85,7 +85,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -104,15 +104,18 @@
        ry="5"
        rx="5" />
     <g
-       transform="matrix(1.8887748,0,0,0.95227922,9.217642,41.128193)"
-       id="g7242">
+       transform="matrix(1.875,0,0,0.9375,9.5,56.272654)"
+       id="g7242"
+       inkscape:export-filename="/Users/danirod/Desarrollo/rectball/android/assets/ui/progress@2x.png"
+       inkscape:export-xdpi="512"
+       inkscape:export-ydpi="512">
       <rect
          y="1004.3622"
          x="0"
          height="48"
          width="24"
          id="rect6461"
-         style="opacity:1;fill:#71c837;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+         style="opacity:1;fill:#b3b3b3;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
       <rect
          style="opacity:1;fill:#ffffff;fill-opacity:0.39215686;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
          id="rect6463"
@@ -131,6 +134,6 @@
          sodipodi:role="line"
          id="tspan7280"
          x="-547"
-         y="988.36218"></tspan></text>
+         y="988.36218" /></text>
   </g>
 </svg>
