@@ -114,4 +114,8 @@ public abstract class AbstractScreen implements Screen {
     }
 
     public abstract int getID();
+
+    public Stage getStage() {
+        return stage;
+    }
 }
