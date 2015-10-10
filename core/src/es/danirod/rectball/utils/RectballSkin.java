@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import es.danirod.rectball.RectballGame;
@@ -32,6 +31,8 @@ public class RectballSkin extends Skin {
         this.game = game;
         addLabelStyles();
         addTextButtonStyles();
+        addNinePatchesStyles();
+        addTextureRegionStyles();
     }
 
     /**
@@ -64,4 +65,22 @@ public class RectballSkin extends Skin {
         this.add("default", buttonStyle);
     }
 
+    private void addNinePatchesStyles() {
+        // Load the yellow ninepatches.
+        Texture yellowTexture = game.manager.get("ui/yellowpatch.png");
+        NinePatch yellowPatch = new NinePatch(yellowTexture, 10, 10, 10, 10);
+        this.add("yellowpatch", yellowPatch);
+    }
+
+    private void addTextureRegionStyles() {
+        // Texture regions for the timer.
+        Texture timer = game.manager.get("timer.png");
+        int width = timer.getWidth() / 3, height = timer.getHeight();
+        TextureRegion background = new TextureRegion(timer, 0, 0, width, height);
+        TextureRegion remaining = new TextureRegion(timer, height, 0, width, height);
+        TextureRegion warning = new TextureRegion(timer, 2 * height, 0, width, height);
+        this.add("timer_background", background);
+        this.add("timer_remaining", remaining);
+        this.add("timer_warning", warning);
+    }
 }

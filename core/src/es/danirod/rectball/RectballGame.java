@@ -120,6 +120,7 @@ public class RectballGame extends Game {
         manager.load("board/colorblind.png", Texture.class, linearParameters);
 
         // Load UI resources.
+        manager.load("ui/yellowpatch.png", Texture.class);
         manager.load("ui/switch.png", Texture.class, linearParameters);
         manager.load("ui/button.png", Texture.class, linearParameters);
         manager.load("scores.png", Texture.class);

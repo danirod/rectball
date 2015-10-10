@@ -115,8 +115,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         stage.addActor(score);
 
         // Set up the timer
-        Texture timerTexture = game.manager.get("timer.png");
-        timer = new Timer(30, timerTexture);
+        timer = new Timer(30, game.getSkin());
         timer.addSubscriber(this);
         timer.setRunning(false);
         stage.addActor(timer);

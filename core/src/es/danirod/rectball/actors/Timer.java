@@ -19,8 +19,10 @@ package es.danirod.rectball.actors;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,28 +68,6 @@ public class Timer extends Actor {
     private static final float WARNING_TRIGGER = 0.2f;
 
     /**
-     * The texture region used to fill the back of the timer. This background
-     * can be seen as a fill on the area that represents the consumed time for
-     * this timer.
-     */
-    private TextureRegion background;
-
-    /**
-     * The texture region used to fill the remaining time of the timer. This
-     * background can be seen on the area that represents the time that the
-     * user still has and usually this is the area that makes smaller and smaller
-     * every frame.
-     */
-    private TextureRegion remaining;
-
-    /**
-     * The texture region used to fill the remaining time of the timer when the
-     * time is running out. This background should be different from the normal
-     * remaining background.
-     */
-    private TextureRegion warning;
-
-    /**
      * The maximum number of seconds this timer can have. When filled with
      * seconds, the value of the timer will always be clamped so that it's
      * never bigger than this. Aditionally this is used as the maximum value
@@ -110,20 +90,18 @@ public class Timer extends Actor {
      */
     private boolean running = true;
 
+    /** The skin used by the game. */
+    private Skin skin;
+
     /**
      * Set up a new timer.
      *
      * @param seconds  the maximum seconds for this timer.
      */
-    public Timer(int seconds, Texture texture) {
+    public Timer(int seconds, Skin skin) {
         this.seconds = seconds;
         this.maxSeconds = seconds;
-
-        int width = texture.getWidth() / 3;
-        int height = texture.getHeight();
-        background = new TextureRegion(texture, 0, 0, width, height);
-        remaining = new TextureRegion(texture, height, 0, width, height);
-        warning = new TextureRegion(texture, 2 * height, 0, width, height);
+        this.skin = skin;
     }
 
     /**
@@ -193,8 +171,12 @@ public class Timer extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        // Draw the background of the timer.
-        batch.draw(background, getX(), getY(), getWidth(), getHeight());
+        // Render the timer background.
+        NinePatch yellowpatch = skin.get("yellowpatch", NinePatch.class);
+        yellowpatch.draw(batch, getX() - 5, getY() - 5, getWidth() + 10, getHeight() + 10);
+
+        // Render the timer inner-background.
+        batch.draw(skin.getRegion("timer_background"), getX(), getY(), getWidth(), getHeight());
 
         // Calculate the remaining percentage of time.
         float percentage = seconds / maxSeconds;
@@ -202,9 +184,9 @@ public class Timer extends Actor {
 
         // Render the remaining time.
         if (percentage < WARNING_TRIGGER) {
-            batch.draw(warning, getX(), getY(), remainingSize, getHeight());
+            batch.draw(skin.getRegion("timer_warning"), getX(), getY(), remainingSize, getHeight());
         } else {
-            batch.draw(remaining, getX(), getY(), remainingSize, getHeight());
+            batch.draw(skin.getRegion("timer_remaining"), getX(), getY(), remainingSize, getHeight());
         }
     }
 }
