@@ -162,9 +162,9 @@ public class RectballGame extends Game {
         // Load TTF font for Press Start.
         FreeTypeFontLoaderParameter monospace = new FreeTypeFontLoaderParameter();
         monospace.fontFileName = "fonts/PressStart2P-Regular.ttf";
-        monospace.fontParameters.size = 64;
-        monospace.fontParameters.minFilter = TextureFilter.Linear;
-        monospace.fontParameters.magFilter = TextureFilter.Linear;
+        monospace.fontParameters.size = 8;
+        monospace.fontParameters.minFilter = TextureFilter.Nearest;
+        monospace.fontParameters.magFilter = TextureFilter.Nearest;
         manager.load("monospace.ttf", BitmapFont.class, monospace);
 
         // Load sounds

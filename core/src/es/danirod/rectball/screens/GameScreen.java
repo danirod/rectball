@@ -165,8 +165,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
 
     @Override
     public void setUpInterface(Table table) {
-        table.add(timer).fillX().height(50).padTop(20).padBottom(10).row();
-        table.add(scoreLabel).width(VIEWPORT_WIDTH / 2).height(65).padBottom(60).row();
+        table.add(timer).fillX().height(50).padBottom(10).row();
+        table.add(scoreLabel).width(VIEWPORT_WIDTH / 2).height(55).padBottom(60).row();
         table.add(board).expand().fill().row();
     }
 
