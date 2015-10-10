@@ -56,8 +56,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
 
     private ScoreActor scoreLabel;
 
-    private int scoreValue;
-
     private boolean paused, started;
 
     private PauseDialog pauseDialog;
@@ -131,10 +129,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         Gdx.input.setCatchBackKey(true);
 
         // Reset data
-        scoreValue = 0;
-        game.aliveTime = 0;
-        paused = false;
-        started = false;
+        game.getCurrentGame().reset();
+        paused = started = false;
 
         // Reset data
         board.setTouchable(Touchable.disabled);
@@ -185,7 +181,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         super.render(delta);
 
         if (timer.isRunning()) {
-            game.aliveTime += delta;
+            game.getCurrentGame().addTime(delta);
         }
 
         // Pause the game when you press BACK or ESCAPE.
@@ -198,7 +194,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
     @Override
     public void onTimeOut() {
         // Update the scoreLabel... and the record.
-        game.scores.addScore(scoreValue);
+        game.scores.addScore(game.getCurrentGame().getScore());
 
         timer.setRunning(false);
         board.setTouchable(Touchable.disabled);
@@ -271,8 +267,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         game.statistics.getSizesData().incrementValue(size);
 
         // Increment the score.
-        scoreValue += score;
-        scoreLabel.setValue(scoreValue);
+        game.getCurrentGame().addScore(score);
+        scoreLabel.setValue(game.getCurrentGame().getScore());
 
         BitmapFont font = game.manager.get("fonts/scores.fnt");
         LabelStyle style = new LabelStyle(font, Color.WHITE);

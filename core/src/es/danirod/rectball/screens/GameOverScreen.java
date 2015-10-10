@@ -32,9 +32,25 @@ import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
 public class GameOverScreen extends AbstractScreen {
 
+    /**
+     * The label that displays how many seconds the last game has lasted.
+     * I need to save a reference to this label because every time the player
+     * enter this screen, the value will probably change.
+     */
     private Label aliveTime;
 
+    /**
+     * The highest score the player has ever had on Rectball. I need to save
+     * a reference to this label in case the value changes when the user
+     * enters this screen after losing a game.
+     */
     private Label highScore;
+
+    /**
+     * The score of the last game. I need to save a reference to this label
+     * because every time the player enters this screen, the value will
+     * probably change.
+     */
     private Value score;
 
     public GameOverScreen(RectballGame game) {
@@ -44,8 +60,11 @@ public class GameOverScreen extends AbstractScreen {
     @Override
     public void setUpInterface(Table table) {
         Label gameOver = new Label("GAME OVER", game.getSkin());
-        aliveTime = new Label("Alive: " + (int) game.aliveTime + " s", game.getSkin());
-        highScore = new Label("High Score: " + game.scores.getHighestScore(), game.getSkin());
+
+        // These labels have to be updated when show() is called because every
+        // time the player enters this screen their values might have changed.
+        aliveTime = new Label("", game.getSkin());
+        highScore = new Label("", game.getSkin());
 
         Texture sheet = game.manager.get("scores.png", Texture.class);
         score = new Value(sheet, 4, game.scores.getLastScore());
@@ -80,12 +99,15 @@ public class GameOverScreen extends AbstractScreen {
     public void show() {
         super.show();
 
-        aliveTime.setText("Alive: " + (int) game.aliveTime + " s");
+        int aliveSeconds = (int) game.getCurrentGame().getTime();
+
+        aliveTime.setText("Alive: " + aliveSeconds + " s");
         highScore.setText("High Score: " + game.scores.getHighestScore());
         score.setValue(game.scores.getLastScore());
 
         game.statistics.getTotalData().incrementValue("games");
-        game.statistics.getTotalData().incrementValue("time", (int) game.aliveTime);
+        game.statistics.getTotalData().incrementValue("time", aliveSeconds);
+
         ScoreIO.save(game.scores);
         Statistics.saveStats(game.statistics);
     }

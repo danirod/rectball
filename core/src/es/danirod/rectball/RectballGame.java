@@ -32,6 +32,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.screens.*;
 import es.danirod.rectball.settings.ScoreIO;
 import es.danirod.rectball.settings.Scores;
@@ -66,7 +67,7 @@ public class RectballGame extends Game {
 
     private Skin uiSkin;
 
-    public float aliveTime;
+    private GameState currentGame = new GameState();
 
     @Override
     public void create() {
@@ -203,5 +204,9 @@ public class RectballGame extends Game {
      */
     public Skin getSkin() {
         return uiSkin;
+    }
+
+    public GameState getCurrentGame() {
+        return currentGame;
     }
 }
