@@ -39,7 +39,7 @@ import java.util.*;
  *
  * @author danirod
  */
-public class Board extends Group {
+public class BoardActor extends Group {
 
     /**
      * The game this board is attached to. This is used to access other
@@ -67,7 +67,7 @@ public class Board extends Group {
      * The user presses these balls and the balls react to events notifying
      * the board about that.
      */
-    private Ball[][] board;
+    private BallActor[][] board;
 
     private SoundPlayer player;
 
@@ -77,7 +77,7 @@ public class Board extends Group {
      * @param screen  the screen this board belongs to.
      * @param size  the size of the board, always square.
      */
-    public Board(GameScreen screen, Texture sheet, int size, SoundPlayer player) {
+    public BoardActor(GameScreen screen, Texture sheet, int size, SoundPlayer player) {
         this.screen = screen;
         this.sheet = sheet;
         this.size = size;
@@ -95,11 +95,11 @@ public class Board extends Group {
      *
      * @return a new matrix with balls
      */
-    private Ball[][] setUpBoard() {
-        Ball[][] board = new Ball[size][size];
+    private BallActor[][] setUpBoard() {
+        BallActor[][] board = new BallActor[size][size];
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-                Ball ball = new Ball(BallColor.GRAY, this, sheet);
+                BallActor ball = new BallActor(BallColor.GRAY, this, sheet);
                 board[x][y] = ball;
                 addActor(ball);
             }
@@ -161,9 +161,9 @@ public class Board extends Group {
         updateBoardBounds();
     }
 
-    private List<Ball> selection = new ArrayList<>();
+    private List<BallActor> selection = new ArrayList<>();
 
-    public void ballSelected(Ball me) {
+    public void ballSelected(BallActor me) {
         // The user unselected the ball.
         if (!me.isSelected()) {
             player.playSound(SoundCode.UNSELECT);
@@ -198,7 +198,7 @@ public class Board extends Group {
                 randomize(bounds.minX, bounds.minY, bounds.maxX, bounds.maxY);
             }
 
-            for (Ball selectedBall : selection) {
+            for (BallActor selectedBall : selection) {
                 selectedBall.addAction(Actions.scaleTo(1f, 1f, 0.1f));
                 selectedBall.setSelected(false);
             }
@@ -212,7 +212,7 @@ public class Board extends Group {
      * Return the board matrix.
      * @return  board matrix
      */
-    public Ball[][] getBoard() {
+    public BallActor[][] getBoard() {
         return board;
     }
 

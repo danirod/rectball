@@ -17,13 +17,11 @@
  */
 package es.danirod.rectball.actors;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import es.danirod.rectball.listeners.BallInputListener;
 import es.danirod.rectball.model.BallColor;
 
 /**
@@ -33,7 +31,7 @@ import es.danirod.rectball.model.BallColor;
  *
  * @author danirod
  */
-public class Ball extends Actor {
+public class BallActor extends Actor {
 
     /**
      * Whether the ball is selected or not. A ball is selected by touching
@@ -76,7 +74,7 @@ public class Ball extends Actor {
      * @param ballColor  initial color of the ball.
      * @param board  the board this ball belongs to.
      */
-    public Ball(BallColor ballColor, Board board, Texture sheet) {
+    public BallActor(BallColor ballColor, BoardActor board, Texture sheet) {
         this.ballColor = ballColor;
         this.sheet = sheet;
 

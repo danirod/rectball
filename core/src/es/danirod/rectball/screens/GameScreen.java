@@ -19,23 +19,20 @@ package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.actors.Ball;
-import es.danirod.rectball.actors.Board;
+import es.danirod.rectball.actors.BallActor;
+import es.danirod.rectball.actors.BoardActor;
 import es.danirod.rectball.actors.ScoreActor;
 import es.danirod.rectball.actors.Timer;
 import es.danirod.rectball.actors.Timer.TimerCallback;
@@ -50,7 +47,7 @@ import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
 
 public class GameScreen extends AbstractScreen implements TimerCallback {
 
-    public Board board;
+    public BoardActor board;
 
     public Timer timer;
 
@@ -69,13 +66,13 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         // Set up the board.
         String file = game.settings.isColorblind() ? "colorblind" : "normal";
         Texture sheet = game.manager.get("board/" + file + ".png");
-        board = new Board(this, sheet, 7, game.player);
+        board = new BoardActor(this, sheet, 7, game.player);
 
         // Set up the listeners for the board.
-        Ball[][] allBalls = board.getBoard();
+        BallActor[][] allBalls = board.getBoard();
         for (int y = 0; y < board.getSize(); y++) {
             for (int x = 0; x < board.getSize(); x++) {
-                Ball ball = allBalls[x][y];
+                BallActor ball = allBalls[x][y];
                 ball.addListener(new BallInputListener(ball, board));
             }
         }
@@ -136,7 +133,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         board.setTouchable(Touchable.disabled);
         timer.setRunning(false);
 
-        Ball[][] allBalls = board.getBoard();
+        BallActor[][] allBalls = board.getBoard();
         for (int y = 0; y < board.getSize(); y++) {
             for (int x = 0; x < board.getSize(); x++) {
                 allBalls[x][y].addAction(Actions.sequence(
@@ -207,11 +204,11 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
 
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
-        Ball[][] allBalls = board.getBoard();
+        BallActor[][] allBalls = board.getBoard();
         BallColor refColor = allBalls[combination.minX][combination.minY].getBallColor();
         for (int y = 0; y < board.getSize(); y++) {
             for (int x = 0; x < board.getSize(); x++) {
-                final Ball currentBall = allBalls[x][y];
+                final BallActor currentBall = allBalls[x][y];
 
                 if ((x >= combination.minX && x <= combination.maxX) &&
                         (y >= combination.minY && y <= combination.maxY)) {

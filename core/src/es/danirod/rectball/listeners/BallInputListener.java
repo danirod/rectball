@@ -17,24 +17,23 @@
  */
 package es.danirod.rectball.listeners;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction;
-import es.danirod.rectball.actors.Ball;
-import es.danirod.rectball.actors.Board;
+import es.danirod.rectball.actors.BallActor;
+import es.danirod.rectball.actors.BoardActor;
 
 /**
  * Created by danirod on 29/8/15.
  */
 public class BallInputListener extends InputListener {
 
-    private final Board board;
+    private final BoardActor board;
 
-    private final Ball ball;
+    private final BallActor ball;
 
-    public BallInputListener(Ball ball, Board board) {
+    public BallInputListener(BallActor ball, BoardActor board) {
         this.ball = ball;
         this.board = board;
     }

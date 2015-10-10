@@ -1,6 +1,6 @@
 package es.danirod.rectball.model;
 
-import es.danirod.rectball.actors.Ball;
+import es.danirod.rectball.actors.BallActor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,13 +8,13 @@ import java.util.List;
 
 public class CombinationFinder {
 
-    private final Ball[][] board;
+    private final BallActor[][] board;
 
     private final int width, height;
 
     private final List<Bounds> bounds;
 
-    public CombinationFinder(Ball[][] board) {
+    public CombinationFinder(BallActor[][] board) {
         this.board = board;
         this.width = board.length;
         this.height = board[0].length;
