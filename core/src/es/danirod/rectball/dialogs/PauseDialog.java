@@ -21,7 +21,9 @@ package es.danirod.rectball.dialogs;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import es.danirod.rectball.Constants;
 
 /**
  * That class is designed to manage in-game pause dialog.
@@ -34,27 +36,19 @@ public class PauseDialog extends Dialog {
 
     /**
      * Creates a new instance of the pause dialog.
-     *
-     *  @param windowStyle
-     *      The window style to be applied to the dialog.
-     *  @param labelStyle
-     *      The style to be applied to the label.
-     *  @param buttonStyle
-     *      The style to be applied to the buttons.
      */
-    public PauseDialog(WindowStyle windowStyle, Label.LabelStyle labelStyle, TextButton.TextButtonStyle buttonStyle) {
-        super("", windowStyle);
+    public PauseDialog(Skin skin) {
+        super("", skin);
 
-        titleLabel = new Label("Leave game?", labelStyle);
-        yesButton = new TextButton("Yes", buttonStyle);
-        noButton = new TextButton("No", buttonStyle);
+        titleLabel = new Label("Leave game?", skin);
+        yesButton = new TextButton("Yes", skin);
+        noButton = new TextButton("No", skin);
 
-        pad(20).padTop(0);
-        row();
-        add(titleLabel).colspan(2).expandX().expandY().row();
+        padBottom(20).row();
+        add(titleLabel).colspan(2).expand().row();
 
-        add(yesButton).expandX().height(80);
-        add(noButton).expandX().height(80);
+        add(yesButton).width(Constants.VIEWPORT_WIDTH * 0.3f).expandX().height(80);
+        add(noButton).width(Constants.VIEWPORT_WIDTH * 0.3f).expandX().height(80);
         row();
     }
 

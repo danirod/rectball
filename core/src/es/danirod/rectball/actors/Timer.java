@@ -19,9 +19,13 @@ package es.danirod.rectball.actors;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import es.danirod.rectball.screens.GameScreen;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * TODO: Separate the timer logic into a separate class or interface.
@@ -39,42 +43,29 @@ import es.danirod.rectball.screens.GameScreen;
 public class Timer extends Actor {
 
     /**
+     * This interface uses the Subscriber pattern to be notified when the timer
+     * runs out of time. Make your subscriber class implement this interface,
+     * then pass your subscriber to this timer when you create it. It will be
+     * notified that the time is over.
+     */
+    public static interface TimerCallback {
+
+        /**
+         * This is the method that receives the message that the time is over.
+         */
+        public void onTimeOut();
+
+    }
+
+    private List<TimerCallback> subscribers = new ArrayList<>();
+
+    /**
      * Warning region. When the remaining time percentage is not greater than
      * this value, the warning mode is triggered. If the time is running out
      * the actor appearance might change, for instance the progress bar could
      * be rendered using a different color or it might shake.
      */
     private static final float WARNING_TRIGGER = 0.2f;
-
-    /**
-     * The texture region used to fill the back of the timer. This background
-     * can be seen as a fill on the area that represents the consumed time for
-     * this timer.
-     */
-    private TextureRegion background;
-
-    /**
-     * The texture region used to fill the remaining time of the timer. This
-     * background can be seen on the area that represents the time that the
-     * user still has and usually this is the area that makes smaller and smaller
-     * every frame.
-     */
-    private TextureRegion remaining;
-
-    /**
-     * The texture region used to fill the remaining time of the timer when the
-     * time is running out. This background should be different from the normal
-     * remaining background.
-     */
-    private TextureRegion warning;
-
-    /**
-     * The game screen owning this timer. This screen will be notified when the
-     * time is over so that it can handle what happens after the time is over,
-     * for instance, displaying a game over.
-     */
-    private GameScreen screen;
-    // TODO: Change GameScreen into a lightweight interface (TimerCallback).
 
     /**
      * The maximum number of seconds this timer can have. When filled with
@@ -99,22 +90,29 @@ public class Timer extends Actor {
      */
     private boolean running = true;
 
+    /** The skin used by the game. */
+    private Skin skin;
+
     /**
      * Set up a new timer.
      *
-     * @param screen  the screen owning this timer.
      * @param seconds  the maximum seconds for this timer.
      */
-    public Timer(GameScreen screen, int seconds, Texture texture) {
-        this.screen = screen;
+    public Timer(int seconds, Skin skin) {
         this.seconds = seconds;
         this.maxSeconds = seconds;
+        this.skin = skin;
+    }
 
-        int width = texture.getWidth() / 3;
-        int height = texture.getHeight();
-        background = new TextureRegion(texture, 0, 0, width, height);
-        remaining = new TextureRegion(texture, height, 0, width, height);
-        warning = new TextureRegion(texture, 2 * height, 0, width, height);
+    /**
+     * Add a new subscriber to this timer. It will be notified when the time
+     * is over so that it can define its own functionality. For instance, the
+     * screen might display a game over message.
+     *
+     * @param subscriber  the subscriber that is going to be added.
+     */
+    public void addSubscriber(TimerCallback subscriber) {
+        subscribers.add(subscriber);
     }
 
     /**
@@ -164,15 +162,21 @@ public class Timer extends Actor {
             seconds -= delta;
             if (seconds < 0) {
                 seconds = 0;
-                screen.gameOver();
+                for (TimerCallback subscriber : subscribers) {
+                    subscriber.onTimeOut();
+                }
             }
         }
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        // Draw the background of the timer.
-        batch.draw(background, getX(), getY(), getWidth(), getHeight());
+        // Render the timer background.
+        NinePatch yellowpatch = skin.get("yellowpatch", NinePatch.class);
+        yellowpatch.draw(batch, getX() - 10, getY() - 10, getWidth() + 20, getHeight() + 20);
+
+        // Render the timer inner-background.
+        batch.draw(skin.getRegion("timer_background"), getX(), getY(), getWidth(), getHeight());
 
         // Calculate the remaining percentage of time.
         float percentage = seconds / maxSeconds;
@@ -180,9 +184,9 @@ public class Timer extends Actor {
 
         // Render the remaining time.
         if (percentage < WARNING_TRIGGER) {
-            batch.draw(warning, getX(), getY(), remainingSize, getHeight());
+            batch.draw(skin.getRegion("timer_warning"), getX(), getY(), remainingSize, getHeight());
         } else {
-            batch.draw(remaining, getX(), getY(), remainingSize, getHeight());
+            batch.draw(skin.getRegion("timer_remaining"), getX(), getY(), remainingSize, getHeight());
         }
     }
 }

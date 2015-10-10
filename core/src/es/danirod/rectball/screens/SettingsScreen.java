@@ -17,11 +17,10 @@
  */
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
@@ -29,18 +28,16 @@ import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.Switch;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
-public class SettingsScreen extends MenuScreen {
+public class SettingsScreen extends AbstractScreen {
 
     public SettingsScreen(RectballGame game) {
         super(game);
     }
 
     @Override
-    public void show() {
-        super.show();
-
+    public void setUpInterface(Table table) {
         // Build stage entities.
-        TextButton backButton = newButton("Back");
+        TextButton backButton = new TextButton("Back", game.getSkin());
 
         Texture switchTex = game.manager.get("ui/switch.png");
         final Switch soundSwitch = new Switch(switchTex, game.settings.isSoundEnabled(), false);
@@ -57,6 +54,10 @@ public class SettingsScreen extends MenuScreen {
         backButton.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                // FIXME: I'm duplicate code!!
+                TextButton button = (TextButton)actor;
+                button.setChecked(false);
+
                 game.settings.setSoundEnabled(soundSwitch.isEnabled());
                 game.settings.setColorblind(colorSwitch.isEnabled());
                 game.player.playSound(SoundCode.FAIL);
@@ -72,12 +73,21 @@ public class SettingsScreen extends MenuScreen {
         return Screens.SETTINGS;
     }
 
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0.5f, 0.6f, 0.6f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    /**
+     * Adapter method for legacy bold label creation.
+     * @param text the text for the label.
+     * @return the bold label.
+     */
+    private Label boldLabel(CharSequence text) {
+        return new Label(text, game.getSkin(), "bold");
+    }
 
-        stage.act();
-        stage.draw();
+    /**
+     * Adapter method for legacy label creation.
+     * @param text  the text for the label.
+     * @return  the label.
+     */
+    private Label newLabel(CharSequence text) {
+        return new Label(text, game.getSkin());
     }
 }

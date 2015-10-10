@@ -17,8 +17,6 @@
  */
 package es.danirod.rectball.actors;
 
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -189,7 +187,10 @@ public class Board extends Group {
                 int rows = bounds.maxY - bounds.minY + 1;
                 int score = cols * rows;
 
-                screen.score(score);
+                // Get the combination color.
+                BallColor color = board[bounds.minX][bounds.minY].getBallColor();
+
+                screen.score(score, color, rows, cols);
                 screen.timer.setSeconds(screen.timer.getSeconds() + 5);
 
                 player.playSound(SoundCode.SUCCESS);

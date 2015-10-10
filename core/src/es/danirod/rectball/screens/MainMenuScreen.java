@@ -17,70 +17,41 @@
  */
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Scaling;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.utils.SoundPlayer.SoundCode;
+import es.danirod.rectball.listeners.ScreenJumper;
 
-public class MainMenuScreen extends MenuScreen {
+import static es.danirod.rectball.Constants.STAGE_PADDING;
+
+public class MainMenuScreen extends AbstractScreen {
 
     public MainMenuScreen(RectballGame game) {
         super(game);
     }
 
     @Override
-    public void show() {
-        super.show();
-
+    public void setUpInterface(Table table) {
         // Build the actors.
         Image title = new Image(game.manager.get("logo.png", Texture.class));
         title.setScaling(Scaling.fit);
-        TextButton play = newButton("Play");
-        TextButton settings = newButton("Settings");
-        TextButton statistics = newButton("Stats");
+        TextButton play = new TextButton("Play", game.getSkin());
+        TextButton settings = new TextButton("Settings", game.getSkin());
+        TextButton statistics = new TextButton("Stats", game.getSkin());
 
         // Position the actors in the screen.
         table.add(title).pad(40).row();
-        table.add(play).pad(20).fillX().height(150).row();
-        table.add(settings).pad(20).fillX().height(150).row();
-        // table.add(statistics).pad(20).fillX().height(100).row();
+        table.add(play).padBottom(STAGE_PADDING).fillX().height(150).row();
+        table.add(settings).padBottom(STAGE_PADDING).fillX().height(150).row();
+        table.add(statistics).padBottom(STAGE_PADDING).fillX().height(150).row();
 
         // Then add the capture listeners for the buttons.
-        play.addCaptureListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                game.player.playSound(SoundCode.SUCCESS);
-                game.setScreen(Screens.GAME);
-            }
-        });
-        settings.addCaptureListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                game.player.playSound(SoundCode.SUCCESS);
-                game.setScreen(Screens.SETTINGS);
-            }
-        });
-        statistics.addCaptureListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                game.player.playSound(SoundCode.FAIL);
-            }
-        });
-    }
-
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0.5f, 0.6f, 0.6f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        stage.act();
-        stage.draw();
+        play.addCaptureListener(new ScreenJumper(game, Screens.GAME));
+        settings.addCaptureListener(new ScreenJumper(game, Screens.SETTINGS));
+        statistics.addCaptureListener(new ScreenJumper(game, Screens.STATISTICS));
     }
 
     @Override

@@ -59,8 +59,7 @@ public class LoadingScreen extends AbstractScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (game.manager.update()) {
-            // Finish loading.
-            game.setScreen(Screens.MAIN_MENU);
+            game.finishLoading();
         } else {
             float progress = game.manager.getProgress();
             shaper.setAutoShapeType(true);

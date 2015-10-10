@@ -17,7 +17,6 @@
  */
 package es.danirod.rectball;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -32,12 +31,14 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import es.danirod.rectball.screens.*;
 import es.danirod.rectball.settings.ScoreIO;
 import es.danirod.rectball.settings.Scores;
 import es.danirod.rectball.settings.Settings;
+import es.danirod.rectball.statistics.Statistics;
+import es.danirod.rectball.utils.RectballSkin;
 import es.danirod.rectball.utils.SoundPlayer;
-import es.danirod.rectball.utils.StyleFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,48 +50,55 @@ public class RectballGame extends Game {
 
     public static final String VERSION = "Rectball 0.1.2-SNAPSHOT";
 
+    /* FIXME: Privatize this. */
+
     private Map<Integer, AbstractScreen> screens = new HashMap<>();
 
     public Settings settings;
 
     public Scores scores;
 
+    public Statistics statistics;
+
     public AssetManager manager;
 
     public SoundPlayer player;
 
-    public StyleFactory style;
+    private Skin uiSkin;
 
     public float aliveTime;
 
     @Override
     public void create() {
-        Gdx.app.setLogLevel(Application.LOG_DEBUG);
-        Gdx.app.debug("RectballGame", "Welcome to " + VERSION);
+        // Add the screens.
+        addScreen(new GameScreen(this));
+        addScreen(new GameOverScreen(this));
+        addScreen(new MainMenuScreen(this));
+        addScreen(new SettingsScreen(this));
+        addScreen(new LoadingScreen(this));
+        addScreen(new StatisticsScreen(this));
 
-        Gdx.app.debug("RectballGame", "Adding Game Screens...");
-        this.addScreen(new GameScreen(this));
-        this.addScreen(new GameOverScreen(this));
-        this.addScreen(new MainMenuScreen(this));
-        this.addScreen(new SettingsScreen(this));
-        this.addScreen(new LoadingScreen(this));
-
-        Gdx.app.debug("RectballGame", "Adding assets to the manager...");
+        // Load the resources.
         manager = createManager();
+        screens.get(Screens.LOADING).load();
+        setScreen(Screens.LOADING);
+    }
 
-        Gdx.app.debug("RectballGame", "Loading screens...");
+    public void finishLoading() {
+        // Load the remaining data.
+        settings = new Settings(Gdx.app.getPreferences("rectball"));
+        scores = ScoreIO.load();
+        statistics = Statistics.loadStats();
+        player = new SoundPlayer(this);
+        uiSkin = new RectballSkin(this);
+
+        // Load the screens.
         for (Map.Entry<Integer, AbstractScreen> screen : screens.entrySet()) {
-            Gdx.app.debug("RectballGame", "Loading screen " + screen.getValue().getID() + "...");
             screen.getValue().load();
         }
 
-        Gdx.app.debug("RectballGame", "Reading settings...");
-        settings = new Settings(Gdx.app.getPreferences("rectball"));
-        scores = ScoreIO.load();
-        player = new SoundPlayer(this);
-
-        Gdx.app.debug("RectballGame", "Loading assets...");
-        setScreen(5);
+        // Enter main menu.
+        setScreen(Screens.MAIN_MENU);
     }
 
     private AssetManager createManager() {
@@ -112,12 +120,12 @@ public class RectballGame extends Game {
         manager.load("board/colorblind.png", Texture.class, linearParameters);
 
         // Load UI resources.
+        manager.load("ui/yellowpatch.png", Texture.class);
         manager.load("ui/switch.png", Texture.class, linearParameters);
         manager.load("ui/button.png", Texture.class, linearParameters);
         manager.load("scores.png", Texture.class);
         manager.load("fonts/scores.fnt", BitmapFont.class);
         manager.load("timer.png", Texture.class);
-        manager.load("ui/leave.png", Texture.class);
 
         // Load TTF font for normal text
         FreeTypeFontLoaderParameter normalFont = new FreeTypeFontLoaderParameter();
@@ -150,6 +158,14 @@ public class RectballGame extends Game {
         bigFont.fontParameters.shadowOffsetY = 4;
         manager.load("bigFont.ttf", BitmapFont.class, bigFont);
 
+        // Load TTF font for Press Start.
+        FreeTypeFontLoaderParameter monospace = new FreeTypeFontLoaderParameter();
+        monospace.fontFileName = "fonts/PressStart2P-Regular.ttf";
+        monospace.fontParameters.size = 64;
+        monospace.fontParameters.minFilter = TextureFilter.Linear;
+        monospace.fontParameters.magFilter = TextureFilter.Linear;
+        manager.load("monospace.ttf", BitmapFont.class, monospace);
+
         // Load sounds
         manager.load("sound/fail.ogg", Sound.class);
         manager.load("sound/gameover.ogg", Sound.class);
@@ -179,5 +195,13 @@ public class RectballGame extends Game {
      */
     public void addScreen(AbstractScreen screen) {
         screens.put(screen.getID(), screen);
+    }
+
+    /**
+     * Get the skin used by Scene2D UI to display things.
+     * @return  the skin the game should use.
+     */
+    public Skin getSkin() {
+        return uiSkin;
     }
 }
