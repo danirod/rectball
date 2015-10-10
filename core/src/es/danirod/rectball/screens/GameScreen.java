@@ -249,14 +249,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         ));
     }
 
-    private String buildScore(int value, int digits) {
-        String strValue = Integer.toString(value);
-        while (strValue.length() < digits) {
-            strValue = "0" + strValue;
-        }
-        return strValue;
-    }
-
     public void score(int score, BallColor color, int rows, int cols) {
         // Store this information in the statistics.
         String size = Math.max(rows, cols) + "x" + Math.min(rows, cols);
@@ -270,19 +262,17 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         game.getCurrentGame().addScore(score);
         scoreLabel.setValue(game.getCurrentGame().getScore());
 
-        BitmapFont font = game.manager.get("fonts/scores.fnt");
-        LabelStyle style = new LabelStyle(font, Color.WHITE);
-        final Label scoreLabel = new Label(Integer.toString(score), style);
+        final Label scoreLabel = new Label(Integer.toString(score), game.getSkin(), "monospace");
         scoreLabel.setAlignment(Align.center);
+        scoreLabel.setFontScale(10);
 
         float ballSize = board.getWidth() / board.getSize();
         scoreLabel.setSize(ballSize, ballSize);
-        scoreLabel.setX(Gdx.graphics.getWidth() / 2 - scoreLabel.getWidth() / 2);
-        scoreLabel.setY(Gdx.graphics.getHeight() / 2 - scoreLabel.getHeight() / 2);
-        scoreLabel.setFontScale(5);
+        scoreLabel.setX((Constants.VIEWPORT_WIDTH - ballSize) / 2);
+        scoreLabel.setY((Constants.VIEWPORT_HEIGHT - ballSize) / 2);
         scoreLabel.addAction(Actions.sequence(
                 Actions.parallel(
-                        Actions.moveBy(0, 100, 1),
+                        Actions.moveBy(0, 80, 1),
                         Actions.fadeOut(1)
                 ),
                 Actions.run(new Runnable() {
