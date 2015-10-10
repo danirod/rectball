@@ -9,6 +9,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import es.danirod.rectball.RectballGame;
 
@@ -30,11 +33,12 @@ public class RectballSkin extends Skin {
      */
     public RectballSkin(RectballGame game) {
         this.game = game;
+        addPixmapStyles();
         addLabelStyles();
         addTextButtonStyles();
+        addWindowStyles();
         addNinePatchesStyles();
         addTextureRegionStyles();
-        addPixmapStyles();
     }
 
     /**
@@ -70,6 +74,13 @@ public class RectballSkin extends Skin {
         BitmapFont font = game.manager.get("normalFont.ttf");
         TextButtonStyle buttonStyle = new TextButtonStyle(drawableUp, drawableDown, drawableDown, font);
         this.add("default", buttonStyle);
+    }
+
+    private void addWindowStyles() {
+        Drawable background = newDrawable("pixel", Color.DARK_GRAY);
+        BitmapFont font = game.manager.get("normalFont.ttf");
+        WindowStyle window = new WindowStyle(font, Color.WHITE, background);
+        add("default", window);
     }
 
     private void addNinePatchesStyles() {

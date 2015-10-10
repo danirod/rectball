@@ -34,8 +34,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.Ball;
 import es.danirod.rectball.actors.Board;
@@ -62,7 +64,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
 
     private int scoreValue;
 
-    private boolean paused;
+    private boolean paused, started;
 
     private PauseDialog pauseDialog;
 
@@ -91,7 +93,35 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
 
         scoreLabel = new ScoreActor(game.getSkin());
 
+        // Create the pause dialog and their listeners.
+        pauseDialog = new PauseDialog(game.getSkin());
+        pauseDialog.addYesButtonCaptureListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                // make dialog invisible
+                PauseDialog dialog = (PauseDialog)actor.getParent();
+                dialog.setVisible(false);
+                timer.setRunning(false);
+                onTimeOut();
+            }
+        });
+        pauseDialog.addNoButtonCaptureListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                // force uncheck
+                TextButton button = (TextButton)actor;
+                button.setChecked(false);
+                setPaused(false);
+            }
+        });
+
         super.load();
+
+        pauseDialog.setVisible(false);
+        pauseDialog.setSize(Constants.VIEWPORT_WIDTH * 0.8f, 200);
+        pauseDialog.setX(Constants.VIEWPORT_WIDTH / 2 - pauseDialog.getWidth() / 2);
+        pauseDialog.setY(Constants.VIEWPORT_HEIGHT / 2 - pauseDialog.getHeight() / 2);
+        getStage().addActor(pauseDialog);
     }
 
     @Override
@@ -110,52 +140,11 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         scoreValue = 0;
         game.aliveTime = 0;
         paused = false;
+        started = false;
 
         // Reset data
         board.setTouchable(Touchable.disabled);
         timer.setRunning(false);
-
-        // Set up the pause dialog.
-        Texture dialogTexture = new Texture("ui/leave.png");
-        TextureRegion dialogRegion = new TextureRegion(dialogTexture);
-        TextureRegionDrawable dialogDrawable = new TextureRegionDrawable(dialogRegion);
-
-        Texture buttonTexture = new Texture("ui/button.png");
-        TextureRegion normalButton = new TextureRegion(buttonTexture, 0, 0, 128, 128);
-        TextureRegion selectedButton = new TextureRegion(buttonTexture, 128, 0, 128, 128);
-        BitmapFont titleFont = game.manager.get("bigFont.ttf");
-        BitmapFont regularFont = game.manager.get("normalFont.ttf");
-        WindowStyle pauseStyle = new WindowStyle(titleFont, Color.WHITE, dialogDrawable);
-
-        // Create buttons.
-        TextButtonStyle leaveButtonStyle = StyleFactory.buildTextButtonStyle(normalButton,
-                selectedButton, 32, regularFont);
-        LabelStyle titleStyle = new LabelStyle(titleFont, Color.WHITE);
-
-        pauseDialog = new PauseDialog(pauseStyle, titleStyle, leaveButtonStyle);
-        pauseDialog.addYesButtonCaptureListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                // make dialog invisible
-                PauseDialog dialog = (PauseDialog)actor.getParent();
-                dialog.setVisible(false);
-
-                timer.setRunning(false);
-                onTimeOut();
-            }
-        });
-        pauseDialog.addNoButtonCaptureListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                // force uncheck
-                TextButton button = (TextButton)actor;
-                button.setChecked(false);
-
-                setPaused(false);
-            }
-        });
-
-        pauseDialog.setVisible(false);
 
         Ball[][] allBalls = board.getBoard();
         for (int y = 0; y < board.getSize(); y++) {
@@ -173,9 +162,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
                 Actions.run(new Runnable() {
                     @Override
                     public void run() {
+                        started = true;
                         board.randomize();
-                        board.setTouchable(Touchable.enabled);
-                        timer.setRunning(true);
+                        if (!paused) {
+                            board.setTouchable(Touchable.enabled);
+                            timer.setRunning(true);
+                        }
                     }
                 })
         ));
@@ -315,10 +307,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
 
     public void setPaused(boolean paused) {
         this.paused = paused;
-        timer.setRunning(!paused);
-        board.setMasked(paused);
-        board.setTouchable(paused ? Touchable.disabled : Touchable.enabled);
         pauseDialog.setVisible(paused);
+        if (started) {
+            timer.setRunning(!paused);
+            board.setMasked(paused);
+            board.setTouchable(paused ? Touchable.disabled : Touchable.enabled);
+        }
     }
 
     @Override

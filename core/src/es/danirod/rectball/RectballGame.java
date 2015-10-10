@@ -126,7 +126,6 @@ public class RectballGame extends Game {
         manager.load("scores.png", Texture.class);
         manager.load("fonts/scores.fnt", BitmapFont.class);
         manager.load("timer.png", Texture.class);
-        manager.load("ui/leave.png", Texture.class);
 
         // Load TTF font for normal text
         FreeTypeFontLoaderParameter normalFont = new FreeTypeFontLoaderParameter();
