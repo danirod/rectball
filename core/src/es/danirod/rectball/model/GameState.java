@@ -79,6 +79,15 @@ public class GameState {
     public void reset() {
         time = 0;
         score = 0;
-        board.randomize();
+        resetBoard();
+    }
+
+    public void resetBoard() {
+        boolean valid = false;
+        while (!valid) {
+            board.randomize();
+            CombinationFinder finder = new CombinationFinder(board);
+            valid = finder.areThereCombinations();
+        }
     }
 }

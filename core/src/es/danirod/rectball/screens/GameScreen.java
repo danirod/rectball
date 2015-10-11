@@ -20,6 +20,8 @@ package es.danirod.rectball.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -35,6 +37,7 @@ import es.danirod.rectball.actors.TimerActor.TimerCallback;
 import es.danirod.rectball.dialogs.ConfirmDialog;
 import es.danirod.rectball.model.Ball;
 import es.danirod.rectball.model.Bounds;
+import es.danirod.rectball.model.CombinationFinder;
 import es.danirod.rectball.model.Coordinate;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
@@ -189,7 +192,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
 
     @Override
     public void setUpInterface(Table table) {
-        getStage().setDebugAll(true);
         table.add(timer).fillX().height(50).padBottom(10).row();
         table.add(scoreLabel).width(VIEWPORT_WIDTH / 2).height(65).padBottom(60).row();
         table.add(board).expand().row();
@@ -257,35 +259,35 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         scoreLabel.setValue(game.getCurrentGame().getScore());
 
         getStage().addAction(Actions.sequence(
+                hideBalls(bounds),
                 Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        for (int x = bounds.minX; x <= bounds.maxX; x++) {
-                            for (int y = bounds.minY; y <= bounds.maxY; y++) {
-                                board.getBall(x, y).addAction(Actions.scaleTo(0, 0, 0.15f));
-                            }
+                        boolean valid = false;
+                        int tries = 0;
+                        while (!valid && tries++ < 3) {
+                            game.getCurrentGame().getBoard().randomize(
+                                    new Coordinate(bounds.minX, bounds.minY),
+                                    new Coordinate(bounds.maxX, bounds.maxY));
+                            CombinationFinder finder = new CombinationFinder(game.getCurrentGame().getBoard());
+                            valid = finder.areThereCombinations();
+                        }
+
+                        if (tries == 3) {
+                            getStage().addAction(Actions.sequence(
+                                    hideBoard(),
+                                    Actions.run(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            game.getCurrentGame().resetBoard();
+                                        }
+                                    }),
+                                    showBoard()
+                            ));
                         }
                     }
                 }),
-                Actions.delay(0.15f),
-                Actions.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        game.getCurrentGame().getBoard().randomize(
-                                new Coordinate(bounds.minX, bounds.minY),
-                                new Coordinate(bounds.maxX, bounds.maxY));
-                    }
-                }),
-                Actions.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (int x = bounds.minX; x <= bounds.maxX; x++) {
-                            for (int y = bounds.minY; y <= bounds.maxY; y++) {
-                                board.getBall(x, y).addAction(Actions.scaleTo(1, 1, 0.15f));
-                            }
-                        }
-                    }
-                })
+                showBalls(bounds)
         ));
 
 
@@ -309,4 +311,65 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
     public void pause() {
         setPaused(true);
     }
+
+    private Action hideBalls(final Bounds bounds) {
+        return Actions.sequence(
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int x = bounds.minX; x <= bounds.maxX; x++) {
+                            for (int y = bounds.minY; y <= bounds.maxY; y++) {
+                                board.getBall(x, y).addAction(Actions.scaleTo(0, 0, 0.15f));
+                            }
+                        }
+                    }
+                }),
+                Actions.delay(0.15f)
+        );
+    }
+
+    private Action showBalls(final Bounds bounds) {
+        return Actions.sequence(
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int x = bounds.minX; x <= bounds.maxX; x++) {
+                            for (int y = bounds.minY; y <= bounds.maxY; y++) {
+                                board.getBall(x, y).addAction(Actions.scaleTo(1, 1, 0.15f));
+                            }
+                        }
+                    }
+                }),
+                Actions.delay(0.15f)
+        );
+    }
+
+    private Action hideBoard() {
+        return Actions.sequence(
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (Actor child : board.getChildren()) {
+                            child.addAction(Actions.scaleTo(0, 0, 0.15f));
+                        }
+                    }
+                }),
+                Actions.delay(0.15f)
+        );
+    }
+
+    private Action showBoard() {
+        return Actions.sequence(
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (Actor child : board.getChildren()) {
+                            child.addAction(Actions.scaleTo(1, 1, 0.15f));
+                        }
+                    }
+                }),
+                Actions.delay(0.15f)
+        );
+    }
+
 }
