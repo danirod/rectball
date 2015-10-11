@@ -40,9 +40,12 @@ public class GameState {
      */
     private float time;
 
+    private Board board;
+
     public GameState() {
         this.score = 0;
         this.time = 0;
+        board = new Board(7);
     }
 
     public int getScore() {
@@ -69,8 +72,13 @@ public class GameState {
         this.time += time;
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
     public void reset() {
-        this.time = 0;
-        this.score = 0;
+        time = 0;
+        score = 0;
+        board = new Board(7);
     }
 }
