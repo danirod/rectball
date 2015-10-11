@@ -33,7 +33,7 @@ import es.danirod.rectball.actors.BoardActor;
 import es.danirod.rectball.actors.ScoreActor;
 import es.danirod.rectball.actors.TimerActor;
 import es.danirod.rectball.actors.TimerActor.TimerCallback;
-import es.danirod.rectball.dialogs.LeaveDialog;
+import es.danirod.rectball.dialogs.ConfirmDialog;
 import es.danirod.rectball.listeners.BallInputListener;
 import es.danirod.rectball.model.BallColor;
 import es.danirod.rectball.model.Bounds;
@@ -80,18 +80,23 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         super.load();
     }
 
-    private void showPauseDialog() {
-        LeaveDialog leaveDialog = new LeaveDialog(game.getSkin());
-        leaveDialog.setCallback(new LeaveDialog.LeaveDialogCallback() {
+    /**
+     * This method will add to the stage a confirmation dialog asking the user
+     * whether to end the game or not. If the user answers YES to that dialog,
+     * the game will end.
+     */
+    private void showLeaveDialog() {
+        ConfirmDialog dialog = new ConfirmDialog(game.getSkin(), "Leave game?", "Yes", "No");
+        dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
             @Override
-            public void onYesButton() {
+            public void ok() {
                 // The user wants to leave the game.
                 timer.setRunning(false);
                 onTimeOut();
             }
 
             @Override
-            public void onNoButton() {
+            public void cancel() {
                 setPaused(false);
             }
         });
@@ -99,10 +104,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         // FIXME: fadeIn action is not working because alpha handling in this
         // game is a mess at the moment. Fix that mess, then let the Dialog
         // use the default actions.
-        leaveDialog.show(getStage(), null);
-        leaveDialog.setPosition(
-                Math.round((getStage().getWidth() - leaveDialog.getWidth()) / 2),
-                Math.round((getStage().getHeight() - leaveDialog.getHeight()) / 2));
+        dialog.show(getStage(), null);
+        dialog.setPosition(
+                Math.round((getStage().getWidth() - dialog.getWidth()) / 2),
+                Math.round((getStage().getHeight() - dialog.getHeight()) / 2));
     }
 
     @Override
@@ -281,7 +286,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
 
         // If the game has just been paused, show the pause dialog.
         if (paused) {
-            showPauseDialog();
+            showLeaveDialog();
         }
 
         // If the game has already started, pause the timer and hide the board.
