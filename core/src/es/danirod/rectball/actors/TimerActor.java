@@ -176,6 +176,7 @@ public class TimerActor extends Actor {
         Texture progress = skin.get("progress", Texture.class);
 
         // Render the timer background.
+        batch.setColor(Color.WHITE);
         yellowpatch.draw(batch, getX() - 10, getY() - 10, getWidth() + 20, getHeight() + 20);
         batch.draw(progress, getX(), getY(), getWidth(), getHeight());
 

@@ -45,7 +45,7 @@ public class GameState {
     public GameState() {
         this.score = 0;
         this.time = 0;
-        board = new Board(7);
+        board = new Board(6);
     }
 
     public int getScore() {
@@ -79,6 +79,6 @@ public class GameState {
     public void reset() {
         time = 0;
         score = 0;
-        board = new Board(7);
+        board = new Board(6);
     }
 }

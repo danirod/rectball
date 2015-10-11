@@ -20,13 +20,17 @@ package es.danirod.rectball.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.actors.BallActor;
+import es.danirod.rectball.actors.BoardActor;
 import es.danirod.rectball.actors.ScoreActor;
 import es.danirod.rectball.actors.TimerActor;
 import es.danirod.rectball.actors.TimerActor.TimerCallback;
 import es.danirod.rectball.dialogs.ConfirmDialog;
+import es.danirod.rectball.model.Ball;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
 import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
@@ -36,6 +40,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
     public TimerActor timer;
 
     private ScoreActor scoreLabel;
+
+    private BoardActor board;
 
     private boolean paused, started;
 
@@ -52,6 +58,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         timer.addSubscriber(this);
 
         scoreLabel = new ScoreActor(game.getSkin());
+
+        game.getCurrentGame().getBoard().randomize();
+        board = new BoardActor(game.getSkin(), game.getCurrentGame().getBoard());
 
         super.load();
     }
@@ -102,12 +111,28 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         game.getCurrentGame().reset();
         paused = started = false;
         timer.setRunning(false);
+
+        board.setTouchable(Touchable.disabled);
+
+        // Wait 2 seconds, then colorize the board.
+        getStage().addAction(Actions.sequence(
+                Actions.delay(2f),
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        board.setColoured(true);
+                        timer.setRunning(true);
+                        board.setTouchable(Touchable.enabled);
+                    }
+                })
+        ));
     }
 
     @Override
     public void setUpInterface(Table table) {
         table.add(timer).fillX().height(50).padBottom(10).row();
         table.add(scoreLabel).width(VIEWPORT_WIDTH / 2).height(65).padBottom(60).row();
+        table.add(board).expand().row();
     }
 
     @Override

@@ -24,7 +24,7 @@ public class Board {
         BallColor[] colors = BallColor.values();
         for (int x = bottomLeft.x; x <= upperRight.x; x++) {
             for (int y = bottomLeft.y; y <= upperRight.y; y++) {
-                int index = MathUtils.random(colors.length - 2);
+                int index = MathUtils.random(colors.length - 1);
                 balls[x][y].setColor(colors[index]);
             }
         }
