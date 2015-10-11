@@ -49,12 +49,12 @@ public class TimerActor extends Actor {
      * then pass your subscriber to this timer when you create it. It will be
      * notified that the time is over.
      */
-    public static interface TimerCallback {
+    public interface TimerCallback {
 
         /**
          * This is the method that receives the message that the time is over.
          */
-        public void onTimeOut();
+        void onTimeOut();
 
     }
 
@@ -176,6 +176,7 @@ public class TimerActor extends Actor {
         Texture progress = skin.get("progress", Texture.class);
 
         // Render the timer background.
+        batch.setColor(Color.WHITE);
         yellowpatch.draw(batch, getX() - 10, getY() - 10, getWidth() + 20, getHeight() + 20);
         batch.draw(progress, getX(), getY(), getWidth(), getHeight());
 

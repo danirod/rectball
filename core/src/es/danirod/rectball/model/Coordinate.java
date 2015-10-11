@@ -17,7 +17,7 @@
  */
 package es.danirod.rectball.model;
 
-class Coordinate {
+public class Coordinate {
 
     public int x, y;
 

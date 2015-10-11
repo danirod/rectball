@@ -1,287 +1,100 @@
-/*
- * This file is part of Rectball.
- * Copyright (C) 2015 Dani Rodríguez.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package es.danirod.rectball.actors;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import es.danirod.rectball.model.BallColor;
-import es.danirod.rectball.model.Bounds;
-import es.danirod.rectball.model.CombinationFinder;
-import es.danirod.rectball.model.Selection;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import es.danirod.rectball.model.Ball;
+import es.danirod.rectball.model.Board;
 import es.danirod.rectball.screens.GameScreen;
-import es.danirod.rectball.utils.SoundPlayer;
-import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-/**
- * The board is a group of balls. The board is created when the game starts
- * using some given size and it is where all the game play actually happens.
- * The board also owns the logic for handling rectangle events, such as
- * when a ball is pressed.
- *
- * @author danirod
- */
-public class BoardActor extends Group {
+public class BoardActor extends Table {
 
-    /**
-     * The game this board is attached to. This is used to access other
-     * entities from the game such as the timer or the score board when
-     * notifying about events.
-     */
     private GameScreen screen;
 
-    /**
-     * The sheet that is used in the board to render the balls. The sheet
-     * is provided as a parameter, which is a nice solution to handle
-     * multiple themes or at least colorblind mode.
-     */
-    private Texture sheet;
+    private Skin skin;
 
-    /**
-     * The size of the board. The bigger the board is, the more balls there
-     * are. Size of the board is related to the difficulty. More balls make
-     * the game more difficult.
-     */
-    private final int size;
+    private final BallActor[][] actors;
 
-    /**
-     * Matrix of balls. These are all the balls that are part of this board.
-     * The user presses these balls and the balls react to events notifying
-     * the board about that.
-     */
-    private BallActor[][] board;
+    /** The board. */
+    private Board board;
 
-    private SoundPlayer player;
+    /** Is the board coloured? If false, all the balls will be grayed. */
+    private boolean coloured = false;
 
-    /**
-     * Set up a new board.
-     *
-     * @param screen  the screen this board belongs to.
-     * @param size  the size of the board, always square.
-     */
-    public BoardActor(GameScreen screen, Texture sheet, int size, SoundPlayer player) {
+    public BoardActor(GameScreen screen, Skin skin, Board board) {
         this.screen = screen;
-        this.sheet = sheet;
-        this.size = size;
+        this.skin = skin;
+        this.board = board;
+        this.actors = new BallActor[board.getSize()][board.getSize()];
 
-        this.player = player;
-
-        board = setUpBoard();
-        updateBoardBounds();
-    }
-
-    /**
-     * Set up a new random matrix of balls using the given size. The matrix
-     * that this method returns already contains a set of balls using random
-     * colors. The balls don't have initial bounds. They have to be set.
-     *
-     * @return a new matrix with balls
-     */
-    private BallActor[][] setUpBoard() {
-        BallActor[][] board = new BallActor[size][size];
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
-                BallActor ball = new BallActor(BallColor.GRAY, this, sheet);
-                board[x][y] = ball;
-                addActor(ball);
+        for (int y = board.getSize() - 1; y >= 0; y--) {
+            for (int x = 0; x < board.getSize(); x++) {
+                actors[x][y] = new BallActor(this, board.getBall(x, y), skin);
+                add(actors[x][y]).pad(2).uniform();
             }
-        }
-        return board;
-    }
-
-    /**
-     * Set whether the board should be masked or not. If the board is masked,
-     * it will be rendered gray. Else, it will be rendered using the actual
-     * colors of the ball.
-     *
-     * @param masked  whether the board should be masked or not.
-     */
-    public void setMasked(boolean masked) {
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
-                board[x][y].setMasked(masked);
-            }
+            row();
         }
     }
 
-    /**
-     * Update the bounds of every ball form this ball using current width and
-     * height, and position from the board itself. This method has to be
-     * called after the bounds of the board change.
-     */
-    private void updateBoardBounds() {
-        // Calculate the size of the balls so that they fit in the actor
-        // without neither looking distorting, neither going out of bounds.
-        float size = Math.min(getWidth() / this.size, getHeight() / this.size);
-
-        // Now just calculate offset for vertical and horizontal centering.
-        // Note that because this is a group, children actors use their own
-        // coordinate system, so we don't add getX() or getY().
-        float totalSize = size * this.size;
-        float baseX = (getWidth() - totalSize) / 2;
-        float baseY = (getHeight() - totalSize) / 2;
-
-        for (int y = 0; y < this.size; y++) {
-            for (int x = 0; x < this.size; x++) {
-                board[x][y].setPosition(baseX + size * x, baseY + size * y);
-                board[x][y].setSize(size, size);
-            }
-        }
+    public BallActor getBall(int x, int y) {
+        return actors[x][y];
     }
 
-    public int getSize() {
-        return size;
+    public boolean isColoured() {
+        return coloured;
     }
 
-    @Override
-    protected void sizeChanged() {
-        updateBoardBounds();
+    public void setColoured(boolean coloured) {
+        this.coloured = coloured;
     }
 
-    @Override
-    protected void positionChanged() {
-        updateBoardBounds();
-    }
+    /** The list of balls that has been selected. */
+    private Set<BallActor> selectedBalls = new HashSet<>();
 
-    private List<BallActor> selection = new ArrayList<>();
-
-    public void ballSelected(BallActor me) {
-        // The user unselected the ball.
-        if (!me.isSelected()) {
-            player.playSound(SoundCode.UNSELECT);
-            selection.remove(me);
-            return;
-        }
-
-        // Otherwise, the user selected the ball.
-        selection.add(me);
-        if (selection.size() == 4) {
-            // If there are four balls selected, test for valid selection.
-            Selection sel = new Selection(this, selection);
-            if (!sel.checkSameColor()) {
-                player.playSound(SoundCode.FAIL);
-            } else if (!sel.checkSquare()) {
-                player.playSound(SoundCode.FAIL);
-            } else {
-                Bounds bounds = sel.getBounds();
-
-                int cols = bounds.maxX - bounds.minX + 1;
-                int rows = bounds.maxY - bounds.minY + 1;
-                int score = cols * rows;
-
-                // Get the combination color.
-                BallColor color = board[bounds.minX][bounds.minY].getBallColor();
-
-                screen.score(score, color, rows, cols);
-                screen.timer.setSeconds(screen.timer.getSeconds() + 5);
-
-                player.playSound(SoundCode.SUCCESS);
-
-                randomize(bounds.minX, bounds.minY, bounds.maxX, bounds.maxY);
-            }
-
-            for (BallActor selectedBall : selection) {
-                selectedBall.addAction(Actions.scaleTo(1f, 1f, 0.1f));
-                selectedBall.setSelected(false);
-            }
-            selection.clear();
+    protected void onBallSelected(BallActor ball) {
+        selectedBalls.add(ball);
+        if (selectedBalls.size() == 4) {
+            selectionDone();
         } else {
-            player.playSound(SoundCode.SELECT);
+            ball.setSelected(true);
         }
     }
 
-    /**
-     * Return the board matrix.
-     * @return  board matrix
-     */
-    public BallActor[][] getBoard() {
-        return board;
-    }
-
-    /**
-     * Randomly swap the colors of the balls in the entire board. All the
-     * balls will have their color changed to a new and random color.
-     */
-    public void randomize() {
-        randomize(0, 0, board.length - 1, board.length - 1);
-    }
-
-    /**
-     * Randomly swap the colors of the balls in a region inside the board.
-     * The area to be swapped in enclosed in a rectangle whose corner points
-     * are (x1,y1), (x2,y1), (x2,y2), (x1,y2).
-     *
-     * @param x1  left column
-     * @param y1  top row
-     * @param x2  right column
-     * @param y2  bottom row
-     */
-    public void randomize(int x1, int y1, int x2, int y2) {
-        BallColor[] allColors = BallColor.values();
-        do {
-            for (int y = y1; y <= y2; y++) {
-                for (int x = x1; x <= x2; x++) {
-                    int index = MathUtils.random(allColors.length - 2);
-                    board[x][y].setBallColor(allColors[index]);
-                }
-            }
-            if (!existsCombination()) {
-                System.out.println("No se encontró combinación. Refrescando.");
-            }
-        } while (!existsCombination());
-    }
-
-    public void setBoardColor(BallColor color) {
-        for (int y = 0; y < size; y++)
-            for (int x = 0; x < size; x++)
-                board[x][y].setBallColor(color);
-    }
-
-    private boolean existsCombination() {
-        return getCombination() != null;
-    }
-
-    /**
-     * This method marks the balls that form a combination. This should only
-     * be called during game over so that the user can see the combination that
-     * he or she missed before the game runs into game over.
-     */
-    public void markCombination() {
-        Bounds unseenBounds = getCombination();
-        if (unseenBounds == null) {
-            return;
+    public void unselectBalls() {
+        for (BallActor ball : selectedBalls) {
+            ball.setSelected(false);
         }
-        for (int x = unseenBounds.minX; x <= unseenBounds.maxX; x++) {
-            for (int y = unseenBounds.minY; y <= unseenBounds.maxY; y++) {
-                board[x][y].addAction(Actions.sequence(
-                        Actions.scaleTo(0.5f, 0.5f),
-                        Actions.delay(1f),
-                        Actions.scaleTo(1f, 1f)
-                ));
-            }
+        selectedBalls.clear();
+    }
+
+    /**
+     * This event is invoked when the four balls have been selected.
+     */
+    private void selectionDone() {
+        // Build the selection list from the actors.
+        List<Ball> selection = new ArrayList<>();
+        for (BallActor ballActor : selectedBalls) {
+            selection.add(ballActor.getBall());
+        }
+
+        // Check if this is a good selection.
+        if (board.selection(selection)) {
+            for (BallActor ballActor : selectedBalls)
+                ballActor.setSelected(false, false);
+            screen.onScore(new ArrayList<>(selectedBalls));
+            selectedBalls.clear();
+        } else {
+            unselectBalls();
         }
     }
 
-    private Bounds getCombination() {
-        CombinationFinder finder = new CombinationFinder(board);
-        return finder.getCombination();
+    protected void onBallUnselected(BallActor ball) {
+        selectedBalls.remove(ball);
+        ball.setSelected(false);
     }
 }

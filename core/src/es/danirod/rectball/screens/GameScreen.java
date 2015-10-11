@@ -19,8 +19,10 @@ package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -34,21 +36,24 @@ import es.danirod.rectball.actors.ScoreActor;
 import es.danirod.rectball.actors.TimerActor;
 import es.danirod.rectball.actors.TimerActor.TimerCallback;
 import es.danirod.rectball.dialogs.ConfirmDialog;
-import es.danirod.rectball.listeners.BallInputListener;
-import es.danirod.rectball.model.BallColor;
+import es.danirod.rectball.model.Ball;
 import es.danirod.rectball.model.Bounds;
 import es.danirod.rectball.model.CombinationFinder;
+import es.danirod.rectball.model.Coordinate;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
 
 public class GameScreen extends AbstractScreen implements TimerCallback {
 
-    public BoardActor board;
-
     public TimerActor timer;
 
     private ScoreActor scoreLabel;
+
+    private BoardActor board;
 
     private boolean paused, started;
 
@@ -60,22 +65,14 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
     public void load() {
         // Set up the board.
         String file = game.settings.isColorblind() ? "colorblind" : "normal";
-        Texture sheet = game.manager.get("board/" + file + ".png");
-        board = new BoardActor(this, sheet, 7, game.player);
 
-        // Set up the listeners for the board.
-        BallActor[][] allBalls = board.getBoard();
-        for (int y = 0; y < board.getSize(); y++) {
-            for (int x = 0; x < board.getSize(); x++) {
-                BallActor ball = allBalls[x][y];
-                ball.addListener(new BallInputListener(ball, board));
-            }
-        }
-
-        timer = new TimerActor(30, game.getSkin());
+        timer = new TimerActor(Constants.SECONDS, game.getSkin());
         timer.addSubscriber(this);
 
         scoreLabel = new ScoreActor(game.getSkin());
+
+        game.getCurrentGame().getBoard().randomize();
+        board = new BoardActor(this, game.getSkin(), game.getCurrentGame().getBoard());
 
         super.load();
     }
@@ -124,33 +121,78 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
 
         // Reset data
         game.getCurrentGame().reset();
+        scoreLabel.setValue(0);
         paused = started = false;
-
-        // Reset data
-        board.setTouchable(Touchable.disabled);
+        timer.setSeconds(Constants.SECONDS);
         timer.setRunning(false);
 
-        BallActor[][] allBalls = board.getBoard();
-        for (int y = 0; y < board.getSize(); y++) {
-            for (int x = 0; x < board.getSize(); x++) {
-                allBalls[x][y].addAction(Actions.sequence(
-                        Actions.scaleTo(0, 0),
-                        Actions.delay(MathUtils.random(0.1f, 2.5f)),
-                        Actions.scaleTo(1, 1, 0.5f)
-                ));
-            }
+        board.setTouchable(Touchable.disabled);
+        for (Actor child : board.getChildren()) {
+            child.setColor(Color.WHITE);
         }
 
-        board.addAction(Actions.sequence(
-                Actions.delay(3f),
+        // Display the countdown.
+        countdown(2);
+
+        // Wait 2 seconds, then colorize the board.
+        getStage().addAction(Actions.sequence(
+                Actions.delay(2f),
                 Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        started = true;
-                        board.randomize();
                         if (!paused) {
-                            board.setTouchable(Touchable.enabled);
+                            board.setColoured(true);
                             timer.setRunning(true);
+                            board.setTouchable(Touchable.enabled);
+                        }
+                        started = true;
+                    }
+                })
+        ));
+    }
+
+    /**
+     * Create a countdown in the screen lasting for the amount of seconds given.
+     * @param seconds how many seconds should the countdown be displayed.
+     */
+    private void countdown(final int seconds) {
+        // Since this is a recursive function, avoid the case where you pass
+        // a number of seconds that might trigger an infinite loop.
+        if (seconds <= 0) {
+            return;
+        }
+
+        // Create the label that will contain this number
+        String number = Integer.toString(seconds);
+        final Label label = new Label(number, game.getSkin(), "monospace");
+        label.setFontScale(20f);
+        label.setSize(150, 150);
+        label.setAlignment(Align.center);
+        label.setPosition(
+                (getStage().getWidth() - label.getWidth()) / 2,
+                (getStage().getHeight() - label.getHeight()) / 2);
+
+        // Add the label to the stage and play a sound to notify the user.
+        getStage().addActor(label);
+        game.player.playSound(SoundCode.SELECT);
+
+        label.addAction(Actions.sequence(
+                // Animate it.
+                Actions.parallel(
+                        Actions.fadeOut(1f),
+                        Actions.moveBy(0, 80, 1f)
+                ),
+
+                // After the animation, decide. If the countdown hasn't finished
+                // yet, run another countdown with 1 second less.
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        label.remove();
+                        if (seconds > 1) {
+                            countdown(seconds - 1);
+                        } else {
+                            game.player.playSound(SoundCode.SUCCESS);
                         }
                     }
                 })
@@ -161,7 +203,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
     public void setUpInterface(Table table) {
         table.add(timer).fillX().height(50).padBottom(10).row();
         table.add(scoreLabel).width(VIEWPORT_WIDTH / 2).height(65).padBottom(60).row();
-        table.add(board).expand().fill().row();
+        table.add(board).expand().row();
     }
 
     @Override
@@ -189,47 +231,22 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
 
     @Override
     public void onTimeOut() {
+        board.unselectBalls();
+
         // Update the scoreLabel... and the record.
         game.scores.addScore(game.getCurrentGame().getScore());
-
         timer.setRunning(false);
-        board.setTouchable(Touchable.disabled);
-
         game.player.playSound(SoundCode.GAME_OVER);
 
-        // Get a combination that the user didn't find.
-        CombinationFinder finder = new CombinationFinder(board.getBoard());
+        CombinationFinder finder = new CombinationFinder(game.getCurrentGame().getBoard());
         Bounds combination = finder.getCombination();
-
-        float width = Gdx.graphics.getWidth();
-        float height = Gdx.graphics.getHeight();
-        BallActor[][] allBalls = board.getBoard();
-        BallColor refColor = allBalls[combination.minX][combination.minY].getBallColor();
-        for (int y = 0; y < board.getSize(); y++) {
-            for (int x = 0; x < board.getSize(); x++) {
-                final BallActor currentBall = allBalls[x][y];
-
+        for (int y = 0; y < game.getCurrentGame().getBoard().getSize(); y++) {
+            for (int x = 0; x < game.getCurrentGame().getBoard().getSize(); x++) {
                 if ((x >= combination.minX && x <= combination.maxX) &&
                         (y >= combination.minY && y <= combination.maxY)) {
-                    currentBall.setBallColor(refColor);
                     continue;
                 }
-
-                float desplX = MathUtils.random(-width / 2, width / 2);
-                float desplY = -height - MathUtils.random(0, height / 4);
-                float scaling = MathUtils.random(0.3f, 0.7f);
-                float desplTime = MathUtils.random(0.5f, 1.5f);
-                currentBall.addAction(Actions.sequence(
-                        Actions.run(new Runnable() {
-                            @Override
-                            public void run() {
-                                currentBall.setBallColor(BallColor.GRAY);
-                            }
-                        }),
-                        Actions.parallel(
-                                Actions.moveBy(desplX, desplY, desplTime),
-                                Actions.scaleBy(scaling, scaling, desplTime)
-                        )));
+                board.getBall(x, y).addAction(Actions.color(Color.GRAY, 0.15f));
             }
         }
 
@@ -245,40 +262,59 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         ));
     }
 
-    public void score(int score, BallColor color, int rows, int cols) {
-        // Store this information in the statistics.
-        String size = Math.max(rows, cols) + "x" + Math.min(rows, cols);
-        game.statistics.getTotalData().incrementValue("balls", rows * cols);
-        game.statistics.getTotalData().incrementValue("scoreLabel", score);
-        game.statistics.getTotalData().incrementValue("combinations");
-        game.statistics.getColorData().incrementValue(color.toString().toLowerCase());
-        game.statistics.getSizesData().incrementValue(size);
+    public void onScore(List<BallActor> balls) {
+        // Get the model
+        List<Ball> ballModel = new ArrayList<>();
+        for (BallActor ballActor : balls) {
+            ballModel.add(ballActor.getBall());
+        }
 
-        // Increment the score.
+        // Get the bounds for these balls.
+        final Bounds bounds = Bounds.fromBallList(ballModel);
+
+        // Calculate the size of these bounds to calculate the score.
+        int rows = bounds.maxY - bounds.minY + 1;
+        int cols = bounds.maxX - bounds.minX + 1;
+        int score = rows * cols;
         game.getCurrentGame().addScore(score);
         scoreLabel.setValue(game.getCurrentGame().getScore());
 
-        final Label scoreLabel = new Label(Integer.toString(score), game.getSkin(), "monospace");
-        scoreLabel.setAlignment(Align.center);
-        scoreLabel.setFontScale(10);
+        // Give some extra time.
+        timer.setSeconds(timer.getSeconds() + 5);
 
-        float ballSize = board.getWidth() / board.getSize();
-        scoreLabel.setSize(ballSize, ballSize);
-        scoreLabel.setX((Constants.VIEWPORT_WIDTH - ballSize) / 2);
-        scoreLabel.setY((Constants.VIEWPORT_HEIGHT - ballSize) / 2);
-        scoreLabel.addAction(Actions.sequence(
-                Actions.parallel(
-                        Actions.moveBy(0, 80, 1),
-                        Actions.fadeOut(1)
-                ),
+        getStage().addAction(Actions.sequence(
+                hideBalls(bounds),
                 Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        scoreLabel.remove();
+                        boolean valid = false;
+                        int tries = 0;
+                        while (!valid && tries++ < 3) {
+                            game.getCurrentGame().getBoard().randomize(
+                                    new Coordinate(bounds.minX, bounds.minY),
+                                    new Coordinate(bounds.maxX, bounds.maxY));
+                            CombinationFinder finder = new CombinationFinder(game.getCurrentGame().getBoard());
+                            valid = finder.areThereCombinations();
+                        }
+
+                        if (tries == 3) {
+                            getStage().addAction(Actions.sequence(
+                                    hideBoard(),
+                                    Actions.run(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            game.getCurrentGame().resetBoard();
+                                        }
+                                    }),
+                                    showBoard()
+                            ));
+                        }
                     }
-                })
+                }),
+                showBalls(bounds)
         ));
-        getStage().addActor(scoreLabel);
+
+
     }
 
     public void setPaused(boolean paused) {
@@ -292,7 +328,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         // If the game has already started, pause the timer and hide the board.
         if (started) {
             timer.setRunning(!paused);
-            board.setMasked(paused);
+            board.setColoured(!paused);
             board.setTouchable(paused ? Touchable.disabled : Touchable.enabled);
         }
     }
@@ -301,4 +337,65 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
     public void pause() {
         setPaused(true);
     }
+
+    private Action hideBalls(final Bounds bounds) {
+        return Actions.sequence(
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int x = bounds.minX; x <= bounds.maxX; x++) {
+                            for (int y = bounds.minY; y <= bounds.maxY; y++) {
+                                board.getBall(x, y).addAction(Actions.scaleTo(0, 0, 0.15f));
+                            }
+                        }
+                    }
+                }),
+                Actions.delay(0.15f)
+        );
+    }
+
+    private Action showBalls(final Bounds bounds) {
+        return Actions.sequence(
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int x = bounds.minX; x <= bounds.maxX; x++) {
+                            for (int y = bounds.minY; y <= bounds.maxY; y++) {
+                                board.getBall(x, y).addAction(Actions.scaleTo(1, 1, 0.15f));
+                            }
+                        }
+                    }
+                }),
+                Actions.delay(0.15f)
+        );
+    }
+
+    private Action hideBoard() {
+        return Actions.sequence(
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (Actor child : board.getChildren()) {
+                            child.addAction(Actions.scaleTo(0, 0, 0.15f));
+                        }
+                    }
+                }),
+                Actions.delay(0.15f)
+        );
+    }
+
+    private Action showBoard() {
+        return Actions.sequence(
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (Actor child : board.getChildren()) {
+                            child.addAction(Actions.scaleTo(1, 1, 0.15f));
+                        }
+                    }
+                }),
+                Actions.delay(0.15f)
+        );
+    }
+
 }

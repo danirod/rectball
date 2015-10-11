@@ -1,164 +1,102 @@
-/*
- * This file is part of Rectball.
- * Copyright (C) 2015 Dani Rodríguez.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package es.danirod.rectball.actors;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import es.danirod.rectball.model.BallColor;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Scaling;
+import es.danirod.rectball.model.Ball;
 
-/**
- * Actor for representing the state of balls that are in the board.
- * Balls can have a color and they can be clicked. The user interacts
- * with the balls in order to make rectangles during a game.
- *
- * @author danirod
- */
-public class BallActor extends Actor {
+public class BallActor extends Image {
 
-    /**
-     * Whether the ball is selected or not. A ball is selected by touching
-     * it. If touched again, it is unselected. The point of the game is
-     * to select four balls. Selected balls should render differently.
-     */
-    private boolean selected = false;
-
-    /**
-     * Should the ball be hidden?
-     */
-    private boolean masked = false;
-
-    /**
-     * The current color of the ball. The value of this field might change
-     * during the game as the user makes rectangles, since making a rectangle
-     * shuffles the contents of the enclosed area.
-     */
-    private BallColor ballColor;
-
-    /**
-     * The texture sheet that is being used. This texture is used when the
-     * ball color is shuffled again and is passed to the method that builds
-     * the sprite.
-     */
-    private Texture sheet;
-
-    /**
-     * The actual sprite representation of the ball. For the sake of making
-     * the code easy, the sprite has the position and size of the image that
-     * is displayed on the screen.
-     */
-    private Sprite sprite;
-
-    /**
-     * Build a new ball. Keep in mind that this method should not be used to
-     * change the color of a ball, since it's possible to change the color
-     * without instantiating new balls.
-     *
-     * @param ballColor  initial color of the ball.
-     * @param board  the board this ball belongs to.
-     */
-    public BallActor(BallColor ballColor, BoardActor board, Texture sheet) {
-        this.ballColor = ballColor;
-        this.sheet = sheet;
-
-        // Set up look and feel.
-        sprite = new Sprite(ballColor.getRegion(this.sheet));
+    public Ball getBall() {
+        return ball;
     }
 
-    /**
-     * Get the selection status of this ball.
-     * @return whether this ball is selected or not
-     */
-    public boolean isSelected() {
-        return selected;
-    }
+    private class BallSelectionListener extends InputListener {
 
-    /**
-     * Change the selected status of this ball. Set this method to true to
-     * make this ball selected. Otherwise set the method to false to make
-     * this ball unselected.
-     *
-     * @param selected  whether the ball should be selected or not.
-     */
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-    }
+        private BoardActor board;
 
-    public boolean isMasked() {
-        return masked;
-    }
+        private BallActor ball;
 
-    public void setMasked(boolean masked) {
-        this.masked = masked;
-        if (masked) {
-            sprite.setRegion(BallColor.GRAY.getRegion(sheet));
-        } else {
-            sprite.setRegion(ballColor.getRegion(sheet));
+        public BallSelectionListener(BoardActor board, BallActor ball) {
+            this.board = board;
+            this.ball = ball;
+        }
+
+        @Override
+        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            if (!isSelected()) {
+                board.onBallSelected(ball);
+            } else {
+
+                board.onBallUnselected(ball);
+            }
+            return true;
         }
     }
 
-    /**
-     * Get the color that this ball has at this very moment.
-     * @return the current color of this ball.
-     */
-    public BallColor getBallColor() {
-        return ballColor;
-    }
+    private boolean selected;
 
-    /**
-     * Update the color of this ball. This method should be invoked whenever
-     * the color of the ball needs to be replaced. For instance, after using
-     * this ball in a selection.
-     *
-     * @param ballColor
-     */
-    public void setBallColor(BallColor ballColor) {
-        this.ballColor = ballColor;
+    private Ball ball;
 
-        // Changing the color also changes the sprite used to render the ball.
-        if (masked) {
-            sprite.setRegion(BallColor.GRAY.getRegion(sheet));
-        } else {
-            sprite.setRegion(ballColor.getRegion(sheet));
-        }
+    private BoardActor board;
+
+    private Skin skin;
+
+    public BallActor(BoardActor board, Ball ball, Skin skin) {
+        this.board = board;
+        this.ball = ball;
+        this.skin = skin;
+        setScaling(Scaling.fit);
+        addListener(new BallSelectionListener(board, this));
     }
 
     @Override
-    public void draw(Batch batch, float parentAlpha) {
-        Color col = batch.getColor();
-
-        batch.setColor(col.r, col.g, col.b, col.a * parentAlpha);
-        batch.draw(sprite, getX(), getY(), getOriginX(), getOriginY(),
-                getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
-        batch.setColor(col);
+    public void act(float delta) {
+        if (board.isColoured()) {
+            setDrawable(skin, "ball_" + ball.getColor().toString().toLowerCase());
+        } else {
+            setDrawable(skin, "ball_gray");
+        }
+        super.act(delta);
     }
 
     @Override
     protected void sizeChanged() {
-        sprite.setSize(getWidth(), getHeight());
         setOrigin(getWidth() / 2, getHeight() / 2);
     }
 
     @Override
-    protected void positionChanged() {
-        sprite.setPosition(getX(), getY());
+    public void draw(Batch batch, float parentAlpha) {
+        super.draw(batch, parentAlpha);
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        setSelected(selected, true);
+    }
+
+    public void setSelected(boolean selected, boolean animate) {
+        float finalScale = selected ? 0.8f : 1;
+        Color finalColor = selected ? Color.LIGHT_GRAY : Color.WHITE;
+
+        if (animate) {
+            addAction(Actions.scaleTo(finalScale, finalScale, 0.15f));
+            addAction(Actions.color(finalColor, 0.15f));
+        } else {
+            addAction(Actions.scaleTo(finalScale, finalScale));
+            addAction(Actions.color(finalColor));
+        }
+
+        this.selected = selected;
     }
 }
-

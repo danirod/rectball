@@ -40,9 +40,12 @@ public class GameState {
      */
     private float time;
 
+    private final Board board;
+
     public GameState() {
         this.score = 0;
         this.time = 0;
+        board = new Board(6);
     }
 
     public int getScore() {
@@ -69,8 +72,22 @@ public class GameState {
         this.time += time;
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
     public void reset() {
-        this.time = 0;
-        this.score = 0;
+        time = 0;
+        score = 0;
+        resetBoard();
+    }
+
+    public void resetBoard() {
+        boolean valid = false;
+        while (!valid) {
+            board.randomize();
+            CombinationFinder finder = new CombinationFinder(board);
+            valid = finder.areThereCombinations();
+        }
     }
 }
