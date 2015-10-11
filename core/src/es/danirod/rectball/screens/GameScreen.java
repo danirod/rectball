@@ -22,7 +22,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
+import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.BallActor;
 import es.danirod.rectball.actors.BoardActor;
@@ -114,6 +117,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
 
         board.setTouchable(Touchable.disabled);
 
+        // Display the countdown.
+        countdown(2);
+
         // Wait 2 seconds, then colorize the board.
         getStage().addAction(Actions.sequence(
                 Actions.delay(2f),
@@ -123,6 +129,54 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
                         board.setColoured(true);
                         timer.setRunning(true);
                         board.setTouchable(Touchable.enabled);
+                    }
+                })
+        ));
+    }
+
+    /**
+     * Create a countdown in the screen lasting for the amount of seconds given.
+     * @param seconds how many seconds should the countdown be displayed.
+     */
+    private void countdown(final int seconds) {
+        // Since this is a recursive function, avoid the case where you pass
+        // a number of seconds that might trigger an infinite loop.
+        if (seconds <= 0) {
+            return;
+        }
+
+        // Create the label that will contain this number
+        String number = Integer.toString(seconds);
+        final Label label = new Label(number, game.getSkin(), "monospace");
+        label.setFontScale(20f);
+        label.setSize(150, 150);
+        label.setAlignment(Align.center);
+        label.setPosition(
+                (getStage().getWidth() - label.getWidth()) / 2,
+                (getStage().getHeight() - label.getHeight()) / 2);
+
+        // Add the label to the stage and play a sound to notify the user.
+        getStage().addActor(label);
+        game.player.playSound(SoundCode.SELECT);
+
+        label.addAction(Actions.sequence(
+                // Animate it.
+                Actions.parallel(
+                        Actions.fadeOut(1f),
+                        Actions.moveBy(0, 80, 1f)
+                ),
+
+                // After the animation, decide. If the countdown hasn't finished
+                // yet, run another countdown with 1 second less.
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        label.remove();
+                        if (seconds > 1) {
+                            countdown(seconds - 1);
+                        } else {
+                            game.player.playSound(SoundCode.SUCCESS);
+                        }
                     }
                 })
         ));
