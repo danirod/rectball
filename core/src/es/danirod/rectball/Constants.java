@@ -23,5 +23,6 @@ public class Constants {
      * The padding for the table in every stage.
      */
     public static final int STAGE_PADDING = 20;
-    public static final int SECONDS = 5;
+    
+    public static final int SECONDS = 30;
 }
