@@ -19,6 +19,7 @@ package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -65,7 +66,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         // Set up the board.
         String file = game.settings.isColorblind() ? "colorblind" : "normal";
 
-        timer = new TimerActor(30, game.getSkin());
+        timer = new TimerActor(Constants.SECONDS, game.getSkin());
         timer.addSubscriber(this);
 
         scoreLabel = new ScoreActor(game.getSkin());
@@ -120,10 +121,15 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
 
         // Reset data
         game.getCurrentGame().reset();
+        scoreLabel.setValue(0);
         paused = started = false;
+        timer.setSeconds(Constants.SECONDS);
         timer.setRunning(false);
 
         board.setTouchable(Touchable.disabled);
+        for (Actor child : board.getChildren()) {
+            child.setColor(Color.WHITE);
+        }
 
         // Display the countdown.
         countdown(2);
@@ -134,9 +140,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
                 Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        board.setColoured(true);
-                        // timer.setRunning(true);
-                        board.setTouchable(Touchable.enabled);
+                        if (!paused) {
+                            board.setColoured(true);
+                            timer.setRunning(true);
+                            board.setTouchable(Touchable.enabled);
+                        }
+                        started = true;
                     }
                 })
         ));
@@ -229,6 +238,18 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         timer.setRunning(false);
         game.player.playSound(SoundCode.GAME_OVER);
 
+        CombinationFinder finder = new CombinationFinder(game.getCurrentGame().getBoard());
+        Bounds combination = finder.getCombination();
+        for (int y = 0; y < game.getCurrentGame().getBoard().getSize(); y++) {
+            for (int x = 0; x < game.getCurrentGame().getBoard().getSize(); x++) {
+                if ((x >= combination.minX && x <= combination.maxX) &&
+                        (y >= combination.minY && y <= combination.maxY)) {
+                    continue;
+                }
+                board.getBall(x, y).addAction(Actions.color(Color.GRAY, 0.15f));
+            }
+        }
+
         getStage().addAction(Actions.sequence(
                 Actions.delay(2f),
                 Actions.run(new Runnable() {
@@ -257,6 +278,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         int score = rows * cols;
         game.getCurrentGame().addScore(score);
         scoreLabel.setValue(game.getCurrentGame().getScore());
+
+        // Give some extra time.
+        timer.setSeconds(timer.getSeconds() + 5);
 
         getStage().addAction(Actions.sequence(
                 hideBalls(bounds),
@@ -304,6 +328,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         // If the game has already started, pause the timer and hide the board.
         if (started) {
             timer.setRunning(!paused);
+            board.setColoured(!paused);
+            board.setTouchable(paused ? Touchable.disabled : Touchable.enabled);
         }
     }
 
