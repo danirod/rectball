@@ -41,7 +41,7 @@ import java.util.List;
  *
  * @author danirod
  */
-public class Timer extends Actor {
+public class TimerActor extends Actor {
 
     /**
      * This interface uses the Subscriber pattern to be notified when the timer
@@ -99,7 +99,7 @@ public class Timer extends Actor {
      *
      * @param seconds  the maximum seconds for this timer.
      */
-    public Timer(int seconds, Skin skin) {
+    public TimerActor(int seconds, Skin skin) {
         this.seconds = seconds;
         this.maxSeconds = seconds;
         this.skin = skin;

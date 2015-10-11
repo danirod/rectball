@@ -21,22 +21,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.BallActor;
 import es.danirod.rectball.actors.BoardActor;
 import es.danirod.rectball.actors.ScoreActor;
-import es.danirod.rectball.actors.Timer;
-import es.danirod.rectball.actors.Timer.TimerCallback;
-import es.danirod.rectball.dialogs.PauseDialog;
+import es.danirod.rectball.actors.TimerActor;
+import es.danirod.rectball.actors.TimerActor.TimerCallback;
+import es.danirod.rectball.dialogs.LeaveDialog;
 import es.danirod.rectball.listeners.BallInputListener;
 import es.danirod.rectball.model.BallColor;
 import es.danirod.rectball.model.Bounds;
@@ -49,13 +46,11 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
 
     public BoardActor board;
 
-    public Timer timer;
+    public TimerActor timer;
 
     private ScoreActor scoreLabel;
 
     private boolean paused, started;
-
-    private PauseDialog pauseDialog;
 
     public GameScreen(RectballGame game) {
         super(game);
@@ -77,40 +72,37 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
             }
         }
 
-        timer = new Timer(30, game.getSkin());
+        timer = new TimerActor(30, game.getSkin());
         timer.addSubscriber(this);
 
         scoreLabel = new ScoreActor(game.getSkin());
 
-        // Create the pause dialog and their listeners.
-        pauseDialog = new PauseDialog(game.getSkin());
-        pauseDialog.addYesButtonCaptureListener(new ChangeListener() {
+        super.load();
+    }
+
+    private void showPauseDialog() {
+        LeaveDialog leaveDialog = new LeaveDialog(game.getSkin());
+        leaveDialog.setCallback(new LeaveDialog.LeaveDialogCallback() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                // make dialog invisible
-                PauseDialog dialog = (PauseDialog)actor.getParent();
-                dialog.setVisible(false);
+            public void onYesButton() {
+                // The user wants to leave the game.
                 timer.setRunning(false);
                 onTimeOut();
             }
-        });
-        pauseDialog.addNoButtonCaptureListener(new ChangeListener() {
+
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                // force uncheck
-                TextButton button = (TextButton)actor;
-                button.setChecked(false);
+            public void onNoButton() {
                 setPaused(false);
             }
         });
 
-        super.load();
-
-        pauseDialog.setVisible(false);
-        pauseDialog.setSize(Constants.VIEWPORT_WIDTH * 0.8f, 200);
-        pauseDialog.setX(Constants.VIEWPORT_WIDTH / 2 - pauseDialog.getWidth() / 2);
-        pauseDialog.setY(Constants.VIEWPORT_HEIGHT / 2 - pauseDialog.getHeight() / 2);
-        getStage().addActor(pauseDialog);
+        // FIXME: fadeIn action is not working because alpha handling in this
+        // game is a mess at the moment. Fix that mess, then let the Dialog
+        // use the default actions.
+        leaveDialog.show(getStage(), null);
+        leaveDialog.setPosition(
+                Math.round((getStage().getWidth() - leaveDialog.getWidth()) / 2),
+                Math.round((getStage().getHeight() - leaveDialog.getHeight()) / 2));
     }
 
     @Override
@@ -184,7 +176,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         // Pause the game when you press BACK or ESCAPE.
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) ||
                 Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            setPaused(!paused);
+            if (!paused) {
+                setPaused(true);
+            }
         }
     }
 
@@ -284,7 +278,13 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
 
     public void setPaused(boolean paused) {
         this.paused = paused;
-        pauseDialog.setVisible(paused);
+
+        // If the game has just been paused, show the pause dialog.
+        if (paused) {
+            showPauseDialog();
+        }
+
+        // If the game has already started, pause the timer and hide the board.
         if (started) {
             timer.setRunning(!paused);
             board.setMasked(paused);
