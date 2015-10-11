@@ -40,7 +40,7 @@ public class GameState {
      */
     private float time;
 
-    private Board board;
+    private final Board board;
 
     public GameState() {
         this.score = 0;
@@ -79,6 +79,6 @@ public class GameState {
     public void reset() {
         time = 0;
         score = 0;
-        board = new Board(6);
+        board.randomize();
     }
 }

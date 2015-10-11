@@ -17,7 +17,22 @@
  */
 package es.danirod.rectball.model;
 
+import java.util.List;
+
 public class Bounds {
+
+    public static Bounds fromBallList(List<Ball> balls) {
+        int minX, minY, maxX, maxY;
+        minX = minY = Integer.MAX_VALUE;
+        maxX = maxY = Integer.MIN_VALUE;
+        for (Ball ball : balls) {
+            minX = Math.min(minX, ball.getX());
+            minY = Math.min(minY, ball.getY());
+            maxX = Math.max(maxX, ball.getX());
+            maxY = Math.max(maxY, ball.getY());
+        }
+        return new Bounds(minX, minY, maxX, maxY);
+    }
 
     public int minX, minY, maxX, maxY;
 

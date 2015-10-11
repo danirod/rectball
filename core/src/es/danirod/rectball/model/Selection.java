@@ -21,14 +21,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Selection {
-
-    private Board board;
+class Selection {
 
     private List<Ball> balls;
 
-    public Selection(Board board, List<Ball> balls) {
-        this.board = board;
+    public Selection(List<Ball> balls) {
         this.balls = balls;
     }
 
@@ -61,18 +58,5 @@ public class Selection {
             cols.add(ball.getX());
         }
         return rows.size() == 2 && cols.size() == 2;
-    }
-
-    public Bounds getBounds() {
-        int minX, minY, maxX, maxY;
-        minX = minY = Integer.MAX_VALUE;
-        maxX = maxY = Integer.MIN_VALUE;
-        for (Ball ball : balls) {
-            minX = Math.min(minX, ball.getX());
-            minY = Math.min(minY, ball.getY());
-            maxX = Math.max(maxX, ball.getX());
-            maxY = Math.max(maxY, ball.getY());
-        }
-        return new Bounds(minX, minY, maxX, maxY);
     }
 }

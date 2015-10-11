@@ -49,12 +49,12 @@ public class TimerActor extends Actor {
      * then pass your subscriber to this timer when you create it. It will be
      * notified that the time is over.
      */
-    public static interface TimerCallback {
+    public interface TimerCallback {
 
         /**
          * This is the method that receives the message that the time is over.
          */
-        public void onTimeOut();
+        void onTimeOut();
 
     }
 

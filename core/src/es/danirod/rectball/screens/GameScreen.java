@@ -34,7 +34,12 @@ import es.danirod.rectball.actors.TimerActor;
 import es.danirod.rectball.actors.TimerActor.TimerCallback;
 import es.danirod.rectball.dialogs.ConfirmDialog;
 import es.danirod.rectball.model.Ball;
+import es.danirod.rectball.model.Bounds;
+import es.danirod.rectball.model.Coordinate;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
 
@@ -63,7 +68,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         scoreLabel = new ScoreActor(game.getSkin());
 
         game.getCurrentGame().getBoard().randomize();
-        board = new BoardActor(game.getSkin(), game.getCurrentGame().getBoard());
+        board = new BoardActor(this, game.getSkin(), game.getCurrentGame().getBoard());
 
         super.load();
     }
@@ -127,7 +132,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
                     @Override
                     public void run() {
                         board.setColoured(true);
-                        timer.setRunning(true);
+                        // timer.setRunning(true);
                         board.setTouchable(Touchable.enabled);
                     }
                 })
@@ -184,6 +189,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
 
     @Override
     public void setUpInterface(Table table) {
+        getStage().setDebugAll(true);
         table.add(timer).fillX().height(50).padBottom(10).row();
         table.add(scoreLabel).width(VIEWPORT_WIDTH / 2).height(65).padBottom(60).row();
         table.add(board).expand().row();
@@ -214,6 +220,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
 
     @Override
     public void onTimeOut() {
+        board.unselectBalls();
+
         // Update the scoreLabel... and the record.
         game.scores.addScore(game.getCurrentGame().getScore());
         timer.setRunning(false);
@@ -229,6 +237,58 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
                     }
                 })
         ));
+    }
+
+    public void onScore(List<BallActor> balls) {
+        // Get the model
+        List<Ball> ballModel = new ArrayList<>();
+        for (BallActor ballActor : balls) {
+            ballModel.add(ballActor.getBall());
+        }
+
+        // Get the bounds for these balls.
+        final Bounds bounds = Bounds.fromBallList(ballModel);
+
+        // Calculate the size of these bounds to calculate the score.
+        int rows = bounds.maxY - bounds.minY + 1;
+        int cols = bounds.maxX - bounds.minX + 1;
+        int score = rows * cols;
+        game.getCurrentGame().addScore(score);
+        scoreLabel.setValue(game.getCurrentGame().getScore());
+
+        getStage().addAction(Actions.sequence(
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int x = bounds.minX; x <= bounds.maxX; x++) {
+                            for (int y = bounds.minY; y <= bounds.maxY; y++) {
+                                board.getBall(x, y).addAction(Actions.scaleTo(0, 0, 0.15f));
+                            }
+                        }
+                    }
+                }),
+                Actions.delay(0.15f),
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.getCurrentGame().getBoard().randomize(
+                                new Coordinate(bounds.minX, bounds.minY),
+                                new Coordinate(bounds.maxX, bounds.maxY));
+                    }
+                }),
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int x = bounds.minX; x <= bounds.maxX; x++) {
+                            for (int y = bounds.minY; y <= bounds.maxY; y++) {
+                                board.getBall(x, y).addAction(Actions.scaleTo(1, 1, 0.15f));
+                            }
+                        }
+                    }
+                })
+        ));
+
+
     }
 
     public void setPaused(boolean paused) {
