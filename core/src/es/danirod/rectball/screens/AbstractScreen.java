@@ -63,7 +63,6 @@ public abstract class AbstractScreen implements Screen {
         table = new Table();
         table.setFillParent(true);
         table.pad(STAGE_PADDING);
-        setUpInterface(table);
         stage.addActor(table);
     }
 
@@ -100,6 +99,8 @@ public abstract class AbstractScreen implements Screen {
 
     @Override
     public void show() {
+        table.clear();
+        setUpInterface(table);
         Gdx.input.setInputProcessor(stage);
     }
 
