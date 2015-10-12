@@ -24,5 +24,5 @@ public class Constants {
      */
     public static final int STAGE_PADDING = 20;
 
-    public static final int SECONDS = 3;
+    public static final int SECONDS = 30;
 }

@@ -63,22 +63,28 @@ public class RectballSkin extends Skin {
         this.add("monospace", monospaceStyle);
     }
 
-    private void addTextButtonStyles() {
-        // Load button assets.
-        Texture buttonTexture = game.manager.get("ui/button.png", Texture.class);
-        TextureRegion buttonUp = new TextureRegion(buttonTexture, 0, 0, 128, 128);
-        TextureRegion buttonDown = new TextureRegion(buttonTexture, 128, 0, 128, 128);
+    private NinePatchDrawable generateButton(Color color, Color down) {
+        Pixmap pixmap = new Pixmap(9, 9, Pixmap.Format.RGBA8888);
+        pixmap.setColor(down);
+        pixmap.fill();
+        pixmap.setColor(color);
+        pixmap.fillRectangle(0, 0, 9, 5);
 
-        // Build button nine patches.
-        NinePatchDrawable drawableUp = new NinePatchDrawable(new NinePatch(buttonUp, 32, 32, 32, 32));
-        NinePatchDrawable drawableDown = new NinePatchDrawable(new NinePatch(buttonDown, 32, 32, 32, 32));
+        Texture texture = new Texture(pixmap);
+        NinePatch ninePatch = new NinePatch(texture, 4, 4, 4, 4);
+        return new NinePatchDrawable(ninePatch);
+    }
+
+    private void addTextButtonStyles() {
+        NinePatchDrawable upButton = generateButton(Color.GRAY, Color.DARK_GRAY);
+        NinePatchDrawable downButton = generateButton(Color.DARK_GRAY, Color.GRAY);
         BitmapFont font = game.manager.get("normalFont.ttf");
-        TextButtonStyle buttonStyle = new TextButtonStyle(drawableUp, drawableDown, drawableDown, font);
+        TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
         this.add("default", buttonStyle);
     }
 
     private void addWindowStyles() {
-        Drawable background = newDrawable("pixel", Color.DARK_GRAY);
+        Drawable background = newDrawable("pixel", 0.3f, 0.3f, 0.3f, 1);
         BitmapFont font = game.manager.get("normalFont.ttf");
         WindowStyle window = new WindowStyle(font, Color.WHITE, background);
         add("default", window);
