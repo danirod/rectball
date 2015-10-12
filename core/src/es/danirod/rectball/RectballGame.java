@@ -26,7 +26,7 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
@@ -65,9 +65,11 @@ public class RectballGame extends Game {
 
     public SoundPlayer player;
 
-    private Skin uiSkin;
+    private RectballSkin uiSkin;
 
     private GameState currentGame = new GameState();
+
+    private TextureAtlas ballAtlas;
 
     @Override
     public void create() {
@@ -92,6 +94,7 @@ public class RectballGame extends Game {
         statistics = Statistics.loadStats();
         player = new SoundPlayer(this);
         uiSkin = new RectballSkin(this);
+        updateBallAtlas();
 
         // Load the screens.
         for (Map.Entry<Integer, AbstractScreen> screen : screens.entrySet()) {
@@ -201,11 +204,26 @@ public class RectballGame extends Game {
      * Get the skin used by Scene2D UI to display things.
      * @return  the skin the game should use.
      */
-    public Skin getSkin() {
+    public RectballSkin getSkin() {
         return uiSkin;
     }
 
     public GameState getState() {
         return currentGame;
+    }
+
+    public void updateBallAtlas() {
+        Texture balls = manager.get(settings.isColorblind() ? "board/colorblind.png" : "board/normal.png");
+        TextureRegion[][] regions = TextureRegion.split(balls, 256, 256);
+        ballAtlas = new TextureAtlas();
+        ballAtlas.addRegion("ball_red", regions[0][0]);
+        ballAtlas.addRegion("ball_yellow", regions[0][1]);
+        ballAtlas.addRegion("ball_blue", regions[1][0]);
+        ballAtlas.addRegion("ball_green", regions[1][1]);
+        ballAtlas.addRegion("ball_gray", regions[1][2]);
+    }
+
+    public TextureAtlas getBallAtlas() {
+        return ballAtlas;
     }
 }

@@ -105,21 +105,6 @@ public class RectballSkin extends Skin {
             Texture progress = game.manager.get("ui/progress.png");
             add("progress", progress);
         }
-
-        // Texture region for the balls.
-        {
-            Texture balls = game.manager.get("board/normal.png");
-            TextureRegion[][] regions = TextureRegion.split(balls, 256, 256);
-            TextureAtlas ballsAtlas = new TextureAtlas();
-            ballsAtlas.addRegion("ball_red", regions[0][0]);
-            ballsAtlas.addRegion("ball_yellow", regions[0][1]);
-            ballsAtlas.addRegion("ball_blue", regions[1][0]);
-            ballsAtlas.addRegion("ball_green", regions[1][1]);
-            ballsAtlas.addRegion("ball_gray", regions[1][2]);
-            addRegions(ballsAtlas);
-
-            // TODO: Add colorblind mode balls.
-        }
     }
 
     private void addPixmapStyles() {

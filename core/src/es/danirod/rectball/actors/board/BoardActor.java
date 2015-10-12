@@ -1,5 +1,6 @@
 package es.danirod.rectball.actors.board;
 
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
@@ -14,7 +15,7 @@ public class BoardActor extends Table {
 
     private GameScreen screen;
 
-    private Skin skin;
+    private TextureAtlas atlas;
 
     private final BallActor[][] actors;
 
@@ -31,15 +32,15 @@ public class BoardActor extends Table {
     /** Is the board coloured? If false, all the balls will be grayed. */
     private boolean coloured = false;
 
-    public BoardActor(GameScreen screen, Skin skin, Board board) {
+    public BoardActor(GameScreen screen, TextureAtlas atlas, Board board) {
         this.screen = screen;
-        this.skin = skin;
+        this.atlas = atlas;
         this.board = board;
         this.actors = new BallActor[board.getSize()][board.getSize()];
 
         for (int y = board.getSize() - 1; y >= 0; y--) {
             for (int x = 0; x < board.getSize(); x++) {
-                actors[x][y] = new BallActor(this, board.getBall(x, y), skin);
+                actors[x][y] = new BallActor(this, board.getBall(x, y), atlas);
                 add(actors[x][y]).pad(2).uniform();
             }
             row();

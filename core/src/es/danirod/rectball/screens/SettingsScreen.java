@@ -59,6 +59,7 @@ public class SettingsScreen extends AbstractScreen {
                 game.player.playSound(SoundCode.FAIL);
 
                 game.settings.save();
+                game.updateBallAtlas();
                 game.setScreen(Screens.MAIN_MENU);
             }
         });
