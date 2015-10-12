@@ -20,7 +20,6 @@ package es.danirod.rectball.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -40,6 +39,8 @@ import es.danirod.rectball.model.Ball;
 import es.danirod.rectball.model.Bounds;
 import es.danirod.rectball.model.CombinationFinder;
 import es.danirod.rectball.model.Coordinate;
+import es.danirod.rectball.settings.ScoreIO;
+import es.danirod.rectball.statistics.Statistics;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
 import java.util.ArrayList;
@@ -49,32 +50,23 @@ import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
 
 public class GameScreen extends AbstractScreen implements TimerCallback {
 
+    /** Display the remaining time. */
     public TimerActor timer;
 
-    private ScoreActor scoreLabel;
+    /** Display the current score. */
+    private ScoreActor score;
 
+    /** Display the board representation. */
     private BoardActor board;
 
-    private boolean paused, started;
+    /** Is the game paused? */
+    private boolean paused;
+
+    /** Has the game started (i.e., countdown finished) */
+    private boolean started;
 
     public GameScreen(RectballGame game) {
         super(game);
-    }
-
-    @Override
-    public void load() {
-        // Set up the board.
-        String file = game.settings.isColorblind() ? "colorblind" : "normal";
-
-        timer = new TimerActor(Constants.SECONDS, game.getSkin());
-        timer.addSubscriber(this);
-
-        scoreLabel = new ScoreActor(game.getSkin());
-
-        game.getCurrentGame().getBoard().randomize();
-        board = new BoardActor(this, game.getSkin(), game.getCurrentGame().getBoard());
-
-        super.load();
     }
 
     /**
@@ -121,41 +113,27 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
 
         // Reset data
         game.getCurrentGame().reset();
-        scoreLabel.setValue(0);
         paused = started = false;
-        timer.setSeconds(Constants.SECONDS);
-        timer.setRunning(false);
 
-        board.setTouchable(Touchable.disabled);
-        for (Actor child : board.getChildren()) {
-            child.setColor(Color.WHITE);
-        }
-
-        // Display the countdown.
-        countdown(2);
-
-        // Wait 2 seconds, then colorize the board.
-        getStage().addAction(Actions.sequence(
-                Actions.delay(2f),
-                Actions.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!paused) {
-                            board.setColoured(true);
-                            timer.setRunning(true);
-                            board.setTouchable(Touchable.enabled);
-                        }
-                        started = true;
-                    }
-                })
-        ));
+        countdown(2, new Runnable() {
+            @Override
+            public void run() {
+                started = true;
+                board.setColoured(true);
+                timer.setRunning(true);
+                board.setTouchable(Touchable.enabled);
+            }
+        });
     }
 
     /**
      * Create a countdown in the screen lasting for the amount of seconds given.
+     * When the countdown reaches 0, the code provided in the runnable will
+     * be executed as a callback.
+     *
      * @param seconds how many seconds should the countdown be displayed.
      */
-    private void countdown(final int seconds) {
+    private void countdown(final int seconds, final Runnable after) {
         // Since this is a recursive function, avoid the case where you pass
         // a number of seconds that might trigger an infinite loop.
         if (seconds <= 0) {
@@ -177,11 +155,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         game.player.playSound(SoundCode.SELECT);
 
         label.addAction(Actions.sequence(
-                // Animate it.
-                Actions.parallel(
-                        Actions.fadeOut(1f),
-                        Actions.moveBy(0, 80, 1f)
-                ),
+                Actions.parallel(Actions.fadeOut(1f), Actions.moveBy(0, 80, 1f)),
 
                 // After the animation, decide. If the countdown hasn't finished
                 // yet, run another countdown with 1 second less.
@@ -190,9 +164,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
                     public void run() {
                         label.remove();
                         if (seconds > 1) {
-                            countdown(seconds - 1);
+                            countdown(seconds - 1, after);
                         } else {
                             game.player.playSound(SoundCode.SUCCESS);
+                            after.run();
                         }
                     }
                 })
@@ -201,8 +176,18 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
 
     @Override
     public void setUpInterface(Table table) {
+        // Create the actors for this screen.
+        timer = new TimerActor(Constants.SECONDS, game.getSkin());
+        score = new ScoreActor(game.getSkin());
+        board = new BoardActor(this, game.getSkin(), game.getCurrentGame().getBoard());
+        timer.setRunning(false);
+
+        // Add subscribers.
+        timer.addSubscriber(this);
+
+        // Fill the table.
         table.add(timer).fillX().height(50).padBottom(10).row();
-        table.add(scoreLabel).width(VIEWPORT_WIDTH / 2).height(65).padBottom(60).row();
+        table.add(score).width(VIEWPORT_WIDTH / 2).height(65).padBottom(60).row();
         table.add(board).expand().row();
     }
 
@@ -233,7 +218,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
     public void onTimeOut() {
         board.unselectBalls();
 
-        // Update the scoreLabel... and the record.
+        // Update the score... and the record.
         game.scores.addScore(game.getCurrentGame().getScore());
         timer.setRunning(false);
         game.player.playSound(SoundCode.GAME_OVER);
@@ -250,16 +235,20 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
             }
         }
 
-        getStage().addAction(Actions.sequence(
-                Actions.delay(2f),
-                Actions.run(new Runnable() {
+        // Save information about this game in the statistics.
+        game.scores.addScore(game.getCurrentGame().getScore());
+        ScoreIO.save(game.scores);
+        game.statistics.getTotalData().incrementValue("games");
+        game.statistics.getTotalData().incrementValue("time", Math.round(game.getCurrentGame().getTime()));
+        Statistics.saveStats(game.statistics);
 
-                    @Override
-                    public void run() {
-                        game.setScreen(Screens.GAME_OVER);
-                    }
-                })
-        ));
+        // Go to game over screen.
+        getStage().addAction(Actions.delay(2f, Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                game.setScreen(Screens.GAME_OVER);
+            }
+        })));
     }
 
     public void onScore(List<BallActor> balls) {
@@ -277,7 +266,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback {
         int cols = bounds.maxX - bounds.minX + 1;
         int score = rows * cols;
         game.getCurrentGame().addScore(score);
-        scoreLabel.setValue(game.getCurrentGame().getScore());
+        this.score.setValue(game.getCurrentGame().getScore());
 
         // Give some extra time.
         timer.setSeconds(timer.getSeconds() + 5);

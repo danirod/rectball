@@ -1,6 +1,5 @@
 package es.danirod.rectball.actors;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import es.danirod.rectball.model.Ball;
