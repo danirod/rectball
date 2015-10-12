@@ -7,237 +7,20 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="200"
-   height="400"
-   viewBox="0 0 199.99999 399.99998"
-   id="svg2"
+   width="192"
+   height="128"
+   viewBox="0 0 192 128"
+   id="svg4276"
    version="1.1"
    inkscape:version="0.91 r13725"
-   inkscape:export-filename="/Users/danirod/Desarrollo/Rectball/android/assets/board/normal@2x.png"
-   inkscape:export-xdpi="460.79999"
-   inkscape:export-ydpi="460.79999"
+   inkscape:export-filename="/Users/danirod/Desarrollo/rectball/android/assets/board/colorblind@2x.png"
+   inkscape:export-xdpi="720"
+   inkscape:export-ydpi="720"
    sodipodi:docname="balls.svg">
   <defs
-     id="defs4">
-    <marker
-       inkscape:stockid="Arrow1Send"
-       orient="auto"
-       refY="0"
-       refX="0"
-       id="Arrow1Send"
-       style="overflow:visible"
-       inkscape:isstock="true">
-      <path
-         id="path4311"
-         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
-         style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#2b2b2b;stroke-width:1pt;stroke-opacity:1"
-         transform="matrix(-0.2,0,0,-0.2,-1.2,0)"
-         inkscape:connector-curvature="0" />
-    </marker>
-    <marker
-       inkscape:stockid="DiamondSend"
-       orient="auto"
-       refY="0"
-       refX="0"
-       id="DiamondSend"
-       style="overflow:visible"
-       inkscape:isstock="true">
-      <path
-         id="path4399"
-         d="M 0,-7.0710768 -7.0710894,0 0,7.0710589 7.0710462,0 0,-7.0710768 Z"
-         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
-         transform="matrix(0.2,0,0,0.2,-1.2,0)"
-         inkscape:connector-curvature="0" />
-    </marker>
-    <marker
-       inkscape:stockid="Arrow2Mend"
-       orient="auto"
-       refY="0"
-       refX="0"
-       id="Arrow2Mend"
-       style="overflow:visible"
-       inkscape:isstock="true">
-      <path
-         id="path4323"
-         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
-         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
-         transform="scale(-0.6,-0.6)"
-         inkscape:connector-curvature="0" />
-    </marker>
-    <marker
-       inkscape:stockid="Arrow1Lend"
-       orient="auto"
-       refY="0"
-       refX="0"
-       id="Arrow1Lend"
-       style="overflow:visible"
-       inkscape:isstock="true">
-      <path
-         id="path4299"
-         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
-         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
-         transform="matrix(-0.8,0,0,-0.8,-10,0)"
-         inkscape:connector-curvature="0" />
-    </marker>
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient4260">
-      <stop
-         style="stop-color:#e8e8e8;stop-opacity:1"
-         offset="0"
-         id="stop4262" />
-      <stop
-         id="stop4264"
-         offset="0.36241296"
-         style="stop-color:#999999;stop-opacity:1" />
-      <stop
-         style="stop-color:#6e6e6e;stop-opacity:1"
-         offset="0.8584581"
-         id="stop4266" />
-      <stop
-         style="stop-color:#535353;stop-opacity:1"
-         offset="1"
-         id="stop4268" />
-    </linearGradient>
-    <linearGradient
-       id="linearGradient4182"
-       inkscape:collect="always">
-      <stop
-         id="stop4184"
-         offset="0"
-         style="stop-color:#c2d1ff;stop-opacity:1" />
-      <stop
-         style="stop-color:#3477ff;stop-opacity:1"
-         offset="0.36241296"
-         id="stop4186" />
-      <stop
-         id="stop4188"
-         offset="0.8584581"
-         style="stop-color:#133f8f;stop-opacity:1" />
-      <stop
-         id="stop4190"
-         offset="1"
-         style="stop-color:#00076d;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient4168">
-      <stop
-         style="stop-color:#56ee00;stop-opacity:1"
-         offset="0"
-         id="stop4170" />
-      <stop
-         id="stop4172"
-         offset="0.36241296"
-         style="stop-color:#25d200;stop-opacity:1" />
-      <stop
-         style="stop-color:#325b02;stop-opacity:1"
-         offset="0.8584581"
-         id="stop4174" />
-      <stop
-         style="stop-color:#144700;stop-opacity:1"
-         offset="1"
-         id="stop4176" />
-    </linearGradient>
-    <linearGradient
-       id="linearGradient4154"
-       inkscape:collect="always">
-      <stop
-         id="stop4156"
-         offset="0"
-         style="stop-color:#ffdad9;stop-opacity:1" />
-      <stop
-         style="stop-color:#ff7734;stop-opacity:1"
-         offset="0.36241296"
-         id="stop4158" />
-      <stop
-         id="stop4160"
-         offset="0.8584581"
-         style="stop-color:#e71c00;stop-opacity:1" />
-      <stop
-         id="stop4162"
-         offset="1"
-         style="stop-color:#9d2f00;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient4138">
-      <stop
-         style="stop-color:#fffcd9;stop-opacity:1"
-         offset="0"
-         id="stop4140" />
-      <stop
-         id="stop4146"
-         offset="0.36241296"
-         style="stop-color:#ffe434;stop-opacity:1" />
-      <stop
-         style="stop-color:#e7ac00;stop-opacity:1"
-         offset="0.8584581"
-         id="stop4148" />
-      <stop
-         style="stop-color:#9d9200;stop-opacity:1"
-         offset="1"
-         id="stop4142" />
-    </linearGradient>
-    <radialGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4138"
-       id="radialGradient4144"
-       cx="28.281721"
-       cy="982.66418"
-       fx="28.281721"
-       fy="982.66418"
-       r="50"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.93590062,1.155624,-0.95926372,0.77687506,944.44695,186.57384)" />
-    <radialGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4154"
-       id="radialGradient4152"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.93590062,1.155624,-0.95926372,0.77687506,1044.4469,186.57384)"
-       cx="28.281721"
-       cy="982.66418"
-       fx="28.281721"
-       fy="982.66418"
-       r="50" />
-    <radialGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4168"
-       id="radialGradient4166"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.93590062,1.155624,-0.95926372,0.77687506,1044.4469,86.573871)"
-       cx="28.281721"
-       cy="982.66418"
-       fx="28.281721"
-       fy="982.66418"
-       r="50" />
-    <radialGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4182"
-       id="radialGradient4180"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.93590051,1.155624,-0.95926361,0.77687506,944.44681,86.573845)"
-       cx="28.281721"
-       cy="982.66418"
-       fx="28.281721"
-       fy="982.66418"
-       r="50" />
-    <radialGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4260"
-       id="radialGradient3458"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.93590062,1.155624,-0.95926372,0.77687506,944.44693,-13.426096)"
-       cx="28.281721"
-       cy="982.66418"
-       fx="28.281721"
-       fy="982.66418"
-       r="50" />
-  </defs>
+     id="defs4278" />
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -245,20 +28,19 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
-     inkscape:cx="210.11483"
-     inkscape:cy="197.19761"
+     inkscape:zoom="3.959798"
+     inkscape:cx="97.696658"
+     inkscape:cy="76.832136"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      units="px"
-     inkscape:window-width="1280"
-     inkscape:window-height="698"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1" />
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
   <metadata
-     id="metadata7">
+     id="metadata4281">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -270,90 +52,154 @@
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="Capa 1"
+     inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-652.36227)">
-    <circle
-       style="opacity:1;fill:url(#radialGradient4144);fill-opacity:1;stroke:none"
-       id="path4136"
-       cx="50"
-       cy="1002.3622"
-       r="50" />
-    <circle
-       r="50"
-       cy="1002.3622"
-       cx="149.99998"
-       id="circle4150"
-       style="opacity:1;fill:url(#radialGradient4152);fill-opacity:1;stroke:none" />
-    <circle
-       style="opacity:1;fill:url(#radialGradient4166);fill-opacity:1;stroke:none"
-       id="circle4164"
-       cx="149.99998"
-       cy="902.36224"
-       r="50" />
-    <ellipse
-       cy="902.36224"
-       cx="49.999992"
-       id="circle4178"
-       style="opacity:1;fill:url(#radialGradient4180);fill-opacity:1;stroke:none"
-       rx="49.999992"
-       ry="50" />
-    <circle
-       style="opacity:1;fill:url(#radialGradient3458);fill-opacity:1;stroke:none"
-       id="circle3456"
-       cx="50"
-       cy="802.36224"
-       r="50" />
+     transform="translate(3.4472656e-7,-924.3622)">
+    <g
+       transform="matrix(1.6,0,0,1.6,-97.580725,60.981834)"
+       id="g4530"
+       inkscape:export-filename="/Users/danirod/Desarrollo/rectball/android/res/drawable-hdpi/ic_launcher.png"
+       inkscape:export-xdpi="50.625"
+       inkscape:export-ydpi="50.625">
+      <circle
+         cy="599.61273"
+         cx="80.987953"
+         id="circle4532"
+         style="opacity:1;fill:#2a7fff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         r="20" />
+      <circle
+         cy="590.88202"
+         cx="72.747986"
+         id="circle4534"
+         style="opacity:0.50700001;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         r="6.3395782" />
+    </g>
+    <g
+       id="g4542"
+       transform="matrix(1.6,0,0,1.6,-14.707822,-4.1496117)"
+       inkscape:export-filename="/Users/danirod/Desarrollo/rectball/android/res/drawable-hdpi/ic_launcher.png"
+       inkscape:export-xdpi="50.625"
+       inkscape:export-ydpi="50.625">
+      <circle
+         r="20"
+         cy="600.31989"
+         cx="29.192389"
+         id="circle4544"
+         style="opacity:1;fill:#d40000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <circle
+         r="6.3395782"
+         cy="591.58917"
+         cx="20.952415"
+         id="circle4546"
+         style="opacity:0.50700001;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    </g>
+    <g
+       id="g4560"
+       transform="matrix(1.5605116,0,0,1.5605116,-132.68965,85.449361)"
+       inkscape:export-filename="/Users/danirod/Desarrollo/rectball/android/res/drawable-hdpi/ic_launcher.png"
+       inkscape:export-xdpi="50.625"
+       inkscape:export-ydpi="50.625">
+      <circle
+         r="20.506096"
+         cy="599.10663"
+         cx="146.54787"
+         id="circle4562"
+         style="opacity:1;fill:#44aa00;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <circle
+         r="6.5"
+         cy="590.15497"
+         cx="138.09941"
+         id="circle4564"
+         style="opacity:0.50700001;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    </g>
+    <g
+       transform="matrix(1.5605116,0,0,1.5605116,-216.55171,19.24251)"
+       id="g4566"
+       inkscape:export-filename="/Users/danirod/Desarrollo/rectball/android/res/drawable-hdpi/ic_launcher.png"
+       inkscape:export-xdpi="50.625"
+       inkscape:export-ydpi="50.625">
+      <circle
+         r="20.506096"
+         cy="600.52081"
+         cx="200.28798"
+         id="circle4568"
+         style="opacity:1;fill:#ffcc00;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <circle
+         r="6.5"
+         cy="591.56915"
+         cx="191.83952"
+         id="circle4570"
+         style="opacity:0.50700001;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    </g>
+    <g
+       id="g4904"
+       transform="matrix(1.6,0,0,1.6,30.419275,60.981834)">
+      <circle
+         r="20"
+         style="opacity:1;fill:#999999;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="circle4906"
+         cx="80.987953"
+         cy="599.61273" />
+      <circle
+         r="6.3395782"
+         style="opacity:0.50700001;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="circle4908"
+         cx="72.747986"
+         cy="590.88202" />
+    </g>
   </g>
   <g
      inkscape:groupmode="layer"
-     id="layer3"
-     inkscape:label="simbolos"
-     style="display:inline"
-     transform="translate(0,199.99998)">
+     id="layer2"
+     inkscape:label="Layer 2"
+     style="display:none">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:79.81295013px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#808080;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="16.523777"
-       y="175.13643"
-       id="text4785"
+       style="font-style:normal;font-weight:normal;font-size:59.4231987px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#4d4d4d;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="14.043372"
+       y="1052.4602"
+       id="text3467"
        sodipodi:linespacing="125%"
-       transform="scale(1.0007797,0.9992209)"><tspan
+       transform="matrix(1.0155332,0,0,0.98470443,3.4472656e-7,-924.3622)"><tspan
          sodipodi:role="line"
-         id="tspan4787"
-         x="16.523777"
-         y="175.13643">+</tspan></text>
+         id="tspan3469"
+         x="14.043372"
+         y="1052.4602">x</tspan></text>
+    <text
+       transform="matrix(1.0695648,0,0,0.93495971,3.4472656e-7,-924.3622)"
+       sodipodi:linespacing="125%"
+       id="text3489"
+       y="1039.1604"
+       x="11.670625"
+       style="font-style:normal;font-weight:normal;font-size:59.60459137px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#4d4d4d;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         y="1039.1604"
+         x="11.670625"
+         id="tspan3491"
+         sodipodi:role="line">o</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:92.84873199px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#808080;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="120.41319"
-       y="177.71829"
-       id="text4789"
+       style="font-style:normal;font-weight:normal;font-size:51.08029556px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#4d4d4d;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="74.525352"
+       y="973.12036"
+       id="text3493"
        sodipodi:linespacing="125%"
-       transform="scale(1.0155332,0.9847044)"><tspan
+       transform="matrix(1.0007797,0,0,0.9992209,3.4472656e-7,-924.3622)"><tspan
          sodipodi:role="line"
-         id="tspan4791"
-         x="120.41319"
-         y="177.71829">x</tspan></text>
-    <circle
-       style="opacity:1;fill:none;fill-opacity:1;stroke:#bdffaf;stroke-width:7.99999905;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="path4797"
-       cx="149.99998"
-       cy="49.999992"
-       r="19.938854" />
-    <circle
-       r="19.938854"
-       cy="49.999992"
-       cx="149.99998"
-       id="circle4799"
-       style="opacity:1;fill:none;fill-opacity:1;stroke:#bdffaf;stroke-width:7.99999905;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+         id="tspan3495"
+         x="74.525352"
+         y="973.12036">+</tspan></text>
     <rect
-       style="opacity:1;fill:none;fill-opacity:1;stroke:#aff7ff;stroke-width:7.45921946;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="rect4801"
-       width="42.540771"
-       height="42.540775"
-       x="28.729607"
-       y="28.729607" />
+       transform="translate(3.4472656e-7,-924.3622)"
+       style="fill:none;fill-opacity:1;stroke:#4d4d4d;stroke-width:4.40460157;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect3497"
+       width="27.595398"
+       height="27.595398"
+       x="82.202301"
+       y="1006.5645"
+       inkscape:export-filename="/Users/danirod/Desarrollo/rectball/android/assets/board/colorblind@2x.png"
+       inkscape:export-xdpi="720"
+       inkscape:export-ydpi="720" />
   </g>
 </svg>

@@ -20,59 +20,92 @@ package es.danirod.rectball.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
+import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.actors.Ball;
-import es.danirod.rectball.actors.Board;
-import es.danirod.rectball.actors.Timer;
-import es.danirod.rectball.actors.Value;
-import es.danirod.rectball.dialogs.PauseDialog;
-import es.danirod.rectball.listeners.BallInputListener;
-import es.danirod.rectball.model.BallColor;
-import es.danirod.rectball.model.Bounds;
-import es.danirod.rectball.model.CombinationFinder;
+import es.danirod.rectball.actors.board.*;
+import es.danirod.rectball.actors.ScoreActor;
+import es.danirod.rectball.actors.TimerActor;
+import es.danirod.rectball.actors.TimerActor.TimerCallback;
+import es.danirod.rectball.dialogs.ConfirmDialog;
+import es.danirod.rectball.model.*;
+import es.danirod.rectball.settings.ScoreIO;
+import es.danirod.rectball.statistics.Statistics;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
-import es.danirod.rectball.utils.StyleFactory;
 
-public class GameScreen extends AbstractScreen {
+import java.util.ArrayList;
+import java.util.List;
 
-    private Stage stage;
+import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
 
-    public Board board;
+public class GameScreen extends AbstractScreen implements TimerCallback, BallSelectionListener {
 
-    public Label score;
+    /** Display the remaining time. */
+    public TimerActor timer;
 
-    public Timer timer;
+    /** Display the current score. */
+    private ScoreActor score;
 
-    private Value countdown;
+    /** Display the board representation. */
+    private BoardActor board;
 
-    private int valueScore;
-
+    /** Is the game paused? */
     private boolean paused;
 
-    private PauseDialog pauseDialog;
+    /** Is the game running? True unless is on countdown or game over. */
+    private boolean running;
+
+    /** Has the countdown already finished? */
+    private boolean countdownFinished;
+
+    /** True if the user is asking to leave. */
+    private boolean askingLeave;
+
+    /** True if the game has finished. */
+    private boolean timeout;
 
     public GameScreen(RectballGame game) {
         super(game);
+    }
+
+    /**
+     * This method will add to the stage a confirmation dialog asking the user
+     * whether to end the game or not. If the user answers YES to that dialog,
+     * the game will end.
+     */
+    private void showLeaveDialog() {
+        ConfirmDialog dialog = new ConfirmDialog(game.getSkin(),
+                game.getLocale().get("game.leave"),
+                game.getLocale().get("core.yes"),
+                game.getLocale().get("core.no"));
+        dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
+            @Override
+            public void ok() {
+                // The user wants to leave the game.
+                askingLeave = false;
+                onTimeOut();
+            }
+
+            @Override
+            public void cancel() {
+                // The user wants to resume the game.
+                askingLeave = false;
+                resume();
+            }
+        });
+
+        // FIXME: fadeIn action is not working because alpha handling in this
+        // game is a mess at the moment. Fix that mess, then let the Dialog
+        // use the default actions.
+        dialog.show(getStage(), null);
+        askingLeave = true;
+        dialog.setPosition(
+                Math.round((getStage().getWidth() - dialog.getWidth()) / 2),
+                Math.round((getStage().getHeight() - dialog.getHeight()) / 2));
     }
 
     @Override
@@ -82,131 +115,125 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void show() {
+        super.show();
+
         // Capture Back button so that the game doesn't minimize on Android.
         Gdx.input.setCatchBackKey(true);
 
         // Reset data
-        valueScore = 0;
-        game.aliveTime = 0;
-        paused = false;
+        game.getState().reset();
+        paused = running = countdownFinished = askingLeave = timeout = false;
+        countdown(2, new Runnable() {
 
-        stage = new Stage(new ScreenViewport());
-        //stage.setDebugAll(true);
+            @Override
+            public void run() {
+                countdownFinished = true;
 
-        // Set up the board.
-        String file = game.settings.isColorblind() ? "colorblind" : "normal";
-        Texture sheet = game.manager.get("board/" + file + ".png");
-        board = new Board(this, sheet, 7, game.player);
-        stage.addActor(board);
-
-        // Set up the listeners for the board.
-        Ball[][] allBalls = board.getBoard();
-        for (int y = 0; y < board.getSize(); y++) {
-            for (int x = 0; x < board.getSize(); x++) {
-                Ball ball = allBalls[x][y];
-                ball.addListener(new BallInputListener(ball, board));
+                // Start the game unless the user is leaving or is pasused.
+                if (!paused && !askingLeave) {
+                    running = true;
+                    board.setColoured(true);
+                    timer.setRunning(true);
+                    board.setTouchable(Touchable.enabled);
+                    game.player.playSound(SoundCode.SUCCESS);
+                }
             }
+        });
+
+    }
+
+    /**
+     * Create a countdown in the screen lasting for the amount of seconds given.
+     * When the countdown reaches 0, the code provided in the runnable will
+     * be executed as a callback.
+     *
+     * @param seconds how many seconds should the countdown be displayed.
+     */
+    private void countdown(final int seconds, final Runnable after) {
+        // Since this is a recursive function, avoid the case where you pass
+        // a number of seconds that might trigger an infinite loop.
+        if (seconds <= 0) {
+            return;
         }
 
-        // Set up the score
-        Texture numbers = game.manager.get("scores.png");
-        score = buildScoreLabel();
-        score.setText(buildScore(valueScore, 4));
-        stage.addActor(score);
+        // Create the label that will contain this number
+        String number = Integer.toString(seconds);
+        final Label label = new Label(number, game.getSkin(), "monospace");
+        label.setFontScale(20f);
+        label.setSize(150, 150);
+        label.setAlignment(Align.center);
+        label.setPosition(
+                (getStage().getWidth() - label.getWidth()) / 2,
+                (getStage().getHeight() - label.getHeight()) / 2);
 
-        // Set up the timer
-        Texture timerTexture = game.manager.get("timer.png");
-        timer = new Timer(this, 30, timerTexture);
-        timer.setRunning(false);
-        stage.addActor(timer);
+        // Add the label to the stage and play a sound to notify the user.
+        getStage().addActor(label);
+        game.player.playSound(SoundCode.SELECT);
 
-        board.setTouchable(Touchable.disabled);
+        label.addAction(Actions.sequence(
+                Actions.parallel(Actions.fadeOut(1f), Actions.moveBy(0, 80, 1f)),
 
-        // Set up the pause dialog.
-        Texture dialogTexture = new Texture("ui/leave.png");
-        TextureRegion dialogRegion = new TextureRegion(dialogTexture);
-        TextureRegionDrawable dialogDrawable = new TextureRegionDrawable(dialogRegion);
-
-        Texture buttonTexture = new Texture("ui/button.png");
-        TextureRegion normalButton = new TextureRegion(buttonTexture, 0, 0, 128, 128);
-        TextureRegion selectedButton = new TextureRegion(buttonTexture, 128, 0, 128, 128);
-        BitmapFont titleFont = game.manager.get("bigFont.ttf");
-        BitmapFont regularFont = game.manager.get("normalFont.ttf");
-        WindowStyle pauseStyle = new WindowStyle(titleFont, Color.WHITE, dialogDrawable);
-
-        // Create buttons.
-        TextButtonStyle leaveButtonStyle = StyleFactory.buildTextButtonStyle(normalButton,
-                selectedButton, 32, regularFont);
-        LabelStyle titleStyle = new LabelStyle(titleFont, Color.WHITE);
-
-        pauseDialog = new PauseDialog(pauseStyle, titleStyle, leaveButtonStyle);
-        pauseDialog.addYesButtonCaptureListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                // make dialog invisible
-                PauseDialog dialog = (PauseDialog)actor.getParent();
-                dialog.setVisible(false);
-
-                timer.setRunning(false);
-                gameOver();
-            }
-        });
-        pauseDialog.addNoButtonCaptureListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                // force uncheck
-                TextButton button = (TextButton)actor;
-                button.setChecked(false);
-
-                setPaused(false);
-            }
-        });
-
-        stage.addActor(pauseDialog);
-        pauseDialog.setVisible(false);
-
-        // Set up the countdown
-        countdown = new Value(numbers, 1, 3);
-        stage.addActor(countdown);
-        countdown.addAction(Actions.sequence(
-                Actions.scaleTo(0, 0, 1f),
+                // After the animation, decide. If the countdown hasn't finished
+                // yet, run another countdown with 1 second less.
                 Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        countdown.setValue(2);
-                    }
-                }),
-                Actions.scaleTo(1, 1),
-                Actions.scaleTo(0, 0, 1f),
-                Actions.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        countdown.setValue(1);
-                    }
-                }),
-                Actions.scaleTo(1, 1),
-                Actions.scaleTo(0, 0, 1f),
-                Actions.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        timer.setRunning(!paused);
-                        countdown.remove();
-                        board.randomize();
-                        board.setTouchable(Touchable.enabled);
+                        label.remove();
+                        if (seconds > 1) {
+                            countdown(seconds - 1, after);
+                        } else {
+                            after.run();
+                        }
                     }
                 })
         ));
-        for (int y = 0; y < board.getSize(); y++) {
-            for (int x = 0; x < board.getSize(); x++) {
-                allBalls[x][y].addAction(Actions.sequence(
-                        Actions.scaleTo(0, 0),
-                        Actions.delay(MathUtils.random(0.1f, 2.5f)),
-                        Actions.scaleTo(1, 1, 0.5f)
-                ));
-            }
-        }
-        resizeScene(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        Gdx.input.setInputProcessor(stage);
+    }
+
+    private void showPartialScore(int score, Bounds bounds) {
+        // Calculate the center of the region.
+        BallActor bottomLeftBall = board.getBall(bounds.minX, bounds.minY);
+        BallActor upperRightBall = board.getBall(bounds.maxX, bounds.maxY);
+
+        float minX = bottomLeftBall.getX();
+        float maxX = upperRightBall.getX() + upperRightBall.getWidth();
+        float minY = bottomLeftBall.getY();
+        float maxY = upperRightBall.getY() + upperRightBall.getHeight();
+        float centerX = (minX + maxX) / 2;
+        float centerY = (minY + maxY) / 2;
+
+        Label label = new Label("+" + score, game.getSkin(), "monospace");
+        label.setFontScale(10f);
+        label.setSize(140, 70);
+        label.setAlignment(Align.center);
+        label.setPosition(centerX - label.getWidth() / 2, centerY - label.getHeight() / 2);
+        label.addAction(Actions.sequence(
+                Actions.parallel(
+                        Actions.moveBy(0, 80, 0.5f),
+                        Actions.alpha(0.5f, 0.5f)),
+                Actions.removeActor()
+        ));
+        getStage().addActor(label);
+    }
+
+    @Override
+    public void setUpInterface(Table table) {
+        // Create the actors for this screen.
+        timer = new TimerActor(Constants.SECONDS, game.getSkin());
+        score = new ScoreActor(game.getSkin());
+        board = new BoardActor(this, game.getBallAtlas(), game.getState().getBoard());
+
+        // Disable game until countdown ends.
+        timer.setRunning(false);
+        board.setTouchable(Touchable.disabled);
+
+        // Add subscribers.
+        timer.addSubscriber(this);
+        board.addSubscriber(this);
+
+        // Fill the table.
+        table.add(timer).fillX().height(50).padBottom(10).row();
+        table.add(score).width(VIEWPORT_WIDTH / 2).height(65).padBottom(60).row();
+        table.add(board).expand().row();
     }
 
     @Override
@@ -217,215 +244,176 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.5f, 0.6f, 0.6f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        super.render(delta);
 
-        // Cheto
-        if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
-            board.markCombination();
-        }
-
+        // If the timer is running, keep incrementing the timer.
         if (timer.isRunning()) {
-            game.aliveTime += delta;
+            game.getState().addTime(delta);
         }
 
-        // Pause the game when you press BACK or ESCAPE.
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) ||
-                Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            setPaused(!paused);
-        }
-
-        stage.getViewport().apply();
-        stage.act(delta);
-        stage.draw();
-    }
-
-    public void gameOver() {
-        // Update the score... and the record.
-        long lastScore = Long.parseLong(score.getText().toString());
-        game.scores.addScore(lastScore);
-
-        timer.setRunning(false);
-        board.setTouchable(Touchable.disabled);
-
-        game.player.playSound(SoundCode.GAME_OVER);
-
-        // Get a combination that the user didn't find.
-        CombinationFinder finder = new CombinationFinder(board.getBoard());
-        Bounds combination = finder.getCombination();
-
-        float width = Gdx.graphics.getWidth();
-        float height = Gdx.graphics.getHeight();
-        Ball[][] allBalls = board.getBoard();
-        BallColor refColor = allBalls[combination.minX][combination.minY].getBallColor();
-        for (int y = 0; y < board.getSize(); y++) {
-            for (int x = 0; x < board.getSize(); x++) {
-                final Ball currentBall = allBalls[x][y];
-
-                if ((x >= combination.minX && x <= combination.maxX) &&
-                        (y >= combination.minY && y <= combination.maxY)) {
-                    currentBall.setBallColor(refColor);
-                    continue;
-                }
-
-                float desplX = MathUtils.random(-width / 2, width / 2);
-                float desplY = -height - MathUtils.random(0, height / 4);
-                float scaling = MathUtils.random(0.3f, 0.7f);
-                float desplTime = MathUtils.random(0.5f, 1.5f);
-                currentBall.addAction(Actions.sequence(
-                        Actions.run(new Runnable() {
-                            @Override
-                            public void run() {
-                                currentBall.setBallColor(BallColor.GRAY);
-                            }
-                        }),
-                        Actions.parallel(
-                                Actions.moveBy(desplX, desplY, desplTime),
-                                Actions.scaleBy(scaling, scaling, desplTime)
-                        )));
+        // The user should be able to leave during the game.
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            if (!paused && !timeout) {
+                pause();
+                showLeaveDialog();
             }
         }
-
-        stage.addAction(Actions.sequence(
-                Actions.delay(2f),
-                Actions.run(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        game.setScreen(Screens.GAME_OVER);
-                    }
-                })
-        ));
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
-        resizeScene(width, height);
-    }
-
-    private void resizeScene(int width, int height) {
-        if ((float) width / height >= 1.6f) {
-            horizontalResize(width, height);
-        } else {
-            verticalResize(width, height);
-        }
-
-        int minSize = Math.min(width, height);
-        countdown.setSize(0.5f * minSize, 0.5f * minSize);
-        countdown.setX((width - countdown.getWidth()) / 2);
-        countdown.setY((height - countdown.getHeight()) / 2);
-
-        // Calculate the height that this has to be rendered at.
-        int fontScale = 1;
-        score.setFontScale(fontScale);
-        while (score.getPrefWidth() <= score.getWidth() * 0.9
-                && score.getPrefHeight() <= score.getHeight() * 0.9) {
-            score.setFontScale(++fontScale);
-        }
-        score.setFontScale(Math.max(1, fontScale - 1));
-
-        // The pause dialog should be centered and have enough size
-        // to let the button and the labels fit.
-        pauseDialog.setSize(400, 200);
-        pauseDialog.setX(width / 2 - pauseDialog.getWidth() / 2);
-        pauseDialog.setY(height / 2 - pauseDialog.getHeight() / 2);
-    }
-
-    private void horizontalResize(int width, int height) {
-        // Put the board on the right.
-        board.setSize(width * 0.5f, height * 0.9f);
-        board.setPosition(width * 0.45f, height * 0.05f);
-
-        // Put the score on the left.
-        score.setSize(width * 0.35f, height / 8);
-        score.setPosition(width * 0.05f, height * 0.6f);
-
-        // Put the timer below the score.
-        timer.setSize(width * 0.35f, height / 16);
-        timer.setPosition(width * 0.05f, score.getY() - timer.getHeight());
-    }
-
-    private void verticalResize(int width, int height) {
-        float scoreWidth = width * 0.9f;
-        float scoreHeight = height / 8 * 0.9f;
-        score.setSize(scoreWidth, scoreHeight);
-        score.setPosition(width * 0.05f, height * 7 / 8);
-
-        float timerWidth = width * 0.9f;
-        float timerHeight = height / 16 * 0.9f;
-        timer.setSize(timerWidth, timerHeight);
-        timer.setPosition(width * 0.05f, score.getY() - timer.getHeight());
-
-        float boardWidth = width * 0.9f;
-        float boardHeight = timer.getY() * 0.9f;
-        board.setSize(boardWidth, boardHeight);
-        board.setPosition(width * 0.05f, height * 0.05f);
-    }
-
-    private Label buildScoreLabel() {
-        BitmapFont font = game.manager.get("fonts/scores.fnt");
-        LabelStyle style = new LabelStyle(font, Color.WHITE);
-        Label label = new Label("0", style);
-        label.setAlignment(Align.center);
-        return label;
-    }
-
-    private String buildScore(int value, int digits) {
-        String strValue = Integer.toString(value);
-        while (strValue.length() < digits) {
-            strValue = "0" + strValue;
-        }
-        return strValue;
-    }
-
-    public void score(int score, BallColor color, int rows, int cols) {
-        // Store this information in the statistics.
-        String size = Math.max(rows, cols) + "x" + Math.min(rows, cols);
-        game.statistics.getTotalData().incrementValue("balls", rows * cols);
-        game.statistics.getTotalData().incrementValue("score", score);
-        game.statistics.getTotalData().incrementValue("combinations");
-        game.statistics.getColorData().incrementValue(color.toString().toLowerCase());
-        game.statistics.getSizesData().incrementValue(size);
-
-        valueScore += score;
-        this.score.setText(buildScore(valueScore, 6));
-
-        BitmapFont font = game.manager.get("fonts/scores.fnt");
-        LabelStyle style = new LabelStyle(font, Color.WHITE);
-        final Label scoreLabel = new Label(Integer.toString(score), style);
-        scoreLabel.setAlignment(Align.center);
-
-        float ballSize = board.getWidth() / board.getSize();
-        scoreLabel.setSize(ballSize, ballSize);
-        scoreLabel.setX(Gdx.graphics.getWidth() / 2 - scoreLabel.getWidth() / 2);
-        scoreLabel.setY(Gdx.graphics.getHeight() / 2 - scoreLabel.getHeight() / 2);
-        scoreLabel.setFontScale(5);
-        scoreLabel.addAction(Actions.sequence(
-                Actions.parallel(
-                        Actions.moveBy(0, 100, 1),
-                        Actions.fadeOut(1)
-                ),
-                Actions.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        scoreLabel.remove();
-                    }
-                })
-        ));
-        stage.addActor(scoreLabel);
-    }
-
-    public void setPaused(boolean paused) {
-        this.paused = paused;
-        timer.setRunning(!paused);
-        board.setMasked(paused);
-        board.setTouchable(paused ? Touchable.disabled : Touchable.enabled);
-        pauseDialog.setVisible(paused);
     }
 
     @Override
     public void pause() {
-        setPaused(true);
+        paused = true;
+        if (running && !timeout) {
+            board.setColoured(false);
+            board.setTouchable(Touchable.disabled);
+            timer.setRunning(false);
+        }
+    }
+
+    @Override
+    public void resume() {
+        paused = false;
+
+        // If the countdown has finished but the game is not running is a
+        // condition that might be triggered in one of the following cases.
+        // 1) The user has paused the game during the countdown. When the
+        //    countdown finishes, because the game is paused, the game does
+        //    not start.
+        // 2) The user was leaving the game during the countdown. Same.
+        if (!running && countdownFinished) {
+            running = true;
+            game.player.playSound(SoundCode.SUCCESS);
+        }
+
+        if (running && !timeout) {
+            board.setColoured(true);
+            board.setTouchable(Touchable.enabled);
+            timer.setRunning(true);
+        }
+    }
+
+    @Override
+    public void onTimeOut() {
+        // Disable any further interactions.
+        timeout = true;
+        board.clearSelection();
+        board.setColoured(true);
+        board.setTouchable(Touchable.disabled);
+        timer.setRunning(false);
+
+        // Update the score... and the record.
+        game.scores.addScore(game.getState().getScore());
+        timer.setRunning(false);
+        game.player.playSound(SoundCode.GAME_OVER);
+
+        // Save information about this game in the statistics.
+        game.scores.addScore(game.getState().getScore());
+        ScoreIO.save(game.scores);
+        game.statistics.getTotalData().incrementValue("score", game.getState().getScore());
+        game.statistics.getTotalData().incrementValue("games");
+        game.statistics.getTotalData().incrementValue("time", Math.round(game.getState().getTime()));
+        Statistics.saveStats(game.statistics);
+
+        // Mark a combination that the user could do if he had enough time.
+        CombinationFinder finder = new CombinationFinder(game.getState().getBoard());
+        Bounds combination = finder.getCombination();
+        for (int y = 0; y < game.getState().getBoard().getSize(); y++) {
+            for (int x = 0; x < game.getState().getBoard().getSize(); x++) {
+                if (combination != null && !combination.inBounds(x, y)) {
+                    board.getBall(x, y).addAction(Actions.color(Color.DARK_GRAY, 0.15f));
+                }
+            }
+        }
+
+        // Animate the transition to game over.
+        board.addAction(Actions.delay(2f, board.hideBoard()));
+        score.addAction(Actions.delay(2f, Actions.fadeOut(0.25f)));
+
+        // Head to the game over after all these animations have finished.
+        getStage().addAction(Actions.delay(2.5f, Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                game.setScreen(Screens.GAME_OVER);
+            }
+        })));
+    }
+
+    @Override
+    public void onBallSelected(BallActor ball) {
+        ball.addAction(Actions.scaleTo(0.8f, 0.8f, 0.15f));
+        ball.addAction(Actions.color(Color.GRAY, 0.15f));
+        game.player.playSound(SoundCode.SELECT);
+    }
+
+    @Override
+    public void onBallUnselected(BallActor ball) {
+        ball.addAction(Actions.scaleTo(1f, 1f, 0.15f));
+        ball.addAction(Actions.color(Color.WHITE, 0.15f));
+        game.player.playSound(SoundCode.UNSELECT);
+    }
+
+    @Override
+    public void onSelectionSucceded(final List<BallActor> selection) {
+        // Extract the data from the selection.
+        List<Ball> balls = new ArrayList<>();
+        for (BallActor selectedBall : selection)
+            balls.add(selectedBall.getBall());
+        final Bounds bounds = Bounds.fromBallList(balls);
+
+        // Change the colors of the selected region.
+        board.addAction(Actions.sequence(
+                board.hideRegion(bounds),
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (BallActor selectedBall : selection) {
+                            selectedBall.setColor(Color.WHITE);
+                        }
+                        game.getState().getBoard().randomize(
+                                new Coordinate(bounds.minX, bounds.minY),
+                                new Coordinate(bounds.maxX, bounds.maxY));
+                    }
+                }),
+                board.showRegion(bounds)
+        ));
+
+        // You deserve some score and extra time.
+        int rows = bounds.maxY - bounds.minY + 1;
+        int cols = bounds.maxX - bounds.minX + 1;
+        game.getState().addScore(rows * cols);
+        score.setValue(game.getState().getScore());
+        timer.setSeconds(timer.getSeconds() + 4);
+
+        // Put information about this combination in the stats.
+        String size = Math.max(rows, cols) + "x" + Math.min(rows, cols);
+        game.statistics.getSizesData().incrementValue(size);
+
+        BallColor color = board.getBall(bounds.minX, bounds.minY).getBall().getColor();
+        game.statistics.getColorData().incrementValue(color.toString().toLowerCase());
+
+        game.statistics.getTotalData().incrementValue("balls", rows * cols);
+        game.statistics.getTotalData().incrementValue("combinations");
+
+
+        // Add some sound and animations.
+        showPartialScore(rows * cols, bounds);
+        game.player.playSound(SoundCode.SUCCESS);
+    }
+
+    @Override
+    public void onSelectionFailed(List<BallActor> selection) {
+        for (BallActor selected : selection) {
+            selected.addAction(Actions.scaleTo(1f, 1f, 0.15f));
+            selected.addAction(Actions.color(Color.WHITE, 0.15f));
+        }
+        game.player.playSound(SoundCode.FAIL);
+    }
+
+    @Override
+    public void onSelectionCleared(List<BallActor> selection) {
+        for (BallActor selected : selection) {
+            selected.addAction(Actions.scaleTo(1f, 1f, 0.15f));
+            selected.addAction(Actions.color(Color.WHITE, 0.15f));
+        }
     }
 }

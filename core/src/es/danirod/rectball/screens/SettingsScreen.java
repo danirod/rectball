@@ -17,8 +17,6 @@
  */
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -30,7 +28,7 @@ import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.Switch;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
-public class SettingsScreen extends MenuScreen {
+public class SettingsScreen extends AbstractScreen {
 
     public SettingsScreen(RectballGame game) {
         super(game);
@@ -39,19 +37,19 @@ public class SettingsScreen extends MenuScreen {
     @Override
     public void setUpInterface(Table table) {
         // Build stage entities.
-        TextButton backButton = newButton("Back");
+        TextButton backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());
 
         Texture switchTex = game.manager.get("ui/switch.png");
         final Switch soundSwitch = new Switch(switchTex, game.settings.isSoundEnabled(), false);
         final Switch colorSwitch = new Switch(switchTex, game.settings.isColorblind(), false);
 
         table.pad(20);
-        table.add(boldLabel("Settings")).expandX().align(Align.center).colspan(2).height(100).row();
-        table.add(newLabel("Sound")).expandX().align(Align.left).height(100);
+        table.add(new Label(game.getLocale().get("main.settings"), game.getSkin(), "bold")).expandX().align(Align.center).colspan(2).height(100).row();
+        table.add(new Label(game.getLocale().get("settings.sound"), game.getSkin())).expandX().align(Align.left).height(100);
         table.add(soundSwitch).width(150).height(50).row();
-        table.add(newLabel("Colorblind")).expandX().align(Align.left).height(100);
+        table.add(new Label(game.getLocale().get("settings.colorblind"), game.getSkin())).expandX().align(Align.left).height(100);
         table.add(colorSwitch).width(150).height(50).row();
-        table.add(backButton).fillX().expandY().height(125).align(Align.bottom).colspan(2).row();
+        table.add(backButton).fillX().expandY().height(80).padTop(20).align(Align.bottom).colspan(2).row();
 
         backButton.addCaptureListener(new ChangeListener() {
             @Override
@@ -61,6 +59,7 @@ public class SettingsScreen extends MenuScreen {
                 game.player.playSound(SoundCode.FAIL);
 
                 game.settings.save();
+                game.updateBallAtlas();
                 game.setScreen(Screens.MAIN_MENU);
             }
         });

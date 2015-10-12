@@ -17,16 +17,16 @@
  */
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
+import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
+<<<<<<< HEAD
 import es.danirod.rectball.actors.Value;
 import es.danirod.rectball.settings.ScoreIO;
 import es.danirod.rectball.statistics.Statistics;
@@ -38,6 +38,11 @@ public class GameOverScreen extends MenuScreen {
 
     private Label highScore;
     private Value score;
+=======
+import es.danirod.rectball.listeners.ScreenJumper;
+
+public class GameOverScreen extends AbstractScreen {
+>>>>>>> feature/refactor
 
     public GameOverScreen(RectballGame game) {
         super(game);
@@ -45,6 +50,7 @@ public class GameOverScreen extends MenuScreen {
 
     @Override
     public void setUpInterface(Table table) {
+<<<<<<< HEAD
         Label gameOver = newLabel("GAME OVER");
         aliveTime = newLabel("Alive: " + (int) game.aliveTime + " s");
         highScore = newLabel("High Score: " + game.scores.getHighestScore());
@@ -90,10 +96,53 @@ public class GameOverScreen extends MenuScreen {
         game.statistics.getTotalData().incrementValue("time", (int) game.aliveTime);
         ScoreIO.save(game.scores);
         Statistics.saveStats(game.statistics);
+=======
+        // Set up the label data.
+        String lastScore = Integer.toString(game.getState().getScore());
+        while (lastScore.length() < 4)
+            lastScore = "0" + lastScore;
+        String aliveTime = Integer.toString(Math.round(game.getState().getTime()));
+        String highScore = Long.toString(game.scores.getHighestScore());
+
+        // Last score.
+        Label highScoreLabel = new Label(lastScore, game.getSkin(), "monospace");
+        highScoreLabel.setFontScale(10f);
+        table.add(new Label(game.getLocale().get("game.gameover"), game.getSkin())).colspan(2).expandX().row();
+        table.add(highScoreLabel).expand().colspan(2).align(Align.center).row();
+
+        // Alive time.
+        Drawable clock = game.getSkin().newDrawable("iconClock");
+        table.add(new Image(clock)).size(80).expandX().align(Align.right).padRight(20);
+        table.add(new Label(aliveTime, game.getSkin())).expandX().align(Align.left).padLeft(20).row();
+
+        // High score.
+        Drawable crown = game.getSkin().newDrawable("iconCrown");
+        table.add(new Image(crown)).size(80).expandX().align(Align.right).padRight(20);
+        table.add(new Label(highScore, game.getSkin())).expandX().align(Align.left).padLeft(20).row();
+
+        // Add replay button.
+        TextButton replay = new TextButton(game.getLocale().get("game.replay"), game.getSkin());
+        replay.addCaptureListener(new ScreenJumper(game, Screens.GAME));
+        table.add(replay).colspan(2).fillX().height(100).padTop(30).row();
+
+        // Add menu button.
+        TextButton menu = new TextButton(game.getLocale().get("game.menu"), game.getSkin());
+        menu.addCaptureListener(new ScreenJumper(game, Screens.MAIN_MENU));
+        table.add(menu).colspan(2).fillX().height(100).padTop(30).row();
+
+        // Now animate the stage to make it fall.
+        getStage().addAction(Actions.sequence(
+                Actions.moveBy(0, Constants.VIEWPORT_HEIGHT),
+                Actions.moveBy(0, -Constants.VIEWPORT_HEIGHT, 0.25f)
+        ));
+>>>>>>> feature/refactor
     }
 
     @Override
     public int getID() {
         return Screens.GAME_OVER;
     }
+
+
+
 }

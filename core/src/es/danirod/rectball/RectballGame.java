@@ -24,22 +24,25 @@ import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
+import com.badlogic.gdx.utils.I18NBundle;
+import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.screens.*;
 import es.danirod.rectball.settings.ScoreIO;
 import es.danirod.rectball.settings.Scores;
 import es.danirod.rectball.settings.Settings;
 import es.danirod.rectball.statistics.Statistics;
+import es.danirod.rectball.utils.RectballSkin;
 import es.danirod.rectball.utils.SoundPlayer;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Main class for the game.
@@ -47,6 +50,8 @@ import java.util.Map;
 public class RectballGame extends Game {
 
     public static final String VERSION = "Rectball 0.1.2-SNAPSHOT";
+
+    /* FIXME: Privatize this. */
 
     private Map<Integer, AbstractScreen> screens = new HashMap<>();
 
@@ -60,7 +65,13 @@ public class RectballGame extends Game {
 
     public SoundPlayer player;
 
-    public float aliveTime;
+    private RectballSkin uiSkin;
+
+    private GameState currentGame = new GameState();
+
+    private TextureAtlas ballAtlas;
+
+    private I18NBundle locale;
 
     @Override
     public void create() {
@@ -71,6 +82,7 @@ public class RectballGame extends Game {
         addScreen(new SettingsScreen(this));
         addScreen(new LoadingScreen(this));
         addScreen(new StatisticsScreen(this));
+        addScreen(new AboutScreen(this));
 
         // Load the resources.
         manager = createManager();
@@ -84,6 +96,9 @@ public class RectballGame extends Game {
         scores = ScoreIO.load();
         statistics = Statistics.loadStats();
         player = new SoundPlayer(this);
+        uiSkin = new RectballSkin(this);
+        updateBallAtlas();
+        locale = setUpLocalization();
 
         // Load the screens.
         for (Map.Entry<Integer, AbstractScreen> screen : screens.entrySet()) {
@@ -92,6 +107,15 @@ public class RectballGame extends Game {
 
         // Enter main menu.
         setScreen(Screens.MAIN_MENU);
+    }
+
+    private I18NBundle setUpLocalization() {
+        FileHandle baseFileHandle = Gdx.files.internal("locale/rectball");
+        return I18NBundle.createBundle(baseFileHandle);
+    }
+
+    public I18NBundle getLocale() {
+        return locale;
     }
 
     private AssetManager createManager() {
@@ -113,17 +137,16 @@ public class RectballGame extends Game {
         manager.load("board/colorblind.png", Texture.class, linearParameters);
 
         // Load UI resources.
+        manager.load("ui/progress.png", Texture.class, linearParameters);
+        manager.load("ui/icons.png", Texture.class, linearParameters);
+        manager.load("ui/yellowpatch.png", Texture.class);
         manager.load("ui/switch.png", Texture.class, linearParameters);
         manager.load("ui/button.png", Texture.class, linearParameters);
-        manager.load("scores.png", Texture.class);
-        manager.load("fonts/scores.fnt", BitmapFont.class);
-        manager.load("timer.png", Texture.class);
-        manager.load("ui/leave.png", Texture.class);
 
         // Load TTF font for normal text
         FreeTypeFontLoaderParameter normalFont = new FreeTypeFontLoaderParameter();
         normalFont.fontFileName = "fonts/Play-Regular.ttf";
-        normalFont.fontParameters.size = 64;
+        normalFont.fontParameters.size = 48;
         normalFont.fontParameters.minFilter = TextureFilter.Linear;
         normalFont.fontParameters.magFilter = TextureFilter.Linear;
         normalFont.fontParameters.shadowOffsetX = 2;
@@ -133,7 +156,7 @@ public class RectballGame extends Game {
         // Load TTF font for bold text
         FreeTypeFontLoaderParameter boldFont = new FreeTypeFontLoaderParameter();
         boldFont.fontFileName = "fonts/Play-Bold.ttf";
-        boldFont.fontParameters.size = 64;
+        boldFont.fontParameters.size = 48;
         boldFont.fontParameters.minFilter = TextureFilter.Linear;
         boldFont.fontParameters.magFilter = TextureFilter.Linear;
         boldFont.fontParameters.shadowOffsetX = 2;
@@ -143,13 +166,29 @@ public class RectballGame extends Game {
         // Load TTF font for big text
         FreeTypeFontLoaderParameter bigFont = new FreeTypeFontLoaderParameter();
         bigFont.fontFileName = "fonts/Play-Regular.ttf";
-        bigFont.fontParameters.size = 96;
+        bigFont.fontParameters.size = 64;
         bigFont.fontParameters.minFilter = TextureFilter.Linear;
         bigFont.fontParameters.magFilter = TextureFilter.Linear;
         bigFont.fontParameters.borderWidth = 2;
         bigFont.fontParameters.shadowOffsetX = 4;
         bigFont.fontParameters.shadowOffsetY = 4;
         manager.load("bigFont.ttf", BitmapFont.class, bigFont);
+
+        // Load TTF font for small text
+        FreeTypeFontLoaderParameter smallFont = new FreeTypeFontLoaderParameter();
+        smallFont.fontFileName = "fonts/Play-Regular.ttf";
+        smallFont.fontParameters.size = 36;
+        smallFont.fontParameters.minFilter = TextureFilter.Linear;
+        smallFont.fontParameters.magFilter = TextureFilter.Linear;
+        manager.load("smallFont.ttf", BitmapFont.class, smallFont);
+
+        // Load TTF font for Press Start.
+        FreeTypeFontLoaderParameter monospace = new FreeTypeFontLoaderParameter();
+        monospace.fontFileName = "fonts/PressStart2P-Regular.ttf";
+        monospace.fontParameters.size = 8;
+        monospace.fontParameters.minFilter = TextureFilter.Nearest;
+        monospace.fontParameters.magFilter = TextureFilter.Nearest;
+        manager.load("monospace.ttf", BitmapFont.class, monospace);
 
         // Load sounds
         manager.load("sound/fail.ogg", Sound.class);
@@ -180,5 +219,32 @@ public class RectballGame extends Game {
      */
     public void addScreen(AbstractScreen screen) {
         screens.put(screen.getID(), screen);
+    }
+
+    /**
+     * Get the skin used by Scene2D UI to display things.
+     * @return  the skin the game should use.
+     */
+    public RectballSkin getSkin() {
+        return uiSkin;
+    }
+
+    public GameState getState() {
+        return currentGame;
+    }
+
+    public void updateBallAtlas() {
+        Texture balls = manager.get(settings.isColorblind() ? "board/colorblind.png" : "board/normal.png");
+        TextureRegion[][] regions = TextureRegion.split(balls, 256, 256);
+        ballAtlas = new TextureAtlas();
+        ballAtlas.addRegion("ball_red", regions[0][0]);
+        ballAtlas.addRegion("ball_yellow", regions[0][1]);
+        ballAtlas.addRegion("ball_blue", regions[1][0]);
+        ballAtlas.addRegion("ball_green", regions[1][1]);
+        ballAtlas.addRegion("ball_gray", regions[1][2]);
+    }
+
+    public TextureAtlas getBallAtlas() {
+        return ballAtlas;
     }
 }
