@@ -68,6 +68,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     /** True if the user is asking to leave. */
     private boolean askingLeave;
 
+    /** True if the game has finished. */
+    private boolean timeout;
+
     public GameScreen(RectballGame game) {
         super(game);
     }
@@ -119,7 +122,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // Reset data
         game.getState().reset();
-        paused = running = countdownFinished = askingLeave = false;
+        paused = running = countdownFinished = askingLeave = timeout = false;
 
         countdown(2, new Runnable() {
             @Override
@@ -223,7 +226,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // The user should be able to leave during the game.
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            if (!paused) {
+            if (!paused && !timeout) {
                 pause();
                 showLeaveDialog();
             }
@@ -233,7 +236,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     @Override
     public void pause() {
         paused = true;
-        if (running) {
+        if (running && !timeout) {
             board.setColoured(false);
             board.setTouchable(Touchable.disabled);
             timer.setRunning(false);
@@ -255,7 +258,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             game.player.playSound(SoundCode.SUCCESS);
         }
 
-        if (running) {
+        if (running && !timeout) {
             board.setColoured(true);
             board.setTouchable(Touchable.enabled);
             timer.setRunning(true);
@@ -265,6 +268,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     @Override
     public void onTimeOut() {
         // Disable any further interactions.
+        timeout = true;
         board.setColoured(true);
         board.setTouchable(Touchable.disabled);
         timer.setRunning(false);
