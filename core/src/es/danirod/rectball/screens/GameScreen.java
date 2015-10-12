@@ -32,10 +32,7 @@ import es.danirod.rectball.actors.ScoreActor;
 import es.danirod.rectball.actors.TimerActor;
 import es.danirod.rectball.actors.TimerActor.TimerCallback;
 import es.danirod.rectball.dialogs.ConfirmDialog;
-import es.danirod.rectball.model.Ball;
-import es.danirod.rectball.model.Bounds;
-import es.danirod.rectball.model.CombinationFinder;
-import es.danirod.rectball.model.Coordinate;
+import es.danirod.rectball.model.*;
 import es.danirod.rectball.settings.ScoreIO;
 import es.danirod.rectball.statistics.Statistics;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
@@ -311,6 +308,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // Save information about this game in the statistics.
         game.scores.addScore(game.getState().getScore());
         ScoreIO.save(game.scores);
+        game.statistics.getTotalData().incrementValue("score", game.getState().getScore());
         game.statistics.getTotalData().incrementValue("games");
         game.statistics.getTotalData().incrementValue("time", Math.round(game.getState().getTime()));
         Statistics.saveStats(game.statistics);
@@ -384,6 +382,17 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         game.getState().addScore(rows * cols);
         score.setValue(game.getState().getScore());
         timer.setSeconds(timer.getSeconds() + 4);
+
+        // Put information about this combination in the stats.
+        String size = Math.max(rows, cols) + "x" + Math.min(rows, cols);
+        game.statistics.getSizesData().incrementValue(size);
+
+        BallColor color = board.getBall(bounds.minX, bounds.minY).getBall().getColor();
+        game.statistics.getColorData().incrementValue(color.toString().toLowerCase());
+
+        game.statistics.getTotalData().incrementValue("balls", rows * cols);
+        game.statistics.getTotalData().incrementValue("combinations");
+
 
         // Add some sound and animations.
         showPartialScore(rows * cols, bounds);
