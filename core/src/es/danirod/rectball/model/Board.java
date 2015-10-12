@@ -23,12 +23,19 @@ public class Board {
     }
 
     public void randomize(Coordinate bottomLeft, Coordinate upperRight) {
+        boolean valid = false;
         BallColor[] colors = BallColor.values();
-        for (int x = bottomLeft.x; x <= upperRight.x; x++) {
-            for (int y = bottomLeft.y; y <= upperRight.y; y++) {
-                int index = MathUtils.random(colors.length - 1);
-                balls[x][y].setColor(colors[index]);
+        while (!valid) {
+            for (int x = bottomLeft.x; x <= upperRight.x; x++) {
+                for (int y = bottomLeft.y; y <= upperRight.y; y++) {
+                    int index = MathUtils.random(colors.length - 1);
+                    balls[x][y].setColor(colors[index]);
+                }
             }
+
+            // Check that we have a combination.
+            CombinationFinder finder = new CombinationFinder(this);
+            valid = finder.areThereCombinations();
         }
     }
 

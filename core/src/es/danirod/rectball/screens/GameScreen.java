@@ -188,6 +188,32 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         ));
     }
 
+    private void showPartialScore(int score, Bounds bounds) {
+        // Calculate the center of the region.
+        BallActor bottomLeftBall = board.getBall(bounds.minX, bounds.minY);
+        BallActor upperRightBall = board.getBall(bounds.maxX, bounds.maxY);
+
+        float minX = bottomLeftBall.getX();
+        float maxX = upperRightBall.getX() + upperRightBall.getWidth();
+        float minY = bottomLeftBall.getY();
+        float maxY = upperRightBall.getY() + upperRightBall.getHeight();
+        float centerX = (minX + maxX) / 2;
+        float centerY = (minY + maxY) / 2;
+
+        Label label = new Label("+" + score, game.getSkin(), "monospace");
+        label.setFontScale(10f);
+        label.setSize(140, 70);
+        label.setAlignment(Align.center);
+        label.setPosition(centerX - label.getWidth() / 2, centerY - label.getHeight() / 2);
+        label.addAction(Actions.sequence(
+                Actions.parallel(
+                        Actions.moveBy(0, 80, 0.5f),
+                        Actions.alpha(0.5f, 0.5f)),
+                Actions.removeActor()
+        ));
+        getStage().addActor(label);
+    }
+
     @Override
     public void setUpInterface(Table table) {
         // Create the actors for this screen.
@@ -269,6 +295,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     public void onTimeOut() {
         // Disable any further interactions.
         timeout = true;
+        board.clearSelection();
         board.setColoured(true);
         board.setTouchable(Touchable.disabled);
         timer.setRunning(false);
@@ -290,7 +317,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         Bounds combination = finder.getCombination();
         for (int y = 0; y < game.getState().getBoard().getSize(); y++) {
             for (int x = 0; x < game.getState().getBoard().getSize(); x++) {
-                if (!combination.inBounds(x, y)) {
+                if (combination != null && !combination.inBounds(x, y)) {
                     board.getBall(x, y).addAction(Actions.color(Color.DARK_GRAY, 0.15f));
                 }
             }
@@ -356,6 +383,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         timer.setSeconds(timer.getSeconds() + 4);
 
         // Add some sound and animations.
+        showPartialScore(rows * cols, bounds);
         game.player.playSound(SoundCode.SUCCESS);
     }
 
