@@ -26,23 +26,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
-<<<<<<< HEAD
-import es.danirod.rectball.actors.Value;
-import es.danirod.rectball.settings.ScoreIO;
-import es.danirod.rectball.statistics.Statistics;
-import es.danirod.rectball.utils.SoundPlayer.SoundCode;
-
-public class GameOverScreen extends MenuScreen {
-
-    private Label aliveTime;
-
-    private Label highScore;
-    private Value score;
-=======
 import es.danirod.rectball.listeners.ScreenJumper;
 
 public class GameOverScreen extends AbstractScreen {
->>>>>>> feature/refactor
 
     public GameOverScreen(RectballGame game) {
         super(game);
@@ -50,53 +36,6 @@ public class GameOverScreen extends AbstractScreen {
 
     @Override
     public void setUpInterface(Table table) {
-<<<<<<< HEAD
-        Label gameOver = newLabel("GAME OVER");
-        aliveTime = newLabel("Alive: " + (int) game.aliveTime + " s");
-        highScore = newLabel("High Score: " + game.scores.getHighestScore());
-
-        Texture sheet = game.manager.get("scores.png", Texture.class);
-        score = new Value(sheet, 4, game.scores.getLastScore());
-        table.add(score).pad(40).colspan(2).fillX().height(200).row();
-
-        table.add(gameOver).pad(40).colspan(2).expandX().expandY().align(Align.center).row();
-        table.add(aliveTime).pad(20).colspan(2).expandX().expandY().align(Align.center).row();
-        table.add(highScore).pad(20).colspan(2).expandX().expandY().align(Align.center).row();
-
-        TextButton replay = newButton("Replay");
-        TextButton menu = newButton("Menu");
-        table.add(replay).pad(40).expandX().height(100);
-        table.add(menu).pad(40).expandX().height(100).row();
-
-        replay.addCaptureListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                game.player.playSound(SoundCode.SUCCESS);
-                game.setScreen(Screens.GAME);
-            }
-        });
-        menu.addCaptureListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                game.player.playSound(SoundCode.FAIL);
-                game.setScreen(Screens.MAIN_MENU);
-            }
-        });
-    }
-
-    @Override
-    public void show() {
-        super.show();
-
-        aliveTime.setText("Alive: " + (int) game.aliveTime + " s");
-        highScore.setText("High Score: " + game.scores.getHighestScore());
-        score.setValue(game.scores.getLastScore());
-
-        game.statistics.getTotalData().incrementValue("games");
-        game.statistics.getTotalData().incrementValue("time", (int) game.aliveTime);
-        ScoreIO.save(game.scores);
-        Statistics.saveStats(game.statistics);
-=======
         // Set up the label data.
         String lastScore = Integer.toString(game.getState().getScore());
         while (lastScore.length() < 4)
@@ -135,7 +74,6 @@ public class GameOverScreen extends AbstractScreen {
                 Actions.moveBy(0, Constants.VIEWPORT_HEIGHT),
                 Actions.moveBy(0, -Constants.VIEWPORT_HEIGHT, 0.25f)
         ));
->>>>>>> feature/refactor
     }
 
     @Override
