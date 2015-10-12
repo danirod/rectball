@@ -49,7 +49,7 @@ public class SettingsScreen extends AbstractScreen {
         table.add(soundSwitch).width(150).height(50).row();
         table.add(new Label("Colorblind", game.getSkin())).expandX().align(Align.left).height(100);
         table.add(colorSwitch).width(150).height(50).row();
-        table.add(backButton).fillX().expandY().height(125).align(Align.bottom).colspan(2).row();
+        table.add(backButton).fillX().expandY().height(80).padTop(20).align(Align.bottom).colspan(2).row();
 
         backButton.addCaptureListener(new ChangeListener() {
             @Override

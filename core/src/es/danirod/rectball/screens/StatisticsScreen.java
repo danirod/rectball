@@ -1,6 +1,7 @@
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -20,19 +21,19 @@ public class StatisticsScreen extends AbstractScreen {
 
     @Override
     public void setUpInterface(Table table) {
-        final TextButton backButton = new TextButton("Back", game.getSkin());
-        final Label stats = new Label("Stats", game.getSkin());
-
         table.pad(20);
-        table.add(backButton).align(Align.left).expandX();
-        table.add(stats).align(Align.center).expandX().row();
+        table.add(new Label("Statistics", game.getSkin(), "bold")).expandX().align(Align.center).height(100).row();
 
-        StatsTable statsTable = new StatsTable(game.statistics, stats.getStyle(), stats.getStyle());
+        LabelStyle bold = game.getSkin().get("bold", LabelStyle.class);
+        LabelStyle normal = game.getSkin().get(LabelStyle.class);
 
+        StatsTable statsTable = new StatsTable(game.statistics, bold, normal);
         ScrollPane.ScrollPaneStyle style = new ScrollPane.ScrollPaneStyle();
         ScrollPane pane = new ScrollPane(statsTable, style);
-        table.add(pane).colspan(2).align(Align.topLeft).expand().fill();
+        table.add(pane).align(Align.topLeft).expand().fill().row();
 
+        TextButton backButton = new TextButton("Back", game.getSkin());
+        table.add(backButton).fillX().expandY().height(80).padTop(20).align(Align.bottom).row();
         backButton.addCaptureListener(new ScreenJumper(game, Screens.MAIN_MENU));
     }
 
