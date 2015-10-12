@@ -42,4 +42,8 @@ public class Bounds {
         this.maxX = maxX;
         this.maxY = maxY;
     }
+
+    public boolean inBounds(int x, int y) {
+        return (x >= minX && x <= maxX) && (y >= minY && y <= maxY);
+    }
 }

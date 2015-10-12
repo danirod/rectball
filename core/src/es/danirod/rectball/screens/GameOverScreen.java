@@ -17,12 +17,14 @@
  */
 package es.danirod.rectball.screens;
 
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
+import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.listeners.ScreenJumper;
 
@@ -35,10 +37,10 @@ public class GameOverScreen extends AbstractScreen {
     @Override
     public void setUpInterface(Table table) {
         // Set up the label data.
-        String lastScore = Integer.toString(game.getCurrentGame().getScore());
+        String lastScore = Integer.toString(game.getState().getScore());
         while (lastScore.length() < 4)
             lastScore = "0" + lastScore;
-        String aliveTime = Integer.toString(Math.round(game.getCurrentGame().getTime()));
+        String aliveTime = Integer.toString(Math.round(game.getState().getTime()));
         String highScore = Long.toString(game.scores.getHighestScore());
 
         // Last score.
@@ -66,6 +68,12 @@ public class GameOverScreen extends AbstractScreen {
         TextButton menu = new TextButton("Menu", game.getSkin());
         menu.addCaptureListener(new ScreenJumper(game, Screens.MAIN_MENU));
         table.add(menu).colspan(2).fillX().height(100).padTop(30).row();
+
+        // Now animate the stage to make it fall.
+        getStage().addAction(Actions.sequence(
+                Actions.moveBy(0, Constants.VIEWPORT_HEIGHT),
+                Actions.moveBy(0, -Constants.VIEWPORT_HEIGHT, 0.25f)
+        ));
     }
 
     @Override

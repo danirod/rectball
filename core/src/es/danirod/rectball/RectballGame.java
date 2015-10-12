@@ -205,7 +205,7 @@ public class RectballGame extends Game {
         return uiSkin;
     }
 
-    public GameState getCurrentGame() {
+    public GameState getState() {
         return currentGame;
     }
 }

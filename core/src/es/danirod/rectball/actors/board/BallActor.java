@@ -1,12 +1,8 @@
-package es.danirod.rectball.actors;
+package es.danirod.rectball.actors.board;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Scaling;
@@ -16,29 +12,6 @@ public class BallActor extends Image {
 
     public Ball getBall() {
         return ball;
-    }
-
-    private class BallSelectionListener extends InputListener {
-
-        private BoardActor board;
-
-        private BallActor ball;
-
-        public BallSelectionListener(BoardActor board, BallActor ball) {
-            this.board = board;
-            this.ball = ball;
-        }
-
-        @Override
-        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            if (!isSelected()) {
-                board.onBallSelected(ball);
-            } else {
-
-                board.onBallUnselected(ball);
-            }
-            return true;
-        }
     }
 
     private boolean selected;
@@ -54,7 +27,13 @@ public class BallActor extends Image {
         this.ball = ball;
         this.skin = skin;
         setScaling(Scaling.fit);
-        addListener(new BallSelectionListener(board, this));
+        addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                setSelected(!isSelected());
+                return true;
+            }
+        });
     }
 
     @Override
@@ -82,21 +61,15 @@ public class BallActor extends Image {
     }
 
     public void setSelected(boolean selected) {
-        setSelected(selected, true);
+        this.selected = selected;
+        if (selected) {
+            board.select(ball.getX(), ball.getY());
+        } else {
+            board.unselect(ball.getX(), ball.getY());
+        }
     }
 
-    public void setSelected(boolean selected, boolean animate) {
-        float finalScale = selected ? 0.8f : 1;
-        Color finalColor = selected ? Color.LIGHT_GRAY : Color.WHITE;
-
-        if (animate) {
-            addAction(Actions.scaleTo(finalScale, finalScale, 0.15f));
-            addAction(Actions.color(finalColor, 0.15f));
-        } else {
-            addAction(Actions.scaleTo(finalScale, finalScale));
-            addAction(Actions.color(finalColor));
-        }
-
+    protected void quietlySetSelected(boolean selected) {
         this.selected = selected;
     }
 }
