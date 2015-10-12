@@ -37,17 +37,17 @@ public class SettingsScreen extends AbstractScreen {
     @Override
     public void setUpInterface(Table table) {
         // Build stage entities.
-        TextButton backButton = new TextButton("Back", game.getSkin());
+        TextButton backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());
 
         Texture switchTex = game.manager.get("ui/switch.png");
         final Switch soundSwitch = new Switch(switchTex, game.settings.isSoundEnabled(), false);
         final Switch colorSwitch = new Switch(switchTex, game.settings.isColorblind(), false);
 
         table.pad(20);
-        table.add(new Label("Settings", game.getSkin(), "bold")).expandX().align(Align.center).colspan(2).height(100).row();
-        table.add(new Label("Sound", game.getSkin())).expandX().align(Align.left).height(100);
+        table.add(new Label(game.getLocale().get("main.settings"), game.getSkin(), "bold")).expandX().align(Align.center).colspan(2).height(100).row();
+        table.add(new Label(game.getLocale().get("settings.sound"), game.getSkin())).expandX().align(Align.left).height(100);
         table.add(soundSwitch).width(150).height(50).row();
-        table.add(new Label("Colorblind", game.getSkin())).expandX().align(Align.left).height(100);
+        table.add(new Label(game.getLocale().get("settings.colorblind"), game.getSkin())).expandX().align(Align.left).height(100);
         table.add(colorSwitch).width(150).height(50).row();
         table.add(backButton).fillX().expandY().height(80).padTop(20).align(Align.bottom).colspan(2).row();
 

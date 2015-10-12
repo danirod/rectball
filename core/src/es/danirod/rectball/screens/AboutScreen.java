@@ -1,35 +1,33 @@
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.StatsTable;
 import es.danirod.rectball.listeners.ScreenJumper;
 
 /**
- * Statistics screen.
+ * About screen.
  */
-public class StatisticsScreen extends AbstractScreen {
+public class AboutScreen extends AbstractScreen {
 
-    public StatisticsScreen(RectballGame game) {
+    public AboutScreen(RectballGame game) {
         super(game);
     }
 
     @Override
     public void setUpInterface(Table table) {
         table.pad(20);
-        table.add(new Label("Statistics", game.getSkin(), "bold")).expandX().align(Align.center).height(100).row();
+        table.add(new Label(game.getLocale().get("main.about"), game.getSkin(), "bold")).expandX().align(Align.center).height(100).row();
 
-        LabelStyle bold = game.getSkin().get("bold", LabelStyle.class);
-        LabelStyle normal = game.getSkin().get("small", LabelStyle.class);
+        Label credits = new Label(getCredits(), game.getSkin(), "small");
+        credits.setWrap(true);
+        credits.setFillParent(true);
 
-        StatsTable statsTable = new StatsTable(game, bold, normal);
         ScrollPane.ScrollPaneStyle style = new ScrollPane.ScrollPaneStyle();
-        ScrollPane pane = new ScrollPane(statsTable, style);
+        ScrollPane pane = new ScrollPane(credits, style);
         table.add(pane).align(Align.topLeft).expand().fill().row();
 
         TextButton backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());
@@ -37,9 +35,13 @@ public class StatisticsScreen extends AbstractScreen {
         backButton.addCaptureListener(new ScreenJumper(game, Screens.MAIN_MENU));
     }
 
+    private String getCredits() {
+        return RectballGame.VERSION + "\n" + Gdx.files.internal("credits.txt").readString();
+    }
+
     @Override
     public int getID() {
-        return Screens.STATISTICS;
+        return Screens.ABOUT;
     }
 
 }

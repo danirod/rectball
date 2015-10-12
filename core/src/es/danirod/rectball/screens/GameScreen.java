@@ -81,7 +81,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
      * the game will end.
      */
     private void showLeaveDialog() {
-        ConfirmDialog dialog = new ConfirmDialog(game.getSkin(), "Leave game?", "Yes", "No");
+        ConfirmDialog dialog = new ConfirmDialog(game.getSkin(),
+                game.getLocale().get("game.leave"),
+                game.getLocale().get("core.yes"),
+                game.getLocale().get("core.no"));
         dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
             @Override
             public void ok() {

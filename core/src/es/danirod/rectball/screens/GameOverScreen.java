@@ -46,7 +46,7 @@ public class GameOverScreen extends AbstractScreen {
         // Last score.
         Label highScoreLabel = new Label(lastScore, game.getSkin(), "monospace");
         highScoreLabel.setFontScale(10f);
-        table.add(new Label("GAME OVER", game.getSkin())).colspan(2).expandX().row();
+        table.add(new Label(game.getLocale().get("game.gameover"), game.getSkin())).colspan(2).expandX().row();
         table.add(highScoreLabel).expand().colspan(2).align(Align.center).row();
 
         // Alive time.
@@ -60,12 +60,12 @@ public class GameOverScreen extends AbstractScreen {
         table.add(new Label(highScore, game.getSkin())).expandX().align(Align.left).padLeft(20).row();
 
         // Add replay button.
-        TextButton replay = new TextButton("Replay", game.getSkin());
+        TextButton replay = new TextButton(game.getLocale().get("game.replay"), game.getSkin());
         replay.addCaptureListener(new ScreenJumper(game, Screens.GAME));
         table.add(replay).colspan(2).fillX().height(100).padTop(30).row();
 
         // Add menu button.
-        TextButton menu = new TextButton("Menu", game.getSkin());
+        TextButton menu = new TextButton(game.getLocale().get("game.menu"), game.getSkin());
         menu.addCaptureListener(new ScreenJumper(game, Screens.MAIN_MENU));
         table.add(menu).colspan(2).fillX().height(100).padTop(30).row();
 

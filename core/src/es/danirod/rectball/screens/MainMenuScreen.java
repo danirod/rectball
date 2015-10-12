@@ -38,20 +38,23 @@ public class MainMenuScreen extends AbstractScreen {
         // Build the actors.
         Image title = new Image(game.manager.get("logo.png", Texture.class));
         title.setScaling(Scaling.fit);
-        TextButton play = new TextButton("Play", game.getSkin());
-        TextButton settings = new TextButton("Settings", game.getSkin());
-        TextButton statistics = new TextButton("Stats", game.getSkin());
+        TextButton play = new TextButton(game.getLocale().get("main.play"), game.getSkin());
+        TextButton settings = new TextButton(game.getLocale().get("main.settings"), game.getSkin());
+        TextButton statistics = new TextButton(game.getLocale().get("main.stats"), game.getSkin());
+        TextButton about = new TextButton(game.getLocale().get("main.about"), game.getSkin());
 
         // Position the actors in the screen.
         table.add(title).pad(40).row();
-        table.add(play).padBottom(STAGE_PADDING).fillX().height(150).row();
-        table.add(settings).padBottom(STAGE_PADDING).fillX().height(150).row();
-        table.add(statistics).padBottom(STAGE_PADDING).fillX().height(150).row();
+        table.add(play).padBottom(STAGE_PADDING).fillX().height(100).row();
+        table.add(settings).padBottom(STAGE_PADDING).fillX().height(100).row();
+        table.add(statistics).padBottom(STAGE_PADDING).fillX().height(100).row();
+        table.add(about).padBottom(STAGE_PADDING).fillX().height(100).row();
 
         // Then add the capture listeners for the buttons.
         play.addCaptureListener(new ScreenJumper(game, Screens.GAME));
         settings.addCaptureListener(new ScreenJumper(game, Screens.SETTINGS));
         statistics.addCaptureListener(new ScreenJumper(game, Screens.STATISTICS));
+        about.addCaptureListener(new ScreenJumper(game, Screens.ABOUT));
     }
 
     @Override

@@ -17,4 +17,6 @@ public class Screens {
 
     public static final int STATISTICS = 6;
 
+    public static final int ABOUT = 7;
+
 }
