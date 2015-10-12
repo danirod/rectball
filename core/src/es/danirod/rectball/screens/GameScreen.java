@@ -59,8 +59,14 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     /** Is the game paused? */
     private boolean paused;
 
-    /** Has the game started (i.e., countdown finished) */
-    private boolean started;
+    /** Is the game running? True unless is on countdown or game over. */
+    private boolean running;
+
+    /** Has the countdown already finished? */
+    private boolean countdownFinished;
+
+    /** True if the user is asking to leave. */
+    private boolean askingLeave;
 
     public GameScreen(RectballGame game) {
         super(game);
@@ -77,13 +83,15 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             @Override
             public void ok() {
                 // The user wants to leave the game.
-                timer.setRunning(false);
+                askingLeave = false;
                 onTimeOut();
             }
 
             @Override
             public void cancel() {
-                setPaused(false);
+                // The user wants to resume the game.
+                askingLeave = false;
+                resume();
             }
         });
 
@@ -91,6 +99,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // game is a mess at the moment. Fix that mess, then let the Dialog
         // use the default actions.
         dialog.show(getStage(), null);
+        askingLeave = true;
         dialog.setPosition(
                 Math.round((getStage().getWidth() - dialog.getWidth()) / 2),
                 Math.round((getStage().getHeight() - dialog.getHeight()) / 2));
@@ -110,15 +119,21 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // Reset data
         game.getState().reset();
-        paused = started = false;
+        paused = running = countdownFinished = askingLeave = false;
 
         countdown(2, new Runnable() {
             @Override
             public void run() {
-                started = true;
-                board.setColoured(true);
-                timer.setRunning(true);
-                board.setTouchable(Touchable.enabled);
+                countdownFinished = true;
+
+                // Start the game unless the user is leaving or is pasused.
+                if (!paused && !askingLeave) {
+                    running = true;
+                    board.setColoured(true);
+                    timer.setRunning(true);
+                    board.setTouchable(Touchable.enabled);
+                    game.player.playSound(SoundCode.SUCCESS);
+                }
             }
         });
     }
@@ -163,7 +178,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                         if (seconds > 1) {
                             countdown(seconds - 1, after);
                         } else {
-                            game.player.playSound(SoundCode.SUCCESS);
                             after.run();
                         }
                     }
@@ -177,7 +191,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         timer = new TimerActor(Constants.SECONDS, game.getSkin());
         score = new ScoreActor(game.getSkin());
         board = new BoardActor(this, game.getSkin(), game.getState().getBoard());
+
+        // Disable game until countdown ends.
         timer.setRunning(false);
+        board.setTouchable(Touchable.disabled);
 
         // Add subscribers.
         timer.addSubscriber(this);
@@ -199,43 +216,56 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     public void render(float delta) {
         super.render(delta);
 
+        // If the timer is running, keep incrementing the timer.
         if (timer.isRunning()) {
             game.getState().addTime(delta);
         }
 
-        // Pause the game when you press BACK or ESCAPE.
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) ||
-                Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        // The user should be able to leave during the game.
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             if (!paused) {
-                setPaused(true);
+                pause();
+                showLeaveDialog();
             }
-        }
-    }
-
-    public void setPaused(boolean paused) {
-        this.paused = paused;
-
-        // If the game has just been paused, show the pause dialog.
-        if (paused) {
-            showLeaveDialog();
-        }
-
-        // If the game has already started, pause the timer and hide the board.
-        if (started) {
-            timer.setRunning(!paused);
-            board.setColoured(!paused);
-            board.setTouchable(paused ? Touchable.disabled : Touchable.enabled);
         }
     }
 
     @Override
     public void pause() {
-        setPaused(true);
+        paused = true;
+        if (running) {
+            board.setColoured(false);
+            board.setTouchable(Touchable.disabled);
+            timer.setRunning(false);
+        }
+    }
+
+    @Override
+    public void resume() {
+        paused = false;
+
+        // If the countdown has finished but the game is not running is a
+        // condition that might be triggered in one of the following cases.
+        // 1) The user has paused the game during the countdown. When the
+        //    countdown finishes, because the game is paused, the game does
+        //    not start.
+        // 2) The user was leaving the game during the countdown. Same.
+        if (!running && countdownFinished) {
+            running = true;
+            game.player.playSound(SoundCode.SUCCESS);
+        }
+
+        if (running) {
+            board.setColoured(true);
+            board.setTouchable(Touchable.enabled);
+            timer.setRunning(true);
+        }
     }
 
     @Override
     public void onTimeOut() {
         // Disable any further interactions.
+        board.setColoured(true);
         board.setTouchable(Touchable.disabled);
         timer.setRunning(false);
 
