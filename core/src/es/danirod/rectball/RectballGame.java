@@ -49,7 +49,7 @@ import java.util.*;
  */
 public class RectballGame extends Game {
 
-    public static final String VERSION = "Rectball 0.1.9";
+    public static final String VERSION = "Rectball 0.2.0";
 
     /* FIXME: Privatize this. */
 
