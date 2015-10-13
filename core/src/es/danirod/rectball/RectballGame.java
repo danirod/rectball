@@ -108,7 +108,7 @@ public class RectballGame extends Game {
         }
 
         // Enter main menu.
-        setScreen(Screens.MAIN_MENU);
+        pushScreen(Screens.MAIN_MENU);
     }
 
     private I18NBundle setUpLocalization() {

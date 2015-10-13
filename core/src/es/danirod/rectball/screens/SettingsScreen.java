@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.ui.SwitchActor;
 import es.danirod.rectball.listeners.ScreenJumper;
+import es.danirod.rectball.listeners.ScreenPopper;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
 public class SettingsScreen extends AbstractScreen {
@@ -68,7 +69,7 @@ public class SettingsScreen extends AbstractScreen {
 
         table.add(backButton).fillX().expandY().height(80).padTop(20).align(Align.bottom).row();
 
-        backButton.addCaptureListener(new ScreenJumper(game, Screens.MAIN_MENU));
+        backButton.addCaptureListener(new ScreenPopper(game));
     }
 
     @Override

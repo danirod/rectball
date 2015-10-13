@@ -5,15 +5,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import es.danirod.rectball.RectballGame;
 
-public class ScreenJumper extends ChangeListener {
+/**
+ * @since 0.3.0
+ */
+public class ScreenPopper extends ChangeListener {
 
     private RectballGame game;
 
-    private int target;
-
-    public ScreenJumper(RectballGame game, int target) {
+    public ScreenPopper(RectballGame game) {
         this.game = game;
-        this.target = target;
     }
 
     @Override
@@ -23,8 +23,8 @@ public class ScreenJumper extends ChangeListener {
             TextButton button = (TextButton)actor;
             button.setChecked(false);
         }
-        
-        game.pushScreen(target);
+
+        game.popScreen();
     }
 
 
