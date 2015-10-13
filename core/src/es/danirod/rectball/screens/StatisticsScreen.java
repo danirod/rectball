@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.StatsTable;
 import es.danirod.rectball.listeners.ScreenJumper;
+import es.danirod.rectball.listeners.ScreenPopper;
 
 /**
  * Statistics screen.
@@ -34,7 +35,7 @@ public class StatisticsScreen extends AbstractScreen {
 
         TextButton backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());
         table.add(backButton).fillX().expandY().height(80).padTop(20).align(Align.bottom).row();
-        backButton.addCaptureListener(new ScreenJumper(game, Screens.MAIN_MENU));
+        backButton.addListener(new ScreenPopper(game));
     }
 
     @Override

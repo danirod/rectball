@@ -49,7 +49,7 @@ import java.util.*;
  */
 public class RectballGame extends Game {
 
-    public static final String VERSION = "Rectball 0.2.0";
+    public static final String VERSION = "Rectball 0.3.0-SNAPSHOT";
 
     /* FIXME: Privatize this. */
 
@@ -73,6 +73,8 @@ public class RectballGame extends Game {
 
     private I18NBundle locale;
 
+    private Deque<AbstractScreen> screenStack = new ArrayDeque<>();
+
     @Override
     public void create() {
         // Add the screens.
@@ -87,7 +89,7 @@ public class RectballGame extends Game {
         // Load the resources.
         manager = createManager();
         screens.get(Screens.LOADING).load();
-        setScreen(Screens.LOADING);
+        setScreen(screens.get(Screens.LOADING));
     }
 
     public void finishLoading() {
@@ -106,7 +108,7 @@ public class RectballGame extends Game {
         }
 
         // Enter main menu.
-        setScreen(Screens.MAIN_MENU);
+        pushScreen(Screens.MAIN_MENU);
     }
 
     private I18NBundle setUpLocalization() {
@@ -205,11 +207,43 @@ public class RectballGame extends Game {
     }
 
     /**
-     * Show the screen with this ID.
-     * @param id  the ID of the screen to use.
+     * Pushes the provided screen into the stack and sets it as the current screen.
+     * The screen that has been previously on screen can be retrieved later using
+     * popScreen.
+     *
+     * @since 0.3.0
+     * @param id  the screen that should be visible now.
      */
-    public void setScreen(int id) {
-        this.setScreen(screens.get(id));
+    public void pushScreen(int id) {
+        screenStack.push(screens.get(id));
+        setScreen(screenStack.peek());
+    }
+
+    /**
+     * Pops the current screen from the stack. The screen that was visible before
+     * pushing the current screen is the one that would be visible. If no screens
+     * are in the stack, the main menu screen will be visible.
+     *
+     * @since 0.3.0
+     */
+    public void popScreen() {
+        screenStack.pop();
+        if (screenStack.isEmpty()) {
+            setScreen(screens.get(Screens.MAIN_MENU));
+        } else {
+            setScreen(screenStack.peek());
+        }
+    }
+
+    /**
+     * Clears the stack of screens. Every screen in the stack is removed and
+     * the main menu gets as the current screen visible.
+     *
+     * @since 0.3.0
+     */
+    public void clearStack() {
+        screenStack.clear();
+        setScreen(screens.get(Screens.MAIN_MENU));
     }
 
     /**
