@@ -27,6 +27,7 @@ import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.listeners.ScreenJumper;
+import es.danirod.rectball.listeners.ScreenPopper;
 
 public class GameOverScreen extends AbstractScreen {
 
@@ -61,12 +62,12 @@ public class GameOverScreen extends AbstractScreen {
 
         // Add replay button.
         TextButton replay = new TextButton(game.getLocale().get("game.replay"), game.getSkin());
-        replay.addCaptureListener(new ScreenJumper(game, Screens.GAME));
+        replay.addListener(new ScreenPopper(game));
         table.add(replay).colspan(2).fillX().height(100).padTop(30).row();
 
         // Add menu button.
         TextButton menu = new TextButton(game.getLocale().get("game.menu"), game.getSkin());
-        menu.addCaptureListener(new ScreenJumper(game, Screens.MAIN_MENU));
+        menu.addListener(new ScreenPopper(game, true));
         table.add(menu).colspan(2).fillX().height(100).padTop(30).row();
 
         // Now animate the stage to make it fall.
