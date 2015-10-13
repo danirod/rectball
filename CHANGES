@@ -1,5 +1,6 @@
 [Already tracked for next release]
 - Prevents turning off Android screen.
+- Fixed game resuming when it should not (bug #33)
 - Fixed some translations.
 - Pressing Back key no more unexpectedly closes the game.
 - Settings screen is slightly different.
