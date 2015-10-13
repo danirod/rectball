@@ -7,13 +7,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.*;
 import es.danirod.rectball.RectballGame;
 
 /**
@@ -40,6 +38,23 @@ public class RectballSkin extends Skin {
         addWindowStyles();
         addNinePatchesStyles();
         addTextureRegionStyles();
+        addCheckboxStyles();
+    }
+
+    private void addCheckboxStyles() {
+        Texture sheet = game.manager.get("ui/switch.png");
+        int width = sheet.getWidth();
+        int height = sheet.getHeight() / 3;
+        TextureRegion broken = new TextureRegion(sheet, 0, 0, width, height);
+        TextureRegion on = new TextureRegion(sheet, 0, height, width, height);
+        TextureRegion off = new TextureRegion(sheet, 0, 2 * height, width, height);
+
+        CheckBox.CheckBoxStyle style = new CheckBox.CheckBoxStyle();
+        style.checkboxOn = new TextureRegionDrawable(on);
+        style.checkboxOff = new TextureRegionDrawable(off);
+        style.checkboxOnDisabled = style.checkboxOffDisabled = new TextureRegionDrawable(broken);
+        style.font = game.manager.get("normalFont.ttf");
+        add("default", style);
     }
 
     /**
