@@ -18,6 +18,7 @@
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -31,7 +32,7 @@ import static es.danirod.rectball.Constants.STAGE_PADDING;
 public class MainMenuScreen extends AbstractScreen {
 
     public MainMenuScreen(RectballGame game) {
-        super(game);
+        super(game, false);
     }
 
     @Override
@@ -65,6 +66,10 @@ public class MainMenuScreen extends AbstractScreen {
         // overrides default to provide a
         // way to quit the game
         Gdx.input.setCatchBackKey(false);
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
+            Gdx.app.exit();
+        }
     }
 
     @Override
