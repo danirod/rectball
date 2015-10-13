@@ -17,16 +17,15 @@
  */
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.utils.SoundPlayer;
 
 import static es.danirod.rectball.Constants.STAGE_PADDING;
 import static es.danirod.rectball.Constants.VIEWPORT_HEIGHT;
@@ -42,6 +41,12 @@ public abstract class AbstractScreen implements Screen {
 
     protected RectballGame game;
 
+    /**
+     * Whether the default BACK/ESCAPE button handler should be used or not.
+     * @since 0.3.0
+     */
+    private boolean handleBack;
+
     /** Common stage. */
     private Stage stage;
 
@@ -49,7 +54,12 @@ public abstract class AbstractScreen implements Screen {
     private Table table;
 
     public AbstractScreen(RectballGame game) {
+        this(game, true);
+    }
+
+    public AbstractScreen(RectballGame game, boolean handleBack) {
         this.game = game;
+        this.handleBack = handleBack;
     }
 
     @Override
@@ -103,7 +113,14 @@ public abstract class AbstractScreen implements Screen {
         setUpInterface(table);
 
         Gdx.input.setCatchBackKey(true);
-        Gdx.input.setInputProcessor(stage);
+        if (handleBack) {
+            InputMultiplexer multiplexer = new InputMultiplexer();
+            multiplexer.addProcessor(new BackButtonInputProcessor(game));
+            multiplexer.addProcessor(stage);
+            Gdx.input.setInputProcessor(multiplexer);
+        } else {
+            Gdx.input.setInputProcessor(stage);
+        }
     }
 
     @Override
@@ -120,5 +137,29 @@ public abstract class AbstractScreen implements Screen {
 
     public Stage getStage() {
         return stage;
+    }
+
+    private class BackButtonInputProcessor extends InputAdapter {
+
+        private RectballGame game;
+
+        public BackButtonInputProcessor(RectballGame game) {
+            this.game = game;
+        }
+
+        @Override
+        public boolean keyDown(int keycode) {
+            return keycode == Input.Keys.ESCAPE || keycode == Input.Keys.BACK;
+        }
+
+        @Override
+        public boolean keyUp(int keycode) {
+            if (keycode == Input.Keys.ESCAPE || keycode == Input.Keys.BACK) {
+                game.player.playSound(SoundPlayer.SoundCode.FAIL);
+                game.popScreen();
+                return true;
+            }
+            return false;
+        }
     }
 }

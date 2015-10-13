@@ -69,7 +69,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     private boolean timeout;
 
     public GameScreen(RectballGame game) {
-        super(game);
+        super(game, false);
     }
 
     /**

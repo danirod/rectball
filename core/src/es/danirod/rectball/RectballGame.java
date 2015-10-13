@@ -227,9 +227,9 @@ public class RectballGame extends Game {
      * @since 0.3.0
      */
     public void popScreen() {
-        screenStack.pop();
+        screenStack.removeFirst();
         if (screenStack.isEmpty()) {
-            setScreen(screens.get(Screens.MAIN_MENU));
+            pushScreen(Screens.MAIN_MENU);
         } else {
             setScreen(screenStack.peek());
         }
