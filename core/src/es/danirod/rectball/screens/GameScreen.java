@@ -269,6 +269,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
     @Override
     public void resume() {
+        if (askingLeave) {
+            return;
+        }
+        
         paused = false;
 
         // If the countdown has finished but the game is not running is a

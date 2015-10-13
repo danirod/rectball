@@ -1,6 +1,5 @@
 package es.danirod.rectball.dialogs;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 /**
@@ -9,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
  * way that is dismissible. Client code can still inject a callback to know
  * when the user dismisses the dialog.
  */
-public class MessageDialog extends Dialog {
+public class MessageDialog extends CommonDialog {
 
     public interface MessageCallback {
 
@@ -25,10 +24,8 @@ public class MessageDialog extends Dialog {
     }
 
     public MessageDialog(Skin skin, String text, String dismissText) {
-        super("", skin);
-
-        pad(20);
-        text(text).button(dismissText, "dismiss");
+        super(skin, text);
+        button(dismissText, "dismiss");
     }
 
     public void setCallback(MessageCallback callback) {
@@ -44,4 +41,6 @@ public class MessageDialog extends Dialog {
         cancel();
         hide(null);
     }
+
+
 }

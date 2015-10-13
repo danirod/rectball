@@ -1,12 +1,11 @@
 package es.danirod.rectball.dialogs;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 /**
  * A generic confirmation dialog based on Scene2D.UI's Dialog class.
  */
-public class ConfirmDialog extends Dialog {
+public class ConfirmDialog extends CommonDialog {
 
     /**
      * This is the callback class that will subscribe to events happening in
@@ -28,9 +27,9 @@ public class ConfirmDialog extends Dialog {
     }
 
     public ConfirmDialog(Skin skin, String text, String okText, String cancelText) {
-        super("", skin);
-        pad(20);
-        text(text).button(okText, "ok").button(cancelText, "cancel");
+        super(skin, text);
+        button(okText, "ok").button(cancelText, "cancel");
+
     }
 
     public void setCallback(ConfirmCallback callback) {
