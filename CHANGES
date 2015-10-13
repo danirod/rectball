@@ -1,0 +1,25 @@
+[Already tracked for next release]
+- Prevents turning off Android screen.
+- Fixed some translations.
+- Pressing Back key no more unexpectedly closes the game.
+- Settings screen is slightly different.
+- Pressing Back on a submenu will return to the main menu.
+
+[0.2.0b]
+- Fix bug on game not running on Linux.
+
+[0.2.0]
+- New look and feel for the game. Everything has been changed.
+- Changed the game over animation to one that everybody seems to like.
+- Change the score from 6 digits to 4. I don't expect reaching 10000 points.
+- Added translations. Available languages: English, Spanish.
+- Added statistics. They will track your progress.
+- Internal refactor. Performance of the game should have improved.
+
+[0.1.1]
+- Fixed: the timer has restored to 30 seconds.
+- Added a score system. Will show your high score on game over.
+- Changed again the game over screen.
+
+[0.1.0]
+- First BETA release.
