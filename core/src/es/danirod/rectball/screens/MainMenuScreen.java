@@ -17,6 +17,7 @@
  */
 package es.danirod.rectball.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -55,6 +56,15 @@ public class MainMenuScreen extends AbstractScreen {
         settings.addCaptureListener(new ScreenJumper(game, Screens.SETTINGS));
         statistics.addCaptureListener(new ScreenJumper(game, Screens.STATISTICS));
         about.addCaptureListener(new ScreenJumper(game, Screens.ABOUT));
+    }
+
+    @Override
+    public void show() {
+        super.show();
+
+        // overrides default to provide a
+        // way to quit the game
+        Gdx.input.setCatchBackKey(false);
     }
 
     @Override
