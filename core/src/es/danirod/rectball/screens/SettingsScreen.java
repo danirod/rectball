@@ -17,15 +17,13 @@
  */
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.actors.Switch;
+import es.danirod.rectball.actors.ui.SwitchActor;
+import es.danirod.rectball.listeners.ScreenJumper;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
 public class SettingsScreen extends AbstractScreen {
@@ -38,31 +36,39 @@ public class SettingsScreen extends AbstractScreen {
     public void setUpInterface(Table table) {
         // Build stage entities.
         TextButton backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());
+        final SwitchActor sound = new SwitchActor(game.getLocale().get("settings.sound"), game.getSkin());
+        final SwitchActor color = new SwitchActor(game.getLocale().get("settings.colorblind"), game.getSkin());
 
-        Texture switchTex = game.manager.get("ui/switch.png");
-        final Switch soundSwitch = new Switch(switchTex, game.settings.isSoundEnabled(), false);
-        final Switch colorSwitch = new Switch(switchTex, game.settings.isColorblind(), false);
+        sound.setChecked(game.settings.isSoundEnabled());
+        color.setChecked(game.settings.isColorblind());
 
-        table.pad(20);
-        table.add(new Label(game.getLocale().get("main.settings"), game.getSkin(), "bold")).expandX().align(Align.center).colspan(2).height(100).row();
-        table.add(new Label(game.getLocale().get("settings.sound"), game.getSkin())).expandX().align(Align.left).height(100);
-        table.add(soundSwitch).width(150).height(50).row();
-        table.add(new Label(game.getLocale().get("settings.colorblind"), game.getSkin())).expandX().align(Align.left).height(100);
-        table.add(colorSwitch).width(150).height(50).row();
-        table.add(backButton).fillX().expandY().height(80).padTop(20).align(Align.bottom).colspan(2).row();
-
-        backButton.addCaptureListener(new ChangeListener() {
+        sound.addListener(new ChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                game.settings.setSoundEnabled(soundSwitch.isEnabled());
-                game.settings.setColorblind(colorSwitch.isEnabled());
-                game.player.playSound(SoundCode.FAIL);
-
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                game.settings.setSoundEnabled(sound.isChecked());
                 game.settings.save();
-                game.updateBallAtlas();
-                game.setScreen(Screens.MAIN_MENU);
+                game.player.playSound(SoundCode.SELECT);
             }
         });
+
+        color.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                game.settings.setColorblind(color.isChecked());
+                game.settings.save();
+                game.updateBallAtlas();
+                game.player.playSound(SoundCode.SELECT);
+            }
+        });
+
+        table.add(new Label(game.getLocale().get("main.settings"), game.getSkin(), "bold")).expandX().align(Align.center).height(100).row();
+
+        table.add(sound).fillX().row();
+        table.add(color).fillX().row();
+
+        table.add(backButton).fillX().expandY().height(80).padTop(20).align(Align.bottom).row();
+
+        backButton.addCaptureListener(new ScreenJumper(game, Screens.MAIN_MENU));
     }
 
     @Override
