@@ -89,7 +89,7 @@ public class RectballGame extends Game {
         // Load the resources.
         manager = createManager();
         screens.get(Screens.LOADING).load();
-        setScreen(Screens.LOADING);
+        setScreen(screens.get(Screens.LOADING));
     }
 
     public void finishLoading() {
@@ -204,16 +204,6 @@ public class RectballGame extends Game {
     @Override
     public void dispose() {
         manager.dispose();
-    }
-
-    /**
-     * Show the screen with this ID.
-     * @deprecated use the stack
-     * @param id  the ID of the screen to use.
-     */
-    @Deprecated
-    public void setScreen(int id) {
-        this.setScreen(screens.get(id));
     }
 
     /**
