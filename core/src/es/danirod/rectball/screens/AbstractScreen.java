@@ -101,6 +101,8 @@ public abstract class AbstractScreen implements Screen {
     public void show() {
         table.clear();
         setUpInterface(table);
+
+        Gdx.input.setCatchBackKey(true);
         Gdx.input.setInputProcessor(stage);
     }
 

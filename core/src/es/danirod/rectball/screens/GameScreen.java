@@ -117,9 +117,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     public void show() {
         super.show();
 
-        // Capture Back button so that the game doesn't minimize on Android.
-        Gdx.input.setCatchBackKey(true);
-
         // Reset data
         game.getState().reset();
         paused = running = countdownFinished = askingLeave = timeout = false;
