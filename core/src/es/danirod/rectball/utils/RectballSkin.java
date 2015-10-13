@@ -104,7 +104,27 @@ public class RectballSkin extends Skin {
     }
 
     private void addWindowStyles() {
-        Drawable background = newDrawable("pixel", 0.3f, 0.3f, 0.3f, 1);
+        final Color backgroundColor = new Color(0, 0.3f, 0.6f, 1f);
+        final Color borderColor = new Color(backgroundColor).lerp(Color.WHITE, 0.2f);
+        final int borderBorder = 4;
+        final int borderWidth = 4;
+
+        final int pixmapSize = 2 * (borderBorder + borderWidth) + 1;
+
+        Pixmap windowBackground = new Pixmap(pixmapSize, pixmapSize, Pixmap.Format.RGBA8888);
+
+        windowBackground.setColor(backgroundColor);
+        windowBackground.fill();
+
+        windowBackground.setColor(borderColor);
+        windowBackground.fillRectangle(borderBorder, borderBorder, pixmapSize - 2 * borderBorder, pixmapSize - 2 * borderBorder);
+
+        windowBackground.setColor(backgroundColor);
+        windowBackground.fillRectangle(borderBorder + borderWidth, borderBorder + borderWidth, pixmapSize - 2 * (borderBorder + borderWidth), pixmapSize - 2 * (borderBorder + borderWidth));
+
+        Texture backgroundWindow = new Texture(windowBackground);
+        NinePatch backgroundPatch = new NinePatch(backgroundWindow, borderBorder + borderWidth, borderBorder + borderWidth, borderBorder + borderWidth, borderBorder + borderWidth);
+        Drawable background = new NinePatchDrawable(backgroundPatch);
         BitmapFont font = game.manager.get("normalFont.ttf");
         WindowStyle window = new WindowStyle(font, Color.WHITE, background);
         add("default", window);
