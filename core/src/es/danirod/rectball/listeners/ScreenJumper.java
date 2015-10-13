@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.utils.SoundPlayer;
 
 public class ScreenJumper extends ChangeListener {
 
@@ -23,7 +24,8 @@ public class ScreenJumper extends ChangeListener {
             TextButton button = (TextButton)actor;
             button.setChecked(false);
         }
-        
+
+        game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
         game.pushScreen(target);
     }
 
