@@ -69,7 +69,7 @@ public class SettingsScreen extends AbstractScreen {
 
         table.add(backButton).fillX().expandY().height(80).padTop(20).align(Align.bottom).row();
 
-        backButton.addCaptureListener(new ScreenPopper(game));
+        backButton.addListener(new ScreenPopper(game));
     }
 
     @Override

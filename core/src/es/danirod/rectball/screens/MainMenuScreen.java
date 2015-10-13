@@ -52,10 +52,10 @@ public class MainMenuScreen extends AbstractScreen {
         table.add(about).padBottom(STAGE_PADDING).fillX().height(100).row();
 
         // Then add the capture listeners for the buttons.
-        play.addCaptureListener(new ScreenJumper(game, Screens.GAME));
-        settings.addCaptureListener(new ScreenJumper(game, Screens.SETTINGS));
-        statistics.addCaptureListener(new ScreenJumper(game, Screens.STATISTICS));
-        about.addCaptureListener(new ScreenJumper(game, Screens.ABOUT));
+        play.addListener(new ScreenJumper(game, Screens.GAME));
+        settings.addListener(new ScreenJumper(game, Screens.SETTINGS));
+        statistics.addListener(new ScreenJumper(game, Screens.STATISTICS));
+        about.addListener(new ScreenJumper(game, Screens.ABOUT));
     }
 
     @Override

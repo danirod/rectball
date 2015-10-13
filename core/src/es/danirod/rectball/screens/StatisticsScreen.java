@@ -35,7 +35,7 @@ public class StatisticsScreen extends AbstractScreen {
 
         TextButton backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());
         table.add(backButton).fillX().expandY().height(80).padTop(20).align(Align.bottom).row();
-        backButton.addCaptureListener(new ScreenPopper(game));
+        backButton.addListener(new ScreenPopper(game));
     }
 
     @Override

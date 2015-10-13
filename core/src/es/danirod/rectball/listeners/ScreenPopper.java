@@ -19,14 +19,11 @@ public class ScreenPopper extends ChangeListener {
 
     @Override
     public void changed(ChangeEvent event, Actor actor) {
-        // If the actor is a TextButton, we need to uncheck it.
-        if (actor instanceof TextButton) {
-            TextButton button = (TextButton)actor;
-            button.setChecked(false);
-        }
-
         game.player.playSound(SoundPlayer.SoundCode.FAIL);
         game.popScreen();
+
+        // Cancel the event to avoid checking the actor
+        event.cancel();
     }
 
 
