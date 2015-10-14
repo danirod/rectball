@@ -166,17 +166,23 @@ public class BoardActor extends Table {
         return resizeBalls(bounds, 1, 0.15f);
     }
 
-    public void shake(float shakiness) {
-        shake(new Bounds(0, 0, board.getSize() - 1, board.getSize() - 1), shakiness);
+    public Action shake(float shakiness, int times) {
+        return shake(new Bounds(0, 0, board.getSize() - 1, board.getSize() - 1), shakiness, times);
     }
 
-    public void shake(Bounds region, float shakiness) {
-        for (int y = region.minY; y <= region.maxY; y++)
-            for (int x = region.minX; x <= region.maxX; x++)
-                actors[x][y].addAction(Actions.repeat(5, Actions.sequence(
-                        Actions.moveBy(shakiness / 2, 0, 0.05f),
-                        Actions.moveBy(-shakiness, 0, 0.1f),
-                        Actions.moveBy(shakiness / 2, 0, 0.05f)
-                )));
+    public Action shake(final Bounds region, final float shakiness, final int times) {
+        Action shakingAction = Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                for (int y = region.minY; y <= region.maxY; y++)
+                    for (int x = region.minX; x <= region.maxX; x++)
+                        actors[x][y].addAction(Actions.repeat(times, Actions.sequence(
+                                Actions.moveBy(shakiness / 2, 0, 0.05f),
+                                Actions.moveBy(-shakiness, 0, 0.1f),
+                                Actions.moveBy(shakiness / 2, 0, 0.05f)
+                        )));
+            }
+        });
+        return Actions.sequence(shakingAction, Actions.delay(times * 0.2f));
     }
 }
