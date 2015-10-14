@@ -137,6 +137,24 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             }
         });
 
+        // Put this colors in the board.
+        String[] wrongBoard = {
+                "BYRGYY", "RGBYBY", "GGRYGR", "GGYGBB", "YBBBRG", "RGYYRB"
+        };
+
+        // Set the board color to the array.
+        for (int y = 0; y < wrongBoard.length; y++) {
+            for (int x = 0; x < wrongBoard.length; x++) {
+                BallColor color = null;
+                switch (wrongBoard[y].charAt(x)) {
+                    case 'Y': color = BallColor.YELLOW; break;
+                    case 'R': color = BallColor.RED; break;
+                    case 'B': color = BallColor.BLUE; break;
+                    case 'G': color = BallColor.GREEN; break;
+                }
+                board.getBall(x, wrongBoard.length - y - 1).getBall().setColor(color);
+            }
+        }
     }
 
     /**
@@ -200,7 +218,29 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 new Coordinate(bounds.minX, bounds.minY),
                 new Coordinate(bounds.maxX, bounds.maxY));
 
-        // Show board again.
+        // Check the new board for valid combinations.
+        CombinationFinder newFinder = new CombinationFinder(game.getState().getBoard());
+        if (newFinder.getPossibleBounds().size() == 1) {
+            // Only one combination? This is trouble.
+            Bounds newCombinationBounds = newFinder.getCombination();
+            if (newCombinationBounds.equals(bounds)) {
+                // Oh, oh, in the same spot! So, they must be of the same color.
+                // Therefore, we need to randomize some balls to avoid enter
+                // an infinite loop.
+                timer.setRunning(false);
+                board.setColoured(false);
+                game.getState().resetBoard();
+                board.addAction(Actions.sequence(
+                        board.shake(10, 5),
+                        Actions.run(new Runnable() {
+                            @Override
+                            public void run() {
+                                board.setColoured(true);
+                                timer.setRunning(true);
+                            }
+                        })));
+            }
+        }
         board.addAction(board.showRegion(bounds));
     }
 
@@ -383,14 +423,14 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         board.addAction(Actions.sequence(
                 board.hideRegion(bounds),
                 Actions.run(new Runnable() {
-                                @Override
-                                public void run() {
-                                    for (BallActor selectedBall : selection) {
-                                        selectedBall.setColor(Color.WHITE);
-                                    }
-                                    generate(bounds);
-                                }
-                            })
+                    @Override
+                    public void run() {
+                        for (BallActor selectedBall : selection) {
+                            selectedBall.setColor(Color.WHITE);
+                        }
+                        generate(bounds);
+                    }
+                })
         ));
 
         // You deserve some score and extra time.
