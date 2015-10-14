@@ -54,7 +54,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         public void run() {
             CombinationFinder finder = new CombinationFinder(game.getState().getBoard());
             for (Bounds bounds : finder.getPossibleBounds()) {
-                board.shake(bounds, 10);
+                board.addAction(board.shake(bounds, 10, 5, 0.1f));
             }
         }
     };

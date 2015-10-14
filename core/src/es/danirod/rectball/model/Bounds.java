@@ -46,4 +46,27 @@ public class Bounds {
     public boolean inBounds(int x, int y) {
         return (x >= minX && x <= maxX) && (y >= minY && y <= maxY);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Bounds bounds = (Bounds) o;
+
+        if (minX != bounds.minX) return false;
+        if (minY != bounds.minY) return false;
+        if (maxX != bounds.maxX) return false;
+        return maxY == bounds.maxY;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = minX;
+        result = 31 * result + minY;
+        result = 31 * result + maxX;
+        result = 31 * result + maxY;
+        return result;
+    }
 }

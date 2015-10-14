@@ -136,7 +136,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 }
             }
         });
-
     }
 
     /**
@@ -184,6 +183,46 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                     }
                 })
         ));
+    }
+
+    /**
+     * Generate new colors. This method is executed by the callback action
+     * when the player selects a valid rectangle. The purpose of this method
+     * is to regenerate the board and apply any required checks to make sure
+     * that the game doesn't enter in an infinite loop.
+     *
+     * @param bounds  the bounds that have to be regenerated.
+     */
+    private void generate(Bounds bounds) {
+        // Generate new balls;
+        game.getState().getBoard().randomize(
+                new Coordinate(bounds.minX, bounds.minY),
+                new Coordinate(bounds.maxX, bounds.maxY));
+
+        // Check the new board for valid combinations.
+        CombinationFinder newFinder = new CombinationFinder(game.getState().getBoard());
+        if (newFinder.getPossibleBounds().size() == 1) {
+            // Only one combination? This is trouble.
+            Bounds newCombinationBounds = newFinder.getCombination();
+            if (newCombinationBounds.equals(bounds)) {
+                // Oh, oh, in the same spot! So, they must be of the same color.
+                // Therefore, we need to randomize some balls to avoid enter
+                // an infinite loop.
+                timer.setRunning(false);
+                board.setColoured(false);
+                game.getState().resetBoard();
+                board.addAction(Actions.sequence(
+                        board.shake(10, 5, 0.05f),
+                        Actions.run(new Runnable() {
+                            @Override
+                            public void run() {
+                                board.setColoured(true);
+                                timer.setRunning(true);
+                            }
+                        })));
+            }
+        }
+        board.addAction(board.showRegion(bounds));
     }
 
     private void showPartialScore(int score, Bounds bounds) {
@@ -370,12 +409,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                         for (BallActor selectedBall : selection) {
                             selectedBall.setColor(Color.WHITE);
                         }
-                        game.getState().getBoard().randomize(
-                                new Coordinate(bounds.minX, bounds.minY),
-                                new Coordinate(bounds.maxX, bounds.maxY));
+                        generate(bounds);
                     }
-                }),
-                board.showRegion(bounds)
+                })
         ));
 
         // You deserve some score and extra time.
