@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 
 import java.util.*;
+import java.util.List;
 
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.statistics.StatisticSet;
@@ -105,21 +106,28 @@ public class StatsTable extends Table {
         }
 
         // Put the data in a TreeMap. TreeMaps keep order. Use reverse to show biggers on left.
-        Map<Integer, String> colorScore = new TreeMap<>(Collections.reverseOrder());
-        colorScore.put(game.statistics.getColorData().getValue("red"), "red");
-        colorScore.put(game.statistics.getColorData().getValue("green"), "green");
-        colorScore.put(game.statistics.getColorData().getValue("blue"), "blue");
-        colorScore.put(game.statistics.getColorData().getValue("yellow"), "yellow");
+        Map<Integer, List<String>> colorScore = new TreeMap<>(Collections.reverseOrder());
+        for (Map.Entry<String, Integer> stat : game.statistics.getColorData().getStats().entrySet()) {
+            if (!colorScore.containsKey(stat.getValue())) {
+                colorScore.put(stat.getValue(), new ArrayList<String>());
+            }
+            colorScore.get(stat.getValue()).add(stat.getKey());
+        }
 
         color.defaults().expandX().fillX().align(Align.center).size(60).padTop(5);
-        for (Map.Entry<Integer, String> entry : colorScore.entrySet()) {
-            color.add(new Image(game.getBallAtlas().findRegion("ball_" + entry.getValue())));
+        for (Map.Entry<Integer, List<String>> entry : colorScore.entrySet()) {
+            for (String ballColor : entry.getValue()) {
+                color.add(new Image(game.getBallAtlas().findRegion("ball_" + ballColor)));
+            }
         }
         color.row();
-        for (Map.Entry<Integer, String> entry : colorScore.entrySet()) {
-            Label label = new Label(entry.getKey().toString(), data);
-            label.setAlignment(Align.center);
-            color.add(label);
+        for (Map.Entry<Integer, List<String>> entry : colorScore.entrySet()) {
+            for (String ballColor : entry.getValue()) {
+                Label label = new Label(entry.getKey().toString(), data);
+                label.setAlignment(Align.center);
+                label.setUserObject(ballColor);
+                color.add(label);
+            }
         }
         color.row();
 
@@ -138,25 +146,28 @@ public class StatsTable extends Table {
             return sizes;
         }
 
-        Map<Integer, String> sizesScore = new TreeMap<>(Collections.reverseOrder());
+        Map<Integer, List<String>> sizesScore = new TreeMap<>(Collections.reverseOrder());
         for (Map.Entry<String, Integer> score : unsortedScores.entrySet()) {
-            sizesScore.put(score.getValue(), score.getKey());
+            if (!sizesScore.containsKey(score.getValue())) {
+                sizesScore.put(score.getValue(), new ArrayList<String>());
+            }
+            sizesScore.get(score.getValue()).add(score.getKey());
         }
 
         int highestValue = -1;
         Drawable bar = game.getSkin().newDrawable("pixel", Color.WHITE);
-        for (Map.Entry<Integer, String> score : sizesScore.entrySet()) {
+        for (Map.Entry<Integer, List<String>> score : sizesScore.entrySet()) {
             // Put the highest value. This should be done using the first item.
             if (highestValue == -1) {
                 highestValue = score.getKey();
             }
 
-            sizes.add(new Label(score.getValue(), data)).align(Align.left).fillX();
-            sizes.add(new Label(score.getKey().toString(), data)).align(Align.right).padRight(10).expandX();
-
-            // Add a bar to the right
-            float percentage = (float) score.getKey() / highestValue;
-            sizes.add(new Image(bar)).width(240 * percentage).padLeft(240 * (1 - percentage)).padBottom(5).fill().row();
+            for (String size : score.getValue()) {
+                float percentage = (float) score.getKey() / highestValue;
+                sizes.add(new Label(size, data)).align(Align.left).fillX();
+                sizes.add(new Label(score.getKey().toString(), data)).align(Align.right).padRight(10).expandX();
+                sizes.add(new Image(bar)).width(240 * percentage).padLeft(240 * (1 - percentage)).padBottom(5).fill().row();
+            }
         }
 
         return sizes;
