@@ -136,25 +136,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 }
             }
         });
-
-        // Put this colors in the board.
-        String[] wrongBoard = {
-                "BYRGYY", "RGBYBY", "GGRYGR", "GGYGBB", "YBBBRG", "RGYYRB"
-        };
-
-        // Set the board color to the array.
-        for (int y = 0; y < wrongBoard.length; y++) {
-            for (int x = 0; x < wrongBoard.length; x++) {
-                BallColor color = null;
-                switch (wrongBoard[y].charAt(x)) {
-                    case 'Y': color = BallColor.YELLOW; break;
-                    case 'R': color = BallColor.RED; break;
-                    case 'B': color = BallColor.BLUE; break;
-                    case 'G': color = BallColor.GREEN; break;
-                }
-                board.getBall(x, wrongBoard.length - y - 1).getBall().setColor(color);
-            }
-        }
     }
 
     /**
@@ -231,7 +212,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 board.setColoured(false);
                 game.getState().resetBoard();
                 board.addAction(Actions.sequence(
-                        board.shake(10, 5),
+                        board.shake(10, 5, 0.05f),
                         Actions.run(new Runnable() {
                             @Override
                             public void run() {
