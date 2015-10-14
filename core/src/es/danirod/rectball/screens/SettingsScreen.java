@@ -35,14 +35,15 @@ public class SettingsScreen extends AbstractScreen {
 
     @Override
     public void setUpInterface(Table table) {
-        // Build stage entities.
-        TextButton backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());
+        table.add(new Label(game.getLocale().get("main.settings"), game.getSkin(), "bold")).expandX().align(Align.top).height(100).row();
+
+        Table settingsTable = new Table();
+        settingsTable.setFillParent(true);
+        settingsTable.defaults().align(Align.top);
+
+        // Sound
         final SwitchActor sound = new SwitchActor(game.getLocale().get("settings.sound"), game.getSkin());
-        final SwitchActor color = new SwitchActor(game.getLocale().get("settings.colorblind"), game.getSkin());
-
         sound.setChecked(game.settings.isSoundEnabled());
-        color.setChecked(game.settings.isColorblind());
-
         sound.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
@@ -51,7 +52,11 @@ public class SettingsScreen extends AbstractScreen {
                 game.player.playSound(SoundCode.SELECT);
             }
         });
+        settingsTable.add(sound).fillX().expandX().row();
 
+        // Color
+        final SwitchActor color = new SwitchActor(game.getLocale().get("settings.colorblind"), game.getSkin());
+        color.setChecked(game.settings.isColorblind());
         color.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
@@ -61,14 +66,21 @@ public class SettingsScreen extends AbstractScreen {
                 game.player.playSound(SoundCode.SELECT);
             }
         });
+        settingsTable.add(color).fillX().expandX().row();
 
-        table.add(new Label(game.getLocale().get("main.settings"), game.getSkin(), "bold")).expandX().align(Align.center).height(100).row();
+        // Do tutorial button.
+        TextButton doTutorial = new TextButton("Play tutorial", game.getSkin());
+        doTutorial.addListener(new ScreenJumper(game, Screens.TUTORIAL));
+        settingsTable.add(doTutorial).padTop(50).height(60).fillX().expandX().row();
 
-        table.add(sound).fillX().row();
-        table.add(color).fillX().row();
+        // Settings pane.
+        ScrollPane.ScrollPaneStyle style = new ScrollPane.ScrollPaneStyle();
+        ScrollPane pane = new ScrollPane(settingsTable, style);
+        table.add(pane).align(Align.top).expand().fill().row();
 
-        table.add(backButton).fillX().expandY().height(80).padTop(20).align(Align.bottom).row();
-
+        // Back button
+        TextButton backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());
+        table.add(backButton).fillX().height(80).padTop(20).align(Align.bottom).row();
         backButton.addListener(new ScreenPopper(game));
     }
 

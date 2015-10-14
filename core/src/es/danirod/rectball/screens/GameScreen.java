@@ -217,7 +217,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // Create the actors for this screen.
         timer = new TimerActor(Constants.SECONDS, game.getSkin());
         score = new ScoreActor(game.getSkin());
-        board = new BoardActor(this, game.getBallAtlas(), game.getState().getBoard());
+        board = new BoardActor(game.getBallAtlas(), game.getState().getBoard());
 
         // Disable game until countdown ends.
         timer.setRunning(false);

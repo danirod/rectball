@@ -172,22 +172,29 @@ public class TimerActor extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        NinePatch yellowpatch = skin.get("yellowpatch", NinePatch.class);
-        Texture progress = skin.get("progress", Texture.class);
+        Color color = getColor();
 
-        // Render the timer background.
-        batch.setColor(Color.WHITE);
+        batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
+
+        NinePatch yellowpatch = skin.get("yellowpatch", NinePatch.class);
         yellowpatch.draw(batch, getX() - 10, getY() - 10, getWidth() + 20, getHeight() + 20);
+
+        Texture progress = skin.get("progress", Texture.class);
         batch.draw(progress, getX(), getY(), getWidth(), getHeight());
+
 
         // Calculate the remaining percentage of time.
         float percentage = seconds / maxSeconds;
         float remainingSize = getWidth() * percentage;
 
         // Render the remaining time using the appropiate color.
-        Color originalColor = batch.getColor();
-        batch.setColor(percentage < WARNING_TRIGGER ? Color.RED : Color.GREEN);
+        if (percentage < WARNING_TRIGGER) {
+            batch.setColor(color.r, 0, 0, getColor().a);
+        } else {
+            batch.setColor(0, color.g, 0, getColor().a);
+        }
         batch.draw(progress, getX(), getY(), remainingSize, getHeight());
-        batch.setColor(originalColor);
+
+        batch.setColor(color.r, color.g, color.b, color.a);
     }
 }

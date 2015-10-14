@@ -13,10 +13,6 @@ import java.util.*;
 
 public class BoardActor extends Table {
 
-    private GameScreen screen;
-
-    private TextureAtlas atlas;
-
     private final BallActor[][] actors;
 
     private Set<BallActor> selection = new HashSet<>();
@@ -32,9 +28,7 @@ public class BoardActor extends Table {
     /** Is the board coloured? If false, all the balls will be grayed. */
     private boolean coloured = false;
 
-    public BoardActor(GameScreen screen, TextureAtlas atlas, Board board) {
-        this.screen = screen;
-        this.atlas = atlas;
+    public BoardActor(TextureAtlas atlas, Board board) {
         this.board = board;
         this.actors = new BallActor[board.getSize()][board.getSize()];
 
@@ -170,5 +164,19 @@ public class BoardActor extends Table {
 
     public Action showRegion(Bounds bounds) {
         return resizeBalls(bounds, 1, 0.15f);
+    }
+
+    public void shake(float shakiness) {
+        shake(new Bounds(0, 0, board.getSize() - 1, board.getSize() - 1), shakiness);
+    }
+
+    public void shake(Bounds region, float shakiness) {
+        for (int y = region.minY; y <= region.maxY; y++)
+            for (int x = region.minX; x <= region.maxX; x++)
+                actors[x][y].addAction(Actions.repeat(5, Actions.sequence(
+                        Actions.moveBy(shakiness / 2, 0, 0.05f),
+                        Actions.moveBy(-shakiness, 0, 0.1f),
+                        Actions.moveBy(shakiness / 2, 0, 0.05f)
+                )));
     }
 }

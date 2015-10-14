@@ -85,6 +85,7 @@ public class RectballGame extends Game {
         addScreen(new LoadingScreen(this));
         addScreen(new StatisticsScreen(this));
         addScreen(new AboutScreen(this));
+        addScreen(new TutorialScreen(this));
 
         // Load the resources.
         manager = createManager();
@@ -147,7 +148,7 @@ public class RectballGame extends Game {
         // Load TTF font for normal text
         FreeTypeFontLoaderParameter normalFont = new FreeTypeFontLoaderParameter();
         normalFont.fontFileName = "fonts/Play-Regular.ttf";
-        normalFont.fontParameters.size = 48;
+        normalFont.fontParameters.size = 36;
         normalFont.fontParameters.minFilter = TextureFilter.Linear;
         normalFont.fontParameters.magFilter = TextureFilter.Linear;
         normalFont.fontParameters.shadowOffsetX = 2;
@@ -157,7 +158,7 @@ public class RectballGame extends Game {
         // Load TTF font for bold text
         FreeTypeFontLoaderParameter boldFont = new FreeTypeFontLoaderParameter();
         boldFont.fontFileName = "fonts/Play-Bold.ttf";
-        boldFont.fontParameters.size = 48;
+        boldFont.fontParameters.size = 36;
         boldFont.fontParameters.minFilter = TextureFilter.Linear;
         boldFont.fontParameters.magFilter = TextureFilter.Linear;
         boldFont.fontParameters.shadowOffsetX = 2;
@@ -167,7 +168,7 @@ public class RectballGame extends Game {
         // Load TTF font for big text
         FreeTypeFontLoaderParameter bigFont = new FreeTypeFontLoaderParameter();
         bigFont.fontFileName = "fonts/Play-Regular.ttf";
-        bigFont.fontParameters.size = 64;
+        bigFont.fontParameters.size = 44;
         bigFont.fontParameters.minFilter = TextureFilter.Linear;
         bigFont.fontParameters.magFilter = TextureFilter.Linear;
         bigFont.fontParameters.borderWidth = 2;
@@ -178,7 +179,7 @@ public class RectballGame extends Game {
         // Load TTF font for small text
         FreeTypeFontLoaderParameter smallFont = new FreeTypeFontLoaderParameter();
         smallFont.fontFileName = "fonts/Play-Regular.ttf";
-        smallFont.fontParameters.size = 36;
+        smallFont.fontParameters.size = 28;
         smallFont.fontParameters.minFilter = TextureFilter.Linear;
         smallFont.fontParameters.magFilter = TextureFilter.Linear;
         manager.load("smallFont.ttf", BitmapFont.class, smallFont);
