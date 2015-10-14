@@ -1,4 +1,5 @@
 [Already tracked for next release]
+- A tutorial has been added on first start.
 - Prevents turning off Android screen.
 - Fixed game resuming when it should not (bug #33)
 - Fixed some translations.
