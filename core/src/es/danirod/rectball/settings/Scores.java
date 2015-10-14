@@ -17,9 +17,6 @@
  */
 package es.danirod.rectball.settings;
 
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonWriter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +27,8 @@ public class Scores {
     private long lastScore;
 
     private long highestScore;
+
+    private int highestTime;
 
     private long totalScore;
 
@@ -57,6 +56,11 @@ public class Scores {
         scores.add(score);
     }
 
+    public void addTime(float time) {
+        int intTime = Math.round(time);
+        highestTime = Math.max(intTime, highestTime);
+    }
+
     public long getTotalScore() {
         return totalScore;
     }
@@ -71,5 +75,13 @@ public class Scores {
 
     public List<Long> getScores() {
         return scores;
+    }
+
+    public int getHighestTime() {
+        return highestTime;
+    }
+
+    public void setHighestTime(int highestTime) {
+        this.highestTime = highestTime;
     }
 }

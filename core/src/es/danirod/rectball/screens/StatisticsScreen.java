@@ -1,5 +1,6 @@
 package es.danirod.rectball.screens;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -31,6 +32,7 @@ public class StatisticsScreen extends AbstractScreen {
         StatsTable statsTable = new StatsTable(game, bold, normal);
         ScrollPane.ScrollPaneStyle style = new ScrollPane.ScrollPaneStyle();
         ScrollPane pane = new ScrollPane(statsTable, style);
+        pane.setForceScroll(false, true);
         table.add(pane).align(Align.topLeft).expand().fill().row();
 
         TextButton backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());

@@ -340,15 +340,14 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         board.setColoured(true);
         board.setTouchable(Touchable.disabled);
         timer.setRunning(false);
+        game.player.playSound(SoundCode.GAME_OVER);
 
         // Update the score... and the record.
         game.scores.addScore(game.getState().getScore());
-        timer.setRunning(false);
-        game.player.playSound(SoundCode.GAME_OVER);
+        game.scores.addTime(game.getState().getTime());
+        ScoreIO.save(game.scores);
 
         // Save information about this game in the statistics.
-        game.scores.addScore(game.getState().getScore());
-        ScoreIO.save(game.scores);
         game.statistics.getTotalData().incrementValue("score", game.getState().getScore());
         game.statistics.getTotalData().incrementValue("games");
         game.statistics.getTotalData().incrementValue("time", Math.round(game.getState().getTime()));
