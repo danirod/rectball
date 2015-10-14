@@ -39,16 +39,29 @@ public class StatsTable extends Table {
         Table best = new Table();
         best.add(new Label(game.getLocale().get("statistics.best"), this.title)).colspan(2).row();
 
+        boolean printedSomething = false;
         // Add best score.
-        String bestScore = Long.toString(game.scores.getHighestScore());
-        best.add(new Label(game.getLocale().get("statistics.best.score"), data)).align(Align.left).fillX();
-        best.add(new Label(bestScore, data)).align(Align.right).expandX().row();
+        if (game.scores.getHighestScore() != 0) {
+            String bestScore = Long.toString(game.scores.getHighestScore());
+            best.add(new Label(game.getLocale().get("statistics.best.score"), data)).align(Align.left).fillX();
+            best.add(new Label(bestScore, data)).align(Align.right).expandX().row();
+            printedSomething = true;
+        }
 
         // Add best time.
-        // FIXME: This is not the best time.
-        String bestTime = secondsToTime(game.scores.getHighestTime());
-        best.add(new Label(game.getLocale().get("statistics.best.time"), data)).align(Align.left).fillX();
-        best.add(new Label(bestTime, data)).align(Align.right).expandX().row();
+        if (game.scores.getHighestTime() != 0) {
+            String bestTime = secondsToTime(game.scores.getHighestTime());
+            best.add(new Label(game.getLocale().get("statistics.best.time"), data)).align(Align.left).fillX();
+            best.add(new Label(bestTime, data)).align(Align.right).expandX().row();
+            printedSomething = true;
+        }
+
+        // If everything is 0, don't print anything.
+        if (!printedSomething) {
+            Label noData = new Label(game.getLocale().get("statistics.noData"), game.getSkin());
+            noData.setAlignment(Align.center);
+            best.add(noData).colspan(2).fillX().expandX().padTop(10).padBottom(10).row();
+        }
 
         return best;
     }
@@ -58,6 +71,13 @@ public class StatsTable extends Table {
         total.add(new Label(game.getLocale().get("statistics.total"), this.title)).colspan(2).row();
 
         StatisticSet set = game.statistics.getTotalData();
+        if (set.getStats().isEmpty()) {
+            Label noData = new Label(game.getLocale().get("statistics.noData"), game.getSkin());
+            noData.setAlignment(Align.center);
+            total.add(noData).colspan(2).fillX().expandX().padTop(10).padBottom(10).row();
+            return total;
+        }
+
         for (Map.Entry<String, Integer> stat : set.getStats().entrySet()) {
             String statName = game.getLocale().get("statistics.total." + stat.getKey());
             String statValue = Integer.toString(stat.getValue());
@@ -77,13 +97,19 @@ public class StatsTable extends Table {
         Table color = new Table();
         color.add(new Label(game.getLocale().get("statistics.color"), this.title)).colspan(4).row();
 
+        if (game.statistics.getColorData().getStats().isEmpty()) {
+            Label noData = new Label(game.getLocale().get("statistics.noData"), game.getSkin());
+            noData.setAlignment(Align.center);
+            color.add(noData).colspan(4).fillX().expandX().padTop(10).padBottom(10).row();
+            return color;
+        }
+
         // Put the data in a TreeMap. TreeMaps keep order. Use reverse to show biggers on left.
         Map<Integer, String> colorScore = new TreeMap<>(Collections.reverseOrder());
         colorScore.put(game.statistics.getColorData().getValue("red"), "red");
         colorScore.put(game.statistics.getColorData().getValue("green"), "green");
         colorScore.put(game.statistics.getColorData().getValue("blue"), "blue");
         colorScore.put(game.statistics.getColorData().getValue("yellow"), "yellow");
-
 
         color.defaults().expandX().fillX().align(Align.center).size(60).padTop(5);
         for (Map.Entry<Integer, String> entry : colorScore.entrySet()) {
@@ -102,9 +128,16 @@ public class StatsTable extends Table {
 
     private Table addSizesData() {
         Table sizes = new Table();
-        sizes.add(new Label(game.getLocale().get("statistics.sizes"), this.title)).colspan(4).row();
+        sizes.add(new Label(game.getLocale().get("statistics.sizes"), this.title)).colspan(3).row();
 
         Map<String, Integer> unsortedScores = game.statistics.getSizesData().getStats();
+        if (unsortedScores.isEmpty()) {
+            Label noData = new Label(game.getLocale().get("statistics.noData"), game.getSkin());
+            noData.setAlignment(Align.center);
+            sizes.add(noData).colspan(3).fillX().expandX().padTop(10).padBottom(10).row();
+            return sizes;
+        }
+
         Map<Integer, String> sizesScore = new TreeMap<>(Collections.reverseOrder());
         for (Map.Entry<String, Integer> score : unsortedScores.entrySet()) {
             sizesScore.put(score.getValue(), score.getKey());
