@@ -54,15 +54,18 @@ public class ScoreActor extends Group {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        Color color = getColor();
         // Draw the background.
-        batch.setColor(Color.WHITE);
+
+        batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
         NinePatch yellowpatch = skin.get("yellowpatch", NinePatch.class);
         yellowpatch.draw(batch, getX() - 10, getY() - 10, getWidth() + 20, getHeight() + 20);
 
         // Draw the black background.
         background.draw(batch, getX(), getY(), getWidth(), getHeight());
-
         super.draw(batch, parentAlpha);
+
+        batch.setColor(color.r, color.g, color.b, color.a);
     }
 
     /**

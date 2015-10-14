@@ -25,6 +25,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Scaling;
 import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.dialogs.ConfirmDialog;
+import es.danirod.rectball.dialogs.MessageDialog;
 import es.danirod.rectball.listeners.ScreenJumper;
 
 import static es.danirod.rectball.Constants.STAGE_PADDING;
@@ -70,10 +72,40 @@ public class MainMenuScreen extends AbstractScreen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
             Gdx.app.exit();
         }
+
+        // On first run, show the tutorial.
+        if (!game.settings.isTutorialAsked()) {
+            askTutorial().show(getStage());
+        }
     }
 
     @Override
     public int getID() {
         return Screens.MAIN_MENU;
+    }
+
+    private ConfirmDialog askTutorial() {
+        String message = game.getLocale().get("main.askTutorial");
+        String yes = game.getLocale().get("core.yes");
+        String no = game.getLocale().get("core.no");
+        ConfirmDialog dialog = new ConfirmDialog(game.getSkin(), message, yes, no);
+        dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
+            @Override
+            public void ok() {
+                game.pushScreen(Screens.TUTORIAL);
+            }
+
+            @Override
+            public void cancel() {
+                tutorialCancel().show(getStage());
+            }
+        });
+        return dialog;
+    }
+
+    private MessageDialog tutorialCancel() {
+        String message = game.getLocale().get("main.cancelTutorial");
+        MessageDialog dialog = new MessageDialog(game.getSkin(), message);
+        return dialog;
     }
 }

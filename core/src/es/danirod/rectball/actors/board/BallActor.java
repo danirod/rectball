@@ -53,11 +53,6 @@ public class BallActor extends Image {
         setOrigin(getWidth() / 2, getHeight() / 2);
     }
 
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
-    }
-
     public boolean isSelected() {
         return selected;
     }

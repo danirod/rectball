@@ -33,17 +33,22 @@ public class Settings {
     /** Whether colorblind mode is on or not. */
     private boolean colorblind;
 
+    /** Has the tutorial been asked?. */
+    private boolean tutorialAsked;
+
     public Settings(Preferences prefs) {
         this.prefs = prefs;
         this.musicEnabled = prefs.getBoolean("music", true);
         this.soundEnabled = prefs.getBoolean("sound", true);
         this.colorblind = prefs.getBoolean("colorblind", false);
+        this.tutorialAsked = prefs.getBoolean("tutorialAsked", false);
     }
 
     public void save() {
         prefs.putBoolean("music", musicEnabled);
         prefs.putBoolean("sound", soundEnabled);
         prefs.putBoolean("colorblind", colorblind);
+        prefs.putBoolean("tutorialAsked", tutorialAsked);
         prefs.flush();
     }
 
@@ -69,5 +74,13 @@ public class Settings {
 
     public void setColorblind(boolean colorblind) {
         this.colorblind = colorblind;
+    }
+
+    public boolean isTutorialAsked() {
+        return tutorialAsked;
+    }
+
+    public void setTutorialAsked(boolean tutorialAsked) {
+        this.tutorialAsked = tutorialAsked;
     }
 }
