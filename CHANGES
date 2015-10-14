@@ -1,6 +1,7 @@
 [Already tracked for next release]
 - A tutorial has been added on first start.
 - Prevents turning off Android screen.
+- Fixed infinite loop when there is only a 2x2 combination.
 - Fixed game resuming when it should not (bug #33)
 - Fixed some translations.
 - Pressing Back key no more unexpectedly closes the game.
