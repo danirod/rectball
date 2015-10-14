@@ -69,7 +69,7 @@ public class SettingsScreen extends AbstractScreen {
         settingsTable.add(color).fillX().expandX().row();
 
         // Do tutorial button.
-        TextButton doTutorial = new TextButton("Play tutorial", game.getSkin());
+        TextButton doTutorial = new TextButton(game.getLocale().get("settings.playTutorial"), game.getSkin());
         doTutorial.addListener(new ScreenJumper(game, Screens.TUTORIAL));
         settingsTable.add(doTutorial).padTop(50).height(60).fillX().expandX().row();
 
