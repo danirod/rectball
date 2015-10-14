@@ -186,6 +186,24 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         ));
     }
 
+    /**
+     * Generate new colors. This method is executed by the callback action
+     * when the player selects a valid rectangle. The purpose of this method
+     * is to regenerate the board and apply any required checks to make sure
+     * that the game doesn't enter in an infinite loop.
+     *
+     * @param bounds  the bounds that have to be regenerated.
+     */
+    private void generate(Bounds bounds) {
+        // Generate new balls;
+        game.getState().getBoard().randomize(
+                new Coordinate(bounds.minX, bounds.minY),
+                new Coordinate(bounds.maxX, bounds.maxY));
+
+        // Show board again.
+        board.addAction(board.showRegion(bounds));
+    }
+
     private void showPartialScore(int score, Bounds bounds) {
         // Calculate the center of the region.
         BallActor bottomLeftBall = board.getBall(bounds.minX, bounds.minY);
@@ -365,17 +383,14 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         board.addAction(Actions.sequence(
                 board.hideRegion(bounds),
                 Actions.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (BallActor selectedBall : selection) {
-                            selectedBall.setColor(Color.WHITE);
-                        }
-                        game.getState().getBoard().randomize(
-                                new Coordinate(bounds.minX, bounds.minY),
-                                new Coordinate(bounds.maxX, bounds.maxY));
-                    }
-                }),
-                board.showRegion(bounds)
+                                @Override
+                                public void run() {
+                                    for (BallActor selectedBall : selection) {
+                                        selectedBall.setColor(Color.WHITE);
+                                    }
+                                    generate(bounds);
+                                }
+                            })
         ));
 
         // You deserve some score and extra time.
