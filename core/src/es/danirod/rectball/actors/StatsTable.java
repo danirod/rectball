@@ -46,7 +46,7 @@ public class StatsTable extends Table {
 
         // Add best time.
         // FIXME: This is not the best time.
-        String bestTime = secondsToTime(game.statistics.getTotalData().getValue("time"));
+        String bestTime = secondsToTime(game.scores.getHighestTime());
         best.add(new Label(game.getLocale().get("statistics.best.time"), data)).align(Align.left).fillX();
         best.add(new Label(bestTime, data)).align(Align.right).expandX().row();
 
