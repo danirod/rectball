@@ -1,5 +1,6 @@
 [Already tracked for next release]
 - A tutorial has been added on first start.
+- Statistics now display high scores and data is sorted.
 - Prevents turning off Android screen.
 - Fixed infinite loop when there is only a 2x2 combination.
 - Fixed game resuming when it should not (bug #33)
