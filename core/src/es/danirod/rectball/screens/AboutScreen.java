@@ -20,16 +20,20 @@ public class AboutScreen extends AbstractScreen {
 
     @Override
     public void setUpInterface(Table table) {
-        table.pad(20);
-        table.add(new Label(game.getLocale().get("main.about"), game.getSkin(), "bold")).expandX().align(Align.center).height(100).row();
-
-        Label credits = new Label(getCredits(), game.getSkin(), "small");
-        credits.setWrap(true);
-        credits.setFillParent(true);
-
+        // TODO: Move this to the skin.
         ScrollPane.ScrollPaneStyle style = new ScrollPane.ScrollPaneStyle();
-        ScrollPane pane = new ScrollPane(credits, style);
-        table.add(pane).align(Align.topLeft).expand().fill().row();
+
+        table.setDebug(true);
+        table.pad(20);
+
+        Label header = new Label(game.getLocale().get("main.about"), game.getSkin(), "bold");
+        table.add(header).expandX().align(Align.center).height(80).row();
+
+        Table innerContainer = new Table();
+        ScrollPane scroll = new ScrollPane(innerContainer, style);
+        table.add(scroll).expand().fill().align(Align.top).row();
+
+        innerContainer.add(getCreditsWidget()).fill().expand();
 
         TextButton backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());
         table.add(backButton).fillX().expandY().height(80).padTop(20).align(Align.bottom).row();
@@ -40,9 +44,15 @@ public class AboutScreen extends AbstractScreen {
         return RectballGame.VERSION + "\n" + Gdx.files.internal("credits.txt").readString();
     }
 
+    private Widget getCreditsWidget() {
+        String credits = RectballGame.VERSION + "\n" + Gdx.files.internal("credits.txt").readString("UTF-8");
+        Label creditsLabel = new Label(credits, game.getSkin(), "small");
+        creditsLabel.setWrap(true);
+        return creditsLabel;
+    }
+
     @Override
     public int getID() {
         return Screens.ABOUT;
     }
-
 }
