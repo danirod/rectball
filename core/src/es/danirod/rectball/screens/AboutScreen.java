@@ -10,6 +10,7 @@ import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.StatsTable;
 import es.danirod.rectball.listeners.ScreenJumper;
 import es.danirod.rectball.listeners.ScreenPopper;
+import es.danirod.rectball.utils.SoundPlayer;
 
 /**
  * About screen.
@@ -57,6 +58,7 @@ public class AboutScreen extends AbstractScreen {
                     changeButton.setText(game.getLocale().get("about.license"));
                     updateScrollPane();
                 }
+                game.player.playSound(SoundPlayer.SoundCode.SELECT);
                 event.cancel();
             }
         });
