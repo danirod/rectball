@@ -97,6 +97,8 @@ public class MainMenuScreen extends AbstractScreen {
 
             @Override
             public void cancel() {
+                game.settings.setTutorialAsked(true);
+                game.settings.save();
                 tutorialCancel().show(getStage());
             }
         });
