@@ -14,7 +14,7 @@ allprojects {
     apply plugin: "maven"
 
     archivesBaseName = 'rectball'
-    version = '0.3.0-SNAPSHOT'
+    version = '0.3.0'
 
     ext {
         appName = 'Rectball'
@@ -33,7 +33,7 @@ project(":android") {
     ext {
         androidToolsVersion = "22.0.1"
         androidSdkVersion = "22"
-        androidVersionCode = "17"
+        androidVersionCode = "18"
         androidScreenOrientation = "portrait"
     }
 }
