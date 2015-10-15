@@ -131,12 +131,16 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
             cancelTutorial.setCallback(new ConfirmDialog.ConfirmCallback() {
                 @Override
                 public void ok() {
+                    game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
+
                     watchdogTask.cancel();
                     MessageDialog leaveDialog = new MessageDialog(game.getSkin(),
                             game.getLocale().get("main.cancelTutorial"));
                     leaveDialog.setCallback(new MessageDialog.MessageCallback() {
                         @Override
                         public void dismiss() {
+                            game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
+
                             board.addAction(board.showRegion(new Bounds(1, 3, 4, 5)));
                             board.setColoured(false);
                             board.setTouchable(Touchable.disabled);
@@ -168,7 +172,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
 
                 @Override
                 public void cancel() {
-
+                    game.player.playSound(SoundPlayer.SoundCode.FAIL);
                 }
             });
             cancelTutorial.show(getStage());
@@ -218,6 +222,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
                 @Override
                 public void dismiss() {
                     if (dismiss != null) {
+                        game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
                         dismiss.run();
                     }
                 }
