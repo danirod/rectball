@@ -28,6 +28,7 @@ import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.dialogs.ConfirmDialog;
 import es.danirod.rectball.dialogs.MessageDialog;
 import es.danirod.rectball.listeners.ScreenJumper;
+import es.danirod.rectball.utils.SoundPlayer;
 
 import static es.danirod.rectball.Constants.STAGE_PADDING;
 
@@ -92,11 +93,13 @@ public class MainMenuScreen extends AbstractScreen {
         dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
             @Override
             public void ok() {
+                game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
                 game.pushScreen(Screens.TUTORIAL);
             }
 
             @Override
             public void cancel() {
+                game.player.playSound(SoundPlayer.SoundCode.FAIL);
                 game.settings.setTutorialAsked(true);
                 game.settings.save();
                 tutorialCancel().show(getStage());
@@ -108,6 +111,12 @@ public class MainMenuScreen extends AbstractScreen {
     private MessageDialog tutorialCancel() {
         String message = game.getLocale().get("main.cancelTutorial");
         MessageDialog dialog = new MessageDialog(game.getSkin(), message);
+        dialog.setCallback(new MessageDialog.MessageCallback() {
+            @Override
+            public void dismiss() {
+                game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
+            }
+        });
         return dialog;
     }
 }
