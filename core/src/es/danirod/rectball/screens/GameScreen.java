@@ -20,10 +20,10 @@ package es.danirod.rectball.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
@@ -86,6 +86,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             @Override
             public void ok() {
                 // The user wants to leave the game.
+                game.player.playSound(SoundCode.SUCCESS);
                 askingLeave = false;
                 onTimeOut();
             }
@@ -93,19 +94,40 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             @Override
             public void cancel() {
                 // The user wants to resume the game.
+                game.player.playSound(SoundCode.FAIL);
                 askingLeave = false;
                 resume();
             }
         });
 
-        // FIXME: fadeIn action is not working because alpha handling in this
-        // game is a mess at the moment. Fix that mess, then let the Dialog
-        // use the default actions.
-        dialog.show(getStage(), null);
+        dialog.show(getStage());
         askingLeave = true;
-        dialog.setPosition(
-                Math.round((getStage().getWidth() - dialog.getWidth()) / 2),
-                Math.round((getStage().getHeight() - dialog.getHeight()) / 2));
+    }
+
+    private void showPreLeaveDialog() {
+        ConfirmDialog dialog = new ConfirmDialog(game.getSkin(),
+                game.getLocale().get("game.paused"),
+                game.getLocale().get("game.continue"),
+                game.getLocale().get("game.leaveGame"));
+        dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
+            @Override
+            public void ok() {
+                // Continue
+                game.player.playSound(SoundCode.SELECT);
+                askingLeave = false;
+                resume();
+            }
+
+            @Override
+            public void cancel() {
+                // Leave
+                game.player.playSound(SoundCode.SELECT);
+                showLeaveDialog();
+            }
+        });
+
+        dialog.show(getStage());
+        askingLeave = true;
     }
 
     @Override
@@ -274,6 +296,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
     @Override
     public void hide() {
+        // Just in case, remove any dialogs that might be forgotten.
+        for (Actor actor : getStage().getActors()) {
+            if (actor instanceof Dialog) {
+                ((Dialog) actor).hide(null);
+            }
+        }
         // Restore original back button functionality.
         Gdx.input.setCatchBackKey(false);
     }
@@ -291,13 +319,16 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             if (!paused && !timeout) {
                 pause();
-                showLeaveDialog();
             }
         }
     }
 
     @Override
     public void pause() {
+        if (!askingLeave && !timeout) {
+            showPreLeaveDialog();
+        }
+
         paused = true;
         if (running && !timeout) {
             board.setColoured(false);
