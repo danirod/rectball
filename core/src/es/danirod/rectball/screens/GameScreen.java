@@ -86,6 +86,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             @Override
             public void ok() {
                 // The user wants to leave the game.
+                game.player.playSound(SoundCode.SUCCESS);
                 askingLeave = false;
                 onTimeOut();
             }
@@ -93,19 +94,40 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             @Override
             public void cancel() {
                 // The user wants to resume the game.
+                game.player.playSound(SoundCode.FAIL);
                 askingLeave = false;
                 resume();
             }
         });
 
-        // FIXME: fadeIn action is not working because alpha handling in this
-        // game is a mess at the moment. Fix that mess, then let the Dialog
-        // use the default actions.
-        dialog.show(getStage(), null);
+        dialog.show(getStage());
         askingLeave = true;
-        dialog.setPosition(
-                Math.round((getStage().getWidth() - dialog.getWidth()) / 2),
-                Math.round((getStage().getHeight() - dialog.getHeight()) / 2));
+    }
+
+    private void showPreLeaveDialog() {
+        ConfirmDialog dialog = new ConfirmDialog(game.getSkin(),
+                game.getLocale().get("game.paused"),
+                game.getLocale().get("game.continue"),
+                game.getLocale().get("game.leaveGame"));
+        dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
+            @Override
+            public void ok() {
+                // Continue
+                game.player.playSound(SoundCode.SELECT);
+                askingLeave = false;
+                resume();
+            }
+
+            @Override
+            public void cancel() {
+                // Leave
+                game.player.playSound(SoundCode.SELECT);
+                showLeaveDialog();
+            }
+        });
+
+        dialog.show(getStage());
+        askingLeave = true;
     }
 
     @Override
@@ -291,7 +313,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             if (!paused && !timeout) {
                 pause();
-                showLeaveDialog();
+                showPreLeaveDialog();
             }
         }
     }
