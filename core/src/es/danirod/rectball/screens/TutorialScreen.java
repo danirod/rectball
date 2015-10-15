@@ -1,5 +1,7 @@
 package es.danirod.rectball.screens;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -13,6 +15,7 @@ import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.ScoreActor;
 import es.danirod.rectball.actors.TimerActor;
 import es.danirod.rectball.actors.board.*;
+import es.danirod.rectball.dialogs.ConfirmDialog;
 import es.danirod.rectball.dialogs.MessageDialog;
 import es.danirod.rectball.model.*;
 import es.danirod.rectball.utils.SoundPlayer;
@@ -49,6 +52,9 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
     /** The current chapter. */
     private int currentState;
 
+    /** Whether the user should be playing now or not. */
+    private boolean userTime;
+
     private Timer.Task watchdogTask = new Timer.Task() {
         @Override
         public void run() {
@@ -69,6 +75,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         // Reset game state.
         game.getState().resetBoard();
         currentState = 0;
+        userTime = false;
 
         // Fill the states information.
         states = new ArrayList<>();
@@ -112,6 +119,61 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
     public void show() {
         super.show();
         nextState();
+    }
+
+    @Override
+    public void render(float delta) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            ConfirmDialog cancelTutorial = new ConfirmDialog(game.getSkin(),
+                    game.getLocale().get("tutorial.cancel"),
+                    game.getLocale().get("core.yes"),
+                    game.getLocale().get("core.no"));
+            cancelTutorial.setCallback(new ConfirmDialog.ConfirmCallback() {
+                @Override
+                public void ok() {
+                    watchdogTask.cancel();
+                    MessageDialog leaveDialog = new MessageDialog(game.getSkin(),
+                            game.getLocale().get("main.cancelTutorial"));
+                    leaveDialog.setCallback(new MessageDialog.MessageCallback() {
+                        @Override
+                        public void dismiss() {
+                            board.addAction(board.showRegion(new Bounds(1, 3, 4, 5)));
+                            board.setColoured(false);
+                            board.setTouchable(Touchable.disabled);
+
+                            // Animate the transition to game over.
+                            float waitingTime = userTime ? 1.5f : 0;
+                            if (userTime) {
+                                board.addAction(Actions.delay(0.5f, board.hideBoard()));
+                                score.addAction(Actions.delay(0.5f, Actions.fadeOut(0.25f)));
+                            }
+
+                            for (State state : states) {
+                                state.getDialog().hide(null);
+                            }
+
+                            // Head to the game over after all these animations have finished.
+                            getStage().addAction(Actions.delay(waitingTime, Actions.run(new Runnable() {
+                                @Override
+                                public void run() {
+                                    game.settings.setTutorialAsked(true);
+                                    game.settings.save();
+                                    game.popScreen();
+                                }
+                            })));
+                        }
+                    });
+                    leaveDialog.show(getStage());
+                }
+
+                @Override
+                public void cancel() {
+
+                }
+            });
+            cancelTutorial.show(getStage());
+        }
+        super.render(delta);
     }
 
     /** Start the next chapter. */
@@ -173,6 +235,10 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
                 height = Math.round((getStage().getHeight() - dialog.getHeight()) / 2);
             }
             dialog.setPosition(Math.round((getStage().getWidth() - dialog.getWidth()) / 2), height);
+        }
+
+        private MessageDialog getDialog() {
+            return dialog;
         }
     }
 
@@ -281,6 +347,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
             public void run() {
                 // Start the game.
                 board.setTouchable(Touchable.enabled);
+                userTime = true;
                 Timer.schedule(watchdogTask, 8, 4, -2);
             }
         }));
@@ -291,6 +358,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
             public void run() {
                 // Start the game again.
                 board.addAction(board.showRegion(new Bounds(2, 2, 3, 3)));
+                userTime = true;
                 Timer.schedule(watchdogTask, 8, 4, -2);
             }
         }));
@@ -300,6 +368,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
             @Override
             public void run() {
                 board.addAction(board.showRegion(new Bounds(1, 2, 3, 4)));
+                userTime = true;
                 Timer.schedule(watchdogTask, 8, 4, -2);
             }
         }));
@@ -361,6 +430,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         if (watchdogTask.isScheduled()) {
             watchdogTask.cancel();
         }
+        userTime = false;
 
         // Extract the data from the selection.
         List<Ball> balls = new ArrayList<>();
