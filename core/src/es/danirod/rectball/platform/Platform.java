@@ -29,6 +29,10 @@ package es.danirod.rectball.platform;
  */
 public interface Platform {
 
-
+    /**
+     * Get the sharing services instance attached to this platform.
+     * @return  sharing services instance.
+     */
+    SharingServices sharing();
 
 }

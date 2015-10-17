@@ -19,6 +19,7 @@
 package es.danirod.rectball.android;
 
 import es.danirod.rectball.platform.Platform;
+import es.danirod.rectball.platform.SharingServices;
 
 /**
  * This contains code for the Android platform. Here code that uses Android
@@ -29,6 +30,14 @@ import es.danirod.rectball.platform.Platform;
  */
 public class AndroidPlatform implements Platform {
 
+    private final SharingServices sharing;
 
+    protected AndroidPlatform() {
+        sharing = new AndroidSharingServices();
+    }
 
+    @Override
+    public SharingServices sharing() {
+        return sharing;
+    }
 }

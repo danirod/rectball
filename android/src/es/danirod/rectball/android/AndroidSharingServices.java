@@ -16,28 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.desktop;
+package es.danirod.rectball.android;
 
-import es.danirod.rectball.platform.Platform;
-import es.danirod.rectball.platform.SharingServices;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Pixmap;
 
 /**
- * This contains code for desktop platform. Here code that uses desktop JRE
- * or APIs such as Swing can be used. This code won't run on any other
- * platform.
- *
  * @author danirod
  */
-public class DesktopPlatform implements Platform {
+public class AndroidSharingServices implements es.danirod.rectball.platform.SharingServices {
 
-    private SharingServices sharing;
-
-    protected DesktopPlatform() {
-        sharing = new DesktopSharingServices();
+    @Override
+    public void shareScreenshot(Pixmap pixmap) {
+        Gdx.app.debug("SharingServices", "Requested a screenshot");
     }
 
     @Override
-    public SharingServices sharing() {
-        return sharing;
+    public void shareGameOverScreenshot(Pixmap pixmap, int score, int time) {
+        Gdx.app.debug("SharingServices", "Requested a screenshot with score");
     }
 }
