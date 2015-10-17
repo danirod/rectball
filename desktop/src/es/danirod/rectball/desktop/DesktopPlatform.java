@@ -1,6 +1,6 @@
 /*
- * This file is part of Rectball.
- * Copyright (C) 2015 Dani Rodríguez.
+ * This file is part of Rectball
+ * Copyright (C) 2015 Dani Rodríguez
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,21 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball.desktop;
 
-import com.badlogic.gdx.Files;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.platform.Platform;
 
-public class DesktopLauncher {
-	public static void main (String[] arg) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 400;
-		config.height = 640;
-		config.title = RectballGame.VERSION;
-		config.useHDPI = true;
-		config.addIcon("icon.png", Files.FileType.Internal);
-		new LwjglApplication(new RectballGame(new DesktopPlatform()), config);
-	}
+/**
+ * This contains code for desktop platform. Here code that uses desktop JRE
+ * or APIs such as Swing can be used. This code won't run on any other
+ * platform.
+ *
+ * @author danirod
+ */
+public class DesktopPlatform implements Platform {
+
+
+
 }

@@ -34,6 +34,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.utils.I18NBundle;
 import es.danirod.rectball.model.GameState;
+import es.danirod.rectball.platform.Platform;
 import es.danirod.rectball.screens.*;
 import es.danirod.rectball.settings.ScoreIO;
 import es.danirod.rectball.settings.Scores;
@@ -50,6 +51,8 @@ import java.util.*;
 public class RectballGame extends Game {
 
     public static final String VERSION = "Rectball 0.4.0-dev";
+
+    private final Platform platform;
 
     /* FIXME: Privatize this. */
 
@@ -74,6 +77,26 @@ public class RectballGame extends Game {
     private I18NBundle locale;
 
     private Deque<AbstractScreen> screenStack = new ArrayDeque<>();
+
+    /**
+     * Create a new instance of Rectball.
+     *
+     * @param platform  the platform this game is using.
+     */
+    public RectballGame(Platform platform) {
+        this.platform = platform;
+    }
+
+    /**
+     * Get the common platform facade. This lets the application logic request
+     * the platform to do special things such as sharing the score or sending
+     * information.
+     *
+     * @return  the platform this game is using.
+     */
+    public Platform getPlatform() {
+        return platform;
+    }
 
     @Override
     public void create() {

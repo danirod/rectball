@@ -31,6 +31,6 @@ public class AndroidLauncher extends AndroidApplication {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useImmersiveMode = true;
-		initialize(new RectballGame(), config);
+		initialize(new RectballGame(new AndroidPlatform()), config);
 	}
 }
