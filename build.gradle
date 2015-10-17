@@ -14,7 +14,7 @@ allprojects {
     apply plugin: "maven"
 
     archivesBaseName = 'rectball'
-    version = '0.3.0'
+    version = '0.4.0-dev'
 
     ext {
         appName = 'Rectball'
