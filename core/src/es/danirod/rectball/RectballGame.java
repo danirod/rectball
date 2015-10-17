@@ -17,14 +17,14 @@
  */
 package es.danirod.rectball;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -33,6 +33,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.badlogic.gdx.utils.ScreenUtils;
 import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.platform.Platform;
 import es.danirod.rectball.screens.*;
@@ -43,6 +44,7 @@ import es.danirod.rectball.statistics.Statistics;
 import es.danirod.rectball.utils.RectballSkin;
 import es.danirod.rectball.utils.SoundPlayer;
 
+import java.nio.ByteBuffer;
 import java.util.*;
 
 /**
@@ -100,6 +102,10 @@ public class RectballGame extends Game {
 
     @Override
     public void create() {
+        if (Constants.DEBUG) {
+            Gdx.app.setLogLevel(Application.LOG_DEBUG);
+        }
+
         // Add the screens.
         addScreen(new GameScreen(this));
         addScreen(new GameOverScreen(this));
@@ -299,6 +305,35 @@ public class RectballGame extends Game {
         ballAtlas.addRegion("ball_blue", regions[1][0]);
         ballAtlas.addRegion("ball_green", regions[1][1]);
         ballAtlas.addRegion("ball_gray", regions[1][2]);
+    }
+
+    /**
+     * Create a screenshot and return the generated Pixmap. Since the game
+     * goes yUp, the returned screenshot is flipped so that it's correctly
+     * yDown'ed.
+     *
+     * @return  game screenshot
+     */
+    public Pixmap requestScreenshot() {
+        int width = Gdx.graphics.getWidth();
+        int height = Gdx.graphics.getHeight();
+        Gdx.app.log("Screenshot", "Requested a new screenshot of size " + width + "x" + height);
+
+        Pixmap screenshot = ScreenUtils.getFrameBufferPixmap(0, 0, width, height);
+
+        // Since the game runs using yDown, the screen has to be flipped.
+        ByteBuffer data = screenshot.getPixels();
+        byte[] flippedBuffer = new byte[4 * width * height];
+        int bytesPerLine = 4 * width;
+        for (int y = 0; y < height; y++) {
+            data.position(bytesPerLine * (height - y - 1));
+            data.get(flippedBuffer, y * bytesPerLine, bytesPerLine);
+        }
+        data.clear();
+        data.put(flippedBuffer);
+        data.clear();
+
+        return screenshot;
     }
 
     public TextureAtlas getBallAtlas() {
