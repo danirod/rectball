@@ -81,7 +81,15 @@ public class GameOverScreen extends AbstractScreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.player.playSound(SoundPlayer.SoundCode.SELECT);
-                Pixmap screenshot = game.requestScreenshot();
+
+                // Request a screenshot of the score region. The following
+                // values have been calculated using a viewport of 500x800.
+                // The screenshot has a size of 500x250, x=0, y=200. However
+                // the size of the screen might be different.
+                int width = Gdx.graphics.getWidth();
+                int height = width / 2;
+                int y = (int) (Gdx.graphics.getHeight() * 0.375f);
+                Pixmap screenshot = game.requestScreenshot(0, y, width, height);
                 game.getPlatform().sharing().shareGameOverScreenshot(screenshot, game.getState().getScore(), Math.round(game.getState().getTime()));
                 event.cancel();
             }

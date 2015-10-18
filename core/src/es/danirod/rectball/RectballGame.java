@@ -306,6 +306,12 @@ public class RectballGame extends Game {
         ballAtlas.addRegion("ball_gray", regions[1][2]);
     }
 
+    public Pixmap requestScreenshot() {
+        int width = Gdx.graphics.getWidth();
+        int height = Gdx.graphics.getHeight();
+        return requestScreenshot(0, 0, width, height);
+    }
+
     /**
      * Create a screenshot and return the generated Pixmap. Since the game
      * goes yUp, the returned screenshot is flipped so that it's correctly
@@ -313,20 +319,17 @@ public class RectballGame extends Game {
      *
      * @return  game screenshot
      */
-    public Pixmap requestScreenshot() {
-        int width = Gdx.graphics.getWidth();
-        int height = Gdx.graphics.getHeight();
+    public Pixmap requestScreenshot(int x, int y, int width, int height) {
         Gdx.app.log("Screenshot", "Requested a new screenshot of size " + width + "x" + height);
-
-        Pixmap screenshot = ScreenUtils.getFrameBufferPixmap(0, 0, width, height);
+        Pixmap screenshot = ScreenUtils.getFrameBufferPixmap(x, y, width, height);
 
         // Since the game runs using yDown, the screen has to be flipped.
         ByteBuffer data = screenshot.getPixels();
         byte[] flippedBuffer = new byte[4 * width * height];
         int bytesPerLine = 4 * width;
-        for (int y = 0; y < height; y++) {
-            data.position(bytesPerLine * (height - y - 1));
-            data.get(flippedBuffer, y * bytesPerLine, bytesPerLine);
+        for (int j = 0; j < height; j++) {
+            data.position(bytesPerLine * (height - j - 1));
+            data.get(flippedBuffer, j * bytesPerLine, bytesPerLine);
         }
         data.clear();
         data.put(flippedBuffer);
