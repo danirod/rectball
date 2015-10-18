@@ -45,7 +45,7 @@ public class DesktopSharingServices implements es.danirod.rectball.platform.Shar
 
     @Override
     public void shareGameOverScreenshot(Pixmap pixmap, int score, int time) {
-        Gdx.app.debug("SharingServices", "Requested a screenshot with score");
+        shareScreenshot(pixmap);
     }
 
     private FileHandle requestSave() {

@@ -17,17 +17,18 @@
  */
 package es.danirod.rectball.screens;
 
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.listeners.ScreenJumper;
 import es.danirod.rectball.listeners.ScreenPopper;
+import es.danirod.rectball.utils.SoundPlayer;
 
 public class GameOverScreen extends AbstractScreen {
 
@@ -37,38 +38,63 @@ public class GameOverScreen extends AbstractScreen {
 
     @Override
     public void setUpInterface(Table table) {
+        // GAME OVER!
+        table.add(new Label(game.getLocale().get("game.gameover"), game.getSkin())).row();
+
         // Set up the label data.
         String lastScore = Integer.toString(game.getState().getScore());
-        while (lastScore.length() < 4)
-            lastScore = "0" + lastScore;
+        while (lastScore.length() < 4) lastScore = "0" + lastScore;
         String aliveTime = Integer.toString(Math.round(game.getState().getTime()));
         String highScore = Long.toString(game.scores.getHighestScore());
+
+        // Scores table
+        Table scoresTable = new Table();
+        scoresTable.setDebug(true);
 
         // Last score.
         Label highScoreLabel = new Label(lastScore, game.getSkin(), "monospace");
         highScoreLabel.setFontScale(10f);
-        table.add(new Label(game.getLocale().get("game.gameover"), game.getSkin())).colspan(2).expandX().row();
-        table.add(highScoreLabel).expand().colspan(2).align(Align.center).row();
+        highScoreLabel.setAlignment(Align.bottom);
+        scoresTable.add(highScoreLabel).expandX().height(90).colspan(2).align(Align.center).row();
 
         // Alive time.
         Drawable clock = game.getSkin().newDrawable("iconClock");
-        table.add(new Image(clock)).size(80).expandX().align(Align.right).padRight(20);
-        table.add(new Label(aliveTime, game.getSkin())).expandX().align(Align.left).padLeft(20).row();
+        scoresTable.add(new Image(clock)).size(60).expandX().align(Align.right).padRight(20);
+        scoresTable.add(new Label(aliveTime, game.getSkin())).expandX().align(Align.left).padLeft(20).row();
 
         // High score.
         Drawable crown = game.getSkin().newDrawable("iconCrown");
-        table.add(new Image(crown)).size(80).expandX().align(Align.right).padRight(20);
-        table.add(new Label(highScore, game.getSkin())).expandX().align(Align.left).padLeft(20).row();
+        scoresTable.add(new Image(crown)).size(60).expandX().align(Align.right).padRight(20);
+        scoresTable.add(new Label(highScore, game.getSkin())).expandX().align(Align.left).padLeft(20).row();
+
+        Table buttonRow = new Table();
+        buttonRow.defaults().fillX().expandX().space(20);
 
         // Add replay button.
-        TextButton replay = new TextButton(game.getLocale().get("game.replay"), game.getSkin());
+        ImageButton replay = new ImageButton(game.getSkin(), "repeat");
         replay.addListener(new ScreenPopper(game));
-        table.add(replay).colspan(2).fillX().height(100).padTop(30).row();
+        buttonRow.add(replay);
+
+        // Add share button
+        ImageButton share = new ImageButton(game.getSkin(), "share");
+        share.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.player.playSound(SoundPlayer.SoundCode.SELECT);
+                Pixmap screenshot = game.requestScreenshot();
+                game.getPlatform().sharing().shareGameOverScreenshot(screenshot, game.getState().getScore(), Math.round(game.getState().getTime()));
+                event.cancel();
+            }
+        });
+        buttonRow.add(share);
 
         // Add menu button.
-        TextButton menu = new TextButton(game.getLocale().get("game.menu"), game.getSkin());
+        ImageButton menu = new ImageButton(game.getSkin(), "house");
         menu.addListener(new ScreenPopper(game, true));
-        table.add(menu).colspan(2).fillX().height(100).padTop(30).row();
+        buttonRow.add(menu);
+
+        table.add(scoresTable).fillX().expand().row();
+        table.add(buttonRow).fillX().expandX().row();
 
         // Now animate the stage to make it fall.
         getStage().addAction(Actions.sequence(
