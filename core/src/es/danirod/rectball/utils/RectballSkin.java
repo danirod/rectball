@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
@@ -35,9 +36,10 @@ public class RectballSkin extends Skin {
         addPixmapStyles();
         addLabelStyles();
         addTextButtonStyles();
+        addTextureRegionStyles();
+        addImageButtonStyles();
         addWindowStyles();
         addNinePatchesStyles();
-        addTextureRegionStyles();
         addCheckboxStyles();
     }
 
@@ -103,6 +105,26 @@ public class RectballSkin extends Skin {
         this.add("default", buttonStyle);
     }
 
+    private void addImageButtonStyles() {
+        {
+            ImageButtonStyle buttonStyle = new ImageButtonStyle(get(TextButtonStyle.class));
+            buttonStyle.imageUp = new TextureRegionDrawable(getRegion("iconShare"));
+            add("share", buttonStyle);
+        }
+
+        {
+            ImageButtonStyle buttonStyle = new ImageButtonStyle(get(TextButtonStyle.class));
+            buttonStyle.imageUp = new TextureRegionDrawable(getRegion("iconRepeat"));
+            add("repeat", buttonStyle);
+        }
+
+        {
+            ImageButtonStyle buttonStyle = new ImageButtonStyle(get(TextButtonStyle.class));
+            buttonStyle.imageUp = new TextureRegionDrawable(getRegion("iconHouse"));
+            add("house", buttonStyle);
+        }
+    }
+
     private void addWindowStyles() {
         final Color backgroundColor = new Color(0, 0.3f, 0.6f, 1f);
         final Color borderColor = new Color(backgroundColor).lerp(Color.WHITE, 0.2f);
@@ -141,9 +163,13 @@ public class RectballSkin extends Skin {
         // Texture region for the icons.
         {
             Texture icons = game.manager.get("ui/icons.png");
-            TextureRegion[][] iconRegions = TextureRegion.split(icons, 256, 256);
-            add("iconClock", iconRegions[0][0]);
-            add("iconCrown", iconRegions[0][1]);
+            TextureRegion[][] iconRegions = TextureRegion.split(icons, 100, 100);
+            add("iconShare", iconRegions[0][0]);
+            add("iconQuestion", iconRegions[0][1]);
+            add("iconRepeat", iconRegions[0][2]);
+            add("iconClock", iconRegions[1][0]);
+            add("iconCrown", iconRegions[1][1]);
+            add("iconHouse", iconRegions[1][2]);
         }
 
         // Texture region for the progress.

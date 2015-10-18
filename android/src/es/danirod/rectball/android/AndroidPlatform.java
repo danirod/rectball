@@ -1,6 +1,6 @@
 /*
- * This file is part of Rectball.
- * Copyright (C) 2015 Dani Rodríguez.
+ * This file is part of Rectball
+ * Copyright (C) 2015 Dani Rodríguez
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,22 +15,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball.android;
 
-import android.os.Bundle;
-
-import android.view.WindowManager;
 import com.badlogic.gdx.backends.android.AndroidApplication;
-import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.platform.Platform;
+import es.danirod.rectball.platform.SharingServices;
 
-public class AndroidLauncher extends AndroidApplication {
-	@Override
-	protected void onCreate (Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		config.useImmersiveMode = true;
-		initialize(new RectballGame(new AndroidPlatform(this)), config);
-	}
+/**
+ * This contains code for the Android platform. Here code that uses Android
+ * SDK or Android API might be used. This code won't run on other platforms
+ * than Android.
+ *
+ * @author danirod
+ */
+public class AndroidPlatform implements Platform {
+
+    private final SharingServices sharing;
+
+    protected AndroidPlatform(AndroidApplication app) {
+        sharing = new AndroidSharingServices(app);
+    }
+
+    @Override
+    public SharingServices sharing() {
+        return sharing;
+    }
 }
