@@ -18,6 +18,7 @@
 
 package es.danirod.rectball.android;
 
+import com.badlogic.gdx.backends.android.AndroidApplication;
 import es.danirod.rectball.platform.Platform;
 import es.danirod.rectball.platform.SharingServices;
 
@@ -32,8 +33,8 @@ public class AndroidPlatform implements Platform {
 
     private final SharingServices sharing;
 
-    protected AndroidPlatform() {
-        sharing = new AndroidSharingServices();
+    protected AndroidPlatform(AndroidApplication app) {
+        sharing = new AndroidSharingServices(app);
     }
 
     @Override

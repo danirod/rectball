@@ -10,6 +10,8 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="ANDROID_SDK_VERSION"/>
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"

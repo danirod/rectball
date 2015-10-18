@@ -49,13 +49,12 @@ public class GameOverScreen extends AbstractScreen {
 
         // Scores table
         Table scoresTable = new Table();
-        scoresTable.setDebug(true);
 
         // Last score.
         Label highScoreLabel = new Label(lastScore, game.getSkin(), "monospace");
         highScoreLabel.setFontScale(10f);
         highScoreLabel.setAlignment(Align.bottom);
-        scoresTable.add(highScoreLabel).expandX().height(90).colspan(2).align(Align.center).row();
+        scoresTable.add(highScoreLabel).expandX().height(120).colspan(2).align(Align.center).row();
 
         // Alive time.
         Drawable clock = game.getSkin().newDrawable("iconClock");

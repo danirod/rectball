@@ -25,7 +25,10 @@ import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
+import java.io.File;
+import java.io.FilenameFilter;
 
 /**
  *
@@ -56,7 +59,6 @@ public class DesktopSharingServices implements es.danirod.rectball.platform.Shar
         // because of the better integration with the rest of the system.
         if (SharedLibraryLoader.isMac) {
             FileDialog dialog = new FileDialog((Frame) null, "Save screenshot to", FileDialog.SAVE);
-            dialog.setFile("*.png");
             dialog.setMultipleMode(false);
             dialog.setVisible(true);
             if (dialog.getFile() != null) {
