@@ -28,10 +28,15 @@ import com.badlogic.gdx.graphics.PixmapIO;
 import es.danirod.rectball.RectballGame;
 
 /**
+ * This contains Android-related sharing utilities. For instance, sharing
+ * screenshots from the game that can be sent to Twitter, WhatsApp or other
+ * services.
+ *
  * @author danirod
  */
 public class AndroidSharingServices implements es.danirod.rectball.platform.SharingServices {
 
+    /** Android application instance. Required for creating intents. */
     private AndroidApplication app;
 
     protected AndroidSharingServices(AndroidApplication app) {
@@ -55,12 +60,18 @@ public class AndroidSharingServices implements es.danirod.rectball.platform.Shar
         shareScreenshotWithMessage(pixmap, message);
     }
 
+    /**
+     * Share at the same time photo and text.
+     *
+     * @param pixmap  image to share
+     * @param text  text to share
+     */
     private void shareScreenshotWithMessage(Pixmap pixmap, String text) {
         // Let's make a dirty cast to get the game instance.
         RectballGame game = (RectballGame) app.getApplicationListener();
 
-        // Save the pixmap to a file.
         try {
+            // Save the pixmap to a file.
             String location = "rectball/screenshot" + System.currentTimeMillis() + ".png";
             FileHandle handle = Gdx.files.external(location);
             PixmapIO.writePNG(handle, pixmap);

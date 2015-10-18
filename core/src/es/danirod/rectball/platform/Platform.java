@@ -26,6 +26,7 @@ package es.danirod.rectball.platform;
  * to prevent desktop releases from failing.
  *
  * @author danirod
+ * @since 0.4.0
  */
 public interface Platform {
 

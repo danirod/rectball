@@ -26,6 +26,7 @@ import com.badlogic.gdx.graphics.Pixmap;
  * the score through an online scoreboard such as Google Play Services.
  *
  * @author danirod
+ * @since 0.4.0
  */
 public interface SharingServices {
 
