@@ -17,6 +17,7 @@
  */
 package es.danirod.rectball.screens;
 
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -33,7 +34,7 @@ import es.danirod.rectball.utils.SoundPlayer;
 public class GameOverScreen extends AbstractScreen {
 
     public GameOverScreen(RectballGame game) {
-        super(game);
+        super(game, true);
     }
 
     @Override
@@ -103,10 +104,32 @@ public class GameOverScreen extends AbstractScreen {
     }
 
     @Override
+    public void show() {
+        super.show();
+
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(getStage());
+        multiplexer.addProcessor(new GameOverInputProcessor());
+        Gdx.input.setInputProcessor(multiplexer);
+    }
+
+    @Override
     public int getID() {
         return Screens.GAME_OVER;
     }
 
+    private class GameOverInputProcessor extends InputAdapter {
 
+        @Override
+        public boolean keyDown(int keycode) {
+            if (keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE) {
+                game.player.playSound(SoundPlayer.SoundCode.FAIL);
+                game.clearStack();
+                return true;
+            }
+            return false;
+        }
+
+    }
 
 }
