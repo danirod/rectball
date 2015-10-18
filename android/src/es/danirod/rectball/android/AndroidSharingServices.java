@@ -50,12 +50,15 @@ public class AndroidSharingServices implements es.danirod.rectball.platform.Shar
 
         // Let's make a dirty cast to get the game instance.
         RectballGame game = (RectballGame) app.getApplicationListener();
-        String message = game.getLocale().format("game.share", score);
+        String message = game.getLocale().format("sharing.text", score);
         message += " https://play.google.com/store/apps/details?id=es.danirod.rectball.android";
         shareScreenshotWithMessage(pixmap, message);
     }
 
     private void shareScreenshotWithMessage(Pixmap pixmap, String text) {
+        // Let's make a dirty cast to get the game instance.
+        RectballGame game = (RectballGame) app.getApplicationListener();
+
         // Save the pixmap to a file.
         try {
             String location = "rectball/screenshot" + System.currentTimeMillis() + ".png";
@@ -68,7 +71,8 @@ public class AndroidSharingServices implements es.danirod.rectball.platform.Shar
             sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(handle.file()));
             sharingIntent.putExtra(Intent.EXTRA_TEXT, text);
             sharingIntent.setType("text/plain");
-            app.startActivity(Intent.createChooser(sharingIntent, "Share result"));
+            String title = game.getLocale().get("sharing.intent");
+            app.startActivity(Intent.createChooser(sharingIntent, title));
         } catch (Exception ex) {
             Gdx.app.error("SharingServices", "Couldn't share photo", ex);
         }
