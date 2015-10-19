@@ -34,6 +34,40 @@ public class AndroidAnalyticServices implements AnalyticServices {
 
     @Override
     public void sendEvent(AnalyticEvent event) {
-        Gdx.app.log("AnalyticServices", "Received an event");
+        if (!event.containsUserData("action")) {
+            Gdx.app.log("AnalyticServices", "Received an event. No action given.");
+            return;
+        }
+
+        String actionKey = (String) event.getUserData("action");
+        switch (actionKey) {
+            case AnalyticEvent.ACTION_SCREEN:
+                screenEvent(event);
+                break;
+            case AnalyticEvent.ACTION_THROWABLE:
+                throwableEvent(event);
+                break;
+            default:
+                Gdx.app.log("AnalyticServices", "Received an event. Unexpected action.");
+                break;
+        }
+    }
+
+    private void screenEvent(AnalyticEvent event) {
+        if (event.containsUserData("screen")) {
+            String screen = (String) event.getUserData("screen");
+            Gdx.app.log("AnalyticServices", "Changed to screen " + screen);
+        } else {
+            Gdx.app.log("AnalyticServices", "Changed to screen.");
+        }
+    }
+
+    private void throwableEvent(AnalyticEvent event) {
+        if (event.containsUserData("throwable")) {
+            Throwable t = (Throwable) event.getUserData("throwable");
+            Gdx.app.error("AnalyticServices", "Error received", t);
+        } else {
+            Gdx.app.log("AnalyticServices", "Error received. No throwable.");
+        }
     }
 }

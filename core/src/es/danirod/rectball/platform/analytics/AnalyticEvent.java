@@ -28,6 +28,10 @@ import java.util.*;
  */
 public class AnalyticEvent {
 
+    public static final String ACTION_SCREEN = "changeScreen";
+
+    public static final String ACTION_THROWABLE = "throwable";
+
     /** Information stored by the user. */
     private final Map<String, Object> userData;
 
@@ -56,6 +60,15 @@ public class AnalyticEvent {
      */
     public Object getUserData(String key) {
         return userData.get(key);
+    }
+
+    /**
+     * Check whether this event has registered an user data with a key.
+     * @param key  the key from which to know whether exists or not.
+     * @return  whether the user data with the provided key exists.
+     */
+    public boolean containsUserData(String key) {
+        return userData.containsKey(key);
     }
 
     /**

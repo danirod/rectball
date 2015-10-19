@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.platform.analytics.AnalyticEvent;
 import es.danirod.rectball.utils.SoundPlayer;
 
 import static es.danirod.rectball.Constants.STAGE_PADDING;
@@ -109,6 +110,12 @@ public abstract class AbstractScreen implements Screen {
 
     @Override
     public void show() {
+        // Dispatch an analytic event.
+        AnalyticEvent event = new AnalyticEvent();
+        event.setUserData("action", AnalyticEvent.ACTION_SCREEN);
+        event.setUserData("screen", getClass().getCanonicalName());
+        game.getPlatform().analytic().sendEvent(event);
+
         table.clear();
         setUpInterface(table);
 
