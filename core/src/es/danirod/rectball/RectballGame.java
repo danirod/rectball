@@ -36,7 +36,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.platform.Platform;
 import es.danirod.rectball.screens.*;
-import es.danirod.rectball.statistics.Statistics;
+import es.danirod.rectball.model.Statistics;
 import es.danirod.rectball.utils.RectballSkin;
 import es.danirod.rectball.utils.SoundPlayer;
 
@@ -117,7 +117,7 @@ public class RectballGame extends Game {
     public void finishLoading() {
         // Load the remaining data.
         platform.score().readData();
-        statistics = Statistics.loadStats();
+        statistics = platform.statistics().loadStatistics();
         player = new SoundPlayer(this);
         uiSkin = new RectballSkin(this);
         updateBallAtlas();

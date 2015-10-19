@@ -33,7 +33,7 @@ import es.danirod.rectball.actors.TimerActor;
 import es.danirod.rectball.actors.TimerActor.TimerCallback;
 import es.danirod.rectball.dialogs.ConfirmDialog;
 import es.danirod.rectball.model.*;
-import es.danirod.rectball.statistics.Statistics;
+import es.danirod.rectball.model.Statistics;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
 import java.util.ArrayList;
@@ -382,7 +382,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         game.statistics.getTotalData().incrementValue("score", game.getState().getScore());
         game.statistics.getTotalData().incrementValue("games");
         game.statistics.getTotalData().incrementValue("time", Math.round(game.getState().getTime()));
-        Statistics.saveStats(game.statistics);
+        game.getPlatform().statistics().saveStatistics(game.statistics);
 
         // Mark a combination that the user could do if he had enough time.
         CombinationFinder finder = new CombinationFinder(game.getState().getBoard());

@@ -24,6 +24,7 @@ import es.danirod.rectball.platform.*;
 import es.danirod.rectball.platform.analytics.AnalyticServices;
 import es.danirod.rectball.platform.scores.ScoreServices;
 import es.danirod.rectball.platform.sharing.SharingServices;
+import es.danirod.rectball.platform.statistics.StatisticsServices;
 
 /**
  * This contains code for desktop platform. Here code that uses desktop JRE
@@ -43,11 +44,14 @@ public class DesktopPlatform implements Platform {
 
     private Preferences preferences;
 
+    private StatisticsServices statistics;
+
     protected DesktopPlatform() {
         sharing = new DesktopSharingServices();
         analytic = new DesktopAnalyticServices();
         score = new DesktopScoreServices();
         preferences = new LwjglPreferences("rectball", ".prefs/");
+        statistics = new DesktopStatisticsServices();
     }
 
     @Override
@@ -68,5 +72,10 @@ public class DesktopPlatform implements Platform {
     @Override
     public Preferences preferences() {
         return preferences;
+    }
+
+    @Override
+    public StatisticsServices statistics() {
+        return statistics;
     }
 }

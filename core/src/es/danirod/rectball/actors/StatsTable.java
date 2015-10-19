@@ -10,8 +10,7 @@ import java.util.*;
 import java.util.List;
 
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.statistics.StatisticSet;
-import es.danirod.rectball.statistics.Statistics;
+import es.danirod.rectball.model.Statistics;
 
 public class StatsTable extends Table {
 
@@ -71,7 +70,7 @@ public class StatsTable extends Table {
         Table total = new Table();
         total.add(new Label(game.getLocale().get("statistics.total"), this.title)).colspan(2).row();
 
-        StatisticSet set = game.statistics.getTotalData();
+        Statistics.StatisticSet set = game.statistics.getTotalData();
         if (set.getStats().isEmpty()) {
             Label noData = new Label(game.getLocale().get("statistics.noData"), game.getSkin());
             noData.setAlignment(Align.center);
