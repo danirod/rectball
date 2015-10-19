@@ -19,6 +19,8 @@
 package es.danirod.rectball.desktop;
 
 import es.danirod.rectball.platform.*;
+import es.danirod.rectball.platform.analytics.AnalyticServices;
+import es.danirod.rectball.platform.sharing.SharingServices;
 
 /**
  * This contains code for desktop platform. Here code that uses desktop JRE

@@ -23,12 +23,10 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
+import es.danirod.rectball.platform.sharing.SharingServices;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 import java.awt.*;
-import java.io.File;
-import java.io.FilenameFilter;
 
 /**
  * Desktop implementation for the sharing services. This implementation is more
@@ -38,7 +36,7 @@ import java.io.FilenameFilter;
  * @author danirod
  * @since 0.4.0
  */
-public class DesktopSharingServices implements es.danirod.rectball.platform.SharingServices {
+public class DesktopSharingServices implements SharingServices {
 
     @Override
     public void shareScreenshot(Pixmap pixmap) {

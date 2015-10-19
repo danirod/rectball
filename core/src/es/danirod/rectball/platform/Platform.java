@@ -18,6 +18,9 @@
 
 package es.danirod.rectball.platform;
 
+import es.danirod.rectball.platform.analytics.AnalyticServices;
+import es.danirod.rectball.platform.sharing.SharingServices;
+
 /**
  * This is the interface for platform code. Platform code is code that depends
  * on the platform that the application is running. Whenever features can only

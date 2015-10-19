@@ -20,6 +20,8 @@ package es.danirod.rectball.android;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import es.danirod.rectball.platform.*;
+import es.danirod.rectball.platform.analytics.AnalyticServices;
+import es.danirod.rectball.platform.sharing.SharingServices;
 
 /**
  * This contains code for the Android platform. Here code that uses Android
