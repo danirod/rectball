@@ -36,8 +36,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.platform.Platform;
 import es.danirod.rectball.screens.*;
-import es.danirod.rectball.settings.ScoreIO;
-import es.danirod.rectball.settings.Scores;
 import es.danirod.rectball.settings.Settings;
 import es.danirod.rectball.statistics.Statistics;
 import es.danirod.rectball.utils.RectballSkin;
@@ -60,8 +58,6 @@ public class RectballGame extends Game {
     private Map<Integer, AbstractScreen> screens = new HashMap<>();
 
     public Settings settings;
-
-    public Scores scores;
 
     public Statistics statistics;
 
@@ -124,7 +120,7 @@ public class RectballGame extends Game {
     public void finishLoading() {
         // Load the remaining data.
         settings = new Settings(Gdx.app.getPreferences("rectball"));
-        scores = ScoreIO.load();
+        platform.score().readData();
         statistics = Statistics.loadStats();
         player = new SoundPlayer(this);
         uiSkin = new RectballSkin(this);

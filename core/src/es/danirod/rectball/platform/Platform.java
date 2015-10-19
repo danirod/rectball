@@ -19,6 +19,7 @@
 package es.danirod.rectball.platform;
 
 import es.danirod.rectball.platform.analytics.AnalyticServices;
+import es.danirod.rectball.platform.scores.ScoreServices;
 import es.danirod.rectball.platform.sharing.SharingServices;
 
 /**
@@ -40,5 +41,7 @@ public interface Platform {
     SharingServices sharing();
 
     AnalyticServices analytic();
+
+    ScoreServices score();
 
 }

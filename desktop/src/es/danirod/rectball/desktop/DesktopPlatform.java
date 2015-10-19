@@ -20,6 +20,7 @@ package es.danirod.rectball.desktop;
 
 import es.danirod.rectball.platform.*;
 import es.danirod.rectball.platform.analytics.AnalyticServices;
+import es.danirod.rectball.platform.scores.ScoreServices;
 import es.danirod.rectball.platform.sharing.SharingServices;
 
 /**
@@ -36,9 +37,12 @@ public class DesktopPlatform implements Platform {
 
     private AnalyticServices analytic;
 
+    private ScoreServices score;
+
     protected DesktopPlatform() {
         sharing = new DesktopSharingServices();
         analytic = new DesktopAnalyticServices();
+        score = new DesktopScoreServices();
     }
 
     @Override
@@ -49,5 +53,10 @@ public class DesktopPlatform implements Platform {
     @Override
     public AnalyticServices analytic() {
         return analytic;
+    }
+
+    @Override
+    public ScoreServices score() {
+        return score;
     }
 }

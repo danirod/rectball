@@ -42,16 +42,16 @@ public class StatsTable extends Table {
 
         boolean printedSomething = false;
         // Add best score.
-        if (game.scores.getHighestScore() != 0) {
-            String bestScore = Long.toString(game.scores.getHighestScore());
+        if (game.getPlatform().score().getHighScore() != 0) {
+            String bestScore = Long.toString(game.getPlatform().score().getHighScore());
             best.add(new Label(game.getLocale().get("statistics.best.score"), data)).align(Align.left).fillX();
             best.add(new Label(bestScore, data)).align(Align.right).expandX().row();
             printedSomething = true;
         }
 
         // Add best time.
-        if (game.scores.getHighestTime() != 0) {
-            String bestTime = secondsToTime(game.scores.getHighestTime());
+        if (game.getPlatform().score().getHighTime() != 0) {
+            String bestTime = secondsToTime(game.getPlatform().score().getHighTime());
             best.add(new Label(game.getLocale().get("statistics.best.time"), data)).align(Align.left).fillX();
             best.add(new Label(bestTime, data)).align(Align.right).expandX().row();
             printedSomething = true;

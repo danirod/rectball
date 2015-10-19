@@ -33,7 +33,6 @@ import es.danirod.rectball.actors.TimerActor;
 import es.danirod.rectball.actors.TimerActor.TimerCallback;
 import es.danirod.rectball.dialogs.ConfirmDialog;
 import es.danirod.rectball.model.*;
-import es.danirod.rectball.settings.ScoreIO;
 import es.danirod.rectball.statistics.Statistics;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
@@ -374,9 +373,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         game.player.playSound(SoundCode.GAME_OVER);
 
         // Update the score... and the record.
-        game.scores.addScore(game.getState().getScore());
-        game.scores.addTime(game.getState().getTime());
-        ScoreIO.save(game.scores);
+        int score = game.getState().getScore();
+        int time = Math.round(game.getState().getTime());
+        game.getPlatform().score().registerScore(score, time);
+        game.getPlatform().score().flushData();
 
         // Save information about this game in the statistics.
         game.statistics.getTotalData().incrementValue("score", game.getState().getScore());
@@ -397,7 +397,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // Animate the transition to game over.
         board.addAction(Actions.delay(2f, board.hideBoard()));
-        score.addAction(Actions.delay(2f, Actions.fadeOut(0.25f)));
+        this.score.addAction(Actions.delay(2f, Actions.fadeOut(0.25f)));
 
         // Head to the game over after all these animations have finished.
         getStage().addAction(Actions.delay(2.5f, Actions.run(new Runnable() {
