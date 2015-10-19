@@ -16,27 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.desktop;
+package es.danirod.rectball.platform.scores;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.*;
-import es.danirod.rectball.platform.scores.ScoreServices;
 
 import java.io.IOException;
 import java.io.StringWriter;
 
 /**
- * @author danirod
+ * Class designed to emulate how the 0.4.0-pre Rectball stored scores.
+ *
+ * @author Dani Rodríguez
  */
-public class DesktopScoreServices implements ScoreServices {
+public abstract class LegacyScoreServices implements ScoreServices {
 
     private int highScore;
 
     private int highTime;
 
     @Override
-    public void readData() {
+    public final void readData() {
         FileHandle scores = getScoresFile();
         if (scores.exists()) {
             Gdx.app.log("ScoreServices", "Score file found. Attempting to read it...");
@@ -55,7 +56,7 @@ public class DesktopScoreServices implements ScoreServices {
     }
 
     @Override
-    public void flushData() {
+    public final void flushData() {
         String jsonData = "";
         try {
             // Convert the data to JSON.
@@ -76,31 +77,21 @@ public class DesktopScoreServices implements ScoreServices {
     }
 
     @Override
-    public void registerScore(int score, int time) {
+    public final void registerScore(int score, int time) {
         highScore = Math.max(highScore, score);
         highTime = Math.max(highTime, time);
     }
 
     @Override
-    public int getHighScore() {
+    public final int getHighScore() {
         return highScore;
     }
 
     @Override
-    public int getHighTime() {
+    public final int getHighTime() {
         return highTime;
     }
 
-    private FileHandle getScoresFile() {
-        if (SharedLibraryLoader.isWindows) {
-            String location = System.getenv("AppData") + "/rectball/scores";
-            return Gdx.files.absolute(location);
-        } else if (SharedLibraryLoader.isLinux) {
-            return Gdx.files.external(".rectball/scores");
-        } else if (SharedLibraryLoader.isMac) {
-            return Gdx.files.external("/Library/Application Support/rectball/scores");
-        } else {
-            return Gdx.files.local("scores");
-        }
-    }
+    protected abstract FileHandle getScoresFile();
+
 }

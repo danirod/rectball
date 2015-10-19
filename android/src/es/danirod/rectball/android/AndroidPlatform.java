@@ -18,10 +18,19 @@
 
 package es.danirod.rectball.android;
 
+import android.content.Context;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.backends.android.AndroidApplication;
+import com.badlogic.gdx.backends.android.AndroidPreferences;
+import com.badlogic.gdx.files.FileHandle;
 import es.danirod.rectball.platform.*;
 import es.danirod.rectball.platform.analytics.AnalyticServices;
+import es.danirod.rectball.platform.scores.LegacyScoreServices;
+import es.danirod.rectball.platform.scores.ScoreServices;
 import es.danirod.rectball.platform.sharing.SharingServices;
+import es.danirod.rectball.platform.statistics.LegacyStatisticsServices;
+import es.danirod.rectball.platform.statistics.StatisticsServices;
 
 /**
  * This contains code for the Android platform. Here code that uses Android
@@ -37,9 +46,28 @@ public class AndroidPlatform implements Platform {
 
     private final AnalyticServices analytic;
 
+    private final ScoreServices score;
+
+    private final Preferences preferences;
+
+    private final StatisticsServices statistics;
+
     protected AndroidPlatform(AndroidApplication app) {
         sharing = new AndroidSharingServices(app);
         analytic = new AndroidAnalyticServices();
+        score = new LegacyScoreServices() {
+            @Override
+            protected FileHandle getScoresFile() {
+                return Gdx.files.local("scores");
+            }
+        };
+        statistics = new LegacyStatisticsServices() {
+            @Override
+            protected FileHandle getStatistics() {
+                return Gdx.files.local("stats");
+            }
+        };
+        preferences = new AndroidPreferences(app.getSharedPreferences("rectball", Context.MODE_PRIVATE));
     }
 
     @Override
@@ -50,5 +78,20 @@ public class AndroidPlatform implements Platform {
     @Override
     public AnalyticServices analytic() {
         return analytic;
+    }
+
+    @Override
+    public ScoreServices score() {
+        return score;
+    }
+
+    @Override
+    public Preferences preferences() {
+        return preferences;
+    }
+
+    @Override
+    public StatisticsServices statistics() {
+        return statistics;
     }
 }

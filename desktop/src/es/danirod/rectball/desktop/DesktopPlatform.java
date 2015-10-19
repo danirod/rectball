@@ -18,12 +18,17 @@
 
 package es.danirod.rectball.desktop;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.backends.lwjgl.LwjglPreferences;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.SharedLibraryLoader;
 import es.danirod.rectball.platform.*;
 import es.danirod.rectball.platform.analytics.AnalyticServices;
+import es.danirod.rectball.platform.scores.LegacyScoreServices;
 import es.danirod.rectball.platform.scores.ScoreServices;
 import es.danirod.rectball.platform.sharing.SharingServices;
+import es.danirod.rectball.platform.statistics.LegacyStatisticsServices;
 import es.danirod.rectball.platform.statistics.StatisticsServices;
 
 /**
@@ -49,9 +54,37 @@ public class DesktopPlatform implements Platform {
     protected DesktopPlatform() {
         sharing = new DesktopSharingServices();
         analytic = new DesktopAnalyticServices();
-        score = new DesktopScoreServices();
+        score = new LegacyScoreServices() {
+            @Override
+            protected FileHandle getScoresFile() {
+                if (SharedLibraryLoader.isWindows) {
+                    String location = System.getenv("AppData") + "/rectball/scores";
+                    return Gdx.files.absolute(location);
+                } else if (SharedLibraryLoader.isLinux) {
+                    return Gdx.files.external(".rectball/scores");
+                } else if (SharedLibraryLoader.isMac) {
+                    return Gdx.files.external("/Library/Application Support/rectball/scores");
+                } else {
+                    return Gdx.files.local("scores");
+                }
+            }
+        };
         preferences = new LwjglPreferences("rectball", ".prefs/");
-        statistics = new DesktopStatisticsServices();
+        statistics = new LegacyStatisticsServices() {
+            @Override
+            protected FileHandle getStatistics() {
+                if (SharedLibraryLoader.isWindows) {
+                    String location = System.getenv("AppData") + "/rectball/stats";
+                    return Gdx.files.absolute(location);
+                } else if (SharedLibraryLoader.isLinux) {
+                    return Gdx.files.external(".rectball/stats");
+                } else if (SharedLibraryLoader.isMac) {
+                    return Gdx.files.external("/Library/Application Support/rectball/stats");
+                } else {
+                    return Gdx.files.local("stats");
+                }
+            }
+        };
     }
 
     @Override

@@ -16,18 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.desktop;
+package es.danirod.rectball.platform.statistics;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.*;
 import es.danirod.rectball.model.Statistics;
-import es.danirod.rectball.platform.statistics.StatisticsServices;
 
 /**
  * @author danirod
  */
-public class DesktopStatisticsServices implements StatisticsServices {
+public abstract class LegacyStatisticsServices implements StatisticsServices {
 
     @Override
     public void saveStatistics(Statistics statistics) {
@@ -38,7 +36,7 @@ public class DesktopStatisticsServices implements StatisticsServices {
         // Encode statistics in Base64 and save it to a file.
         String encodedJson = Base64Coder.encodeString(jsonData);
         FileHandle handle;
-        handle = getScoresFile();
+        handle = getStatistics();
         handle.writeString(encodedJson, false);
     }
 
@@ -46,7 +44,7 @@ public class DesktopStatisticsServices implements StatisticsServices {
     public Statistics loadStatistics() {
         try {
             // Read stats from file and decode them.
-            FileHandle handle = getScoresFile();
+            FileHandle handle = getStatistics();
             String encodedJson = handle.readString();
             String decodedJson = Base64Coder.decodeString(encodedJson);
 
@@ -58,16 +56,6 @@ public class DesktopStatisticsServices implements StatisticsServices {
         }
     }
 
-    private FileHandle getScoresFile() {
-        if (SharedLibraryLoader.isWindows) {
-            String location = System.getenv("AppData") + "/rectball/stats";
-            return Gdx.files.absolute(location);
-        } else if (SharedLibraryLoader.isLinux) {
-            return Gdx.files.external(".rectball/stats");
-        } else if (SharedLibraryLoader.isMac) {
-            return Gdx.files.external("/Library/Application Support/rectball/stats");
-        } else {
-            return Gdx.files.local("scores");
-        }
-    }
+    protected abstract FileHandle getStatistics();
+
 }
