@@ -32,7 +32,8 @@ public interface Analytics {
      * Use this method to notify the analytic services of Rectball that an
      * event has happened. Each analytic implementation might want to do
      * something particular with that event.
-     * @param event  the event to track within the application.
+     *
+     * @param event the event to track within the application.
      */
     void sendEvent(AnalyticEvent event);
 

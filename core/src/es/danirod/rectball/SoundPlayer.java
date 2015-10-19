@@ -20,23 +20,8 @@ package es.danirod.rectball;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.MathUtils;
-import es.danirod.rectball.RectballGame;
 
 public class SoundPlayer {
-
-    public enum SoundCode {
-        GAME_OVER("sound/game_over.ogg"),
-        SELECT("sound/select.ogg"),
-        UNSELECT("sound/unselect.ogg"),
-        SUCCESS("sound/success.ogg"),
-        FAIL("sound/fail.ogg");
-
-        final String internalPath;
-
-        SoundCode(String path) {
-            internalPath = path;
-        }
-    }
 
     private final RectballGame game;
 
@@ -52,5 +37,19 @@ public class SoundPlayer {
         Sound sound = game.manager.get(code.internalPath, Sound.class);
         float randomPitch = MathUtils.random(0.7f, 1.3f);
         sound.play(0.7f, randomPitch, 0);
+    }
+
+    public enum SoundCode {
+        GAME_OVER("sound/game_over.ogg"),
+        SELECT("sound/select.ogg"),
+        UNSELECT("sound/unselect.ogg"),
+        SUCCESS("sound/success.ogg"),
+        FAIL("sound/fail.ogg");
+
+        final String internalPath;
+
+        SoundCode(String path) {
+            internalPath = path;
+        }
     }
 }

@@ -25,9 +25,9 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.scene2d.game.BoardActor;
 import es.danirod.rectball.model.BallColor;
 import es.danirod.rectball.model.Board;
+import es.danirod.rectball.scene2d.game.BoardActor;
 
 public class LoadingScreen extends AbstractScreen {
 
@@ -80,14 +80,14 @@ public class LoadingScreen extends AbstractScreen {
         canUpdate = false;
         swapBalls();
         getStage().addAction(Actions.sequence(
-                Actions.alpha(0),
-                Actions.alpha(1, FADE_SPEED),
-                Actions.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        canUpdate = true;
-                    }
-                })
+                                                     Actions.alpha(0),
+                                                     Actions.alpha(1, FADE_SPEED),
+                                                     Actions.run(new Runnable() {
+                                                         @Override
+                                                         public void run() {
+                                                             canUpdate = true;
+                                                         }
+                                                     })
         ));
     }
 
@@ -97,51 +97,51 @@ public class LoadingScreen extends AbstractScreen {
         if (canUpdate && game.manager.update(1000 / 120)) {
             canUpdate = false;
             getStage().addAction(Actions.sequence(
-                    Actions.alpha(0, FADE_SPEED),
-                    Actions.delay(0.1f, Actions.run(new Runnable() {
-                        @Override
-                        public void run() {
-                            boardActor.remove();
-                            ballAtlas.dispose();
-                            ballsTexture.dispose();
-                            game.finishLoading();
-                        }
-                    }))
+                                                         Actions.alpha(0, FADE_SPEED),
+                                                         Actions.delay(0.1f, Actions.run(new Runnable() {
+                                                             @Override
+                                                             public void run() {
+                                                                 boardActor.remove();
+                                                                 ballAtlas.dispose();
+                                                                 ballsTexture.dispose();
+                                                                 game.finishLoading();
+                                                             }
+                                                         }))
             ));
         }
     }
 
     private void swapBalls() {
         getStage().addAction(Actions.sequence(
-                Actions.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        boardActor.getBall(0, 0).addAction(Actions.moveBy(50, 0, BALL_SPEED));
-                        boardActor.getBall(1, 0).addAction(Actions.moveBy(0, 50, BALL_SPEED));
-                        boardActor.getBall(1, 1).addAction(Actions.moveBy(-50, 0, BALL_SPEED));
-                        boardActor.getBall(0, 1).addAction(Actions.moveBy(0, -50, BALL_SPEED));
-                    }
-                }),
-                Actions.delay(BALL_SPEED * 2, Actions.run(new Runnable() {
-                            @Override
-                            public void run() {
-                                boardActor.getBall(0, 0).addAction(Actions.moveBy(-50, 0));
-                                boardActor.getBall(1, 0).addAction(Actions.moveBy(0, -50));
-                                boardActor.getBall(1, 1).addAction(Actions.moveBy(50, 0));
-                                boardActor.getBall(0, 1).addAction(Actions.moveBy(0, 50));
-                                BallColor bottomLeft = board.getBall(0, 0).getColor();
-                                BallColor bottomRight = board.getBall(1, 0).getColor();
-                                BallColor upperLeft = board.getBall(0, 1).getColor();
-                                BallColor upperRight = board.getBall(1, 1).getColor();
+                                                     Actions.run(new Runnable() {
+                                                         @Override
+                                                         public void run() {
+                                                             boardActor.getBall(0, 0).addAction(Actions.moveBy(50, 0, BALL_SPEED));
+                                                             boardActor.getBall(1, 0).addAction(Actions.moveBy(0, 50, BALL_SPEED));
+                                                             boardActor.getBall(1, 1).addAction(Actions.moveBy(-50, 0, BALL_SPEED));
+                                                             boardActor.getBall(0, 1).addAction(Actions.moveBy(0, -50, BALL_SPEED));
+                                                         }
+                                                     }),
+                                                     Actions.delay(BALL_SPEED * 2, Actions.run(new Runnable() {
+                                                         @Override
+                                                         public void run() {
+                                                             boardActor.getBall(0, 0).addAction(Actions.moveBy(-50, 0));
+                                                             boardActor.getBall(1, 0).addAction(Actions.moveBy(0, -50));
+                                                             boardActor.getBall(1, 1).addAction(Actions.moveBy(50, 0));
+                                                             boardActor.getBall(0, 1).addAction(Actions.moveBy(0, 50));
+                                                             BallColor bottomLeft = board.getBall(0, 0).getColor();
+                                                             BallColor bottomRight = board.getBall(1, 0).getColor();
+                                                             BallColor upperLeft = board.getBall(0, 1).getColor();
+                                                             BallColor upperRight = board.getBall(1, 1).getColor();
 
-                                board.getBall(0, 0).setColor(upperLeft);
-                                board.getBall(1, 0).setColor(bottomLeft);
-                                board.getBall(1, 1).setColor(bottomRight);
-                                board.getBall(0, 1).setColor(upperRight);
+                                                             board.getBall(0, 0).setColor(upperLeft);
+                                                             board.getBall(1, 0).setColor(bottomLeft);
+                                                             board.getBall(1, 1).setColor(bottomRight);
+                                                             board.getBall(0, 1).setColor(upperRight);
 
-                                swapBalls();
-                            }
-                        }))
+                                                             swapBalls();
+                                                         }
+                                                     }))
         ));
     }
 }

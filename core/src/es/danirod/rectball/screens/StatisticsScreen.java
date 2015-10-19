@@ -18,15 +18,12 @@
 
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.scene2d.ui.StatsTable;
 import es.danirod.rectball.scene2d.listeners.ScreenPopper;
+import es.danirod.rectball.scene2d.ui.StatsTable;
 
 /**
  * Statistics screen.

@@ -24,23 +24,22 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.scene2d.listeners.ScreenPopper;
 import es.danirod.rectball.SoundPlayer;
+import es.danirod.rectball.scene2d.listeners.ScreenPopper;
 
 /**
  * About screen.
  */
 public class AboutScreen extends AbstractScreen {
 
-    public AboutScreen(RectballGame game) {
-        super(game);
-    }
-
     private static final int SCREEN_CREDITS = 1;
     private static final int SCREEN_LICENSE = 2;
     private int screen = SCREEN_CREDITS;
-
     private Table innerContainer;
+
+    public AboutScreen(RectballGame game) {
+        super(game);
+    }
 
     @Override
     public void setUpInterface(Table table) {

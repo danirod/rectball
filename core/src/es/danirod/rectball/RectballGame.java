@@ -25,20 +25,19 @@ import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ScreenUtils;
 import es.danirod.rectball.model.GameState;
-import es.danirod.rectball.platform.Platform;
-import es.danirod.rectball.screens.*;
 import es.danirod.rectball.model.Statistics;
+import es.danirod.rectball.platform.Platform;
 import es.danirod.rectball.scene2d.RectballSkin;
+import es.danirod.rectball.screens.*;
 
 import java.nio.ByteBuffer;
 import java.util.*;
@@ -55,27 +54,19 @@ public class RectballGame extends Game {
     /* FIXME: Privatize this. */
 
     private final Map<Integer, AbstractScreen> screens = new HashMap<>();
-
-    public Statistics statistics;
-
-    public AssetManager manager;
-
-    public SoundPlayer player;
-
-    private RectballSkin uiSkin;
-
     private final GameState currentGame = new GameState();
-
-    private TextureAtlas ballAtlas;
-
-    private I18NBundle locale;
-
     private final Deque<AbstractScreen> screenStack = new ArrayDeque<>();
+    public Statistics statistics;
+    public AssetManager manager;
+    public SoundPlayer player;
+    private RectballSkin uiSkin;
+    private TextureAtlas ballAtlas;
+    private I18NBundle locale;
 
     /**
      * Create a new instance of Rectball.
      *
-     * @param platform  the platform this game is using.
+     * @param platform the platform this game is using.
      */
     public RectballGame(Platform platform) {
         this.platform = platform;
@@ -86,7 +77,7 @@ public class RectballGame extends Game {
      * the platform to do special things such as sharing the score or sending
      * information.
      *
-     * @return  the platform this game is using.
+     * @return the platform this game is using.
      */
     public Platform getPlatform() {
         return platform;
@@ -232,8 +223,8 @@ public class RectballGame extends Game {
      * The screen that has been previously on screen can be retrieved later using
      * popScreen.
      *
+     * @param id the screen that should be visible now.
      * @since 0.3.0
-     * @param id  the screen that should be visible now.
      */
     public void pushScreen(int id) {
         screenStack.push(screens.get(id));
@@ -269,7 +260,8 @@ public class RectballGame extends Game {
 
     /**
      * Add a screen to the map of Strings.
-     * @param screen  the screen being added to the map
+     *
+     * @param screen the screen being added to the map
      */
     private void addScreen(AbstractScreen screen) {
         screens.put(screen.getID(), screen);
@@ -277,7 +269,8 @@ public class RectballGame extends Game {
 
     /**
      * Get the skin used by Scene2D UI to display things.
-     * @return  the skin the game should use.
+     *
+     * @return the skin the game should use.
      */
     public RectballSkin getSkin() {
         return uiSkin;
@@ -304,7 +297,7 @@ public class RectballGame extends Game {
      * goes yUp, the returned screenshot is flipped so that it's correctly
      * yDown'ed.
      *
-     * @return  game screenshot
+     * @return game screenshot
      */
     public Pixmap requestScreenshot(int x, int y, int width, int height) {
         Gdx.app.log("Screenshot", "Requested a new screenshot of size " + width + "x" + height);

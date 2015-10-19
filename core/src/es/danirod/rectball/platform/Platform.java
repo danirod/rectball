@@ -34,7 +34,8 @@ public interface Platform {
 
     /**
      * Get the sharing services instance attached to this platform.
-     * @return  sharing services instance.
+     *
+     * @return sharing services instance.
      */
     Sharing sharing();
 

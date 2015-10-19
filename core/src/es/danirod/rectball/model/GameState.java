@@ -27,21 +27,19 @@ package es.danirod.rectball.model;
  */
 public class GameState {
 
+    private final Board board;
     /**
      * The score. This data structure will provide methods to manually update
      * the score or to add points to the value, which is what the user will
      * usually do, actually.
      */
     private int score;
-
     /**
      * How many seconds has been the player playing. This is used to know how
      * many seconds has the player lasted when the game is over. Every tick
      * this value should be updated.
      */
     private float time;
-
-    private final Board board;
 
     public GameState() {
         this.score = 0;

@@ -18,15 +18,12 @@
 
 package es.danirod.rectball.scene2d;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
@@ -46,7 +43,8 @@ public class RectballSkin extends Skin {
     /**
      * Build a new Rectball skin. This will set up all the required styles
      * so that they can be later retrieving using the methods from Skin class.
-     * @param game  the game this skin is attached to.
+     *
+     * @param game the game this skin is attached to.
      */
     public RectballSkin(RectballGame game) {
         this.game = game;
@@ -93,7 +91,7 @@ public class RectballSkin extends Skin {
 
         // Build the label style for bold font.
         BitmapFont smallFont = game.manager.get("smallFont.ttf");
-        LabelStyle smallStyle  = new LabelStyle(smallFont, Color.WHITE);
+        LabelStyle smallStyle = new LabelStyle(smallFont, Color.WHITE);
         this.add("small", smallStyle);
 
         // Build the monospace style

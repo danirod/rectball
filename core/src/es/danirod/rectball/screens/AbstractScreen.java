@@ -19,19 +19,16 @@
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.*;
-
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.platform.AnalyticEvent;
 import es.danirod.rectball.SoundPlayer;
+import es.danirod.rectball.platform.AnalyticEvent;
 
-import static es.danirod.rectball.Constants.STAGE_PADDING;
-import static es.danirod.rectball.Constants.VIEWPORT_HEIGHT;
-import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
+import static es.danirod.rectball.Constants.*;
 
 /**
  * This is the base screen every screen has to inherit. It contains common
@@ -45,14 +42,19 @@ public abstract class AbstractScreen implements Screen {
 
     /**
      * Whether the default BACK/ESCAPE button handler should be used or not.
+     *
      * @since 0.3.0
      */
     private final boolean handleBack;
 
-    /** Common stage. */
+    /**
+     * Common stage.
+     */
     private Stage stage;
 
-    /** Common table. */
+    /**
+     * Common table.
+     */
     private Table table;
 
     AbstractScreen(RectballGame game) {
@@ -83,7 +85,7 @@ public abstract class AbstractScreen implements Screen {
      * have to override this method and add to the provided table the widgets
      * they want to show in the screen.
      *
-     * @param table  table that has been assigned to this screen.
+     * @param table table that has been assigned to this screen.
      */
     void setUpInterface(Table table) {
         // FIXME: This method should be abstract.

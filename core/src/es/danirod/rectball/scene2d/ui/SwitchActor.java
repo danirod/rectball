@@ -25,8 +25,8 @@ import com.badlogic.gdx.utils.Align;
 /**
  * Switch actor.
  *
- * @since 0.3.0
  * @author danirod
+ * @since 0.3.0
  */
 public class SwitchActor extends CheckBox {
 

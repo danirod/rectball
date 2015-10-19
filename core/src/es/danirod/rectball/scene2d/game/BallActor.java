@@ -28,17 +28,10 @@ import es.danirod.rectball.model.Ball;
 
 public class BallActor extends Image {
 
-    public Ball getBall() {
-        return ball;
-    }
-
-    private boolean selected;
-
     private final Ball ball;
-
     private final BoardActor board;
-
     private final TextureAtlas atlas;
+    private boolean selected;
 
     public BallActor(BoardActor board, Ball ball, TextureAtlas atlas) {
         this.board = board;
@@ -52,6 +45,10 @@ public class BallActor extends Image {
                 return true;
             }
         });
+    }
+
+    public Ball getBall() {
+        return ball;
     }
 
     @Override

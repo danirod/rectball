@@ -36,7 +36,7 @@ public interface Sharing {
      * the screenshot in services such as Twitter or WhatsApp. On desktop
      * the user might want to store the screenshot in a folder.
      *
-     * @param pixmap  the pixmap with the image data.
+     * @param pixmap the pixmap with the image data.
      */
     void shareScreenshot(Pixmap pixmap);
 
@@ -45,9 +45,9 @@ public interface Sharing {
      * useful when the user has lost the game and want to share their score
      * with other people using a tweet or sending it via WhatsApp.
      *
-     * @param pixmap  the pixmap with the image data.
+     * @param pixmap the pixmap with the image data.
      * @param score  the score the player has or had.
-     * @param time  the time the player has lasted.
+     * @param time   the time the player has lasted.
      */
     void shareGameOverScreenshot(Pixmap pixmap, int score, int time);
 

@@ -71,8 +71,8 @@ public class Board {
      * then that region will be regenerated. The result will also be returned
      * so that the client code can use the value.
      *
-     * @param balls  the balls that have been selected.
-     * @return  whether those balls are valid or not
+     * @param balls the balls that have been selected.
+     * @return whether those balls are valid or not
      */
     public boolean selection(List<Ball> balls) {
         // If there aren't 4 balls, this is an error.

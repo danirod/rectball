@@ -38,10 +38,14 @@ public class BoardActor extends Table {
      */
     private final List<BallSelectionListener> subscribers = new ArrayList<>();
 
-    /** The board. */
+    /**
+     * The board.
+     */
     private final Board board;
 
-    /** Is the board coloured? If false, all the balls will be grayed. */
+    /**
+     * Is the board coloured? If false, all the balls will be grayed.
+     */
     private boolean coloured = false;
 
     public BoardActor(TextureAtlas atlas, Board board) {
@@ -69,7 +73,9 @@ public class BoardActor extends Table {
         this.coloured = coloured;
     }
 
-    /** Select a ball. */
+    /**
+     * Select a ball.
+     */
     public void select(int x, int y) {
         BallActor selectedBall = actors[x][y];
         if (selection.add(selectedBall)) {
@@ -103,7 +109,9 @@ public class BoardActor extends Table {
         }
     }
 
-    /** Unselect a ball. */
+    /**
+     * Unselect a ball.
+     */
     public void unselect(int x, int y) {
         BallActor unselectedBall = actors[x][y];
         if (selection.remove(unselectedBall)) {
@@ -113,7 +121,9 @@ public class BoardActor extends Table {
         }
     }
 
-    /** Clear the selection. */
+    /**
+     * Clear the selection.
+     */
     public void clearSelection() {
         List<BallActor> unselectedBalls = new ArrayList<>(selection);
         for (BallSelectionListener subscriber : subscribers)
@@ -127,7 +137,8 @@ public class BoardActor extends Table {
     /**
      * Attach a new subscriber to this board. The subscriber will receive
      * notifications about selection events happened in this board.
-     * @param subscriber  subscriber that wants to be notified
+     *
+     * @param subscriber subscriber that wants to be notified
      */
     public void addSubscriber(BallSelectionListener subscriber) {
         subscribers.add(subscriber);
@@ -135,10 +146,11 @@ public class BoardActor extends Table {
 
     /**
      * Resize some balls from this board.
-     * @param bounds  bounding box for the balls that will be resized.
+     *
+     * @param bounds bounding box for the balls that will be resized.
      * @param scale  the final scale for these balls.
-     * @param time  the time that the animation will last for
-     * @return  the action that will animate these balls
+     * @param time   the time that the animation will last for
+     * @return the action that will animate these balls
      */
     private Action resizeBalls(final Bounds bounds, final float scale, final float time) {
         Action scalingAction = Actions.run(new Runnable() {
@@ -179,9 +191,9 @@ public class BoardActor extends Table {
                 for (int y = region.minY; y <= region.maxY; y++)
                     for (int x = region.minX; x <= region.maxX; x++)
                         actors[x][y].addAction(Actions.repeat(times, Actions.sequence(
-                                Actions.moveBy(shakiness / 2, 0, speed / 2),
-                                Actions.moveBy(-shakiness, 0, speed),
-                                Actions.moveBy(shakiness / 2, 0, speed / 2)
+                                                                                             Actions.moveBy(shakiness / 2, 0, speed / 2),
+                                                                                             Actions.moveBy(-shakiness, 0, speed),
+                                                                                             Actions.moveBy(shakiness / 2, 0, speed / 2)
                         )));
             }
         });

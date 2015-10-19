@@ -44,30 +44,13 @@ import java.util.List;
 public class TimerActor extends Actor {
 
     /**
-     * This interface uses the Subscriber pattern to be notified when the timer
-     * runs out of time. Make your subscriber class implement this interface,
-     * then pass your subscriber to this timer when you create it. It will be
-     * notified that the time is over.
-     */
-    public interface TimerCallback {
-
-        /**
-         * This is the method that receives the message that the time is over.
-         */
-        void onTimeOut();
-
-    }
-
-    private final List<TimerCallback> subscribers = new ArrayList<>();
-
-    /**
      * Warning region. When the remaining time percentage is not greater than
      * this value, the warning mode is triggered. If the time is running out
      * the actor appearance might change, for instance the progress bar could
      * be rendered using a different color or it might shake.
      */
     private static final float WARNING_TRIGGER = 0.2f;
-
+    private final List<TimerCallback> subscribers = new ArrayList<>();
     /**
      * The maximum number of seconds this timer can have. When filled with
      * seconds, the value of the timer will always be clamped so that it's
@@ -75,7 +58,10 @@ public class TimerActor extends Actor {
      * when calculating the percentage of the timer.
      */
     private final float maxSeconds;
-
+    /**
+     * The skin used by the game.
+     */
+    private final Skin skin;
     /**
      * The countdown value for the timer. The value of this countdown
      * represents how many seconds are there remaining until game over. The
@@ -91,13 +77,10 @@ public class TimerActor extends Actor {
      */
     private boolean running = true;
 
-    /** The skin used by the game. */
-    private final Skin skin;
-
     /**
      * Set up a new timer.
      *
-     * @param seconds  the maximum seconds for this timer.
+     * @param seconds the maximum seconds for this timer.
      */
     public TimerActor(int seconds, Skin skin) {
         this.seconds = seconds;
@@ -110,7 +93,7 @@ public class TimerActor extends Actor {
      * is over so that it can define its own functionality. For instance, the
      * screen might display a game over message.
      *
-     * @param subscriber  the subscriber that is going to be added.
+     * @param subscriber the subscriber that is going to be added.
      */
     public void addSubscriber(TimerCallback subscriber) {
         subscribers.add(subscriber);
@@ -118,7 +101,8 @@ public class TimerActor extends Actor {
 
     /**
      * How many seconds are there in the timer remaining.
-     * @return  remaining value of the timer.
+     *
+     * @return remaining value of the timer.
      */
     public float getSeconds() {
         return seconds;
@@ -140,7 +124,8 @@ public class TimerActor extends Actor {
 
     /**
      * Whether this timer is running or not.
-     * @return  is the timer running or not
+     *
+     * @return is the timer running or not
      */
     public boolean isRunning() {
         return running;
@@ -151,7 +136,7 @@ public class TimerActor extends Actor {
      * countdown unless is running. The timer can be paused by making it
      * not running.
      *
-     * @param running  whether the timer should be running or not
+     * @param running whether the timer should be running or not
      */
     public void setRunning(boolean running) {
         this.running = running;
@@ -196,5 +181,20 @@ public class TimerActor extends Actor {
         batch.draw(progress, getX(), getY(), remainingSize, getHeight());
 
         batch.setColor(color.r, color.g, color.b, color.a);
+    }
+
+    /**
+     * This interface uses the Subscriber pattern to be notified when the timer
+     * runs out of time. Make your subscriber class implement this interface,
+     * then pass your subscriber to this timer when you create it. It will be
+     * notified that the time is over.
+     */
+    public interface TimerCallback {
+
+        /**
+         * This is the method that receives the message that the time is over.
+         */
+        void onTimeOut();
+
     }
 }

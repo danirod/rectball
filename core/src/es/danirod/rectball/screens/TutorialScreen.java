@@ -10,16 +10,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
-import es.danirod.rectball.Constants;
-import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.scene2d.game.ScoreActor;
-import es.danirod.rectball.scene2d.game.TimerActor;
+import es.danirod.rectball.*;
+import es.danirod.rectball.model.*;
 import es.danirod.rectball.scene2d.game.*;
+import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
 import es.danirod.rectball.scene2d.ui.ConfirmDialog;
 import es.danirod.rectball.scene2d.ui.MessageDialog;
-import es.danirod.rectball.model.*;
-import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
-import es.danirod.rectball.SoundPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,27 +31,10 @@ import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
  */
 public class TutorialScreen extends AbstractScreen implements BallSelectionListener {
 
-    /** The board. */
-    private BoardActor board;
-
-    /** The score. */
-    private ScoreActor score;
-
-    /** The timer. */
-    private TimerActor timer;
-
     /**
-     * Every chapter in this tutorial is a state. The game passes from one
-     * state to another and when finished, is back to the home screen.
+     * The board.
      */
-    private List<State> states;
-
-    /** The current chapter. */
-    private int currentState;
-
-    /** Whether the user should be playing now or not. */
-    private boolean userTime;
-
+    private BoardActor board;
     private final Timer.Task watchdogTask = new Timer.Task() {
         @Override
         public void run() {
@@ -65,6 +44,27 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
             }
         }
     };
+    /**
+     * The score.
+     */
+    private ScoreActor score;
+    /**
+     * The timer.
+     */
+    private TimerActor timer;
+    /**
+     * Every chapter in this tutorial is a state. The game passes from one
+     * state to another and when finished, is back to the home screen.
+     */
+    private List<State> states;
+    /**
+     * The current chapter.
+     */
+    private int currentState;
+    /**
+     * Whether the user should be playing now or not.
+     */
+    private boolean userTime;
 
     public TutorialScreen(RectballGame game) {
         super(game, false);
@@ -126,9 +126,9 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
     public void render(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             ConfirmDialog cancelTutorial = new ConfirmDialog(game.getSkin(),
-                    game.getLocale().get("tutorial.cancel"),
-                    game.getLocale().get("core.yes"),
-                    game.getLocale().get("core.no"));
+                                                                    game.getLocale().get("tutorial.cancel"),
+                                                                    game.getLocale().get("core.yes"),
+                                                                    game.getLocale().get("core.no"));
             cancelTutorial.setCallback(new ConfirmDialog.ConfirmCallback() {
                 @Override
                 public void ok() {
@@ -136,7 +136,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
 
                     watchdogTask.cancel();
                     MessageDialog leaveDialog = new MessageDialog(game.getSkin(),
-                            game.getLocale().get("main.cancelTutorial"));
+                                                                         game.getLocale().get("main.cancelTutorial"));
                     leaveDialog.setCallback(new MessageDialog.MessageCallback() {
                         @Override
                         public void dismiss() {
@@ -181,7 +181,9 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         super.render(delta);
     }
 
-    /** Start the next chapter. */
+    /**
+     * Start the next chapter.
+     */
     private void nextState() {
         states.get(currentState++).start();
     }
@@ -189,63 +191,6 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
     @Override
     public int getID() {
         return Screens.TUTORIAL;
-    }
-
-    /**
-     * This is a state of the tutorial.
-     */
-    private class State {
-
-        /**
-         * The message dialog that should be displayed when the state starts.
-         */
-        private final MessageDialog dialog;
-
-        /**
-         * The alignment of the message dialog. Can be top, bottom or center.
-         * Usually will be center, but sometimes we need to push the dialog
-         * top or down if we want to focus on something particular.
-         */
-        private final int alignment;
-
-        /**
-         * Create a new state.
-         * @param messageID  the state ID, used to retrieve the string.
-         * @param alignment  Align.top, Align.center or Align.bottom.
-         * @param button  the text for the button (Ok, Continue...)
-         * @param dismiss  the runnable that is executed when the user dismisses.
-         */
-        public State(int messageID, int alignment, String button, final Runnable dismiss) {
-            this.alignment = alignment;
-
-            dialog = new MessageDialog(game.getSkin(), game.getLocale().get("tutorial.line" + messageID), game.getLocale().get(button));
-            dialog.setCallback(new MessageDialog.MessageCallback() {
-                @Override
-                public void dismiss() {
-                    if (dismiss != null) {
-                        game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
-                        dismiss.run();
-                    }
-                }
-            });
-        }
-
-        public void start() {
-            dialog.show(getStage(), Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.1f)));
-            float height;
-            if ((alignment & Align.top) != 0) {
-                height = Constants.VIEWPORT_HEIGHT - dialog.getHeight() - 20;
-            } else if ((alignment & Align.bottom) != 0) {
-                height = 20;
-            } else {
-                height = Math.round((getStage().getHeight() - dialog.getHeight()) / 2);
-            }
-            dialog.setPosition(Math.round((getStage().getWidth() - dialog.getWidth()) / 2), height);
-        }
-
-        private MessageDialog getDialog() {
-            return dialog;
-        }
     }
 
     private void addStates() {
@@ -312,12 +257,12 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
 
                 // Put this colors in the board.
                 char[][] trainingBoard = {
-                        { 'Y', 'B', 'R', 'Y', 'B', 'Y' },
-                        { 'R', 'G', 'Y', 'G', 'Y', 'R' },
-                        { 'Y', 'Y', 'R', 'R', 'B', 'B' },
-                        { 'R', 'G', 'R', 'R', 'B', 'Y' },
-                        { 'Y', 'R', 'B', 'R', 'Y', 'R' },
-                        { 'B', 'R', 'R', 'Y', 'R', 'B' }
+                                                 { 'Y', 'B', 'R', 'Y', 'B', 'Y' },
+                                                 { 'R', 'G', 'Y', 'G', 'Y', 'R' },
+                                                 { 'Y', 'Y', 'R', 'R', 'B', 'B' },
+                                                 { 'R', 'G', 'R', 'R', 'B', 'Y' },
+                                                 { 'Y', 'R', 'B', 'R', 'Y', 'R' },
+                                                 { 'B', 'R', 'R', 'Y', 'R', 'B' }
                 };
 
                 // Set the board color to the array.
@@ -325,10 +270,18 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
                     for (int x = 0; x < trainingBoard.length; x++) {
                         BallColor color = null;
                         switch (trainingBoard[y][x]) {
-                            case 'Y': color = BallColor.YELLOW; break;
-                            case 'R': color = BallColor.RED; break;
-                            case 'B': color = BallColor.BLUE; break;
-                            case 'G': color = BallColor.GREEN; break;
+                            case 'Y':
+                                color = BallColor.YELLOW;
+                                break;
+                            case 'R':
+                                color = BallColor.RED;
+                                break;
+                            case 'B':
+                                color = BallColor.BLUE;
+                                break;
+                            case 'G':
+                                color = BallColor.GREEN;
+                                break;
                         }
                         board.getBall(x, trainingBoard.length - y - 1).getBall().setColor(color);
                     }
@@ -449,40 +402,40 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
 
         // Hide the selection.
         board.addAction(Actions.sequence(
-                board.hideRegion(bounds),
-                Actions.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (BallActor selectedBall : selection) {
-                            selectedBall.setColor(Color.WHITE);
-                        }
+                                                board.hideRegion(bounds),
+                                                Actions.run(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        for (BallActor selectedBall : selection) {
+                                                            selectedBall.setColor(Color.WHITE);
+                                                        }
 
-                        if (currentState == 6) {
-                            game.getState().getBoard().getBall(2, 2).setColor(BallColor.YELLOW);
-                            game.getState().getBoard().getBall(3, 2).setColor(BallColor.GREEN);
-                            game.getState().getBoard().getBall(3, 3).setColor(BallColor.RED);
-                            game.getState().getBoard().getBall(2, 3).setColor(BallColor.BLUE);
-                            nextState();
-                        } else if (currentState == 7) {
-                            game.getState().getBoard().getBall(1, 2).setColor(BallColor.YELLOW);
-                            game.getState().getBoard().getBall(2, 2).setColor(BallColor.GREEN);
-                            game.getState().getBoard().getBall(3, 2).setColor(BallColor.RED);
-                            game.getState().getBoard().getBall(1, 3).setColor(BallColor.BLUE);
-                            game.getState().getBoard().getBall(2, 3).setColor(BallColor.GREEN);
-                            game.getState().getBoard().getBall(3, 3).setColor(BallColor.GREEN);
-                            game.getState().getBoard().getBall(1, 4).setColor(BallColor.BLUE);
-                            game.getState().getBoard().getBall(2, 4).setColor(BallColor.YELLOW);
-                            game.getState().getBoard().getBall(3, 4).setColor(BallColor.GREEN);
-                            nextState();
-                        } else if (currentState == 8) {
-                            // Now just generate some random balls here.
-                            game.getState().getBoard().randomize(
-                                    new Coordinate(bounds.minX, bounds.minY),
-                                    new Coordinate(bounds.maxX, bounds.maxY));
-                            nextState();
-                        }
-                    }
-                })));
+                                                        if (currentState == 6) {
+                                                            game.getState().getBoard().getBall(2, 2).setColor(BallColor.YELLOW);
+                                                            game.getState().getBoard().getBall(3, 2).setColor(BallColor.GREEN);
+                                                            game.getState().getBoard().getBall(3, 3).setColor(BallColor.RED);
+                                                            game.getState().getBoard().getBall(2, 3).setColor(BallColor.BLUE);
+                                                            nextState();
+                                                        } else if (currentState == 7) {
+                                                            game.getState().getBoard().getBall(1, 2).setColor(BallColor.YELLOW);
+                                                            game.getState().getBoard().getBall(2, 2).setColor(BallColor.GREEN);
+                                                            game.getState().getBoard().getBall(3, 2).setColor(BallColor.RED);
+                                                            game.getState().getBoard().getBall(1, 3).setColor(BallColor.BLUE);
+                                                            game.getState().getBoard().getBall(2, 3).setColor(BallColor.GREEN);
+                                                            game.getState().getBoard().getBall(3, 3).setColor(BallColor.GREEN);
+                                                            game.getState().getBoard().getBall(1, 4).setColor(BallColor.BLUE);
+                                                            game.getState().getBoard().getBall(2, 4).setColor(BallColor.YELLOW);
+                                                            game.getState().getBoard().getBall(3, 4).setColor(BallColor.GREEN);
+                                                            nextState();
+                                                        } else if (currentState == 8) {
+                                                            // Now just generate some random balls here.
+                                                            game.getState().getBoard().randomize(
+                                                                                                        new Coordinate(bounds.minX, bounds.minY),
+                                                                                                        new Coordinate(bounds.maxX, bounds.maxY));
+                                                            nextState();
+                                                        }
+                                                    }
+                                                })));
 
         showPartialScore(rows * cols, bounds);
         game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
@@ -526,11 +479,69 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         label.setAlignment(Align.center);
         label.setPosition(centerX - label.getWidth() / 2, centerY - label.getHeight() / 2);
         label.addAction(Actions.sequence(
-                Actions.parallel(
-                        Actions.moveBy(0, 80, 0.5f),
-                        Actions.alpha(0.5f, 0.5f)),
-                Actions.removeActor()
+                                                Actions.parallel(
+                                                                        Actions.moveBy(0, 80, 0.5f),
+                                                                        Actions.alpha(0.5f, 0.5f)),
+                                                Actions.removeActor()
         ));
         getStage().addActor(label);
+    }
+
+    /**
+     * This is a state of the tutorial.
+     */
+    private class State {
+
+        /**
+         * The message dialog that should be displayed when the state starts.
+         */
+        private final MessageDialog dialog;
+
+        /**
+         * The alignment of the message dialog. Can be top, bottom or center.
+         * Usually will be center, but sometimes we need to push the dialog
+         * top or down if we want to focus on something particular.
+         */
+        private final int alignment;
+
+        /**
+         * Create a new state.
+         *
+         * @param messageID the state ID, used to retrieve the string.
+         * @param alignment Align.top, Align.center or Align.bottom.
+         * @param button    the text for the button (Ok, Continue...)
+         * @param dismiss   the runnable that is executed when the user dismisses.
+         */
+        public State(int messageID, int alignment, String button, final Runnable dismiss) {
+            this.alignment = alignment;
+
+            dialog = new MessageDialog(game.getSkin(), game.getLocale().get("tutorial.line" + messageID), game.getLocale().get(button));
+            dialog.setCallback(new MessageDialog.MessageCallback() {
+                @Override
+                public void dismiss() {
+                    if (dismiss != null) {
+                        game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
+                        dismiss.run();
+                    }
+                }
+            });
+        }
+
+        public void start() {
+            dialog.show(getStage(), Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.1f)));
+            float height;
+            if ((alignment & Align.top) != 0) {
+                height = Constants.VIEWPORT_HEIGHT - dialog.getHeight() - 20;
+            } else if ((alignment & Align.bottom) != 0) {
+                height = 20;
+            } else {
+                height = Math.round((getStage().getHeight() - dialog.getHeight()) / 2);
+            }
+            dialog.setPosition(Math.round((getStage().getWidth() - dialog.getWidth()) / 2), height);
+        }
+
+        private MessageDialog getDialog() {
+            return dialog;
+        }
     }
 }

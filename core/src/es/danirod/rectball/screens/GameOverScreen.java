@@ -26,10 +26,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
-import es.danirod.rectball.Constants;
-import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.*;
 import es.danirod.rectball.scene2d.listeners.ScreenPopper;
-import es.danirod.rectball.SoundPlayer;
 
 public class GameOverScreen extends AbstractScreen {
 
@@ -106,8 +104,8 @@ public class GameOverScreen extends AbstractScreen {
 
         // Now animate the stage to make it fall.
         getStage().addAction(Actions.sequence(
-                Actions.moveBy(0, Constants.VIEWPORT_HEIGHT),
-                Actions.moveBy(0, -Constants.VIEWPORT_HEIGHT, 0.25f)
+                                                     Actions.moveBy(0, Constants.VIEWPORT_HEIGHT),
+                                                     Actions.moveBy(0, -Constants.VIEWPORT_HEIGHT, 0.25f)
         ));
     }
 

@@ -18,7 +18,8 @@
 
 package es.danirod.rectball.platform;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Event tracked in the analytic services.
@@ -32,7 +33,9 @@ public class AnalyticEvent {
 
     public static final String ACTION_THROWABLE = "throwable";
 
-    /** Information stored by the user. */
+    /**
+     * Information stored by the user.
+     */
     private final Map<String, Object> userData;
 
     /**
@@ -46,8 +49,9 @@ public class AnalyticEvent {
      * Add some user data to the event using a key. If any data was previously
      * stored in this event with the same key, the old value is replaced by
      * the new value.
-     * @param key  the key to use for this data.
-     * @param value  the value for this data.
+     *
+     * @param key   the key to use for this data.
+     * @param value the value for this data.
      */
     public void setUserData(String key, Object value) {
         userData.put(key, value);
@@ -55,8 +59,9 @@ public class AnalyticEvent {
 
     /**
      * Get the value for a particular data stored in this event given the key.
-     * @param key  the key for the data to be retrieved.
-     * @return  the value for the requested data.
+     *
+     * @param key the key for the data to be retrieved.
+     * @return the value for the requested data.
      */
     public Object getUserData(String key) {
         return userData.get(key);
@@ -64,8 +69,9 @@ public class AnalyticEvent {
 
     /**
      * Check whether this event has registered an user data with a key.
-     * @param key  the key from which to know whether exists or not.
-     * @return  whether the user data with the provided key exists.
+     *
+     * @param key the key from which to know whether exists or not.
+     * @return whether the user data with the provided key exists.
      */
     public boolean containsUserData(String key) {
         return userData.containsKey(key);

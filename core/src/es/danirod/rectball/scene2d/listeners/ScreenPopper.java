@@ -30,7 +30,9 @@ public class ScreenPopper extends ChangeListener {
 
     private final RectballGame game;
 
-    /** If true, the event will clear the stack, returning to the main menu. */
+    /**
+     * If true, the event will clear the stack, returning to the main menu.
+     */
     private final boolean popAll;
 
     public ScreenPopper(RectballGame game) {

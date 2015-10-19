@@ -22,6 +22,17 @@ import java.util.List;
 
 public class Bounds {
 
+    public final int minX;
+    public final int minY;
+    public final int maxX;
+    public final int maxY;
+    public Bounds(int minX, int minY, int maxX, int maxY) {
+        this.minX = minX;
+        this.minY = minY;
+        this.maxX = maxX;
+        this.maxY = maxY;
+    }
+
     public static Bounds fromBallList(List<Ball> balls) {
         int minX, minY, maxX, maxY;
         minX = minY = Integer.MAX_VALUE;
@@ -33,18 +44,6 @@ public class Bounds {
             maxY = Math.max(maxY, ball.getY());
         }
         return new Bounds(minX, minY, maxX, maxY);
-    }
-
-    public final int minX;
-    public final int minY;
-    public final int maxX;
-    public final int maxY;
-
-    public Bounds(int minX, int minY, int maxX, int maxY) {
-        this.minX = minX;
-        this.minY = minY;
-        this.maxX = maxX;
-        this.maxY = maxY;
     }
 
     public boolean inBounds(int x, int y) {

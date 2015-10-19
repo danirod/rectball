@@ -23,12 +23,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
+import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.model.Statistics;
 
 import java.util.*;
 import java.util.List;
-
-import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.model.Statistics;
 
 public class StatsTable extends Table {
 
@@ -48,6 +47,19 @@ public class StatsTable extends Table {
         add(addTotalData()).fillX().expandX().row();
         add(addColorData()).fillX().expandX().row();
         add(addSizesData()).fillX().expandX().row();
+    }
+
+    private static String secondsToTime(int seconds) {
+        if (seconds < 60) {
+            return Integer.toString(seconds);
+        } else {
+            String min = Integer.toString(seconds / 60);
+            String sec = Integer.toString(seconds % 60);
+            if (sec.length() == 1) {
+                sec = "0" + sec;
+            }
+            return min + ":" + sec;
+        }
     }
 
     private Table addBestScores() {
@@ -185,18 +197,5 @@ public class StatsTable extends Table {
         }
 
         return sizes;
-    }
-
-    private static String secondsToTime(int seconds) {
-        if (seconds < 60) {
-            return Integer.toString(seconds);
-        } else {
-            String min = Integer.toString(seconds / 60);
-            String sec = Integer.toString(seconds % 60);
-            if (sec.length() == 1) {
-                sec = "0" + sec;
-            }
-            return min + ":" + sec;
-        }
     }
 }

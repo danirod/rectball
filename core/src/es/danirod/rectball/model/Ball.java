@@ -37,11 +37,11 @@ public class Ball {
         return y;
     }
 
-    public void setColor(BallColor color) {
-        this.color = color;
-    }
-
     public BallColor getColor() {
         return color;
+    }
+
+    public void setColor(BallColor color) {
+        this.color = color;
     }
 }

@@ -25,19 +25,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
  */
 public class ConfirmDialog extends CommonDialog {
 
-    /**
-     * This is the callback class that will subscribe to events happening in
-     * this confirmation dialog class.
-     */
-    public interface ConfirmCallback {
-
-        /** This event is triggered when the OK button is pressed. */
-        void ok();
-
-        /** This event is triggered when the CANCEL button is pressed. */
-        void cancel();
-    }
-
     private ConfirmCallback callback = null;
 
     public ConfirmDialog(Skin skin, String text, String okText, String cancelText) {
@@ -62,5 +49,22 @@ public class ConfirmDialog extends CommonDialog {
 
         cancel();
         hide(null);
+    }
+
+    /**
+     * This is the callback class that will subscribe to events happening in
+     * this confirmation dialog class.
+     */
+    public interface ConfirmCallback {
+
+        /**
+         * This event is triggered when the OK button is pressed.
+         */
+        void ok();
+
+        /**
+         * This event is triggered when the CANCEL button is pressed.
+         */
+        void cancel();
     }
 }

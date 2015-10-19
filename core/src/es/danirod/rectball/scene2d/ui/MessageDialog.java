@@ -28,13 +28,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
  */
 public class MessageDialog extends CommonDialog {
 
-    public interface MessageCallback {
-
-        /** Event received when the user dismisses the message. */
-        void dismiss();
-
-    }
-
     private MessageCallback callback = null;
 
     public MessageDialog(Skin skin, String text) {
@@ -58,6 +51,15 @@ public class MessageDialog extends CommonDialog {
 
         cancel();
         hide(null);
+    }
+
+    public interface MessageCallback {
+
+        /**
+         * Event received when the user dismisses the message.
+         */
+        void dismiss();
+
     }
 
 

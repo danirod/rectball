@@ -32,20 +32,26 @@ import com.badlogic.gdx.utils.Align;
  */
 public class ScoreActor extends Group {
 
-    /** The skin instance used to style this actor. */
+    /**
+     * The skin instance used to style this actor.
+     */
     private final Skin skin;
-
-    /** The current value for this score. */
-    private int value;
-
-    /** Whether to pad with zeroes or not. */
+    /**
+     * Whether to pad with zeroes or not.
+     */
     private final boolean zeroPad;
-
-    /** The background. */
+    /**
+     * The background.
+     */
     private final Drawable background;
-
-    /** The actual value that is rendered. */
+    /**
+     * The actual value that is rendered.
+     */
     private final Label label;
+    /**
+     * The current value for this score.
+     */
+    private int value;
 
     public ScoreActor(Skin skin) {
         this.skin = skin;
@@ -81,7 +87,7 @@ public class ScoreActor extends Group {
      * Because it depends on whether you want to pad the number with zeroes
      * or not.
      *
-     * @return  the score as a string.
+     * @return the score as a string.
      */
     private String getScore() {
         String score = Integer.toString(value);

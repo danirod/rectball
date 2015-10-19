@@ -18,8 +18,6 @@
 
 package es.danirod.rectball.platform;
 
-import es.danirod.rectball.model.Statistics;
-
 /**
  * @author danirod
  */
