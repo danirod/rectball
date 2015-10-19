@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.platform;
+package es.danirod.rectball.platform.sharing;
 
 import com.badlogic.gdx.graphics.Pixmap;
 

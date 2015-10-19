@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.platform;
+package es.danirod.rectball.platform.analytics;
 
 import es.danirod.rectball.platform.analytics.AnalyticEvent;
 

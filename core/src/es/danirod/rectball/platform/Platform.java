@@ -18,6 +18,12 @@
 
 package es.danirod.rectball.platform;
 
+import com.badlogic.gdx.Preferences;
+import es.danirod.rectball.platform.analytics.AnalyticServices;
+import es.danirod.rectball.platform.scores.ScoreServices;
+import es.danirod.rectball.platform.sharing.SharingServices;
+import es.danirod.rectball.platform.statistics.StatisticsServices;
+
 /**
  * This is the interface for platform code. Platform code is code that depends
  * on the platform that the application is running. Whenever features can only
@@ -37,5 +43,11 @@ public interface Platform {
     SharingServices sharing();
 
     AnalyticServices analytic();
+
+    ScoreServices score();
+
+    Preferences preferences();
+
+    StatisticsServices statistics();
 
 }

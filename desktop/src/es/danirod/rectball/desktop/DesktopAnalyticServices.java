@@ -19,7 +19,7 @@
 package es.danirod.rectball.desktop;
 
 import com.badlogic.gdx.Gdx;
-import es.danirod.rectball.platform.AnalyticServices;
+import es.danirod.rectball.platform.analytics.AnalyticServices;
 import es.danirod.rectball.platform.analytics.AnalyticEvent;
 
 /**

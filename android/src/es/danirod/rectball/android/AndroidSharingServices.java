@@ -26,6 +26,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.platform.sharing.SharingServices;
 
 /**
  * This contains Android-related sharing utilities. For instance, sharing
@@ -35,7 +36,7 @@ import es.danirod.rectball.RectballGame;
  * @author danirod
  * @since 0.4.0
  */
-public class AndroidSharingServices implements es.danirod.rectball.platform.SharingServices {
+public class AndroidSharingServices implements SharingServices {
 
     /** Android application instance. Required for creating intents. */
     private AndroidApplication app;

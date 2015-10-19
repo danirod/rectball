@@ -10,8 +10,7 @@ import java.util.*;
 import java.util.List;
 
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.statistics.StatisticSet;
-import es.danirod.rectball.statistics.Statistics;
+import es.danirod.rectball.model.Statistics;
 
 public class StatsTable extends Table {
 
@@ -42,16 +41,16 @@ public class StatsTable extends Table {
 
         boolean printedSomething = false;
         // Add best score.
-        if (game.scores.getHighestScore() != 0) {
-            String bestScore = Long.toString(game.scores.getHighestScore());
+        if (game.getPlatform().score().getHighScore() != 0) {
+            String bestScore = Long.toString(game.getPlatform().score().getHighScore());
             best.add(new Label(game.getLocale().get("statistics.best.score"), data)).align(Align.left).fillX();
             best.add(new Label(bestScore, data)).align(Align.right).expandX().row();
             printedSomething = true;
         }
 
         // Add best time.
-        if (game.scores.getHighestTime() != 0) {
-            String bestTime = secondsToTime(game.scores.getHighestTime());
+        if (game.getPlatform().score().getHighTime() != 0) {
+            String bestTime = secondsToTime(game.getPlatform().score().getHighTime());
             best.add(new Label(game.getLocale().get("statistics.best.time"), data)).align(Align.left).fillX();
             best.add(new Label(bestTime, data)).align(Align.right).expandX().row();
             printedSomething = true;
@@ -71,7 +70,7 @@ public class StatsTable extends Table {
         Table total = new Table();
         total.add(new Label(game.getLocale().get("statistics.total"), this.title)).colspan(2).row();
 
-        StatisticSet set = game.statistics.getTotalData();
+        Statistics.StatisticSet set = game.statistics.getTotalData();
         if (set.getStats().isEmpty()) {
             Label noData = new Label(game.getLocale().get("statistics.noData"), game.getSkin());
             noData.setAlignment(Align.center);

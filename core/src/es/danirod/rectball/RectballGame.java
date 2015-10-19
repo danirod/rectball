@@ -36,10 +36,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.platform.Platform;
 import es.danirod.rectball.screens.*;
-import es.danirod.rectball.settings.ScoreIO;
-import es.danirod.rectball.settings.Scores;
-import es.danirod.rectball.settings.Settings;
-import es.danirod.rectball.statistics.Statistics;
+import es.danirod.rectball.model.Statistics;
 import es.danirod.rectball.utils.RectballSkin;
 import es.danirod.rectball.utils.SoundPlayer;
 
@@ -58,10 +55,6 @@ public class RectballGame extends Game {
     /* FIXME: Privatize this. */
 
     private Map<Integer, AbstractScreen> screens = new HashMap<>();
-
-    public Settings settings;
-
-    public Scores scores;
 
     public Statistics statistics;
 
@@ -123,9 +116,8 @@ public class RectballGame extends Game {
 
     public void finishLoading() {
         // Load the remaining data.
-        settings = new Settings(Gdx.app.getPreferences("rectball"));
-        scores = ScoreIO.load();
-        statistics = Statistics.loadStats();
+        platform.score().readData();
+        statistics = platform.statistics().loadStatistics();
         player = new SoundPlayer(this);
         uiSkin = new RectballSkin(this);
         updateBallAtlas();
@@ -296,7 +288,8 @@ public class RectballGame extends Game {
     }
 
     public void updateBallAtlas() {
-        Texture balls = manager.get(settings.isColorblind() ? "board/colorblind.png" : "board/normal.png");
+        boolean isColorblind = platform.preferences().getBoolean("colorblind");
+        Texture balls = manager.get(isColorblind ? "board/colorblind.png" : "board/normal.png");
         TextureRegion[][] regions = TextureRegion.split(balls, 256, 256);
         ballAtlas = new TextureAtlas();
         ballAtlas.addRegion("ball_red", regions[0][0]);
