@@ -50,15 +50,16 @@ public class StatsTable extends Table {
     }
 
     private static String secondsToTime(int seconds) {
-        if (seconds < 60) {
-            return Integer.toString(seconds);
+        int hrs = seconds / 3600;
+        int min = (seconds % 3600) / 60;
+        int sec = (seconds % 3600) % 60;
+
+        if (hrs != 0) {
+            return String.format("%d:%02d:%02d", hrs, min, sec);
+        } else if (min != 0) {
+            return String.format("%d:%02d", min, sec);
         } else {
-            String min = Integer.toString(seconds / 60);
-            String sec = Integer.toString(seconds % 60);
-            if (sec.length() == 1) {
-                sec = "0" + sec;
-            }
-            return min + ":" + sec;
+            return String.format("%d", sec);
         }
     }
 
