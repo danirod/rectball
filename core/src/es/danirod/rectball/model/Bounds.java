@@ -15,11 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball.model;
 
 import java.util.List;
 
 public class Bounds {
+
+    public final int minX;
+    public final int minY;
+    public final int maxX;
+    public final int maxY;
+    public Bounds(int minX, int minY, int maxX, int maxY) {
+        this.minX = minX;
+        this.minY = minY;
+        this.maxX = maxX;
+        this.maxY = maxY;
+    }
 
     public static Bounds fromBallList(List<Ball> balls) {
         int minX, minY, maxX, maxY;
@@ -34,15 +46,6 @@ public class Bounds {
         return new Bounds(minX, minY, maxX, maxY);
     }
 
-    public int minX, minY, maxX, maxY;
-
-    public Bounds(int minX, int minY, int maxX, int maxY) {
-        this.minX = minX;
-        this.minY = minY;
-        this.maxX = maxX;
-        this.maxY = maxY;
-    }
-
     public boolean inBounds(int x, int y) {
         return (x >= minX && x <= maxX) && (y >= minY && y <= maxY);
     }
@@ -54,10 +57,7 @@ public class Bounds {
 
         Bounds bounds = (Bounds) o;
 
-        if (minX != bounds.minX) return false;
-        if (minY != bounds.minY) return false;
-        if (maxX != bounds.maxX) return false;
-        return maxY == bounds.maxY;
+        return minX == bounds.minX && minY == bounds.minY && maxX == bounds.maxX && maxY == bounds.maxY;
 
     }
 

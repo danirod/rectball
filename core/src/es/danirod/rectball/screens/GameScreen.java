@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
@@ -27,14 +28,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.actors.board.*;
-import es.danirod.rectball.actors.ScoreActor;
-import es.danirod.rectball.actors.TimerActor;
-import es.danirod.rectball.actors.TimerActor.TimerCallback;
-import es.danirod.rectball.dialogs.ConfirmDialog;
+import es.danirod.rectball.SoundPlayer.SoundCode;
 import es.danirod.rectball.model.*;
-import es.danirod.rectball.model.Statistics;
-import es.danirod.rectball.utils.SoundPlayer.SoundCode;
+import es.danirod.rectball.scene2d.game.*;
+import es.danirod.rectball.scene2d.game.TimerActor.TimerCallback;
+import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
+import es.danirod.rectball.scene2d.ui.ConfirmDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,28 +42,44 @@ import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
 
 public class GameScreen extends AbstractScreen implements TimerCallback, BallSelectionListener {
 
-    /** Display the remaining time. */
-    public TimerActor timer;
+    /**
+     * Display the remaining time.
+     */
+    private TimerActor timer;
 
-    /** Display the current score. */
+    /**
+     * Display the current score.
+     */
     private ScoreActor score;
 
-    /** Display the board representation. */
+    /**
+     * Display the board representation.
+     */
     private BoardActor board;
 
-    /** Is the game paused? */
+    /**
+     * Is the game paused?
+     */
     private boolean paused;
 
-    /** Is the game running? True unless is on countdown or game over. */
+    /**
+     * Is the game running? True unless is on countdown or game over.
+     */
     private boolean running;
 
-    /** Has the countdown already finished? */
+    /**
+     * Has the countdown already finished?
+     */
     private boolean countdownFinished;
 
-    /** True if the user is asking to leave. */
+    /**
+     * True if the user is asking to leave.
+     */
     private boolean askingLeave;
 
-    /** True if the game has finished. */
+    /**
+     * True if the game has finished.
+     */
     private boolean timeout;
 
     public GameScreen(RectballGame game) {
@@ -78,9 +93,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
      */
     private void showLeaveDialog() {
         ConfirmDialog dialog = new ConfirmDialog(game.getSkin(),
-                game.getLocale().get("game.leave"),
-                game.getLocale().get("core.yes"),
-                game.getLocale().get("core.no"));
+                                                        game.getLocale().get("game.leave"),
+                                                        game.getLocale().get("core.yes"),
+                                                        game.getLocale().get("core.no"));
         dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
             @Override
             public void ok() {
@@ -105,9 +120,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
     private void showPreLeaveDialog() {
         ConfirmDialog dialog = new ConfirmDialog(game.getSkin(),
-                game.getLocale().get("game.paused"),
-                game.getLocale().get("game.continue"),
-                game.getLocale().get("game.leaveGame"));
+                                                        game.getLocale().get("game.paused"),
+                                                        game.getLocale().get("game.continue"),
+                                                        game.getLocale().get("game.leaveGame"));
         dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
             @Override
             public void ok() {
@@ -147,7 +162,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             public void run() {
                 countdownFinished = true;
 
-                // Start the game unless the user is leaving or is pasused.
+                // Start the game unless the user is leaving or is paused.
                 if (!paused && !askingLeave) {
                     running = true;
                     board.setColoured(true);
@@ -180,29 +195,29 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         label.setSize(150, 150);
         label.setAlignment(Align.center);
         label.setPosition(
-                (getStage().getWidth() - label.getWidth()) / 2,
-                (getStage().getHeight() - label.getHeight()) / 2);
+                                 (getStage().getWidth() - label.getWidth()) / 2,
+                                 (getStage().getHeight() - label.getHeight()) / 2);
 
         // Add the label to the stage and play a sound to notify the user.
         getStage().addActor(label);
         game.player.playSound(SoundCode.SELECT);
 
         label.addAction(Actions.sequence(
-                Actions.parallel(Actions.fadeOut(1f), Actions.moveBy(0, 80, 1f)),
+                                                Actions.parallel(Actions.fadeOut(1f), Actions.moveBy(0, 80, 1f)),
 
-                // After the animation, decide. If the countdown hasn't finished
-                // yet, run another countdown with 1 second less.
-                Actions.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        label.remove();
-                        if (seconds > 1) {
-                            countdown(seconds - 1, after);
-                        } else {
-                            after.run();
-                        }
-                    }
-                })
+                                                // After the animation, decide. If the countdown hasn't finished
+                                                // yet, run another countdown with 1 second less.
+                                                Actions.run(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        label.remove();
+                                                        if (seconds > 1) {
+                                                            countdown(seconds - 1, after);
+                                                        } else {
+                                                            after.run();
+                                                        }
+                                                    }
+                                                })
         ));
     }
 
@@ -212,13 +227,13 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
      * is to regenerate the board and apply any required checks to make sure
      * that the game doesn't enter in an infinite loop.
      *
-     * @param bounds  the bounds that have to be regenerated.
+     * @param bounds the bounds that have to be regenerated.
      */
     private void generate(Bounds bounds) {
         // Generate new balls;
         game.getState().getBoard().randomize(
-                new Coordinate(bounds.minX, bounds.minY),
-                new Coordinate(bounds.maxX, bounds.maxY));
+                                                    new Coordinate(bounds.minX, bounds.minY),
+                                                    new Coordinate(bounds.maxX, bounds.maxY));
 
         // Check the new board for valid combinations.
         CombinationFinder newFinder = new CombinationFinder(game.getState().getBoard());
@@ -233,14 +248,14 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 board.setColoured(false);
                 game.getState().resetBoard();
                 board.addAction(Actions.sequence(
-                        board.shake(10, 5, 0.05f),
-                        Actions.run(new Runnable() {
-                            @Override
-                            public void run() {
-                                board.setColoured(true);
-                                timer.setRunning(true);
-                            }
-                        })));
+                                                        board.shake(10, 5, 0.05f),
+                                                        Actions.run(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                board.setColoured(true);
+                                                                timer.setRunning(true);
+                                                            }
+                                                        })));
             }
         }
         board.addAction(board.showRegion(bounds));
@@ -264,10 +279,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         label.setAlignment(Align.center);
         label.setPosition(centerX - label.getWidth() / 2, centerY - label.getHeight() / 2);
         label.addAction(Actions.sequence(
-                Actions.parallel(
-                        Actions.moveBy(0, 80, 0.5f),
-                        Actions.alpha(0.5f, 0.5f)),
-                Actions.removeActor()
+                                                Actions.parallel(
+                                                                        Actions.moveBy(0, 80, 0.5f),
+                                                                        Actions.alpha(0.5f, 0.5f)),
+                                                Actions.removeActor()
         ));
         getStage().addActor(label);
     }
@@ -341,7 +356,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         if (askingLeave) {
             return;
         }
-        
+
         paused = false;
 
         // If the countdown has finished but the game is not running is a
@@ -423,7 +438,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     }
 
     @Override
-    public void onSelectionSucceded(final List<BallActor> selection) {
+    public void onSelectionSucceeded(final List<BallActor> selection) {
         // Extract the data from the selection.
         List<Ball> balls = new ArrayList<>();
         for (BallActor selectedBall : selection)
@@ -432,16 +447,16 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // Change the colors of the selected region.
         board.addAction(Actions.sequence(
-                board.hideRegion(bounds),
-                Actions.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (BallActor selectedBall : selection) {
-                            selectedBall.setColor(Color.WHITE);
-                        }
-                        generate(bounds);
-                    }
-                })
+                                                board.hideRegion(bounds),
+                                                Actions.run(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        for (BallActor selectedBall : selection) {
+                                                            selectedBall.setColor(Color.WHITE);
+                                                        }
+                                                        generate(bounds);
+                                                    }
+                                                })
         ));
 
         // You deserve some score and extra time.

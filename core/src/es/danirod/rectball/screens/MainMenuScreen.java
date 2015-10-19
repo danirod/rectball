@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
@@ -23,10 +24,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Scaling;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.dialogs.ConfirmDialog;
-import es.danirod.rectball.dialogs.MessageDialog;
-import es.danirod.rectball.listeners.ScreenJumper;
-import es.danirod.rectball.utils.SoundPlayer;
+import es.danirod.rectball.SoundPlayer;
+import es.danirod.rectball.scene2d.listeners.ScreenJumper;
+import es.danirod.rectball.scene2d.ui.ConfirmDialog;
+import es.danirod.rectball.scene2d.ui.MessageDialog;
 
 import static es.danirod.rectball.Constants.STAGE_PADDING;
 

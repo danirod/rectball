@@ -15,15 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball.model;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 class Selection {
 
-    private List<Ball> balls;
+    private final List<Ball> balls;
 
     public Selection(List<Ball> balls) {
         this.balls = balls;
@@ -31,6 +30,7 @@ class Selection {
 
     /**
      * Returns true if all the balls in the selection share the same color.
+     *
      * @return true unless there is a single ball having a different color.
      */
     public boolean checkSameColor() {
@@ -45,7 +45,8 @@ class Selection {
 
     /**
      * Check that the selection forms a square.
-     * @return  true if the selection forms a square.
+     *
+     * @return true if the selection forms a square.
      */
     public boolean checkSquare() {
         // Put the coordinate values into two sets, one for rows and another

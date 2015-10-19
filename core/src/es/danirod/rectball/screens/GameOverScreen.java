@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.*;
@@ -25,10 +26,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
-import es.danirod.rectball.Constants;
-import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.listeners.ScreenPopper;
-import es.danirod.rectball.utils.SoundPlayer;
+import es.danirod.rectball.*;
+import es.danirod.rectball.scene2d.listeners.ScreenPopper;
 
 public class GameOverScreen extends AbstractScreen {
 
@@ -39,7 +38,7 @@ public class GameOverScreen extends AbstractScreen {
     @Override
     public void setUpInterface(Table table) {
         // GAME OVER!
-        table.add(new Label(game.getLocale().get("game.gameover"), game.getSkin())).row();
+        table.add(new Label(game.getLocale().get("game.game_over"), game.getSkin())).row();
 
         // Set up the label data.
         String lastScore = Integer.toString(game.getState().getScore());
@@ -105,8 +104,8 @@ public class GameOverScreen extends AbstractScreen {
 
         // Now animate the stage to make it fall.
         getStage().addAction(Actions.sequence(
-                Actions.moveBy(0, Constants.VIEWPORT_HEIGHT),
-                Actions.moveBy(0, -Constants.VIEWPORT_HEIGHT, 0.25f)
+                                                     Actions.moveBy(0, Constants.VIEWPORT_HEIGHT),
+                                                     Actions.moveBy(0, -Constants.VIEWPORT_HEIGHT, 0.25f)
         ));
     }
 

@@ -24,12 +24,12 @@ import com.badlogic.gdx.backends.lwjgl.LwjglPreferences;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
 import es.danirod.rectball.platform.*;
-import es.danirod.rectball.platform.analytics.AnalyticServices;
-import es.danirod.rectball.platform.scores.LegacyScoreServices;
-import es.danirod.rectball.platform.scores.ScoreServices;
-import es.danirod.rectball.platform.sharing.SharingServices;
-import es.danirod.rectball.platform.statistics.LegacyStatisticsServices;
-import es.danirod.rectball.platform.statistics.StatisticsServices;
+import es.danirod.rectball.platform.Analytics;
+import es.danirod.rectball.platform.LegacyScores;
+import es.danirod.rectball.platform.Scores;
+import es.danirod.rectball.platform.Sharing;
+import es.danirod.rectball.platform.LegacyStatistics;
+import es.danirod.rectball.platform.Statistics;
 
 /**
  * This contains code for desktop platform. Here code that uses desktop JRE
@@ -41,20 +41,20 @@ import es.danirod.rectball.platform.statistics.StatisticsServices;
  */
 public class DesktopPlatform implements Platform {
 
-    private SharingServices sharing;
+    private Sharing sharing;
 
-    private AnalyticServices analytic;
+    private Analytics analytic;
 
-    private ScoreServices score;
+    private Scores score;
 
     private Preferences preferences;
 
-    private StatisticsServices statistics;
+    private Statistics statistics;
 
     protected DesktopPlatform() {
-        sharing = new DesktopSharingServices();
-        analytic = new DesktopAnalyticServices();
-        score = new LegacyScoreServices() {
+        sharing = new DesktopSharing();
+        analytic = new DesktopAnalytics();
+        score = new LegacyScores() {
             @Override
             protected FileHandle getScoresFile() {
                 if (SharedLibraryLoader.isWindows) {
@@ -70,7 +70,7 @@ public class DesktopPlatform implements Platform {
             }
         };
         preferences = new LwjglPreferences("rectball", ".prefs/");
-        statistics = new LegacyStatisticsServices() {
+        statistics = new LegacyStatistics() {
             @Override
             protected FileHandle getStatistics() {
                 if (SharedLibraryLoader.isWindows) {
@@ -88,17 +88,17 @@ public class DesktopPlatform implements Platform {
     }
 
     @Override
-    public SharingServices sharing() {
+    public Sharing sharing() {
         return sharing;
     }
 
     @Override
-    public AnalyticServices analytic() {
+    public Analytics analytic() {
         return analytic;
     }
 
     @Override
-    public ScoreServices score() {
+    public Scores score() {
         return score;
     }
 
@@ -108,7 +108,7 @@ public class DesktopPlatform implements Platform {
     }
 
     @Override
-    public StatisticsServices statistics() {
+    public Statistics statistics() {
         return statistics;
     }
 }

@@ -18,33 +18,13 @@
 
 package es.danirod.rectball.platform;
 
-import com.badlogic.gdx.Preferences;
-
 /**
- * This is the interface for platform code. Platform code is code that depends
- * on the platform that the application is running. Whenever features can only
- * in a particular platform, platform dependent code should be used. For
- * instance, adding Google APIs or Android APIs must be done in Android code
- * to prevent desktop releases from failing.
- *
  * @author danirod
- * @since 0.4.0
  */
-public interface Platform {
+public interface Statistics {
 
-    /**
-     * Get the sharing services instance attached to this platform.
-     *
-     * @return sharing services instance.
-     */
-    Sharing sharing();
+    es.danirod.rectball.model.Statistics loadStatistics();
 
-    Analytics analytic();
-
-    Scores score();
-
-    Preferences preferences();
-
-    Statistics statistics();
+    void saveStatistics(es.danirod.rectball.model.Statistics statistics);
 
 }

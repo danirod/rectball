@@ -16,35 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.platform;
+package es.danirod.rectball.scene2d.ui;
 
-import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Align;
 
 /**
- * This is the interface for platform code. Platform code is code that depends
- * on the platform that the application is running. Whenever features can only
- * in a particular platform, platform dependent code should be used. For
- * instance, adding Google APIs or Android APIs must be done in Android code
- * to prevent desktop releases from failing.
+ * Switch actor.
  *
  * @author danirod
- * @since 0.4.0
+ * @since 0.3.0
  */
-public interface Platform {
+public class SwitchActor extends CheckBox {
 
-    /**
-     * Get the sharing services instance attached to this platform.
-     *
-     * @return sharing services instance.
-     */
-    Sharing sharing();
-
-    Analytics analytic();
-
-    Scores score();
-
-    Preferences preferences();
-
-    Statistics statistics();
-
+    public SwitchActor(String text, Skin skin) {
+        super(text, skin);
+        padTop(10).padBottom(10);
+        getImageCell().width(150).height(50).padRight(20);
+        getLabelCell().align(Align.left).expandX();
+    }
 }

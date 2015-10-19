@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball.model;
 
 /**
@@ -26,21 +27,19 @@ package es.danirod.rectball.model;
  */
 public class GameState {
 
+    private final Board board;
     /**
      * The score. This data structure will provide methods to manually update
      * the score or to add points to the value, which is what the user will
      * usually do, actually.
      */
     private int score;
-
     /**
      * How many seconds has been the player playing. This is used to know how
      * many seconds has the player lasted when the game is over. Every tick
      * this value should be updated.
      */
     private float time;
-
-    private final Board board;
 
     public GameState() {
         this.score = 0;
@@ -52,20 +51,12 @@ public class GameState {
         return score;
     }
 
-    public void setScore(int score) {
-        this.score = Math.max(0, score);
-    }
-
     public void addScore(int score) {
         this.score += score;
     }
 
     public float getTime() {
         return time;
-    }
-
-    public void setTime(float time) {
-        this.time = Math.max(0, time);
     }
 
     public void addTime(float time) {

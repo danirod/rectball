@@ -16,24 +16,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-apply plugin: "java"
+package es.danirod.rectball.scene2d.listeners;
 
-sourceCompatibility = 1.7
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.SoundPlayer;
 
-sourceSets.main.java.srcDirs = ["src/"]
-sourceSets.test.java.srcDirs = ["test/"]
+public class ScreenJumper extends ChangeListener {
 
-dependencies {
-    compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-    compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+    private final RectballGame game;
 
-    testCompile "junit:junit:4.11"
-    testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-    testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
-    testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-}
+    private final int target;
 
-eclipse.project {
-    name = appName + "-core"
+    public ScreenJumper(RectballGame game, int target) {
+        this.game = game;
+        this.target = target;
+    }
+
+    @Override
+    public void changed(ChangeEvent event, Actor actor) {
+        game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
+        game.pushScreen(target);
+
+        // Cancel the event to avoid checking the actor
+        event.cancel();
+    }
+
+
 }
