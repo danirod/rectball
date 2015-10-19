@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
@@ -33,7 +34,6 @@ import es.danirod.rectball.actors.TimerActor;
 import es.danirod.rectball.actors.TimerActor.TimerCallback;
 import es.danirod.rectball.dialogs.ConfirmDialog;
 import es.danirod.rectball.model.*;
-import es.danirod.rectball.model.Statistics;
 import es.danirod.rectball.utils.SoundPlayer.SoundCode;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
 public class GameScreen extends AbstractScreen implements TimerCallback, BallSelectionListener {
 
     /** Display the remaining time. */
-    public TimerActor timer;
+    private TimerActor timer;
 
     /** Display the current score. */
     private ScoreActor score;
@@ -147,7 +147,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             public void run() {
                 countdownFinished = true;
 
-                // Start the game unless the user is leaving or is pasused.
+                // Start the game unless the user is leaving or is paused.
                 if (!paused && !askingLeave) {
                     running = true;
                     board.setColoured(true);
@@ -423,7 +423,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     }
 
     @Override
-    public void onSelectionSucceded(final List<BallActor> selection) {
+    public void onSelectionSucceeded(final List<BallActor> selection) {
         // Extract the data from the selection.
         List<Ball> balls = new ArrayList<>();
         for (BallActor selectedBall : selection)

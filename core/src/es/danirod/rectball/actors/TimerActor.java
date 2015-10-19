@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball.actors;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
@@ -58,7 +58,7 @@ public class TimerActor extends Actor {
 
     }
 
-    private List<TimerCallback> subscribers = new ArrayList<>();
+    private final List<TimerCallback> subscribers = new ArrayList<>();
 
     /**
      * Warning region. When the remaining time percentage is not greater than
@@ -71,10 +71,10 @@ public class TimerActor extends Actor {
     /**
      * The maximum number of seconds this timer can have. When filled with
      * seconds, the value of the timer will always be clamped so that it's
-     * never bigger than this. Aditionally this is used as the maximum value
+     * never bigger than this. Additionally this is used as the maximum value
      * when calculating the percentage of the timer.
      */
-    private float maxSeconds;
+    private final float maxSeconds;
 
     /**
      * The countdown value for the timer. The value of this countdown
@@ -92,7 +92,7 @@ public class TimerActor extends Actor {
     private boolean running = true;
 
     /** The skin used by the game. */
-    private Skin skin;
+    private final Skin skin;
 
     /**
      * Set up a new timer.
@@ -126,7 +126,7 @@ public class TimerActor extends Actor {
 
     /**
      * Set the number of seconds of this timer to some value. The value will
-     * be clamped againts the maximum number of seconds that the timer can
+     * be clamped against the maximum number of seconds that the timer can
      * hold.
      *
      * @param seconds new value of seconds for this timer.
@@ -176,8 +176,8 @@ public class TimerActor extends Actor {
 
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
 
-        NinePatch yellowpatch = skin.get("yellowpatch", NinePatch.class);
-        yellowpatch.draw(batch, getX() - 10, getY() - 10, getWidth() + 20, getHeight() + 20);
+        NinePatch yellowPatch = skin.get("yellowPatch", NinePatch.class);
+        yellowPatch.draw(batch, getX() - 10, getY() - 10, getWidth() + 20, getHeight() + 20);
 
         Texture progress = skin.get("progress", Texture.class);
         batch.draw(progress, getX(), getY(), getWidth(), getHeight());
@@ -187,7 +187,7 @@ public class TimerActor extends Actor {
         float percentage = seconds / maxSeconds;
         float remainingSize = getWidth() * percentage;
 
-        // Render the remaining time using the appropiate color.
+        // Render the remaining time using the appropriate color.
         if (percentage < WARNING_TRIGGER) {
             batch.setColor(color.r, 0, 0, getColor().a);
         } else {

@@ -1,11 +1,27 @@
+/*
+ * This file is part of Rectball
+ * Copyright (C) 2015 Dani Rodríguez
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package es.danirod.rectball.actors.board;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import es.danirod.rectball.model.Ball;
@@ -18,11 +34,11 @@ public class BallActor extends Image {
 
     private boolean selected;
 
-    private Ball ball;
+    private final Ball ball;
 
-    private BoardActor board;
+    private final BoardActor board;
 
-    private TextureAtlas atlas;
+    private final TextureAtlas atlas;
 
     public BallActor(BoardActor board, Ball ball, TextureAtlas atlas) {
         this.board = board;
@@ -53,11 +69,11 @@ public class BallActor extends Image {
         setOrigin(getWidth() / 2, getHeight() / 2);
     }
 
-    public boolean isSelected() {
+    private boolean isSelected() {
         return selected;
     }
 
-    public void setSelected(boolean selected) {
+    private void setSelected(boolean selected) {
         this.selected = selected;
         if (selected) {
             board.select(ball.getX(), ball.getY());
@@ -66,7 +82,7 @@ public class BallActor extends Image {
         }
     }
 
-    protected void quietlySetSelected(boolean selected) {
-        this.selected = selected;
+    void quietlyUnselect() {
+        this.selected = false;
     }
 }

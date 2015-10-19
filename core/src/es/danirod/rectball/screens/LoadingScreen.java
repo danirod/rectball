@@ -15,18 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Timer;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.actors.board.BoardActor;
 import es.danirod.rectball.model.BallColor;
@@ -38,7 +35,7 @@ public class LoadingScreen extends AbstractScreen {
 
     private static final float BALL_SPEED = 0.15f;
 
-    private Board board;
+    private final Board board;
 
     private BoardActor boardActor;
 

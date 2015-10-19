@@ -1,13 +1,28 @@
+/*
+ * This file is part of Rectball
+ * Copyright (C) 2015 Dani Rodríguez
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package es.danirod.rectball.actors.board;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import es.danirod.rectball.model.*;
-import es.danirod.rectball.screens.GameScreen;
 
 import java.util.*;
 
@@ -15,15 +30,15 @@ public class BoardActor extends Table {
 
     private final BallActor[][] actors;
 
-    private Set<BallActor> selection = new HashSet<>();
+    private final Set<BallActor> selection = new HashSet<>();
 
     /**
      * Subscribers that will receive notifications about selection events.
      */
-    private List<BallSelectionListener> subscribers = new ArrayList<>();
+    private final List<BallSelectionListener> subscribers = new ArrayList<>();
 
     /** The board. */
-    private Board board;
+    private final Board board;
 
     /** Is the board coloured? If false, all the balls will be grayed. */
     private boolean coloured = false;
@@ -66,7 +81,7 @@ public class BoardActor extends Table {
                 if (board.selection(ballSelection)) {
                     // It is a valid selection. Notify our subscribers.
                     for (BallSelectionListener subscriber : subscribers)
-                        subscriber.onSelectionSucceded(new ArrayList<>(selection));
+                        subscriber.onSelectionSucceeded(new ArrayList<>(selection));
                 } else {
                     // It is not a valid selection. Notify our subscribers.
                     for (BallSelectionListener subscriber : subscribers)
@@ -76,7 +91,7 @@ public class BoardActor extends Table {
                 // our subscribers about the clear event. Subscribers should
                 // assume on selection events that the selection is cleared.
                 for (BallActor selected : selection) {
-                    selected.quietlySetSelected(false);
+                    selected.quietlyUnselect();
                 }
                 selection.clear();
             } else {
@@ -103,7 +118,7 @@ public class BoardActor extends Table {
         for (BallSelectionListener subscriber : subscribers)
             subscriber.onSelectionCleared(unselectedBalls);
         for (BallActor selected : selection) {
-            selected.quietlySetSelected(false);
+            selected.quietlyUnselect();
         }
         selection.clear();
     }
@@ -111,19 +126,10 @@ public class BoardActor extends Table {
     /**
      * Attach a new subscriber to this board. The subscriber will receive
      * notifications about selection events happened in this board.
-     * @param subscriber  susbcriber that wants to be notified
+     * @param subscriber  subscriber that wants to be notified
      */
     public void addSubscriber(BallSelectionListener subscriber) {
         subscribers.add(subscriber);
-    }
-
-    /**
-     * Remove all the subscribers attached to this board. This method should be
-     * called when the board is not being used anymore to clear any references
-     * and to let the virtual machine do his job disposing the board.
-     */
-    public void removeSubscribers() {
-        subscribers.clear();
     }
 
     /**
@@ -151,11 +157,6 @@ public class BoardActor extends Table {
     public Action hideBoard() {
         Bounds boardBounds = new Bounds(0, 0, board.getSize() - 1, board.getSize() - 1);
         return resizeBalls(boardBounds, 0, 0.15f);
-    }
-
-    public Action showBoard() {
-        Bounds boardBounds = new Bounds(0, 0, board.getSize() - 1, board.getSize() - 1);
-        return resizeBalls(boardBounds, 1, 0.15f);
     }
 
     public Action hideRegion(Bounds bounds) {

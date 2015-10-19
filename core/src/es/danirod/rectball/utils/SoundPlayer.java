@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball.utils;
 
 import com.badlogic.gdx.audio.Sound;
@@ -24,20 +25,20 @@ import es.danirod.rectball.RectballGame;
 public class SoundPlayer {
 
     public enum SoundCode {
-        GAME_OVER("sound/gameover.ogg"),
+        GAME_OVER("sound/game_over.ogg"),
         SELECT("sound/select.ogg"),
         UNSELECT("sound/unselect.ogg"),
         SUCCESS("sound/success.ogg"),
         FAIL("sound/fail.ogg");
 
-        protected final String internalPath;
+        final String internalPath;
 
         SoundCode(String path) {
             internalPath = path;
         }
     }
 
-    private RectballGame game;
+    private final RectballGame game;
 
     public SoundPlayer(RectballGame game) {
         this.game = game;

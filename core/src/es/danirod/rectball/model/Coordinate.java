@@ -15,11 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball.model;
 
 public class Coordinate {
 
-    public int x, y;
+    public final int x;
+    public final int y;
 
     public Coordinate(int x, int y) {
         this.x = x;

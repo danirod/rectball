@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.*;
@@ -39,7 +40,7 @@ public class GameOverScreen extends AbstractScreen {
     @Override
     public void setUpInterface(Table table) {
         // GAME OVER!
-        table.add(new Label(game.getLocale().get("game.gameover"), game.getSkin())).row();
+        table.add(new Label(game.getLocale().get("game.game_over"), game.getSkin())).row();
 
         // Set up the label data.
         String lastScore = Integer.toString(game.getState().getScore());

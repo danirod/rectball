@@ -71,14 +71,4 @@ public class AnalyticEvent {
         return userData.containsKey(key);
     }
 
-    /**
-     * This method returns a map with all the data available in this event.
-     * The returned map is a read-only map where every entry is a user data
-     * previously placed in the event.
-     * @return  user data for this event.
-     */
-    public Map<String, Object> getAllUserData() {
-        return Collections.unmodifiableMap(userData);
-    }
-
 }

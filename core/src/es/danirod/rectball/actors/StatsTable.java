@@ -1,3 +1,21 @@
+/*
+ * This file is part of Rectball
+ * Copyright (C) 2015 Dani Rodríguez
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package es.danirod.rectball.actors;
 
 import com.badlogic.gdx.graphics.Color;
@@ -14,17 +32,14 @@ import es.danirod.rectball.model.Statistics;
 
 public class StatsTable extends Table {
 
-    private RectballGame game;
+    private final RectballGame game;
 
-    private Statistics stats;
+    private final LabelStyle title;
 
-    private LabelStyle title;
-
-    private LabelStyle data;
+    private final LabelStyle data;
 
     public StatsTable(RectballGame game, LabelStyle title, LabelStyle data) {
         this.game = game;
-        this.stats = game.statistics;
         this.title = title;
         this.data = data;
 
@@ -104,7 +119,7 @@ public class StatsTable extends Table {
             return color;
         }
 
-        // Put the data in a TreeMap. TreeMaps keep order. Use reverse to show biggers on left.
+        // Put the data in a TreeMap. TreeMaps keep order. Use reverse to show bigger values on left.
         Map<Integer, List<String>> colorScore = new TreeMap<>(Collections.reverseOrder());
         for (Map.Entry<String, Integer> stat : game.statistics.getColorData().getStats().entrySet()) {
             if (!colorScore.containsKey(stat.getValue())) {

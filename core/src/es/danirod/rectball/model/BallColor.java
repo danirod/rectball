@@ -15,30 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball.model;
 
-import com.badlogic.gdx.graphics.Color;
-
 /**
- * Enumerated type for representing the colors balls can have. This enumared
+ * Enumerated type for representing the colors balls can have. This enumerated
  * type is also responsible for getting the texture region of a sheet for
  * representing that color on the screen.
  *
  * @author danirod
  */
 public enum BallColor {
-    BLUE(Color.BLUE),
-    GREEN(Color.GREEN),
-    RED(Color.RED),
-    YELLOW(Color.YELLOW);
-
-    private Color color;
-
-    BallColor(Color color) {
-        this.color = color;
-    }
-
-    public Color getColor() {
-        return color;
-    }
+    BLUE,
+    GREEN,
+    RED,
+    YELLOW
 }

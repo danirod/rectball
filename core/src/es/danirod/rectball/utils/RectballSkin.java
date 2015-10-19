@@ -1,3 +1,21 @@
+/*
+ * This file is part of Rectball
+ * Copyright (C) 2015 Dani Rodríguez
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package es.danirod.rectball.utils;
 
 import com.badlogic.gdx.graphics.Color;
@@ -5,7 +23,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
@@ -24,12 +41,12 @@ public class RectballSkin extends Skin {
     /**
      * Game instance. I need access to the AssetManager.
      */
-    private RectballGame game;
+    private final RectballGame game;
 
     /**
      * Build a new Rectball skin. This will set up all the required styles
      * so that they can be later retrieving using the methods from Skin class.
-     * @param game
+     * @param game  the game this skin is attached to.
      */
     public RectballSkin(RectballGame game) {
         this.game = game;
@@ -153,10 +170,10 @@ public class RectballSkin extends Skin {
     }
 
     private void addNinePatchesStyles() {
-        // Load the yellow ninepatches.
-        Texture yellowTexture = game.manager.get("ui/yellowpatch.png");
+        // Load the yellow nine patches.
+        Texture yellowTexture = game.manager.get("ui/yellow_patch.png");
         NinePatch yellowPatch = new NinePatch(yellowTexture, 10, 10, 10, 10);
-        this.add("yellowpatch", yellowPatch);
+        this.add("yellowPatch", yellowPatch);
     }
 
     private void addTextureRegionStyles() {

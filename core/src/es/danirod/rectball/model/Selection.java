@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball.model;
 
 import java.util.HashSet;
@@ -23,7 +24,7 @@ import java.util.Set;
 
 class Selection {
 
-    private List<Ball> balls;
+    private final List<Ball> balls;
 
     public Selection(List<Ball> balls) {
         this.balls = balls;

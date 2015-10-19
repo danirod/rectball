@@ -1,10 +1,26 @@
+/*
+ * This file is part of Rectball
+ * Copyright (C) 2015 Dani Rodríguez
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package es.danirod.rectball.actors;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -17,13 +33,13 @@ import com.badlogic.gdx.utils.Align;
 public class ScoreActor extends Group {
 
     /** The skin instance used to style this actor. */
-    private Skin skin;
+    private final Skin skin;
 
     /** The current value for this score. */
     private int value;
 
     /** Whether to pad with zeroes or not. */
-    private boolean zeropad;
+    private final boolean zeroPad;
 
     /** The background. */
     private final Drawable background;
@@ -32,17 +48,9 @@ public class ScoreActor extends Group {
     private final Label label;
 
     public ScoreActor(Skin skin) {
-        this(skin, 0, true);
-    }
-
-    public ScoreActor(Skin skin, int value) {
-        this(skin, value, true);
-    }
-
-    public ScoreActor(Skin skin, int value, boolean zeropad) {
         this.skin = skin;
-        this.value = value;
-        this.zeropad = zeropad;
+        this.value = 0;
+        this.zeroPad = true;
 
         background = skin.newDrawable("pixel", Color.BLACK);
         label = new Label(getScore(), skin, "monospace");
@@ -58,8 +66,8 @@ public class ScoreActor extends Group {
         // Draw the background.
 
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
-        NinePatch yellowpatch = skin.get("yellowpatch", NinePatch.class);
-        yellowpatch.draw(batch, getX() - 10, getY() - 10, getWidth() + 20, getHeight() + 20);
+        NinePatch yellowPatch = skin.get("yellowPatch", NinePatch.class);
+        yellowPatch.draw(batch, getX() - 10, getY() - 10, getWidth() + 20, getHeight() + 20);
 
         // Draw the black background.
         background.draw(batch, getX(), getY(), getWidth(), getHeight());
@@ -77,7 +85,7 @@ public class ScoreActor extends Group {
      */
     private String getScore() {
         String score = Integer.toString(value);
-        if (zeropad) {
+        if (zeroPad) {
             while (score.length() < 4) {
                 score = "0" + score;
             }

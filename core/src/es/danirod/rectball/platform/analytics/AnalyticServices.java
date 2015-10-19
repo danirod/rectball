@@ -18,8 +18,6 @@
 
 package es.danirod.rectball.platform.analytics;
 
-import es.danirod.rectball.platform.analytics.AnalyticEvent;
-
 /**
  * This interface provides analytic services integration. Analytic services
  * allow to get information about the game. This can be used, for instance,

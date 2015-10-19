@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball.model;
 
 /**
@@ -52,20 +53,12 @@ public class GameState {
         return score;
     }
 
-    public void setScore(int score) {
-        this.score = Math.max(0, score);
-    }
-
     public void addScore(int score) {
         this.score += score;
     }
 
     public float getTime() {
         return time;
-    }
-
-    public void setTime(float time) {
-        this.time = Math.max(0, time);
     }
 
     public void addTime(float time) {

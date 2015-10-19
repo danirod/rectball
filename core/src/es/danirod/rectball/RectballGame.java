@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball;
 
 import com.badlogic.gdx.*;
@@ -54,7 +55,7 @@ public class RectballGame extends Game {
 
     /* FIXME: Privatize this. */
 
-    private Map<Integer, AbstractScreen> screens = new HashMap<>();
+    private final Map<Integer, AbstractScreen> screens = new HashMap<>();
 
     public Statistics statistics;
 
@@ -64,13 +65,13 @@ public class RectballGame extends Game {
 
     private RectballSkin uiSkin;
 
-    private GameState currentGame = new GameState();
+    private final GameState currentGame = new GameState();
 
     private TextureAtlas ballAtlas;
 
     private I18NBundle locale;
 
-    private Deque<AbstractScreen> screenStack = new ArrayDeque<>();
+    private final Deque<AbstractScreen> screenStack = new ArrayDeque<>();
 
     /**
      * Create a new instance of Rectball.
@@ -162,7 +163,7 @@ public class RectballGame extends Game {
         // Load UI resources.
         manager.load("ui/progress.png", Texture.class, linearParameters);
         manager.load("ui/icons.png", Texture.class, linearParameters);
-        manager.load("ui/yellowpatch.png", Texture.class);
+        manager.load("ui/yellow_patch.png", Texture.class);
         manager.load("ui/switch.png", Texture.class, linearParameters);
 
         // Load TTF font for normal text
@@ -214,7 +215,7 @@ public class RectballGame extends Game {
 
         // Load sounds
         manager.load("sound/fail.ogg", Sound.class);
-        manager.load("sound/gameover.ogg", Sound.class);
+        manager.load("sound/game_over.ogg", Sound.class);
         manager.load("sound/select.ogg", Sound.class);
         manager.load("sound/success.ogg", Sound.class);
         manager.load("sound/unselect.ogg", Sound.class);
@@ -269,9 +270,9 @@ public class RectballGame extends Game {
 
     /**
      * Add a screen to the map of Strings.
-     * @param screen
+     * @param screen  the screen being added to the map
      */
-    public void addScreen(AbstractScreen screen) {
+    private void addScreen(AbstractScreen screen) {
         screens.put(screen.getID(), screen);
     }
 
@@ -297,12 +298,6 @@ public class RectballGame extends Game {
         ballAtlas.addRegion("ball_blue", regions[1][0]);
         ballAtlas.addRegion("ball_green", regions[1][1]);
         ballAtlas.addRegion("ball_gray", regions[1][2]);
-    }
-
-    public Pixmap requestScreenshot() {
-        int width = Gdx.graphics.getWidth();
-        int height = Gdx.graphics.getHeight();
-        return requestScreenshot(0, 0, width, height);
     }
 
     /**

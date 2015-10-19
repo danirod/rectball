@@ -28,7 +28,7 @@ import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
 /**
  * This is the screen used to teach Rectball. This screen is mostly hardcoded
  * because the tutorial is always the same. The hardest part of this screen is
- * actually compositing the storyboard.
+ * actually creating the storyboard.
  *
  * @since 0.3.0
  */
@@ -55,7 +55,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
     /** Whether the user should be playing now or not. */
     private boolean userTime;
 
-    private Timer.Task watchdogTask = new Timer.Task() {
+    private final Timer.Task watchdogTask = new Timer.Task() {
         @Override
         public void run() {
             CombinationFinder finder = new CombinationFinder(game.getState().getBoard());
@@ -198,14 +198,14 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         /**
          * The message dialog that should be displayed when the state starts.
          */
-        private MessageDialog dialog;
+        private final MessageDialog dialog;
 
         /**
          * The alignment of the message dialog. Can be top, bottom or center.
          * Usually will be center, but sometimes we need to push the dialog
          * top or down if we want to focus on something particular.
          */
-        private int alignment;
+        private final int alignment;
 
         /**
          * Create a new state.
@@ -430,7 +430,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
     }
 
     @Override
-    public void onSelectionSucceded(final List<BallActor> selection) {
+    public void onSelectionSucceeded(final List<BallActor> selection) {
         // Reset the watchdog timer.
         if (watchdogTask.isScheduled()) {
             watchdogTask.cancel();
