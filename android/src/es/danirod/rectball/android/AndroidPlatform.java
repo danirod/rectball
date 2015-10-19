@@ -25,12 +25,12 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidPreferences;
 import com.badlogic.gdx.files.FileHandle;
 import es.danirod.rectball.platform.*;
-import es.danirod.rectball.platform.analytics.AnalyticServices;
-import es.danirod.rectball.platform.scores.LegacyScoreServices;
-import es.danirod.rectball.platform.scores.ScoreServices;
-import es.danirod.rectball.platform.sharing.SharingServices;
-import es.danirod.rectball.platform.statistics.LegacyStatisticsServices;
-import es.danirod.rectball.platform.statistics.StatisticsServices;
+import es.danirod.rectball.platform.Analytics;
+import es.danirod.rectball.platform.LegacyScores;
+import es.danirod.rectball.platform.Scores;
+import es.danirod.rectball.platform.Sharing;
+import es.danirod.rectball.platform.LegacyStatistics;
+import es.danirod.rectball.platform.Statistics;
 
 /**
  * This contains code for the Android platform. Here code that uses Android
@@ -42,26 +42,26 @@ import es.danirod.rectball.platform.statistics.StatisticsServices;
  */
 public class AndroidPlatform implements Platform {
 
-    private final SharingServices sharing;
+    private final Sharing sharing;
 
-    private final AnalyticServices analytic;
+    private final Analytics analytic;
 
-    private final ScoreServices score;
+    private final Scores score;
 
     private final Preferences preferences;
 
-    private final StatisticsServices statistics;
+    private final Statistics statistics;
 
     protected AndroidPlatform(AndroidApplication app) {
-        sharing = new AndroidSharingServices(app);
-        analytic = new AndroidAnalyticServices();
-        score = new LegacyScoreServices() {
+        sharing = new AndroidSharing(app);
+        analytic = new AndroidAnalytics();
+        score = new LegacyScores() {
             @Override
             protected FileHandle getScoresFile() {
                 return Gdx.files.local("scores");
             }
         };
-        statistics = new LegacyStatisticsServices() {
+        statistics = new LegacyStatistics() {
             @Override
             protected FileHandle getStatistics() {
                 return Gdx.files.local("stats");
@@ -71,17 +71,17 @@ public class AndroidPlatform implements Platform {
     }
 
     @Override
-    public SharingServices sharing() {
+    public Sharing sharing() {
         return sharing;
     }
 
     @Override
-    public AnalyticServices analytic() {
+    public Analytics analytic() {
         return analytic;
     }
 
     @Override
-    public ScoreServices score() {
+    public Scores score() {
         return score;
     }
 
@@ -91,7 +91,7 @@ public class AndroidPlatform implements Platform {
     }
 
     @Override
-    public StatisticsServices statistics() {
+    public Statistics statistics() {
         return statistics;
     }
 }

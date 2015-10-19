@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.platform.analytics;
+package es.danirod.rectball.platform;
 
 /**
  * This interface provides analytic services integration. Analytic services
@@ -26,7 +26,7 @@ package es.danirod.rectball.platform.analytics;
  * @author danirod
  * @since 0.4.0
  */
-public interface AnalyticServices {
+public interface Analytics {
 
     /**
      * Use this method to notify the analytic services of Rectball that an

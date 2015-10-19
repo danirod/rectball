@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.platform.scores;
+package es.danirod.rectball.platform;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -30,7 +30,7 @@ import java.io.StringWriter;
  *
  * @author Dani Rodríguez
  */
-public abstract class LegacyScoreServices implements ScoreServices {
+public abstract class LegacyScores implements Scores {
 
     private int highScore;
 

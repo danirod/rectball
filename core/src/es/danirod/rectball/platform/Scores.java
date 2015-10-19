@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.platform.scores;
+package es.danirod.rectball.platform;
 
 /**
  * Score services. Each implementation might do a particular thing. For instance
@@ -27,7 +27,7 @@ package es.danirod.rectball.platform.scores;
  * @author danirod
  * @since 0.4.0
  */
-public interface ScoreServices {
+public interface Scores {
 
     void registerScore(int score, int time);
 

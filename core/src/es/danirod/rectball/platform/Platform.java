@@ -19,10 +19,6 @@
 package es.danirod.rectball.platform;
 
 import com.badlogic.gdx.Preferences;
-import es.danirod.rectball.platform.analytics.AnalyticServices;
-import es.danirod.rectball.platform.scores.ScoreServices;
-import es.danirod.rectball.platform.sharing.SharingServices;
-import es.danirod.rectball.platform.statistics.StatisticsServices;
 
 /**
  * This is the interface for platform code. Platform code is code that depends
@@ -40,14 +36,14 @@ public interface Platform {
      * Get the sharing services instance attached to this platform.
      * @return  sharing services instance.
      */
-    SharingServices sharing();
+    Sharing sharing();
 
-    AnalyticServices analytic();
+    Analytics analytic();
 
-    ScoreServices score();
+    Scores score();
 
     Preferences preferences();
 
-    StatisticsServices statistics();
+    Statistics statistics();
 
 }

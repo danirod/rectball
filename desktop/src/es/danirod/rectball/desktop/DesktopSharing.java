@@ -23,7 +23,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
-import es.danirod.rectball.platform.sharing.SharingServices;
+import es.danirod.rectball.platform.Sharing;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,7 +36,7 @@ import java.awt.*;
  * @author danirod
  * @since 0.4.0
  */
-public class DesktopSharingServices implements SharingServices {
+public class DesktopSharing implements Sharing {
 
     @Override
     public void shareScreenshot(Pixmap pixmap) {

@@ -16,17 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.platform.statistics;
+package es.danirod.rectball.platform;
 
 import es.danirod.rectball.model.Statistics;
 
 /**
  * @author danirod
  */
-public interface StatisticsServices {
+public interface Statistics {
 
-    Statistics loadStatistics();
+    es.danirod.rectball.model.Statistics loadStatistics();
 
-    void saveStatistics(Statistics statistics);
+    void saveStatistics(es.danirod.rectball.model.Statistics statistics);
 
 }

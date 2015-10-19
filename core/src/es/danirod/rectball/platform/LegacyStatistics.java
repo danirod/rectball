@@ -16,19 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.platform.statistics;
+package es.danirod.rectball.platform;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.*;
-import es.danirod.rectball.model.Statistics;
 
 /**
  * @author danirod
  */
-public abstract class LegacyStatisticsServices implements StatisticsServices {
+public abstract class LegacyStatistics implements Statistics {
 
     @Override
-    public void saveStatistics(Statistics statistics) {
+    public void saveStatistics(es.danirod.rectball.model.Statistics statistics) {
         Json json = new Json();
         json.setOutputType(JsonWriter.OutputType.json);
         String jsonData = json.toJson(statistics);
@@ -41,7 +40,7 @@ public abstract class LegacyStatisticsServices implements StatisticsServices {
     }
 
     @Override
-    public Statistics loadStatistics() {
+    public es.danirod.rectball.model.Statistics loadStatistics() {
         try {
             // Read stats from file and decode them.
             FileHandle handle = getStatistics();
@@ -50,9 +49,9 @@ public abstract class LegacyStatisticsServices implements StatisticsServices {
 
             // Convert JSON to statistics
             Json json = new Json();
-            return json.fromJson(Statistics.class, decodedJson);
+            return json.fromJson(es.danirod.rectball.model.Statistics.class, decodedJson);
         } catch (Exception ex) {
-            return new Statistics();
+            return new es.danirod.rectball.model.Statistics();
         }
     }
 

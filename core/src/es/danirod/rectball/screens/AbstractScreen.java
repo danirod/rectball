@@ -26,7 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.platform.analytics.AnalyticEvent;
+import es.danirod.rectball.platform.AnalyticEvent;
 import es.danirod.rectball.utils.SoundPlayer;
 
 import static es.danirod.rectball.Constants.STAGE_PADDING;

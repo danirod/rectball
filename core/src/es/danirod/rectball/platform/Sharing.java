@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.platform.sharing;
+package es.danirod.rectball.platform;
 
 import com.badlogic.gdx.graphics.Pixmap;
 
@@ -28,7 +28,7 @@ import com.badlogic.gdx.graphics.Pixmap;
  * @author danirod
  * @since 0.4.0
  */
-public interface SharingServices {
+public interface Sharing {
 
     /**
      * Share a screenshot from the game. The platform should decide what to

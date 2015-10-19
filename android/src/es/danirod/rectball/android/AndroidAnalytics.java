@@ -16,21 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.desktop;
+package es.danirod.rectball.android;
 
 import com.badlogic.gdx.Gdx;
-import es.danirod.rectball.platform.analytics.AnalyticServices;
-import es.danirod.rectball.platform.analytics.AnalyticEvent;
+import es.danirod.rectball.platform.Analytics;
+import es.danirod.rectball.platform.AnalyticEvent;
 
 /**
- * Desktop implementation for the analytic services. This is a dummy
+ * Android implementation for the analytic services. This is a dummy
  * implementation because at the moment no analytic services are being used
  * in this version. However, it's open for anybody to use.
  *
  * @author danirod
  * @since 0.4.0
  */
-public class DesktopAnalyticServices implements AnalyticServices {
+public class AndroidAnalytics implements Analytics {
 
     @Override
     public void sendEvent(AnalyticEvent event) {
