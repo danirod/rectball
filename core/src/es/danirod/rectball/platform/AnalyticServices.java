@@ -18,24 +18,24 @@
 
 package es.danirod.rectball.platform;
 
+import es.danirod.rectball.platform.analytics.AnalyticEvent;
+
 /**
- * This is the interface for platform code. Platform code is code that depends
- * on the platform that the application is running. Whenever features can only
- * in a particular platform, platform dependent code should be used. For
- * instance, adding Google APIs or Android APIs must be done in Android code
- * to prevent desktop releases from failing.
+ * This interface provides analytic services integration. Analytic services
+ * allow to get information about the game. This can be used, for instance,
+ * for getting information about the game during an error report.
  *
  * @author danirod
  * @since 0.4.0
  */
-public interface Platform {
+public interface AnalyticServices {
 
     /**
-     * Get the sharing services instance attached to this platform.
-     * @return  sharing services instance.
+     * Use this method to notify the analytic services of Rectball that an
+     * event has happened. Each analytic implementation might want to do
+     * something particular with that event.
+     * @param event  the event to track within the application.
      */
-    SharingServices sharing();
-
-    AnalyticServices analytic();
+    void sendEvent(AnalyticEvent event);
 
 }

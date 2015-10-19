@@ -19,8 +19,7 @@
 package es.danirod.rectball.android;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
-import es.danirod.rectball.platform.Platform;
-import es.danirod.rectball.platform.SharingServices;
+import es.danirod.rectball.platform.*;
 
 /**
  * This contains code for the Android platform. Here code that uses Android
@@ -28,17 +27,26 @@ import es.danirod.rectball.platform.SharingServices;
  * than Android.
  *
  * @author danirod
+ * @since 0.4.0
  */
 public class AndroidPlatform implements Platform {
 
     private final SharingServices sharing;
 
+    private final AnalyticServices analytic;
+
     protected AndroidPlatform(AndroidApplication app) {
         sharing = new AndroidSharingServices(app);
+        analytic = new AndroidAnalyticServices();
     }
 
     @Override
     public SharingServices sharing() {
         return sharing;
+    }
+
+    @Override
+    public AnalyticServices analytic() {
+        return analytic;
     }
 }

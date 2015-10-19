@@ -18,8 +18,7 @@
 
 package es.danirod.rectball.desktop;
 
-import es.danirod.rectball.platform.Platform;
-import es.danirod.rectball.platform.SharingServices;
+import es.danirod.rectball.platform.*;
 
 /**
  * This contains code for desktop platform. Here code that uses desktop JRE
@@ -27,17 +26,26 @@ import es.danirod.rectball.platform.SharingServices;
  * platform.
  *
  * @author danirod
+ * @since 0.4.0
  */
 public class DesktopPlatform implements Platform {
 
     private SharingServices sharing;
 
+    private AnalyticServices analytic;
+
     protected DesktopPlatform() {
         sharing = new DesktopSharingServices();
+        analytic = new DesktopAnalyticServices();
     }
 
     @Override
     public SharingServices sharing() {
         return sharing;
+    }
+
+    @Override
+    public AnalyticServices analytic() {
+        return analytic;
     }
 }

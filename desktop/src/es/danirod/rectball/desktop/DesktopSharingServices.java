@@ -31,8 +31,12 @@ import java.io.File;
 import java.io.FilenameFilter;
 
 /**
+ * Desktop implementation for the sharing services. This implementation is more
+ * lightweight than the Android version because desktop doesn't have as much
+ * sharing functionality than Android.
  *
  * @author danirod
+ * @since 0.4.0
  */
 public class DesktopSharingServices implements es.danirod.rectball.platform.SharingServices {
 
@@ -42,6 +46,8 @@ public class DesktopSharingServices implements es.danirod.rectball.platform.Shar
         FileHandle output = requestSave();
         if (output != null) {
             Gdx.app.debug("SharingServices", "Saving screenshot to " + output.path() + "...");
+
+            // FIXME: What about Exception handling, my darling?
             PixmapIO.writePNG(output, pixmap);
         }
     }
@@ -51,6 +57,14 @@ public class DesktopSharingServices implements es.danirod.rectball.platform.Shar
         shareScreenshot(pixmap);
     }
 
+    /**
+     * Present a save dialog to the user and get the associated FileHandle.
+     * This method will block the execution of the application. When the
+     * user finally selects a file, it will be converted to a FileHandle
+     * and returned to the user. If the user cancels the dialog this method
+     * will return null.
+     * @return  the FileHandle where the user wants to save or null
+     */
     private FileHandle requestSave() {
         String location = null;
 
