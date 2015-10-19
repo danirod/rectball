@@ -18,6 +18,7 @@
 
 package es.danirod.rectball.platform;
 
+import com.badlogic.gdx.Preferences;
 import es.danirod.rectball.platform.analytics.AnalyticServices;
 import es.danirod.rectball.platform.scores.ScoreServices;
 import es.danirod.rectball.platform.sharing.SharingServices;
@@ -43,5 +44,7 @@ public interface Platform {
     AnalyticServices analytic();
 
     ScoreServices score();
+
+    Preferences preferences();
 
 }

@@ -44,7 +44,7 @@ public class SoundPlayer {
     }
 
     public void playSound(SoundCode code) {
-        if (!game.settings.isSoundEnabled()) {
+        if (!game.getPlatform().preferences().getBoolean("sound", true)) {
             return;
         }
 

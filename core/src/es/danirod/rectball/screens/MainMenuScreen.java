@@ -73,7 +73,7 @@ public class MainMenuScreen extends AbstractScreen {
         }
 
         // On first run, show the tutorial.
-        if (!game.settings.isTutorialAsked()) {
+        if (!game.getPlatform().preferences().getBoolean("tutorialAsked")) {
             askTutorial().show(getStage());
         }
     }
@@ -98,8 +98,8 @@ public class MainMenuScreen extends AbstractScreen {
             @Override
             public void cancel() {
                 game.player.playSound(SoundPlayer.SoundCode.FAIL);
-                game.settings.setTutorialAsked(true);
-                game.settings.save();
+                game.getPlatform().preferences().putBoolean("tutorialAsked", true);
+                game.getPlatform().preferences().flush();
                 tutorialCancel().show(getStage());
             }
         });

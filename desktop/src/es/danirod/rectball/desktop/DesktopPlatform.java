@@ -18,6 +18,8 @@
 
 package es.danirod.rectball.desktop;
 
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.backends.lwjgl.LwjglPreferences;
 import es.danirod.rectball.platform.*;
 import es.danirod.rectball.platform.analytics.AnalyticServices;
 import es.danirod.rectball.platform.scores.ScoreServices;
@@ -39,10 +41,13 @@ public class DesktopPlatform implements Platform {
 
     private ScoreServices score;
 
+    private Preferences preferences;
+
     protected DesktopPlatform() {
         sharing = new DesktopSharingServices();
         analytic = new DesktopAnalyticServices();
         score = new DesktopScoreServices();
+        preferences = new LwjglPreferences("rectball", ".prefs/");
     }
 
     @Override
@@ -58,5 +63,10 @@ public class DesktopPlatform implements Platform {
     @Override
     public ScoreServices score() {
         return score;
+    }
+
+    @Override
+    public Preferences preferences() {
+        return preferences;
     }
 }

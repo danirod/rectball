@@ -160,8 +160,8 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
                             getStage().addAction(Actions.delay(waitingTime, Actions.run(new Runnable() {
                                 @Override
                                 public void run() {
-                                    game.settings.setTutorialAsked(true);
-                                    game.settings.save();
+                                    game.getPlatform().preferences().putBoolean("tutorialAsked", true);
+                                    game.getPlatform().preferences().flush();
                                     game.popScreen();
                                 }
                             })));
@@ -394,8 +394,8 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
                 getStage().addAction(Actions.delay(1.5f, Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        game.settings.setTutorialAsked(true);
-                        game.settings.save();
+                        game.getPlatform().preferences().getBoolean("tutorialAsked", true);
+                        game.getPlatform().preferences().flush();
                         game.popScreen();
                     }
                 })));
