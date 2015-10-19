@@ -16,37 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.android;
+package es.danirod.rectball.platform;
 
-import com.badlogic.gdx.backends.android.AndroidApplication;
-import es.danirod.rectball.platform.*;
+import es.danirod.rectball.platform.analytics.AnalyticEvent;
 
 /**
- * This contains code for the Android platform. Here code that uses Android
- * SDK or Android API might be used. This code won't run on other platforms
- * than Android.
+ * This interface provides analytic services integration. Analytic services
+ * allow to get information about the game. This can be used, for instance,
+ * for getting information about the game during an error report.
  *
  * @author danirod
  * @since 0.4.0
  */
-public class AndroidPlatform implements Platform {
+public interface AnalyticServices {
 
-    private final SharingServices sharing;
+    void sendEvent(AnalyticEvent event);
 
-    private final AnalyticServices analytic;
-
-    protected AndroidPlatform(AndroidApplication app) {
-        sharing = new AndroidSharingServices(app);
-        analytic = new AndroidAnalyticServices();
-    }
-
-    @Override
-    public SharingServices sharing() {
-        return sharing;
-    }
-
-    @Override
-    public AnalyticServices analytic() {
-        return analytic;
-    }
 }

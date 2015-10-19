@@ -18,35 +18,22 @@
 
 package es.danirod.rectball.android;
 
-import com.badlogic.gdx.backends.android.AndroidApplication;
-import es.danirod.rectball.platform.*;
+import com.badlogic.gdx.Gdx;
+import es.danirod.rectball.platform.AnalyticServices;
+import es.danirod.rectball.platform.analytics.AnalyticEvent;
 
 /**
- * This contains code for the Android platform. Here code that uses Android
- * SDK or Android API might be used. This code won't run on other platforms
- * than Android.
+ * Android implementation for the analytic services. This is a dummy
+ * implementation because at the moment no analytic services are being used
+ * in this version. However, it's open for anybody to use.
  *
  * @author danirod
  * @since 0.4.0
  */
-public class AndroidPlatform implements Platform {
-
-    private final SharingServices sharing;
-
-    private final AnalyticServices analytic;
-
-    protected AndroidPlatform(AndroidApplication app) {
-        sharing = new AndroidSharingServices(app);
-        analytic = new AndroidAnalyticServices();
-    }
+public class AndroidAnalyticServices implements AnalyticServices {
 
     @Override
-    public SharingServices sharing() {
-        return sharing;
-    }
-
-    @Override
-    public AnalyticServices analytic() {
-        return analytic;
+    public void sendEvent(AnalyticEvent event) {
+        Gdx.app.log("AnalyticServices", "Received an event");
     }
 }

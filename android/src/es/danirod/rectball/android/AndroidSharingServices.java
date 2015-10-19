@@ -33,6 +33,7 @@ import es.danirod.rectball.RectballGame;
  * services.
  *
  * @author danirod
+ * @since 0.4.0
  */
 public class AndroidSharingServices implements es.danirod.rectball.platform.SharingServices {
 

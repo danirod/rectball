@@ -36,4 +36,6 @@ public interface Platform {
      */
     SharingServices sharing();
 
+    AnalyticServices analytic();
+
 }
