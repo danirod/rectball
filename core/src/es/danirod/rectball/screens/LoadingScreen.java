@@ -25,7 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.actors.board.BoardActor;
+import es.danirod.rectball.scene2d.game.BoardActor;
 import es.danirod.rectball.model.BallColor;
 import es.danirod.rectball.model.Board;
 

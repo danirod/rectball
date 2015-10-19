@@ -16,32 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.listeners;
+package es.danirod.rectball.scene2d.ui;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.utils.SoundPlayer;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Align;
 
-public class ScreenJumper extends ChangeListener {
+/**
+ * Switch actor.
+ *
+ * @since 0.3.0
+ * @author danirod
+ */
+public class SwitchActor extends CheckBox {
 
-    private final RectballGame game;
-
-    private final int target;
-
-    public ScreenJumper(RectballGame game, int target) {
-        this.game = game;
-        this.target = target;
+    public SwitchActor(String text, Skin skin) {
+        super(text, skin);
+        padTop(10).padBottom(10);
+        getImageCell().width(150).height(50).padRight(20);
+        getLabelCell().align(Align.left).expandX();
     }
-
-    @Override
-    public void changed(ChangeEvent event, Actor actor) {
-        game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
-        game.pushScreen(target);
-
-        // Cancel the event to avoid checking the actor
-        event.cancel();
-    }
-
-
 }

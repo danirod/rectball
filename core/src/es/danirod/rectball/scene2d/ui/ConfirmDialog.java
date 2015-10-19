@@ -16,49 +16,51 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.dialogs;
+package es.danirod.rectball.scene2d.ui;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 /**
- * A generic message dialog that displays some text and that has a button for
- * dismissing the dialog. This is useful to display some text to the user in a
- * way that is dismissible. Client code can still inject a callback to know
- * when the user dismisses the dialog.
+ * A generic confirmation dialog based on Scene2D.UI's Dialog class.
  */
-public class MessageDialog extends CommonDialog {
+public class ConfirmDialog extends CommonDialog {
 
-    public interface MessageCallback {
+    /**
+     * This is the callback class that will subscribe to events happening in
+     * this confirmation dialog class.
+     */
+    public interface ConfirmCallback {
 
-        /** Event received when the user dismisses the message. */
-        void dismiss();
+        /** This event is triggered when the OK button is pressed. */
+        void ok();
 
+        /** This event is triggered when the CANCEL button is pressed. */
+        void cancel();
     }
 
-    private MessageCallback callback = null;
+    private ConfirmCallback callback = null;
 
-    public MessageDialog(Skin skin, String text) {
-        this(skin, text, "OK");
-    }
-
-    public MessageDialog(Skin skin, String text, String dismissText) {
+    public ConfirmDialog(Skin skin, String text, String okText, String cancelText) {
         super(skin, text);
-        button(dismissText, "dismiss");
+        button(okText, "ok").button(cancelText, "cancel");
+
     }
 
-    public void setCallback(MessageCallback callback) {
+    public void setCallback(ConfirmCallback callback) {
         this.callback = callback;
     }
 
     @Override
     protected void result(Object object) {
-        if (callback != null && object.equals("dismiss")) {
-            callback.dismiss();
+        if (callback != null) {
+            if (object.equals("ok")) {
+                callback.ok();
+            } else if (object.equals("cancel")) {
+                callback.cancel();
+            }
         }
 
         cancel();
         hide(null);
     }
-
-
 }

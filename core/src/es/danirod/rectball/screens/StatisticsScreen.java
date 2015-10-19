@@ -25,8 +25,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.actors.StatsTable;
-import es.danirod.rectball.listeners.ScreenPopper;
+import es.danirod.rectball.scene2d.ui.StatsTable;
+import es.danirod.rectball.scene2d.listeners.ScreenPopper;
 
 /**
  * Statistics screen.

@@ -16,40 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.listeners;
+package es.danirod.rectball.scene2d.listeners;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.utils.SoundPlayer;
+import es.danirod.rectball.SoundPlayer;
 
-/**
- * @since 0.3.0
- */
-public class ScreenPopper extends ChangeListener {
+public class ScreenJumper extends ChangeListener {
 
     private final RectballGame game;
 
-    /** If true, the event will clear the stack, returning to the main menu. */
-    private final boolean popAll;
+    private final int target;
 
-    public ScreenPopper(RectballGame game) {
-        this(game, false);
-    }
-
-    public ScreenPopper(RectballGame game, boolean popAll) {
+    public ScreenJumper(RectballGame game, int target) {
         this.game = game;
-        this.popAll = popAll;
+        this.target = target;
     }
 
     @Override
     public void changed(ChangeEvent event, Actor actor) {
-        game.player.playSound(SoundPlayer.SoundCode.FAIL);
-        if (popAll) {
-            game.clearStack();
-        } else {
-            game.popScreen();
-        }
+        game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
+        game.pushScreen(target);
 
         // Cancel the event to avoid checking the actor
         event.cancel();

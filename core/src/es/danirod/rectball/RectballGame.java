@@ -38,8 +38,7 @@ import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.platform.Platform;
 import es.danirod.rectball.screens.*;
 import es.danirod.rectball.model.Statistics;
-import es.danirod.rectball.utils.RectballSkin;
-import es.danirod.rectball.utils.SoundPlayer;
+import es.danirod.rectball.scene2d.RectballSkin;
 
 import java.nio.ByteBuffer;
 import java.util.*;

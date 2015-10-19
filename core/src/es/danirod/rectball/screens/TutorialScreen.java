@@ -12,13 +12,14 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.actors.ScoreActor;
-import es.danirod.rectball.actors.TimerActor;
-import es.danirod.rectball.actors.board.*;
-import es.danirod.rectball.dialogs.ConfirmDialog;
-import es.danirod.rectball.dialogs.MessageDialog;
+import es.danirod.rectball.scene2d.game.ScoreActor;
+import es.danirod.rectball.scene2d.game.TimerActor;
+import es.danirod.rectball.scene2d.game.*;
+import es.danirod.rectball.scene2d.ui.ConfirmDialog;
+import es.danirod.rectball.scene2d.ui.MessageDialog;
 import es.danirod.rectball.model.*;
-import es.danirod.rectball.utils.SoundPlayer;
+import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
+import es.danirod.rectball.SoundPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
  *
  * @since 0.3.0
  */
-public class TutorialScreen extends AbstractScreen implements BallSelectionListener{
+public class TutorialScreen extends AbstractScreen implements BallSelectionListener {
 
     /** The board. */
     private BoardActor board;

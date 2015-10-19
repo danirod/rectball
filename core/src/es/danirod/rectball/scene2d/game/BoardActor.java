@@ -16,13 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.actors.board;
+package es.danirod.rectball.scene2d.game;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import es.danirod.rectball.model.*;
+import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
 
 import java.util.*;
 

@@ -28,8 +28,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.listeners.ScreenPopper;
-import es.danirod.rectball.utils.SoundPlayer;
+import es.danirod.rectball.scene2d.listeners.ScreenPopper;
+import es.danirod.rectball.SoundPlayer;
 
 public class GameOverScreen extends AbstractScreen {
 

@@ -24,10 +24,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Scaling;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.dialogs.ConfirmDialog;
-import es.danirod.rectball.dialogs.MessageDialog;
-import es.danirod.rectball.listeners.ScreenJumper;
-import es.danirod.rectball.utils.SoundPlayer;
+import es.danirod.rectball.scene2d.ui.ConfirmDialog;
+import es.danirod.rectball.scene2d.ui.MessageDialog;
+import es.danirod.rectball.scene2d.listeners.ScreenJumper;
+import es.danirod.rectball.SoundPlayer;
 
 import static es.danirod.rectball.Constants.STAGE_PADDING;
 

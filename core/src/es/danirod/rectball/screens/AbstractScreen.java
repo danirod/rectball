@@ -27,7 +27,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.platform.AnalyticEvent;
-import es.danirod.rectball.utils.SoundPlayer;
+import es.danirod.rectball.SoundPlayer;
 
 import static es.danirod.rectball.Constants.STAGE_PADDING;
 import static es.danirod.rectball.Constants.VIEWPORT_HEIGHT;

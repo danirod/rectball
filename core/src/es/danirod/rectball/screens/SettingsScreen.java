@@ -23,10 +23,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.actors.ui.SwitchActor;
-import es.danirod.rectball.listeners.ScreenJumper;
-import es.danirod.rectball.listeners.ScreenPopper;
-import es.danirod.rectball.utils.SoundPlayer.SoundCode;
+import es.danirod.rectball.scene2d.ui.SwitchActor;
+import es.danirod.rectball.scene2d.listeners.ScreenJumper;
+import es.danirod.rectball.scene2d.listeners.ScreenPopper;
+import es.danirod.rectball.SoundPlayer.SoundCode;
 
 public class SettingsScreen extends AbstractScreen {
 

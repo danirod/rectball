@@ -16,7 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.actors.board;
+package es.danirod.rectball.scene2d.listeners;
+
+import es.danirod.rectball.scene2d.game.BallActor;
 
 import java.util.List;
 
