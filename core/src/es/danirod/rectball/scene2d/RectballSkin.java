@@ -24,10 +24,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import es.danirod.rectball.RectballGame;
+
+import javax.xml.soap.Text;
 
 /**
  * Skin used in Rectball. Once this portion of code is more stable, this code
@@ -113,30 +116,44 @@ public class RectballSkin extends Skin {
     }
 
     private void addTextButtonStyles() {
-        NinePatchDrawable upButton = generateButton(Color.GRAY, Color.DARK_GRAY);
-        NinePatchDrawable downButton = generateButton(Color.DARK_GRAY, Color.GRAY);
-        BitmapFont font = game.manager.get("normalFont.ttf");
-        TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
-        this.add("default", buttonStyle);
+        {
+            NinePatchDrawable upButton = generateButton(Color.GRAY, Color.DARK_GRAY);
+            NinePatchDrawable downButton = generateButton(Color.DARK_GRAY, Color.GRAY);
+            BitmapFont font = game.manager.get("normalFont.ttf");
+            TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
+            this.add("default", buttonStyle);
+        }
+
+        {
+            NinePatchDrawable upButton = generateButton(Color.valueOf("37c837"), Color.valueOf("37c837").lerp(Color.BLACK, 0.25f));
+            NinePatchDrawable downButton = generateButton(Color.valueOf("37c837").lerp(Color.BLACK, 0.25f), Color.valueOf("37c837"));
+            BitmapFont font = game.manager.get("normalFont.ttf");
+            TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
+            this.add("green", buttonStyle);
+        }
+    }
+
+    private ImageButtonStyle buildImageButton(TextButtonStyle source, String region) {
+        ImageButtonStyle style = new ImageButtonStyle(source);
+        style.imageUp = new TextureRegionDrawable(getRegion(region));
+        return style;
     }
 
     private void addImageButtonStyles() {
-        {
-            ImageButtonStyle buttonStyle = new ImageButtonStyle(get(TextButtonStyle.class));
-            buttonStyle.imageUp = new TextureRegionDrawable(getRegion("iconShare"));
-            add("share", buttonStyle);
-        }
+        add("share", buildImageButton(get(TextButtonStyle.class), "iconShare"));
+        add("repeat", buildImageButton(get(TextButtonStyle.class), "iconRepeat"));
+        add("house", buildImageButton(get(TextButtonStyle.class), "iconHouse"));
+
+        add("play", buildImageButton(get("green", TextButtonStyle.class), "iconPlay"));
+        add("settings", buildImageButton(get(TextButtonStyle.class), "iconSettings"));
+        add("info", buildImageButton(get(TextButtonStyle.class), "iconInfo"));
+        add("charts", buildImageButton(get(TextButtonStyle.class), "iconCharts"));
+        add("star", buildImageButton(get(TextButtonStyle.class), "iconStar"));
 
         {
-            ImageButtonStyle buttonStyle = new ImageButtonStyle(get(TextButtonStyle.class));
-            buttonStyle.imageUp = new TextureRegionDrawable(getRegion("iconRepeat"));
-            add("repeat", buttonStyle);
-        }
-
-        {
-            ImageButtonStyle buttonStyle = new ImageButtonStyle(get(TextButtonStyle.class));
-            buttonStyle.imageUp = new TextureRegionDrawable(getRegion("iconHouse"));
-            add("house", buttonStyle);
+            Drawable redCross = newDrawable("iconCross", 0.9f, 0.1f, 0.1f, 1f);
+            ImageButtonStyle crossStyle = new ImageButtonStyle(null, null, null, redCross, null, null);
+            add("quit", crossStyle);
         }
     }
 
@@ -179,12 +196,19 @@ public class RectballSkin extends Skin {
         {
             Texture icons = game.manager.get("ui/icons.png");
             TextureRegion[][] iconRegions = TextureRegion.split(icons, 100, 100);
-            add("iconShare", iconRegions[0][0]);
-            add("iconQuestion", iconRegions[0][1]);
-            add("iconRepeat", iconRegions[0][2]);
-            add("iconClock", iconRegions[1][0]);
-            add("iconCrown", iconRegions[1][1]);
-            add("iconHouse", iconRegions[1][2]);
+            add("iconCharts", iconRegions[0][0]);
+            add("iconScore", iconRegions[0][1]);
+            add("iconStar", iconRegions[0][2]);
+            add("iconSettings", iconRegions[0][3]);
+            add("iconCross", iconRegions[0][4]);
+            add("iconShare", iconRegions[1][0]);
+            add("iconQuestion", iconRegions[1][1]);
+            add("iconRepeat", iconRegions[1][2]);
+            add("iconPlay", iconRegions[1][3]);
+            add("iconClock", iconRegions[2][0]);
+            add("iconCrown", iconRegions[2][1]);
+            add("iconHouse", iconRegions[2][2]);
+            add("iconInfo", iconRegions[2][3]);
         }
 
         // Texture region for the progress.

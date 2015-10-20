@@ -21,8 +21,11 @@ package es.danirod.rectball.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Scaling;
+import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
 import es.danirod.rectball.scene2d.listeners.ScreenJumper;
@@ -42,23 +45,42 @@ public class MainMenuScreen extends AbstractScreen {
         // Build the actors.
         Image title = new Image(game.manager.get("logo.png", Texture.class));
         title.setScaling(Scaling.fit);
-        TextButton play = new TextButton(game.getLocale().get("main.play"), game.getSkin());
-        TextButton settings = new TextButton(game.getLocale().get("main.settings"), game.getSkin());
-        TextButton statistics = new TextButton(game.getLocale().get("main.stats"), game.getSkin());
-        TextButton about = new TextButton(game.getLocale().get("main.about"), game.getSkin());
+        ImageButton play = new ImageButton(game.getSkin(), "play");
+        ImageButton settings = new ImageButton(game.getSkin(), "settings");
+        ImageButton statistics = new ImageButton(game.getSkin(), "charts");
+        ImageButton about = new ImageButton(game.getSkin(), "info");
 
-        // Position the actors in the screen.
-        table.add(title).pad(40).row();
-        table.add(play).padBottom(STAGE_PADDING).fillX().height(100).row();
-        table.add(settings).padBottom(STAGE_PADDING).fillX().height(100).row();
-        table.add(statistics).padBottom(STAGE_PADDING).fillX().height(100).row();
-        table.add(about).padBottom(STAGE_PADDING).fillX().height(100).row();
+        // Add the title button and the clickable about text.
+        table.add(title).pad(40).padBottom(60).row();
+
+        // Add the big green play button.
+        table.add(play).fillX().height(150).row();
+
+        // Add the table layout for all the extra buttons.
+        Table extraButtons = new Table();
+        extraButtons.defaults().expandX().fillX();
+        extraButtons.add(settings);
+        extraButtons.add(statistics).pad(0, 20, 0, 20);
+        extraButtons.add(about).row();
+        table.add(extraButtons).fillX().height(150).row();
 
         // Then add the capture listeners for the buttons.
         play.addListener(new ScreenJumper(game, Screens.GAME));
         settings.addListener(new ScreenJumper(game, Screens.SETTINGS));
         statistics.addListener(new ScreenJumper(game, Screens.STATISTICS));
         about.addListener(new ScreenJumper(game, Screens.ABOUT));
+
+        // Add a quit button.
+        ImageButton quit = new ImageButton(game.getSkin(), "quit");
+        quit.setSize(50, 50);
+        quit.setPosition(Constants.VIEWPORT_WIDTH - 60, Constants.VIEWPORT_HEIGHT - 60);
+        quit.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.exit();
+            }
+        });
+        getStage().addActor(quit);
     }
 
     @Override
