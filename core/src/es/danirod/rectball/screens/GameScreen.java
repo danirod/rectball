@@ -513,9 +513,36 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // You deserve some score and extra time.
         int rows = bounds.maxY - bounds.minY + 1;
         int cols = bounds.maxX - bounds.minX + 1;
-        game.getState().addScore(rows * cols);
-        score.setValue(game.getState().getScore());
-        timer.setSeconds(timer.getSeconds() + 4);
+
+        // TODO: Use a different formula.
+        int scoreFormula = rows * cols;
+        game.getState().addScore(scoreFormula);
+        final float givenTime = 4f;
+
+        // Animate the score
+        getStage().addAction(Actions.repeat(scoreFormula, Actions.delay(0.25f / scoreFormula,
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        score.setValue(score.getValue() + 1);
+                    }
+                }))));
+
+        // Animate the timer
+        timer.setRunning(false);
+        getStage().addAction(Actions.repeat(10, Actions.delay(0.01f,
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        timer.setSeconds(timer.getSeconds() + givenTime / 10);
+                    }
+                }))));
+        getStage().addAction(Actions.delay(0.05f, Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                timer.setRunning(true);
+            }
+        })));
 
         // Put information about this combination in the stats.
         String size = Math.max(rows, cols) + "x" + Math.min(rows, cols);
