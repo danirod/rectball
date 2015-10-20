@@ -162,7 +162,7 @@ public class TimerActor extends Actor {
 
         // Draw the progress bar background.
         Texture progress = skin.get("progress", Texture.class);
-        batch.setColor(0.5f, 0.5f, 0.5f, getColor().a);
+        batch.setColor(0.5f, 0.5f, 0.5f, color.a * parentAlpha);
         batch.draw(progress, getX(), getY(), getWidth(), getHeight());
 
         // Calculate the remaining percentage of time.
@@ -171,9 +171,9 @@ public class TimerActor extends Actor {
 
         // Render the remaining time using the appropriate color.
         if (percentage < WARNING_TRIGGER) {
-            batch.setColor(color.r, 0, 0, getColor().a);
+            batch.setColor(color.r, 0, 0, color.a * parentAlpha);
         } else {
-            batch.setColor(0, color.g, 0, getColor().a);
+            batch.setColor(0, color.g, 0, color.a * parentAlpha);
         }
         batch.draw(progress, getX(), getY(), remainingSize, getHeight());
 

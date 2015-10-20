@@ -39,8 +39,6 @@ import es.danirod.rectball.scene2d.ui.ConfirmDialog;
 import java.util.ArrayList;
 import java.util.List;
 
-import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
-
 public class GameScreen extends AbstractScreen implements TimerCallback, BallSelectionListener {
 
     /**
@@ -57,6 +55,11 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
      * Display the board representation.
      */
     private BoardActor board;
+
+    /**
+     * The display used to represent information about the user.
+     */
+    private Table hud;
 
     /**
      * Is the game paused?
@@ -335,7 +338,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         float aspectRatio = landscape ?
                 (float) Gdx.graphics.getWidth() / Gdx.graphics.getHeight() :
                 (float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
-        Table hud = new Table();
+        hud = new Table();
 
         if (aspectRatio < 1.5f) {
             // Compact layout: buttons and score in the same line.
@@ -463,7 +466,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // Animate the transition to game over.
         board.addAction(Actions.delay(2f, board.hideBoard()));
-        this.score.addAction(Actions.delay(2f, Actions.fadeOut(0.25f)));
+        hud.addAction(Actions.delay(2f, Actions.fadeOut(0.25f)));
 
         // Head to the game over after all these animations have finished.
         getStage().addAction(Actions.delay(2.5f, Actions.run(new Runnable() {
