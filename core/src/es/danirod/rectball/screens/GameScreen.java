@@ -303,8 +303,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         board.addSubscriber(this);
 
         // Fill the table.
-        table.add(timer).fillX().height(50).padBottom(10).row();
-        table.add(score).width(VIEWPORT_WIDTH / 2).height(65).padBottom(60).row();
+        table.add(new BorderedContainer(game.getSkin(), timer)).fillX().height(50).padBottom(10).row();
+        table.add(new BorderedContainer(game.getSkin(), score)).width(VIEWPORT_WIDTH / 2).height(65).padBottom(60).row();
         table.add(board).expand().row();
     }
 
