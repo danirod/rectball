@@ -143,8 +143,11 @@ public class RectballSkin extends Skin {
         add("share", buildImageButton(get(TextButtonStyle.class), "iconShare"));
         add("repeat", buildImageButton(get(TextButtonStyle.class), "iconRepeat"));
         add("house", buildImageButton(get(TextButtonStyle.class), "iconHouse"));
+        add("help", buildImageButton(get(TextButtonStyle.class), "iconQuestion"));
+        add("cross", buildImageButton(get(TextButtonStyle.class), "iconCross"));
 
-        add("play", buildImageButton(get("green", TextButtonStyle.class), "iconPlay"));
+        add("greenPlay", buildImageButton(get("green", TextButtonStyle.class), "iconPlay"));
+        add("play", buildImageButton(get(TextButtonStyle.class), "iconPlay"));
         add("settings", buildImageButton(get(TextButtonStyle.class), "iconSettings"));
         add("info", buildImageButton(get(TextButtonStyle.class), "iconInfo"));
         add("charts", buildImageButton(get(TextButtonStyle.class), "iconCharts"));

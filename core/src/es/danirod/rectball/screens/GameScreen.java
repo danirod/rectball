@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
@@ -294,6 +295,27 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         score = new ScoreActor(game.getSkin());
         board = new BoardActor(game.getBallAtlas(), game.getState().getBoard());
 
+        // Add the help button.
+        ImageButton help = new ImageButton(game.getSkin(), "help");
+        help.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                // TODO: Add help handler.
+                event.cancel();
+            }
+        });
+
+        // Add the pause button.
+        ImageButton pause = new ImageButton(game.getSkin(), "cross");
+        pause.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.player.playSound(SoundCode.FAIL);
+                pause();
+                event.cancel();
+            }
+        });
+
         // Disable game until countdown ends.
         timer.setRunning(false);
         board.setTouchable(Touchable.disabled);
@@ -303,9 +325,11 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         board.addSubscriber(this);
 
         // Fill the table.
-        table.add(new BorderedContainer(game.getSkin(), timer)).fillX().height(50).padBottom(10).row();
-        table.add(new BorderedContainer(game.getSkin(), score)).width(VIEWPORT_WIDTH / 2).height(65).padBottom(60).row();
-        table.add(board).expand().row();
+        table.add(new BorderedContainer(game.getSkin(), help)).align(Align.left).padLeft(20).expand().size(60);
+        table.add(new BorderedContainer(game.getSkin(), pause)).align(Align.right).padRight(20).expand().size(60).row();
+        table.add(new BorderedContainer(game.getSkin(), timer)).colspan(2).fillX().height(50).padBottom(10).padTop(10).row();
+        table.add(new BorderedContainer(game.getSkin(), score)).colspan(2).width(VIEWPORT_WIDTH / 2).height(65).padBottom(20).row();
+        table.add(board).colspan(2).expand().row();
     }
 
     @Override

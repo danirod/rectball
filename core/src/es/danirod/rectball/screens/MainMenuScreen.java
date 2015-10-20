@@ -45,7 +45,7 @@ public class MainMenuScreen extends AbstractScreen {
         // Build the actors.
         Image title = new Image(game.manager.get("logo.png", Texture.class));
         title.setScaling(Scaling.fit);
-        ImageButton play = new ImageButton(game.getSkin(), "play");
+        ImageButton play = new ImageButton(game.getSkin(), "greenPlay");
         ImageButton settings = new ImageButton(game.getSkin(), "settings");
         ImageButton statistics = new ImageButton(game.getSkin(), "charts");
         ImageButton about = new ImageButton(game.getSkin(), "info");
