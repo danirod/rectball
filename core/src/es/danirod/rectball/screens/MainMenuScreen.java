@@ -73,7 +73,7 @@ public class MainMenuScreen extends AbstractScreen {
         // Add a quit button.
         ImageButton quit = new ImageButton(game.getSkin(), "quit");
         quit.setSize(50, 50);
-        quit.setPosition(Constants.VIEWPORT_WIDTH - 60, Constants.VIEWPORT_HEIGHT - 60);
+        quit.setPosition(getStage().getViewport().getWorldWidth() - 60, getStage().getViewport().getWorldHeight() - 60);
         quit.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
