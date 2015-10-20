@@ -21,6 +21,7 @@ package es.danirod.rectball.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -85,6 +86,23 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
      * True if the game has finished.
      */
     private boolean timeout;
+
+    /**
+     * Whether the player has seen the next combination. When the user presses
+     * the HELP button, a valid combination is displayed to help the player and
+     * some time is substracted. To prevent happening this more than once,
+     * this variable will flag whether to substract or not. It will be reset
+     * every time a new combination is made.
+     */
+    private boolean seenCheat;
+
+    /**
+     * These are the bounds selected when the user presses the Help button.
+     * They are cached so that the same bounds are always used. Otherwise,
+     * each time the user presses HELP without selecting a combination, a
+     * different one would be used.
+     */
+    private Bounds wiggledBounds;
 
     public GameScreen(RectballGame game) {
         super(game, false);
@@ -299,17 +317,37 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         board = new BoardActor(game.getBallAtlas(), game.getState().getBoard());
 
         // Add the help button.
-        ImageButton help = new ImageButton(game.getSkin(), "help");
+        ImageButton help = new ImageButton(game.getSkin(), "blueHelp");
         help.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                // TODO: Add help handler.
+                // Wigle a valid combination.
+                if (wiggledBounds == null) {
+                    CombinationFinder finder = new CombinationFinder(game.getState().getBoard());
+                    wiggledBounds = finder.getPossibleBounds().get(MathUtils.random(finder.getPossibleBounds().size() - 1));
+                }
+                board.addAction(board.shake(wiggledBounds, 10, 5, 0.1f));
+
+                if (!seenCheat) {
+                    // Substract some time.
+                    float substractedTime = 5f;
+                    final float step = substractedTime / 10;
+                    getStage().addAction(Actions.repeat(10, Actions.delay(0.01f,
+                            Actions.run(new Runnable() {
+                                @Override
+                                public void run() {
+                                    timer.setSeconds(timer.getSeconds() - step);
+                                }
+                            }))));
+                    seenCheat = true;
+                }
+
                 event.cancel();
             }
         });
 
         // Add the pause button.
-        ImageButton pause = new ImageButton(game.getSkin(), "cross");
+        ImageButton pause = new ImageButton(game.getSkin(), "blueCross");
         pause.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -512,6 +550,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                                                     }
                                                 })
         ));
+
+        // Reset the cheat
+        seenCheat = false;
+        wiggledBounds = null;
 
         // You deserve some score and extra time.
         int rows = bounds.maxY - bounds.minY + 1;

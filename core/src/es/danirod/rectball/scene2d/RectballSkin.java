@@ -131,6 +131,14 @@ public class RectballSkin extends Skin {
             TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
             this.add("green", buttonStyle);
         }
+
+        {
+            NinePatchDrawable upButton = generateButton(Color.valueOf("0066cc"), Color.valueOf("0066cc").lerp(Color.BLACK, 0.25f));
+            NinePatchDrawable downButton = generateButton(Color.valueOf("0066cc").lerp(Color.BLACK, 0.25f), Color.valueOf("0066cc"));
+            BitmapFont font = game.manager.get("normalFont.ttf");
+            TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
+            this.add("blue", buttonStyle);
+        }
     }
 
     private ImageButtonStyle buildImageButton(TextButtonStyle source, String region) {
@@ -146,7 +154,10 @@ public class RectballSkin extends Skin {
         add("help", buildImageButton(get(TextButtonStyle.class), "iconQuestion"));
         add("cross", buildImageButton(get(TextButtonStyle.class), "iconCross"));
 
+        add("blueHelp", buildImageButton(get("blue", TextButtonStyle.class), "iconQuestion"));
+        add("blueCross", buildImageButton(get("blue", TextButtonStyle.class), "iconCross"));
         add("greenPlay", buildImageButton(get("green", TextButtonStyle.class), "iconPlay"));
+
         add("play", buildImageButton(get(TextButtonStyle.class), "iconPlay"));
         add("settings", buildImageButton(get(TextButtonStyle.class), "iconSettings"));
         add("info", buildImageButton(get(TextButtonStyle.class), "iconInfo"));
