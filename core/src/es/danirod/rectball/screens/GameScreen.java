@@ -90,8 +90,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     /**
      * Whether the player has seen the next combination. When the user presses
      * the HELP button, a valid combination is displayed to help the player and
-     * some time is substracted. To prevent happening this more than once,
-     * this variable will flag whether to substract or not. It will be reset
+     * some time is subtracted. To prevent happening this more than once,
+     * this variable will flag whether to subtract or not. It will be reset
      * every time a new combination is made.
      */
     private boolean seenCheat;
@@ -321,7 +321,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         help.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                // Wigle a valid combination.
+                // Wiggle a valid combination.
                 if (wiggledBounds == null) {
                     CombinationFinder finder = new CombinationFinder(game.getState().getBoard());
                     wiggledBounds = finder.getPossibleBounds().get(MathUtils.random(finder.getPossibleBounds().size() - 1));
@@ -329,9 +329,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 board.addAction(board.shake(wiggledBounds, 10, 5, 0.1f));
 
                 if (!seenCheat) {
-                    // Substract some time.
-                    float substractedTime = 5f;
-                    final float step = substractedTime / 10;
+                    // Subtract some time.
+                    float subtractedTime = 5f;
+                    final float step = subtractedTime / 10;
                     getStage().addAction(Actions.repeat(10, Actions.delay(0.01f,
                             Actions.run(new Runnable() {
                                 @Override
