@@ -324,12 +324,39 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         timer.addSubscriber(this);
         board.addSubscriber(this);
 
-        // Fill the table.
-        table.add(new BorderedContainer(game.getSkin(), help)).align(Align.left).padLeft(20).expand().size(60);
-        table.add(new BorderedContainer(game.getSkin(), pause)).align(Align.right).padRight(20).expand().size(60).row();
-        table.add(new BorderedContainer(game.getSkin(), timer)).colspan(2).fillX().height(50).padBottom(10).padTop(10).row();
-        table.add(new BorderedContainer(game.getSkin(), score)).colspan(2).width(VIEWPORT_WIDTH / 2).height(65).padBottom(20).row();
-        table.add(board).colspan(2).expand().row();
+        /*
+         * Fill the HUD, which is the display that appears over the board with
+         * all the information. The HUD is generated differently depending on
+         * the aspect ratio of the device. If the device is 4:3, the HUD is
+         * compressed to avoid making the board small. Otherwise, it's expanded
+         * to the usual size.
+         */
+        boolean landscape = Gdx.graphics.getWidth() > Gdx.graphics.getHeight();
+        float aspectRatio = landscape ?
+                (float) Gdx.graphics.getWidth() / Gdx.graphics.getHeight() :
+                (float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
+        Table hud = new Table();
+
+        if (aspectRatio < 1.5f) {
+            // Compact layout: buttons and score in the same line.
+            hud.add(new BorderedContainer(game.getSkin(), help)).size(50).padBottom(10);
+            hud.add(new BorderedContainer(game.getSkin(), score)).height(50).width(Constants.VIEWPORT_WIDTH / 2).space(10).expandX().fillX();
+            hud.add(new BorderedContainer(game.getSkin(), pause)).size(50).padBottom(10).row();
+            hud.add(new BorderedContainer(game.getSkin(), timer)).colspan(3).fillX().height(40).padBottom(20).row();
+        } else {
+            // Large layout: buttons above timer, score below timer (classic).
+            hud.add(new BorderedContainer(game.getSkin(), help)).size(50).spaceLeft(10).padBottom(10).align(Align.left);
+            hud.add(new BorderedContainer(game.getSkin(), pause)).size(50).spaceRight(10).padBottom(10).align(Align.right).row();
+            hud.add(new BorderedContainer(game.getSkin(), timer)).colspan(2).fillX().expandX().height(40).padBottom(10).row();
+            hud.add(new BorderedContainer(game.getSkin(), score)).colspan(2).height(60).width(Constants.VIEWPORT_WIDTH / 2).align(Align.center).padBottom(10).row();
+        }
+
+        if (aspectRatio > 1.6) {
+            hud.padBottom(20);
+        }
+
+        table.add(hud).fillX().expandY().align(Align.top).row();
+        table.add(board).fill().expand().row();
     }
 
     @Override
