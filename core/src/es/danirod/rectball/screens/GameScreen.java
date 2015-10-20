@@ -21,10 +21,12 @@ package es.danirod.rectball.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
@@ -37,8 +39,6 @@ import es.danirod.rectball.scene2d.ui.ConfirmDialog;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
 
 public class GameScreen extends AbstractScreen implements TimerCallback, BallSelectionListener {
 
@@ -56,6 +56,11 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
      * Display the board representation.
      */
     private BoardActor board;
+
+    /**
+     * The display used to represent information about the user.
+     */
+    private Table hud;
 
     /**
      * Is the game paused?
@@ -81,6 +86,23 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
      * True if the game has finished.
      */
     private boolean timeout;
+
+    /**
+     * Whether the player has seen the next combination. When the user presses
+     * the HELP button, a valid combination is displayed to help the player and
+     * some time is subtracted. To prevent happening this more than once,
+     * this variable will flag whether to subtract or not. It will be reset
+     * every time a new combination is made.
+     */
+    private boolean seenCheat;
+
+    /**
+     * These are the bounds selected when the user presses the Help button.
+     * They are cached so that the same bounds are always used. Otherwise,
+     * each time the user presses HELP without selecting a combination, a
+     * different one would be used.
+     */
+    private Bounds wiggledBounds;
 
     public GameScreen(RectballGame game) {
         super(game, false);
@@ -294,6 +316,47 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         score = new ScoreActor(game.getSkin());
         board = new BoardActor(game.getBallAtlas(), game.getState().getBoard());
 
+        // Add the help button.
+        ImageButton help = new ImageButton(game.getSkin(), "blueHelp");
+        help.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                // Wiggle a valid combination.
+                if (wiggledBounds == null) {
+                    CombinationFinder finder = new CombinationFinder(game.getState().getBoard());
+                    wiggledBounds = finder.getPossibleBounds().get(MathUtils.random(finder.getPossibleBounds().size() - 1));
+                }
+                board.addAction(board.shake(wiggledBounds, 10, 5, 0.1f));
+
+                if (!seenCheat) {
+                    // Subtract some time.
+                    float subtractedTime = 5f;
+                    final float step = subtractedTime / 10;
+                    getStage().addAction(Actions.repeat(10, Actions.delay(0.01f,
+                            Actions.run(new Runnable() {
+                                @Override
+                                public void run() {
+                                    timer.setSeconds(timer.getSeconds() - step);
+                                }
+                            }))));
+                    seenCheat = true;
+                }
+
+                event.cancel();
+            }
+        });
+
+        // Add the pause button.
+        ImageButton pause = new ImageButton(game.getSkin(), "blueCross");
+        pause.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.player.playSound(SoundCode.FAIL);
+                pause();
+                event.cancel();
+            }
+        });
+
         // Disable game until countdown ends.
         timer.setRunning(false);
         board.setTouchable(Touchable.disabled);
@@ -302,10 +365,39 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         timer.addSubscriber(this);
         board.addSubscriber(this);
 
-        // Fill the table.
-        table.add(timer).fillX().height(50).padBottom(10).row();
-        table.add(score).width(VIEWPORT_WIDTH / 2).height(65).padBottom(60).row();
-        table.add(board).expand().row();
+        /*
+         * Fill the HUD, which is the display that appears over the board with
+         * all the information. The HUD is generated differently depending on
+         * the aspect ratio of the device. If the device is 4:3, the HUD is
+         * compressed to avoid making the board small. Otherwise, it's expanded
+         * to the usual size.
+         */
+        boolean landscape = Gdx.graphics.getWidth() > Gdx.graphics.getHeight();
+        float aspectRatio = landscape ?
+                (float) Gdx.graphics.getWidth() / Gdx.graphics.getHeight() :
+                (float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
+        hud = new Table();
+
+        if (aspectRatio < 1.5f) {
+            // Compact layout: buttons and score in the same line.
+            hud.add(new BorderedContainer(game.getSkin(), help)).size(50).padBottom(10);
+            hud.add(new BorderedContainer(game.getSkin(), score)).height(50).width(Constants.VIEWPORT_WIDTH / 2).space(10).expandX().fillX();
+            hud.add(new BorderedContainer(game.getSkin(), pause)).size(50).padBottom(10).row();
+            hud.add(new BorderedContainer(game.getSkin(), timer)).colspan(3).fillX().height(40).padBottom(20).row();
+        } else {
+            // Large layout: buttons above timer, score below timer (classic).
+            hud.add(new BorderedContainer(game.getSkin(), help)).size(50).spaceLeft(10).padBottom(10).align(Align.left);
+            hud.add(new BorderedContainer(game.getSkin(), pause)).size(50).spaceRight(10).padBottom(10).align(Align.right).row();
+            hud.add(new BorderedContainer(game.getSkin(), timer)).colspan(2).fillX().expandX().height(40).padBottom(10).row();
+            hud.add(new BorderedContainer(game.getSkin(), score)).colspan(2).height(60).width(Constants.VIEWPORT_WIDTH / 2).align(Align.center).padBottom(10).row();
+        }
+
+        if (aspectRatio > 1.6) {
+            hud.padBottom(20);
+        }
+
+        table.add(hud).fillX().expandY().align(Align.top).row();
+        table.add(board).fill().expand().row();
     }
 
     @Override
@@ -412,7 +504,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // Animate the transition to game over.
         board.addAction(Actions.delay(2f, board.hideBoard()));
-        this.score.addAction(Actions.delay(2f, Actions.fadeOut(0.25f)));
+        hud.addAction(Actions.delay(2f, Actions.fadeOut(0.25f)));
 
         // Head to the game over after all these animations have finished.
         getStage().addAction(Actions.delay(2.5f, Actions.run(new Runnable() {
@@ -459,12 +551,43 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                                                 })
         ));
 
+        // Reset the cheat
+        seenCheat = false;
+        wiggledBounds = null;
+
         // You deserve some score and extra time.
         int rows = bounds.maxY - bounds.minY + 1;
         int cols = bounds.maxX - bounds.minX + 1;
-        game.getState().addScore(rows * cols);
-        score.setValue(game.getState().getScore());
-        timer.setSeconds(timer.getSeconds() + 4);
+
+        // TODO: Use a different formula.
+        int scoreFormula = rows * cols;
+        game.getState().addScore(scoreFormula);
+        final float givenTime = 4f;
+
+        // Animate the score
+        getStage().addAction(Actions.repeat(scoreFormula, Actions.delay(0.25f / scoreFormula,
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        score.setValue(score.getValue() + 1);
+                    }
+                }))));
+
+        // Animate the timer
+        timer.setRunning(false);
+        getStage().addAction(Actions.repeat(10, Actions.delay(0.01f,
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        timer.setSeconds(timer.getSeconds() + givenTime / 10);
+                    }
+                }))));
+        getStage().addAction(Actions.delay(0.05f, Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                timer.setRunning(true);
+            }
+        })));
 
         // Put information about this combination in the stats.
         String size = Math.max(rows, cols) + "x" + Math.min(rows, cols);

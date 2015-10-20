@@ -20,6 +20,7 @@ package es.danirod.rectball.scene2d.game;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -53,6 +54,8 @@ public class ScoreActor extends Group {
      */
     private int value;
 
+    private float fontScale;
+
     public ScoreActor(Skin skin) {
         this.skin = skin;
         this.value = 0;
@@ -62,18 +65,14 @@ public class ScoreActor extends Group {
         label = new Label(getScore(), skin, "monospace");
         label.setAlignment(Align.bottom);
         label.setFillParent(true);
-        label.setFontScale(7f);
+        label.setFontScale(calculateFontScale());
         addActor(label);
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         Color color = getColor();
-        // Draw the background.
-
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
-        NinePatch yellowPatch = skin.get("yellowPatch", NinePatch.class);
-        yellowPatch.draw(batch, getX() - 10, getY() - 10, getWidth() + 20, getHeight() + 20);
 
         // Draw the black background.
         background.draw(batch, getX(), getY(), getWidth(), getHeight());
@@ -106,5 +105,21 @@ public class ScoreActor extends Group {
     public void setValue(int value) {
         this.value = value;
         label.setText(getScore());
+        label.setFontScale(calculateFontScale());
+    }
+
+    @Override
+    protected void sizeChanged() {
+        label.setFontScale(calculateFontScale());
+    }
+
+    private float calculateFontScale() {
+        GlyphLayout layout = new GlyphLayout(label.getStyle().font, label.getText());
+        int requiredWidth = Math.round(layout.width);
+        int requiredHeight = Math.round(layout.height);
+
+        int maxHorizontalScale = Math.round((getWidth() - 10) / requiredWidth);
+        int maxVerticalScale = Math.round((getHeight() - 10) / requiredHeight);
+        return Math.min(maxHorizontalScale, maxVerticalScale) - 1;
     }
 }

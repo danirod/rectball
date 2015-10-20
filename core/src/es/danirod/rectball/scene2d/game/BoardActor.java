@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import es.danirod.rectball.model.*;
 import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
 
@@ -55,7 +56,7 @@ public class BoardActor extends Table {
         for (int y = board.getSize() - 1; y >= 0; y--) {
             for (int x = 0; x < board.getSize(); x++) {
                 actors[x][y] = new BallActor(this, board.getBall(x, y), atlas);
-                add(actors[x][y]).pad(2).uniform();
+                add(actors[x][y]).pad(4, 2, 4, 2);
             }
             row();
         }
