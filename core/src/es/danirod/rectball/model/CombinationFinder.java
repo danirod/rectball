@@ -35,8 +35,6 @@ public class CombinationFinder {
     }
 
     private List<Bounds> calculateCombinations() {
-        // FIXME: This method may return duplicated bounds.
-
         List<Bounds> possibleBounds = new ArrayList<>();
         for (int y = 0; y < height - 1; y++) {
             for (int x = 0; x < width - 1; x++) {
