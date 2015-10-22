@@ -555,17 +555,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         seenCheat = false;
         wiggledBounds = null;
 
-        // You deserve some score and extra time.
-        int rows = bounds.maxY - bounds.minY + 1;
-        int cols = bounds.maxX - bounds.minX + 1;
-
-        // TODO: Use a different formula.
-        int scoreFormula = rows * cols;
-        game.getState().addScore(scoreFormula);
-        final float givenTime = 4f;
-
-        // Animate the score
-        getStage().addAction(Actions.repeat(scoreFormula, Actions.delay(0.25f / scoreFormula,
+        // Give some score to the user.
+        ScoreCalculator calculator = new ScoreCalculator(bounds);
+        int givenScore = calculator.calculate();
+        game.getState().addScore(givenScore);
+        showPartialScore(givenScore, bounds);
+        getStage().addAction(Actions.repeat(givenScore, Actions.delay(0.25f / givenScore,
                 Actions.run(new Runnable() {
                     @Override
                     public void run() {
@@ -573,7 +568,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                     }
                 }))));
 
-        // Animate the timer
+        // Give some time to the user.
+        final float givenTime = 4f;
         timer.setRunning(false);
         getStage().addAction(Actions.repeat(10, Actions.delay(0.01f,
                 Actions.run(new Runnable() {
@@ -590,6 +586,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         })));
 
         // Put information about this combination in the stats.
+        int rows = bounds.maxY - bounds.minY + 1;
+        int cols = bounds.maxX - bounds.minX + 1;
         String size = Math.max(rows, cols) + "x" + Math.min(rows, cols);
         game.statistics.getSizesData().incrementValue(size);
 
@@ -601,7 +599,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
 
         // Add some sound and animations.
-        showPartialScore(rows * cols, bounds);
         game.player.playSound(SoundCode.SUCCESS);
     }
 
