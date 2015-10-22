@@ -35,8 +35,6 @@ public class CombinationFinder {
     }
 
     private List<Bounds> calculateCombinations() {
-        // FIXME: This method may return duplicated bounds.
-
         List<Bounds> possibleBounds = new ArrayList<>();
         for (int y = 0; y < height - 1; y++) {
             for (int x = 0; x < width - 1; x++) {
@@ -93,7 +91,59 @@ public class CombinationFinder {
         return bounds.isEmpty() ? null : bounds.get(0);
     }
 
+    public Bounds getBestCombination() {
+        if (bounds.isEmpty()) {
+            return null;
+        }
+
+        // Imagine this with lambdas and Java 8. Android PLEASE.
+        Bounds maxBounds = bounds.get(0);
+        for (Bounds thisBounds : bounds) {
+            if (getWeightForCombination(thisBounds) > getWeightForCombination(maxBounds)) {
+                maxBounds = thisBounds;
+            }
+        }
+        return maxBounds;
+    }
+
+    public Bounds getWorstCombination() {
+        if (bounds.isEmpty()) {
+            return null;
+        }
+
+        Bounds minBounds = bounds.get(0);
+        for (Bounds thisBounds : bounds) {
+            if (getWeightForCombination(thisBounds) < getWeightForCombination(minBounds)) {
+                minBounds = thisBounds;
+            }
+        }
+
+        return minBounds;
+    }
+
     public boolean areThereCombinations() {
         return !(bounds.isEmpty());
+    }
+
+    /**
+     * Calculate the weight of the provided combination. Please note that the
+     * weight is not the same as the score that the user receives from this
+     * combination. Weight is a local comparation system used by the
+     * CombinationFinder to decide what is the greatest combination can be
+     * offered to the user.
+     *
+     * @since 0.4
+     *
+     * @param bounds  the bounds whose weight we want to know.
+     * @return  the weight for this combination
+     */
+    private int getWeightForCombination(Bounds bounds) {
+        /*
+         * For now let's just use the number of balls in the combination. This
+         * is an experimental formula that might be tweaked in future releases.
+         */
+        int cols = bounds.maxX - bounds.minX + 1;
+        int rows = bounds.maxY - bounds.minY + 1;
+        return cols * rows;
     }
 }

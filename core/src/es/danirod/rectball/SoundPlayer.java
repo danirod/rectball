@@ -44,7 +44,8 @@ public class SoundPlayer {
         SELECT("sound/select.ogg"),
         UNSELECT("sound/unselect.ogg"),
         SUCCESS("sound/success.ogg"),
-        FAIL("sound/fail.ogg");
+        FAIL("sound/fail.ogg"),
+        PERFECT("sound/perfect.ogg");
 
         final String internalPath;
 

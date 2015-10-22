@@ -34,14 +34,6 @@ import com.badlogic.gdx.utils.Align;
 public class ScoreActor extends Group {
 
     /**
-     * The skin instance used to style this actor.
-     */
-    private final Skin skin;
-    /**
-     * Whether to pad with zeroes or not.
-     */
-    private final boolean zeroPad;
-    /**
      * The background.
      */
     private final Drawable background;
@@ -54,13 +46,12 @@ public class ScoreActor extends Group {
      */
     private int value;
 
-    private float fontScale;
+    /**
+     * The remaining score that still has to be added to the value.
+     */
+    private int remainingValue;
 
     public ScoreActor(Skin skin) {
-        this.skin = skin;
-        this.value = 0;
-        this.zeroPad = true;
-
         background = skin.newDrawable("pixel", Color.BLACK);
         label = new Label(getScore(), skin, "monospace");
         label.setAlignment(Align.bottom);
@@ -90,10 +81,8 @@ public class ScoreActor extends Group {
      */
     private String getScore() {
         String score = Integer.toString(value);
-        if (zeroPad) {
-            while (score.length() < 4) {
-                score = "0" + score;
-            }
+        while (score.length() < 4) {
+            score = "0" + score;
         }
         return score;
     }
@@ -121,5 +110,20 @@ public class ScoreActor extends Group {
         int maxHorizontalScale = Math.round((getWidth() - 10) / requiredWidth);
         int maxVerticalScale = Math.round((getHeight() - 10) / requiredHeight);
         return Math.min(maxHorizontalScale, maxVerticalScale) - 1;
+    }
+
+    @Override
+    public void act(float delta) {
+        if (remainingValue > 0) {
+            int givenValue = Math.min(remainingValue, 2);
+            remainingValue -= givenValue;
+            value += givenValue;
+            label.setText(getScore());
+            label.setFontScale(calculateFontScale());
+        }
+    }
+
+    public void giveScore(int score) {
+        remainingValue += score;
     }
 }
