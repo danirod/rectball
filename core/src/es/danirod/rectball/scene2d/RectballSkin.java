@@ -23,6 +23,8 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
@@ -59,6 +61,12 @@ public class RectballSkin extends Skin {
         addWindowStyles();
         addNinePatchesStyles();
         addCheckboxStyles();
+        addScrollPaneStyles();
+    }
+
+    private void addScrollPaneStyles() {
+        ScrollPaneStyle style = new ScrollPaneStyle();
+        add("default", style);
     }
 
     private void addCheckboxStyles() {

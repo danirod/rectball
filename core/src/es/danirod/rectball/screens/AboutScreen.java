@@ -43,16 +43,13 @@ public class AboutScreen extends AbstractScreen {
 
     @Override
     public void setUpInterface(Table table) {
-        // TODO: Move this to the skin.
-        ScrollPane.ScrollPaneStyle style = new ScrollPane.ScrollPaneStyle();
-
         table.pad(20);
 
         Label header = new Label(game.getLocale().get("main.about"), game.getSkin(), "bold");
         table.add(header).expandX().align(Align.center).height(80).row();
 
         innerContainer = new Table();
-        ScrollPane scroll = new ScrollPane(innerContainer, style);
+        ScrollPane scroll = new ScrollPane(innerContainer, game.getSkin());
         table.add(scroll).expand().fill().align(Align.top).row();
         innerContainer.defaults().fill().expand();
 

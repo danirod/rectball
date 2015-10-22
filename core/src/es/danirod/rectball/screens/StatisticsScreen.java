@@ -43,8 +43,7 @@ public class StatisticsScreen extends AbstractScreen {
         LabelStyle normal = game.getSkin().get("small", LabelStyle.class);
 
         StatsTable statsTable = new StatsTable(game, bold, normal);
-        ScrollPane.ScrollPaneStyle style = new ScrollPane.ScrollPaneStyle();
-        ScrollPane pane = new ScrollPane(statsTable, style);
+        ScrollPane pane = new ScrollPane(statsTable, game.getSkin());
         pane.setForceScroll(false, true);
         table.add(pane).align(Align.topLeft).expand().fill().row();
 
