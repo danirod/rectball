@@ -36,16 +36,12 @@ public class StatisticsScreen extends AbstractScreen {
 
     @Override
     public void setUpInterface(Table table) {
-        table.pad(20);
-        table.add(new Label(game.getLocale().get("main.stats"), game.getSkin(), "bold")).expandX().align(Align.center).height(100).row();
-
         LabelStyle bold = game.getSkin().get("bold", LabelStyle.class);
         LabelStyle normal = game.getSkin().get("small", LabelStyle.class);
 
         StatsTable statsTable = new StatsTable(game, bold, normal);
-        ScrollPane.ScrollPaneStyle style = new ScrollPane.ScrollPaneStyle();
-        ScrollPane pane = new ScrollPane(statsTable, style);
-        pane.setForceScroll(false, true);
+        ScrollPane pane = new ScrollPane(statsTable, game.getSkin());
+        pane.setFadeScrollBars(false);
         table.add(pane).align(Align.topLeft).expand().fill().row();
 
         TextButton backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());

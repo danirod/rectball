@@ -42,7 +42,7 @@ public class StatsTable extends Table {
         this.title = title;
         this.data = data;
 
-        defaults().padBottom(30);
+        defaults().padBottom(30).padRight(10);
         add(addBestScores()).fillX().expandX().row();
         add(addTotalData()).fillX().expandX().row();
         add(addColorData()).fillX().expandX().row();
