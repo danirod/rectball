@@ -36,8 +36,6 @@ public class SettingsScreen extends AbstractScreen {
 
     @Override
     public void setUpInterface(Table table) {
-        table.add(new Label(game.getLocale().get("main.settings"), game.getSkin(), "bold")).expandX().align(Align.top).height(100).row();
-
         Table settingsTable = new Table();
         settingsTable.setFillParent(true);
         settingsTable.defaults().align(Align.top);
