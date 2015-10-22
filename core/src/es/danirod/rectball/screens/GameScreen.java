@@ -25,7 +25,10 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.Constants;
@@ -115,9 +118,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
      */
     private void showLeaveDialog() {
         ConfirmDialog dialog = new ConfirmDialog(game.getSkin(),
-                                                        game.getLocale().get("game.leave"),
-                                                        game.getLocale().get("core.yes"),
-                                                        game.getLocale().get("core.no"));
+                game.getLocale().get("game.leave"),
+                game.getLocale().get("core.yes"),
+                game.getLocale().get("core.no"));
         dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
             @Override
             public void ok() {
@@ -142,9 +145,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
     private void showPreLeaveDialog() {
         ConfirmDialog dialog = new ConfirmDialog(game.getSkin(),
-                                                        game.getLocale().get("game.paused"),
-                                                        game.getLocale().get("game.continue"),
-                                                        game.getLocale().get("game.leaveGame"));
+                game.getLocale().get("game.paused"),
+                game.getLocale().get("game.continue"),
+                game.getLocale().get("game.leaveGame"));
         dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
             @Override
             public void ok() {
@@ -217,29 +220,29 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         label.setSize(150, 150);
         label.setAlignment(Align.center);
         label.setPosition(
-                                 (getStage().getWidth() - label.getWidth()) / 2,
-                                 (getStage().getHeight() - label.getHeight()) / 2);
+                (getStage().getWidth() - label.getWidth()) / 2,
+                (getStage().getHeight() - label.getHeight()) / 2);
 
         // Add the label to the stage and play a sound to notify the user.
         getStage().addActor(label);
         game.player.playSound(SoundCode.SELECT);
 
         label.addAction(Actions.sequence(
-                                                Actions.parallel(Actions.fadeOut(1f), Actions.moveBy(0, 80, 1f)),
+                Actions.parallel(Actions.fadeOut(1f), Actions.moveBy(0, 80, 1f)),
 
-                                                // After the animation, decide. If the countdown hasn't finished
-                                                // yet, run another countdown with 1 second less.
-                                                Actions.run(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        label.remove();
-                                                        if (seconds > 1) {
-                                                            countdown(seconds - 1, after);
-                                                        } else {
-                                                            after.run();
-                                                        }
-                                                    }
-                                                })
+                // After the animation, decide. If the countdown hasn't finished
+                // yet, run another countdown with 1 second less.
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        label.remove();
+                        if (seconds > 1) {
+                            countdown(seconds - 1, after);
+                        } else {
+                            after.run();
+                        }
+                    }
+                })
         ));
     }
 
@@ -254,8 +257,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     private void generate(Bounds bounds) {
         // Generate new balls;
         game.getState().getBoard().randomize(
-                                                    new Coordinate(bounds.minX, bounds.minY),
-                                                    new Coordinate(bounds.maxX, bounds.maxY));
+                new Coordinate(bounds.minX, bounds.minY),
+                new Coordinate(bounds.maxX, bounds.maxY));
 
         // Check the new board for valid combinations.
         CombinationFinder newFinder = new CombinationFinder(game.getState().getBoard());
@@ -270,14 +273,14 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 board.setColoured(false);
                 game.getState().resetBoard();
                 board.addAction(Actions.sequence(
-                                                        board.shake(10, 5, 0.05f),
-                                                        Actions.run(new Runnable() {
-                                                            @Override
-                                                            public void run() {
-                                                                board.setColoured(true);
-                                                                timer.setRunning(true);
-                                                            }
-                                                        })));
+                        board.shake(10, 5, 0.05f),
+                        Actions.run(new Runnable() {
+                            @Override
+                            public void run() {
+                                board.setColoured(true);
+                                timer.setRunning(true);
+                            }
+                        })));
             }
         }
         board.addAction(board.showRegion(bounds));
@@ -301,10 +304,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         label.setAlignment(Align.center);
         label.setPosition(centerX - label.getWidth() / 2, centerY - label.getHeight() / 2);
         label.addAction(Actions.sequence(
-                                                Actions.parallel(
-                                                                        Actions.moveBy(0, 80, 0.5f),
-                                                                        Actions.alpha(0.5f, 0.5f)),
-                                                Actions.removeActor()
+                Actions.parallel(
+                        Actions.moveBy(0, 80, 0.5f),
+                        Actions.alpha(0.5f, 0.5f)),
+                Actions.removeActor()
         ));
         getStage().addActor(label);
     }
@@ -539,16 +542,16 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // Change the colors of the selected region.
         board.addAction(Actions.sequence(
-                                                board.hideRegion(bounds),
-                                                Actions.run(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        for (BallActor selectedBall : selection) {
-                                                            selectedBall.setColor(Color.WHITE);
-                                                        }
-                                                        generate(bounds);
-                                                    }
-                                                })
+                board.hideRegion(bounds),
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (BallActor selectedBall : selection) {
+                            selectedBall.setColor(Color.WHITE);
+                        }
+                        generate(bounds);
+                    }
+                })
         ));
 
         // Reset the cheat
