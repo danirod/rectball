@@ -44,7 +44,7 @@ public class StatisticsScreen extends AbstractScreen {
 
         StatsTable statsTable = new StatsTable(game, bold, normal);
         ScrollPane pane = new ScrollPane(statsTable, game.getSkin());
-        pane.setForceScroll(false, true);
+        pane.setFadeScrollBars(false);
         table.add(pane).align(Align.topLeft).expand().fill().row();
 
         TextButton backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());

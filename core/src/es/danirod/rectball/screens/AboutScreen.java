@@ -50,8 +50,9 @@ public class AboutScreen extends AbstractScreen {
 
         innerContainer = new Table();
         ScrollPane scroll = new ScrollPane(innerContainer, game.getSkin());
+        scroll.setFadeScrollBars(false);
         table.add(scroll).expand().fill().align(Align.top).row();
-        innerContainer.defaults().fill().expand();
+        innerContainer.defaults().fill().expand().padRight(10);
 
         screen = SCREEN_CREDITS;
         updateScrollPane();
