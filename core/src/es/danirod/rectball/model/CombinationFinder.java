@@ -93,6 +93,36 @@ public class CombinationFinder {
         return bounds.isEmpty() ? null : bounds.get(0);
     }
 
+    public Bounds getBestCombination() {
+        if (bounds.isEmpty()) {
+            return null;
+        }
+
+        // Imagine this with lambdas and Java 8. Android PLEASE.
+        Bounds maxBounds = bounds.get(0);
+        for (Bounds thisBounds : bounds) {
+            if (getWeightForCombination(thisBounds) > getWeightForCombination(maxBounds)) {
+                maxBounds = thisBounds;
+            }
+        }
+        return maxBounds;
+    }
+
+    public Bounds getWorstCombination() {
+        if (bounds.isEmpty()) {
+            return null;
+        }
+
+        Bounds minBounds = bounds.get(0);
+        for (Bounds thisBounds : bounds) {
+            if (getWeightForCombination(thisBounds) < getWeightForCombination(minBounds)) {
+                minBounds = thisBounds;
+            }
+        }
+
+        return minBounds;
+    }
+
     public boolean areThereCombinations() {
         return !(bounds.isEmpty());
     }
