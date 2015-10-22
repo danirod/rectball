@@ -111,6 +111,10 @@ public class RectballSkin extends Skin {
         LabelStyle smallStyle = new LabelStyle(smallFont, Color.WHITE);
         this.add("small", smallStyle);
 
+        BitmapFont bigFont = game.manager.get("bigFont.ttf");
+        LabelStyle bigStyle = new LabelStyle(bigFont, Color.WHITE);
+        this.add("big", bigStyle);
+
         // Build the monospace style
         BitmapFont monospaceFont = game.manager.get("monospace.ttf");
         LabelStyle monospaceStyle = new LabelStyle(monospaceFont, Color.WHITE);

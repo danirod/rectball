@@ -178,8 +178,8 @@ public class RectballGame extends Game {
 
         // Load TTF font for big text
         FreeTypeFontLoaderParameter bigFont = new FreeTypeFontLoaderParameter();
-        bigFont.fontFileName = "fonts/Play-Regular.ttf";
-        bigFont.fontParameters.size = 44;
+        bigFont.fontFileName = "fonts/Play-Bold.ttf";
+        bigFont.fontParameters.size = 80;
         bigFont.fontParameters.minFilter = TextureFilter.Linear;
         bigFont.fontParameters.magFilter = TextureFilter.Linear;
         bigFont.fontParameters.borderWidth = 2;
@@ -206,6 +206,7 @@ public class RectballGame extends Game {
         // Load sounds
         manager.load("sound/fail.ogg", Sound.class);
         manager.load("sound/game_over.ogg", Sound.class);
+        manager.load("sound/perfect.ogg", Sound.class);
         manager.load("sound/select.ogg", Sound.class);
         manager.load("sound/success.ogg", Sound.class);
         manager.load("sound/unselect.ogg", Sound.class);

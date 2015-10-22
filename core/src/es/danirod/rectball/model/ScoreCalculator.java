@@ -12,8 +12,11 @@ public class ScoreCalculator {
 
     private Bounds bounds;
 
+    private Board board;
+
     public ScoreCalculator(Board board, Bounds bounds) {
         this.bounds = bounds;
+        this.board = board;
         this.finder = new CombinationFinder(board);
     }
 
@@ -39,6 +42,13 @@ public class ScoreCalculator {
                     score = Math.round((float) score * 1.3f);
                     break;
             }
+        }
+
+        // In fact, does this combination use the entire board?
+        if (bounds.minX == 0 && bounds.minY == 0
+                && bounds.maxX == board.getSize() - 1 && bounds.maxY == board.getSize() - 1) {
+            // Yes, make that another bonus.
+            score = Math.round((float) score * 1.5f);
         }
 
         return score;

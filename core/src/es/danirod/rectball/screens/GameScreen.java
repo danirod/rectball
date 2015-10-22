@@ -557,16 +557,22 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // Give some score to the user.
         ScoreCalculator calculator = new ScoreCalculator(game.getState().getBoard(), bounds);
-        int givenScore = calculator.calculate();
+        final int initialScore = score.getValue();
+        final int givenScore = calculator.calculate();
         game.getState().addScore(givenScore);
-        showPartialScore(givenScore, bounds);
-        getStage().addAction(Actions.repeat(givenScore, Actions.delay(0.25f / givenScore,
+        getStage().addAction(Actions.repeat(10, Actions.delay(0.01f,
                 Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        score.setValue(score.getValue() + 1);
+                        score.setValue(score.getValue() + givenScore / 10);
                     }
                 }))));
+        getStage().addAction(Actions.delay(0.1f, Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                score.setValue(initialScore + givenScore);
+            }
+        })));
 
         // Give some time to the user.
         final float givenTime = 4f;
@@ -578,7 +584,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                         timer.setSeconds(timer.getSeconds() + givenTime / 10);
                     }
                 }))));
-        getStage().addAction(Actions.delay(0.05f, Actions.run(new Runnable() {
+        getStage().addAction(Actions.delay(0.1f, Actions.run(new Runnable() {
             @Override
             public void run() {
                 timer.setRunning(true);
@@ -593,13 +599,28 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         BallColor color = board.getBall(bounds.minX, bounds.minY).getBall().getColor();
         game.statistics.getColorData().incrementValue(color.toString().toLowerCase());
-
         game.statistics.getTotalData().incrementValue("balls", rows * cols);
         game.statistics.getTotalData().incrementValue("combinations");
 
-
-        // Add some sound and animations.
-        game.player.playSound(SoundCode.SUCCESS);
+        // Now, display the score to the user. If the combination is a
+        // PERFECT combination, just display PERFECT.
+        int boardSize = game.getState().getBoard().getSize() - 1;
+        if (bounds.equals(new Bounds(0, 0, boardSize, boardSize))) {
+            Label label = new Label("PERFECT", game.getSkin(), "big");
+            label.setX((getStage().getViewport().getWorldWidth() - label.getWidth()) / 2);
+            label.setY((getStage().getViewport().getWorldHeight() - label.getHeight()) / 2);
+            label.addAction(Actions.sequence(
+                    Actions.parallel(
+                            Actions.moveBy(0, 80, 0.5f),
+                            Actions.alpha(0.5f, 0.5f)),
+                    Actions.removeActor()
+            ));
+            getStage().addActor(label);
+            game.player.playSound(SoundCode.PERFECT);
+        } else {
+            showPartialScore(givenScore, bounds);
+            game.player.playSound(SoundCode.SUCCESS);
+        }
     }
 
     @Override
