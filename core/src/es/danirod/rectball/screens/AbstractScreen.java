@@ -78,7 +78,6 @@ public abstract class AbstractScreen implements Screen {
                 (float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
         float width = (float) VIEWPORT_WIDTH;
         float height = landscape ? width : width * ar;
-        Gdx.app.debug("AbstractScreen", "Setting size to " + width + "x" + height);
         Viewport viewport = new FitViewport(width, height);
         stage = new Stage(viewport);
         table = new Table();

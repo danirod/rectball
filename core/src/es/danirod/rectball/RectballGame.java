@@ -89,6 +89,14 @@ public class RectballGame extends Game {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
         }
 
+        Calendar halloween = Calendar.getInstance();
+        if (halloween.get(Calendar.MONTH) == Calendar.OCTOBER &&
+                halloween.get(Calendar.DATE) == 31) {
+            Constants.SPOOKY_MODE = true;
+        } else {
+            Constants.SPOOKY_MODE = false;
+        }
+
         // Add the screens.
         addScreen(new GameScreen(this));
         addScreen(new GameOverScreen(this));
@@ -149,6 +157,8 @@ public class RectballGame extends Game {
         manager.load("logo.png", Texture.class, linearParameters);
         manager.load("board/normal.png", Texture.class, linearParameters);
         manager.load("board/colorblind.png", Texture.class, linearParameters);
+        manager.load("board/spooky.png", Texture.class, linearParameters);
+        manager.load("board/blindspooky.png", Texture.class, linearParameters);
 
         // Load UI resources.
         manager.load("ui/progress.png", Texture.class, linearParameters);
@@ -283,7 +293,13 @@ public class RectballGame extends Game {
 
     public void updateBallAtlas() {
         boolean isColorblind = platform.preferences().getBoolean("colorblind");
-        Texture balls = manager.get(isColorblind ? "board/colorblind.png" : "board/normal.png");
+        String ballsTexture;
+        if (isColorblind) {
+            ballsTexture = Constants.SPOOKY_MODE ? "board/blindspooky.png" : "board/colorblind.png";
+        } else {
+            ballsTexture = Constants.SPOOKY_MODE ? "board/spooky.png" : "board/normal.png";
+        }
+        Texture balls = manager.get(ballsTexture);
         TextureRegion[][] regions = TextureRegion.split(balls, 256, 256);
         ballAtlas = new TextureAtlas();
         ballAtlas.addRegion("ball_red", regions[0][0]);

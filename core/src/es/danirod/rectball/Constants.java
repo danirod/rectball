@@ -18,6 +18,9 @@
 
 package es.danirod.rectball;
 
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Class for holding constant values to keep them centralized.
  */
@@ -50,4 +53,11 @@ public class Constants {
     public static final int STAGE_PADDING = 20;
 
     public static final int SECONDS = 30;
+
+    /**
+     * Whether to enable spooky mode or not. if spooky mode is enabled, the
+     * game might act differently, for instance displaying a different color
+     * scheme.
+     */
+    public static boolean SPOOKY_MODE = false;
 }
