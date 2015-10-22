@@ -556,7 +556,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         wiggledBounds = null;
 
         // Give some score to the user.
-        ScoreCalculator calculator = new ScoreCalculator(bounds);
+        ScoreCalculator calculator = new ScoreCalculator(game.getState().getBoard(), bounds);
         int givenScore = calculator.calculate();
         game.getState().addScore(givenScore);
         showPartialScore(givenScore, bounds);
