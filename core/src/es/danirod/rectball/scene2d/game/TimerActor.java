@@ -21,7 +21,6 @@ package es.danirod.rectball.scene2d.game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
@@ -76,6 +75,8 @@ public class TimerActor extends Actor {
      * system.
      */
     private boolean running = true;
+
+    private float remainingTime;
 
     /**
      * Set up a new timer.
@@ -153,6 +154,14 @@ public class TimerActor extends Actor {
                 }
             }
         }
+
+        if (remainingTime > 0) {
+            float givenTime = Math.min(remainingTime, 0.25f);
+            remainingTime -= givenTime;
+            seconds += givenTime;
+        }
+
+        seconds = Math.min(seconds, maxSeconds);
     }
 
     @Override
@@ -178,6 +187,10 @@ public class TimerActor extends Actor {
         batch.draw(progress, getX(), getY(), remainingSize, getHeight());
 
         batch.setColor(color.r, color.g, color.b, color.a);
+    }
+
+    public void giveTime(float time) {
+        remainingTime += time;
     }
 
     /**

@@ -560,39 +560,13 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // Give some score to the user.
         ScoreCalculator calculator = new ScoreCalculator(game.getState().getBoard(), bounds);
-        final int initialScore = score.getValue();
-        final int givenScore = calculator.calculate();
+        int givenScore = calculator.calculate();
         game.getState().addScore(givenScore);
-        getStage().addAction(Actions.repeat(10, Actions.delay(0.01f,
-                Actions.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        score.setValue(score.getValue() + givenScore / 10);
-                    }
-                }))));
-        getStage().addAction(Actions.delay(0.1f, Actions.run(new Runnable() {
-            @Override
-            public void run() {
-                score.setValue(initialScore + givenScore);
-            }
-        })));
+        score.giveScore(givenScore);
 
         // Give some time to the user.
-        final float givenTime = 4f;
-        timer.setRunning(false);
-        getStage().addAction(Actions.repeat(10, Actions.delay(0.01f,
-                Actions.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        timer.setSeconds(timer.getSeconds() + givenTime / 10);
-                    }
-                }))));
-        getStage().addAction(Actions.delay(0.1f, Actions.run(new Runnable() {
-            @Override
-            public void run() {
-                timer.setRunning(true);
-            }
-        })));
+        float givenTime = 4f;
+        timer.giveTime(givenTime);
 
         // Put information about this combination in the stats.
         int rows = bounds.maxY - bounds.minY + 1;
@@ -642,4 +616,5 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             selected.addAction(Actions.color(Color.WHITE, 0.15f));
         }
     }
+
 }
