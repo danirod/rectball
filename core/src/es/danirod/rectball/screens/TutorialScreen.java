@@ -52,6 +52,9 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
      * The timer.
      */
     private TimerActor timer;
+
+    private BorderedContainer scoreBorder, timerBorder;
+
     /**
      * Every chapter in this tutorial is a state. The game passes from one
      * state to another and when finished, is back to the home screen.
@@ -87,6 +90,9 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         score = new ScoreActor(game.getSkin());
         board = new BoardActor(game.getBallAtlas(), game.getState().getBoard());
 
+        scoreBorder = new BorderedContainer(game.getSkin(), score);
+        timerBorder = new BorderedContainer(game.getSkin(), timer);
+
         // Set some subscribers.
         timer.addSubscriber(new TimerActor.TimerCallback() {
             @Override
@@ -106,13 +112,13 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         timer.setRunning(false);
         board.setTouchable(Touchable.disabled);
         board.setColoured(false);
-        score.setVisible(false);
+        scoreBorder.setVisible(false);
         board.setVisible(false);
-        timer.setVisible(false);
+        timerBorder.setVisible(false);
 
         // Fill the table.
-        table.add(timer).fillX().height(50).padBottom(10).row();
-        table.add(score).width(VIEWPORT_WIDTH / 2).height(65).padBottom(60).row();
+        table.add(timerBorder).fillX().height(50).padBottom(10).row();
+        table.add(scoreBorder).width(VIEWPORT_WIDTH / 2).height(65).padBottom(60).row();
         table.add(board).expand().row();
     }
 
@@ -216,7 +222,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
                 getStage().addAction(Actions.delay(0.25f, Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        timer.setVisible(true);
+                        timerBorder.setVisible(true);
                         timer.setRunning(true);
                     }
                 })));
@@ -234,7 +240,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
                 getStage().addAction(Actions.delay(0.25f, Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        score.setVisible(true);
+                        scoreBorder.setVisible(true);
                         score.addAction(Actions.forever(Actions.delay(0.1f, Actions.run(new Runnable() {
                             @Override
                             public void run() {
