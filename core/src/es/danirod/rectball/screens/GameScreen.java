@@ -36,6 +36,7 @@ import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer.SoundCode;
 import es.danirod.rectball.model.*;
 import es.danirod.rectball.scene2d.game.*;
+import es.danirod.rectball.scene2d.game.ScoreActor.ScoreListener;
 import es.danirod.rectball.scene2d.game.TimerActor.TimerCallback;
 import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
 import es.danirod.rectball.scene2d.ui.ConfirmDialog;
@@ -43,7 +44,7 @@ import es.danirod.rectball.scene2d.ui.ConfirmDialog;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameScreen extends AbstractScreen implements TimerCallback, BallSelectionListener {
+public class GameScreen extends AbstractScreen implements TimerCallback, BallSelectionListener, ScoreListener {
 
     /**
      * Display the remaining time.
@@ -180,6 +181,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // Reset data
         game.getState().reset();
+        score.setValue(game.getState().getScore());
         paused = running = countdownFinished = askingLeave = timeout = false;
         countdown(2, new Runnable() {
 
@@ -367,6 +369,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // Add subscribers.
         timer.addSubscriber(this);
         board.addSubscriber(this);
+        score.setScoreListener(this);
 
         /*
          * Fill the HUD, which is the display that appears over the board with
@@ -617,4 +620,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         }
     }
 
+    @Override
+    public void onScoreGoNuts() {
+        game.player.playSound(SoundCode.PERFECT);
+    }
 }

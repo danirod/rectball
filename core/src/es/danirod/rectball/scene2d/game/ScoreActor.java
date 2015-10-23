@@ -21,7 +21,7 @@ package es.danirod.rectball.scene2d.game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -51,13 +51,23 @@ public class ScoreActor extends Group {
      */
     private int remainingValue;
 
+    private boolean goNuts = false;
+
+    private float nutTime = 0.0f;
+
+    private ScoreListener listener = null;
+
     public ScoreActor(Skin skin) {
         background = skin.newDrawable("pixel", Color.BLACK);
         label = new Label(getScore(), skin, "monospace");
-        label.setAlignment(Align.bottom);
+        label.setAlignment(Align.bottom, Align.bottom);
         label.setFillParent(true);
         label.setFontScale(calculateFontScale());
         addActor(label);
+    }
+
+    public void setScoreListener(ScoreListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -107,8 +117,8 @@ public class ScoreActor extends Group {
         int requiredWidth = Math.round(layout.width);
         int requiredHeight = Math.round(layout.height);
 
-        int maxHorizontalScale = Math.round((getWidth() - 10) / requiredWidth);
-        int maxVerticalScale = Math.round((getHeight() - 10) / requiredHeight);
+        int maxHorizontalScale = Math.round(getWidth() / requiredWidth);
+        int maxVerticalScale = Math.round(getHeight() / requiredHeight);
         return Math.min(maxHorizontalScale, maxVerticalScale) - 1;
     }
 
@@ -121,9 +131,34 @@ public class ScoreActor extends Group {
             label.setText(getScore());
             label.setFontScale(calculateFontScale());
         }
+        if (goNuts) {
+            if (nutTime < 1) {
+                label.setText(Integer.toString(MathUtils.random(1000, 9999)));
+                label.setFontScale(calculateFontScale());
+                nutTime += delta;
+            } else {
+                label.setText(getScore());
+                label.setFontScale(calculateFontScale());
+                goNuts = false;
+                nutTime = 0;
+            }
+        }
     }
 
     public void giveScore(int score) {
+        if (value < 10000 && (value + score) >= 10000) {
+            goNuts = true;
+            value += score;
+            if (listener != null) {
+                listener.onScoreGoNuts();
+            }
+        }
         remainingValue += score;
+    }
+
+    public interface ScoreListener {
+
+        void onScoreGoNuts();
+
     }
 }
