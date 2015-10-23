@@ -1,3 +1,6 @@
+[0.4.1]
+- Fix timer being negative if a hint was made when almost game over.
+
 [0.4.0]
 - Subtle changes to the game layout.
 - Bonuses are now given on good combos.
