@@ -15,33 +15,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.badlogic.gdx.utils.ScreenUtils;
 import es.danirod.rectball.model.GameState;
+import es.danirod.rectball.model.Statistics;
+import es.danirod.rectball.platform.Platform;
+import es.danirod.rectball.scene2d.RectballSkin;
 import es.danirod.rectball.screens.*;
-import es.danirod.rectball.settings.ScoreIO;
-import es.danirod.rectball.settings.Scores;
-import es.danirod.rectball.settings.Settings;
-import es.danirod.rectball.statistics.Statistics;
-import es.danirod.rectball.utils.RectballSkin;
-import es.danirod.rectball.utils.SoundPlayer;
 
+import java.nio.ByteBuffer;
 import java.util.*;
 
 /**
@@ -49,34 +47,56 @@ import java.util.*;
  */
 public class RectballGame extends Game {
 
-    public static final String VERSION = "Rectball 0.3.0";
+    public static final String VERSION = "Rectball 0.4.0";
+
+    private final Platform platform;
 
     /* FIXME: Privatize this. */
 
-    private Map<Integer, AbstractScreen> screens = new HashMap<>();
-
-    public Settings settings;
-
-    public Scores scores;
-
+    private final Map<Integer, AbstractScreen> screens = new HashMap<>();
+    private final GameState currentGame = new GameState();
+    private final Deque<AbstractScreen> screenStack = new ArrayDeque<>();
     public Statistics statistics;
-
     public AssetManager manager;
-
     public SoundPlayer player;
-
     private RectballSkin uiSkin;
-
-    private GameState currentGame = new GameState();
-
     private TextureAtlas ballAtlas;
-
     private I18NBundle locale;
 
-    private Deque<AbstractScreen> screenStack = new ArrayDeque<>();
+    /**
+     * Create a new instance of Rectball.
+     *
+     * @param platform the platform this game is using.
+     */
+    public RectballGame(Platform platform) {
+        this.platform = platform;
+    }
+
+    /**
+     * Get the common platform facade. This lets the application logic request
+     * the platform to do special things such as sharing the score or sending
+     * information.
+     *
+     * @return the platform this game is using.
+     */
+    public Platform getPlatform() {
+        return platform;
+    }
 
     @Override
     public void create() {
+        if (Constants.DEBUG) {
+            Gdx.app.setLogLevel(Application.LOG_DEBUG);
+        }
+
+        Calendar halloween = Calendar.getInstance();
+        if (halloween.get(Calendar.MONTH) == Calendar.OCTOBER &&
+                halloween.get(Calendar.DATE) == 31) {
+            Constants.SPOOKY_MODE = true;
+        } else {
+            Constants.SPOOKY_MODE = false;
+        }
+
         // Add the screens.
         addScreen(new GameScreen(this));
         addScreen(new GameOverScreen(this));
@@ -95,9 +115,8 @@ public class RectballGame extends Game {
 
     public void finishLoading() {
         // Load the remaining data.
-        settings = new Settings(Gdx.app.getPreferences("rectball"));
-        scores = ScoreIO.load();
-        statistics = Statistics.loadStats();
+        platform.score().readData();
+        statistics = platform.statistics().loadStatistics();
         player = new SoundPlayer(this);
         uiSkin = new RectballSkin(this);
         updateBallAtlas();
@@ -138,11 +157,13 @@ public class RectballGame extends Game {
         manager.load("logo.png", Texture.class, linearParameters);
         manager.load("board/normal.png", Texture.class, linearParameters);
         manager.load("board/colorblind.png", Texture.class, linearParameters);
+        manager.load("board/spooky.png", Texture.class, linearParameters);
+        manager.load("board/blindspooky.png", Texture.class, linearParameters);
 
         // Load UI resources.
         manager.load("ui/progress.png", Texture.class, linearParameters);
         manager.load("ui/icons.png", Texture.class, linearParameters);
-        manager.load("ui/yellowpatch.png", Texture.class);
+        manager.load("ui/yellow_patch.png", Texture.class);
         manager.load("ui/switch.png", Texture.class, linearParameters);
 
         // Load TTF font for normal text
@@ -167,8 +188,8 @@ public class RectballGame extends Game {
 
         // Load TTF font for big text
         FreeTypeFontLoaderParameter bigFont = new FreeTypeFontLoaderParameter();
-        bigFont.fontFileName = "fonts/Play-Regular.ttf";
-        bigFont.fontParameters.size = 44;
+        bigFont.fontFileName = "fonts/Play-Bold.ttf";
+        bigFont.fontParameters.size = 80;
         bigFont.fontParameters.minFilter = TextureFilter.Linear;
         bigFont.fontParameters.magFilter = TextureFilter.Linear;
         bigFont.fontParameters.borderWidth = 2;
@@ -194,7 +215,8 @@ public class RectballGame extends Game {
 
         // Load sounds
         manager.load("sound/fail.ogg", Sound.class);
-        manager.load("sound/gameover.ogg", Sound.class);
+        manager.load("sound/game_over.ogg", Sound.class);
+        manager.load("sound/perfect.ogg", Sound.class);
         manager.load("sound/select.ogg", Sound.class);
         manager.load("sound/success.ogg", Sound.class);
         manager.load("sound/unselect.ogg", Sound.class);
@@ -212,8 +234,8 @@ public class RectballGame extends Game {
      * The screen that has been previously on screen can be retrieved later using
      * popScreen.
      *
+     * @param id the screen that should be visible now.
      * @since 0.3.0
-     * @param id  the screen that should be visible now.
      */
     public void pushScreen(int id) {
         screenStack.push(screens.get(id));
@@ -249,15 +271,17 @@ public class RectballGame extends Game {
 
     /**
      * Add a screen to the map of Strings.
-     * @param screen
+     *
+     * @param screen the screen being added to the map
      */
-    public void addScreen(AbstractScreen screen) {
+    private void addScreen(AbstractScreen screen) {
         screens.put(screen.getID(), screen);
     }
 
     /**
      * Get the skin used by Scene2D UI to display things.
-     * @return  the skin the game should use.
+     *
+     * @return the skin the game should use.
      */
     public RectballSkin getSkin() {
         return uiSkin;
@@ -268,7 +292,14 @@ public class RectballGame extends Game {
     }
 
     public void updateBallAtlas() {
-        Texture balls = manager.get(settings.isColorblind() ? "board/colorblind.png" : "board/normal.png");
+        boolean isColorblind = platform.preferences().getBoolean("colorblind");
+        String ballsTexture;
+        if (isColorblind) {
+            ballsTexture = Constants.SPOOKY_MODE ? "board/blindspooky.png" : "board/colorblind.png";
+        } else {
+            ballsTexture = Constants.SPOOKY_MODE ? "board/spooky.png" : "board/normal.png";
+        }
+        Texture balls = manager.get(ballsTexture);
         TextureRegion[][] regions = TextureRegion.split(balls, 256, 256);
         ballAtlas = new TextureAtlas();
         ballAtlas.addRegion("ball_red", regions[0][0]);
@@ -276,6 +307,32 @@ public class RectballGame extends Game {
         ballAtlas.addRegion("ball_blue", regions[1][0]);
         ballAtlas.addRegion("ball_green", regions[1][1]);
         ballAtlas.addRegion("ball_gray", regions[1][2]);
+    }
+
+    /**
+     * Create a screenshot and return the generated Pixmap. Since the game
+     * goes yUp, the returned screenshot is flipped so that it's correctly
+     * yDown'ed.
+     *
+     * @return game screenshot
+     */
+    public Pixmap requestScreenshot(int x, int y, int width, int height) {
+        Gdx.app.log("Screenshot", "Requested a new screenshot of size " + width + "x" + height);
+        Pixmap screenshot = ScreenUtils.getFrameBufferPixmap(x, y, width, height);
+
+        // Since the game runs using yDown, the screen has to be flipped.
+        ByteBuffer data = screenshot.getPixels();
+        byte[] flippedBuffer = new byte[4 * width * height];
+        int bytesPerLine = 4 * width;
+        for (int j = 0; j < height; j++) {
+            data.position(bytesPerLine * (height - j - 1));
+            data.get(flippedBuffer, j * bytesPerLine, bytesPerLine);
+        }
+        data.clear();
+        data.put(flippedBuffer);
+        data.clear();
+
+        return screenshot;
     }
 
     public TextureAtlas getBallAtlas() {

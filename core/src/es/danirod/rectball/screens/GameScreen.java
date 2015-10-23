@@ -15,58 +15,98 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.actors.board.*;
-import es.danirod.rectball.actors.ScoreActor;
-import es.danirod.rectball.actors.TimerActor;
-import es.danirod.rectball.actors.TimerActor.TimerCallback;
-import es.danirod.rectball.dialogs.ConfirmDialog;
+import es.danirod.rectball.SoundPlayer.SoundCode;
 import es.danirod.rectball.model.*;
-import es.danirod.rectball.settings.ScoreIO;
-import es.danirod.rectball.statistics.Statistics;
-import es.danirod.rectball.utils.SoundPlayer.SoundCode;
+import es.danirod.rectball.scene2d.game.*;
+import es.danirod.rectball.scene2d.game.ScoreActor.ScoreListener;
+import es.danirod.rectball.scene2d.game.TimerActor.TimerCallback;
+import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
+import es.danirod.rectball.scene2d.ui.ConfirmDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
+public class GameScreen extends AbstractScreen implements TimerCallback, BallSelectionListener, ScoreListener {
 
-public class GameScreen extends AbstractScreen implements TimerCallback, BallSelectionListener {
+    /**
+     * Display the remaining time.
+     */
+    private TimerActor timer;
 
-    /** Display the remaining time. */
-    public TimerActor timer;
-
-    /** Display the current score. */
+    /**
+     * Display the current score.
+     */
     private ScoreActor score;
 
-    /** Display the board representation. */
+    /**
+     * Display the board representation.
+     */
     private BoardActor board;
 
-    /** Is the game paused? */
+    /**
+     * The display used to represent information about the user.
+     */
+    private Table hud;
+
+    /**
+     * Is the game paused?
+     */
     private boolean paused;
 
-    /** Is the game running? True unless is on countdown or game over. */
+    /**
+     * Is the game running? True unless is on countdown or game over.
+     */
     private boolean running;
 
-    /** Has the countdown already finished? */
+    /**
+     * Has the countdown already finished?
+     */
     private boolean countdownFinished;
 
-    /** True if the user is asking to leave. */
+    /**
+     * True if the user is asking to leave.
+     */
     private boolean askingLeave;
 
-    /** True if the game has finished. */
+    /**
+     * True if the game has finished.
+     */
     private boolean timeout;
+
+    /**
+     * Whether the player has seen the next combination. When the user presses
+     * the HELP button, a valid combination is displayed to help the player and
+     * some time is subtracted. To prevent happening this more than once,
+     * this variable will flag whether to subtract or not. It will be reset
+     * every time a new combination is made.
+     */
+    private boolean seenCheat;
+
+    /**
+     * These are the bounds selected when the user presses the Help button.
+     * They are cached so that the same bounds are always used. Otherwise,
+     * each time the user presses HELP without selecting a combination, a
+     * different one would be used.
+     */
+    private Bounds wiggledBounds;
 
     public GameScreen(RectballGame game) {
         super(game, false);
@@ -141,6 +181,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // Reset data
         game.getState().reset();
+        score.setValue(game.getState().getScore());
         paused = running = countdownFinished = askingLeave = timeout = false;
         countdown(2, new Runnable() {
 
@@ -148,7 +189,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             public void run() {
                 countdownFinished = true;
 
-                // Start the game unless the user is leaving or is pasused.
+                // Start the game unless the user is leaving or is paused.
                 if (!paused && !askingLeave) {
                     running = true;
                     board.setColoured(true);
@@ -213,7 +254,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
      * is to regenerate the board and apply any required checks to make sure
      * that the game doesn't enter in an infinite loop.
      *
-     * @param bounds  the bounds that have to be regenerated.
+     * @param bounds the bounds that have to be regenerated.
      */
     private void generate(Bounds bounds) {
         // Generate new balls;
@@ -280,6 +321,53 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         score = new ScoreActor(game.getSkin());
         board = new BoardActor(game.getBallAtlas(), game.getState().getBoard());
 
+        // Add the help button.
+        ImageButton help = new ImageButton(game.getSkin(), "blueHelp");
+        help.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                // Don't act if the game hasn't started yet.
+                if (!countdownFinished) {
+                    event.cancel();
+                    return;
+                }
+
+                // Wiggle a valid combination.
+                if (wiggledBounds == null) {
+                    CombinationFinder finder = new CombinationFinder(game.getState().getBoard());
+                    wiggledBounds = finder.getPossibleBounds().get(MathUtils.random(finder.getPossibleBounds().size() - 1));
+                }
+                board.addAction(board.shake(wiggledBounds, 10, 5, 0.1f));
+
+                if (!seenCheat) {
+                    // Subtract some time.
+                    float subtractedTime = 5f;
+                    final float step = subtractedTime / 10;
+                    getStage().addAction(Actions.repeat(10, Actions.delay(0.01f,
+                            Actions.run(new Runnable() {
+                                @Override
+                                public void run() {
+                                    timer.setSeconds(timer.getSeconds() - step);
+                                }
+                            }))));
+                    seenCheat = true;
+                }
+
+                event.cancel();
+            }
+        });
+
+        // Add the pause button.
+        ImageButton pause = new ImageButton(game.getSkin(), "blueCross");
+        pause.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.player.playSound(SoundCode.FAIL);
+                pause();
+                event.cancel();
+            }
+        });
+
         // Disable game until countdown ends.
         timer.setRunning(false);
         board.setTouchable(Touchable.disabled);
@@ -287,11 +375,41 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // Add subscribers.
         timer.addSubscriber(this);
         board.addSubscriber(this);
+        score.setScoreListener(this);
 
-        // Fill the table.
-        table.add(timer).fillX().height(50).padBottom(10).row();
-        table.add(score).width(VIEWPORT_WIDTH / 2).height(65).padBottom(60).row();
-        table.add(board).expand().row();
+        /*
+         * Fill the HUD, which is the display that appears over the board with
+         * all the information. The HUD is generated differently depending on
+         * the aspect ratio of the device. If the device is 4:3, the HUD is
+         * compressed to avoid making the board small. Otherwise, it's expanded
+         * to the usual size.
+         */
+        boolean landscape = Gdx.graphics.getWidth() > Gdx.graphics.getHeight();
+        float aspectRatio = landscape ?
+                (float) Gdx.graphics.getWidth() / Gdx.graphics.getHeight() :
+                (float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
+        hud = new Table();
+
+        if (aspectRatio < 1.5f) {
+            // Compact layout: buttons and score in the same line.
+            hud.add(new BorderedContainer(game.getSkin(), help)).size(50).padBottom(10);
+            hud.add(new BorderedContainer(game.getSkin(), score)).height(50).width(Constants.VIEWPORT_WIDTH / 2).space(10).expandX().fillX();
+            hud.add(new BorderedContainer(game.getSkin(), pause)).size(50).padBottom(10).row();
+            hud.add(new BorderedContainer(game.getSkin(), timer)).colspan(3).fillX().height(40).padBottom(20).row();
+        } else {
+            // Large layout: buttons above timer, score below timer (classic).
+            hud.add(new BorderedContainer(game.getSkin(), help)).size(50).spaceLeft(10).padBottom(10).align(Align.left);
+            hud.add(new BorderedContainer(game.getSkin(), pause)).size(50).spaceRight(10).padBottom(10).align(Align.right).row();
+            hud.add(new BorderedContainer(game.getSkin(), timer)).colspan(2).fillX().expandX().height(40).padBottom(10).row();
+            hud.add(new BorderedContainer(game.getSkin(), score)).colspan(2).height(60).width(Constants.VIEWPORT_WIDTH / 2).align(Align.center).padBottom(10).row();
+        }
+
+        if (aspectRatio > 1.6) {
+            hud.padBottom(20);
+        }
+
+        table.add(hud).fillX().expandY().align(Align.top).row();
+        table.add(board).fill().expand().row();
     }
 
     @Override
@@ -342,7 +460,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         if (askingLeave) {
             return;
         }
-        
+
         paused = false;
 
         // If the countdown has finished but the game is not running is a
@@ -374,30 +492,34 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         game.player.playSound(SoundCode.GAME_OVER);
 
         // Update the score... and the record.
-        game.scores.addScore(game.getState().getScore());
-        game.scores.addTime(game.getState().getTime());
-        ScoreIO.save(game.scores);
+        int score = game.getState().getScore();
+        int time = Math.round(game.getState().getTime());
+        game.getPlatform().score().registerScore(score, time);
+        game.getPlatform().score().flushData();
 
         // Save information about this game in the statistics.
         game.statistics.getTotalData().incrementValue("score", game.getState().getScore());
         game.statistics.getTotalData().incrementValue("games");
         game.statistics.getTotalData().incrementValue("time", Math.round(game.getState().getTime()));
-        Statistics.saveStats(game.statistics);
+        game.getPlatform().statistics().saveStatistics(game.statistics);
 
         // Mark a combination that the user could do if he had enough time.
-        CombinationFinder finder = new CombinationFinder(game.getState().getBoard());
-        Bounds combination = finder.getCombination();
+        if (wiggledBounds == null) {
+            CombinationFinder combo = new CombinationFinder(game.getState().getBoard());
+            wiggledBounds = combo.getCombination();
+        }
         for (int y = 0; y < game.getState().getBoard().getSize(); y++) {
             for (int x = 0; x < game.getState().getBoard().getSize(); x++) {
-                if (combination != null && !combination.inBounds(x, y)) {
+                if (wiggledBounds != null && !wiggledBounds.inBounds(x, y)) {
                     board.getBall(x, y).addAction(Actions.color(Color.DARK_GRAY, 0.15f));
                 }
             }
         }
+        wiggledBounds = null;
 
         // Animate the transition to game over.
         board.addAction(Actions.delay(2f, board.hideBoard()));
-        score.addAction(Actions.delay(2f, Actions.fadeOut(0.25f)));
+        hud.addAction(Actions.delay(2f, Actions.fadeOut(0.25f)));
 
         // Head to the game over after all these animations have finished.
         getStage().addAction(Actions.delay(2.5f, Actions.run(new Runnable() {
@@ -423,7 +545,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     }
 
     @Override
-    public void onSelectionSucceded(final List<BallActor> selection) {
+    public void onSelectionSucceeded(final List<BallActor> selection) {
         // Extract the data from the selection.
         List<Ball> balls = new ArrayList<>();
         for (BallActor selectedBall : selection)
@@ -444,27 +566,50 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 })
         ));
 
-        // You deserve some score and extra time.
-        int rows = bounds.maxY - bounds.minY + 1;
-        int cols = bounds.maxX - bounds.minX + 1;
-        game.getState().addScore(rows * cols);
-        score.setValue(game.getState().getScore());
-        timer.setSeconds(timer.getSeconds() + 4);
+        // Reset the cheat
+        seenCheat = false;
+        wiggledBounds = null;
+
+        // Give some score to the user.
+        ScoreCalculator calculator = new ScoreCalculator(game.getState().getBoard(), bounds);
+        int givenScore = calculator.calculate();
+        game.getState().addScore(givenScore);
+        score.giveScore(givenScore);
+
+        // Give some time to the user.
+        float givenTime = 4f;
+        timer.giveTime(givenTime);
 
         // Put information about this combination in the stats.
+        int rows = bounds.maxY - bounds.minY + 1;
+        int cols = bounds.maxX - bounds.minX + 1;
         String size = Math.max(rows, cols) + "x" + Math.min(rows, cols);
         game.statistics.getSizesData().incrementValue(size);
 
         BallColor color = board.getBall(bounds.minX, bounds.minY).getBall().getColor();
         game.statistics.getColorData().incrementValue(color.toString().toLowerCase());
-
         game.statistics.getTotalData().incrementValue("balls", rows * cols);
         game.statistics.getTotalData().incrementValue("combinations");
 
-
-        // Add some sound and animations.
-        showPartialScore(rows * cols, bounds);
-        game.player.playSound(SoundCode.SUCCESS);
+        // Now, display the score to the user. If the combination is a
+        // PERFECT combination, just display PERFECT.
+        int boardSize = game.getState().getBoard().getSize() - 1;
+        if (bounds.equals(new Bounds(0, 0, boardSize, boardSize))) {
+            Label label = new Label("PERFECT", game.getSkin(), "big");
+            label.setX((getStage().getViewport().getWorldWidth() - label.getWidth()) / 2);
+            label.setY((getStage().getViewport().getWorldHeight() - label.getHeight()) / 2);
+            label.addAction(Actions.sequence(
+                    Actions.parallel(
+                            Actions.moveBy(0, 80, 0.5f),
+                            Actions.alpha(0.5f, 0.5f)),
+                    Actions.removeActor()
+            ));
+            getStage().addActor(label);
+            game.player.playSound(SoundCode.PERFECT);
+        } else {
+            showPartialScore(givenScore, bounds);
+            game.player.playSound(SoundCode.SUCCESS);
+        }
     }
 
     @Override
@@ -482,5 +627,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             selected.addAction(Actions.scaleTo(1f, 1f, 0.15f));
             selected.addAction(Actions.color(Color.WHITE, 0.15f));
         }
+    }
+
+    @Override
+    public void onScoreGoNuts() {
+        game.player.playSound(SoundCode.PERFECT);
     }
 }

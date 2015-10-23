@@ -15,21 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.*;
-
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.utils.SoundPlayer;
+import es.danirod.rectball.SoundPlayer;
+import es.danirod.rectball.platform.AnalyticEvent;
 
-import static es.danirod.rectball.Constants.STAGE_PADDING;
-import static es.danirod.rectball.Constants.VIEWPORT_HEIGHT;
-import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
+import static es.danirod.rectball.Constants.*;
 
 /**
  * This is the base screen every screen has to inherit. It contains common
@@ -39,25 +38,30 @@ import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
  */
 public abstract class AbstractScreen implements Screen {
 
-    protected RectballGame game;
+    final RectballGame game;
 
     /**
      * Whether the default BACK/ESCAPE button handler should be used or not.
+     *
      * @since 0.3.0
      */
-    private boolean handleBack;
+    private final boolean handleBack;
 
-    /** Common stage. */
+    /**
+     * Common stage.
+     */
     private Stage stage;
 
-    /** Common table. */
+    /**
+     * Common table.
+     */
     private Table table;
 
-    public AbstractScreen(RectballGame game) {
+    AbstractScreen(RectballGame game) {
         this(game, true);
     }
 
-    public AbstractScreen(RectballGame game, boolean handleBack) {
+    AbstractScreen(RectballGame game, boolean handleBack) {
         this.game = game;
         this.handleBack = handleBack;
     }
@@ -68,7 +72,13 @@ public abstract class AbstractScreen implements Screen {
     }
 
     public void load() {
-        Viewport viewport = new FitViewport(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+        boolean landscape = Gdx.graphics.getWidth() > Gdx.graphics.getHeight();
+        float ar = landscape ?
+                (float) Gdx.graphics.getWidth() / Gdx.graphics.getHeight() :
+                (float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
+        float width = (float) VIEWPORT_WIDTH;
+        float height = landscape ? width : width * ar;
+        Viewport viewport = new FitViewport(width, height);
         stage = new Stage(viewport);
         table = new Table();
         table.setFillParent(true);
@@ -81,9 +91,9 @@ public abstract class AbstractScreen implements Screen {
      * have to override this method and add to the provided table the widgets
      * they want to show in the screen.
      *
-     * @param table  table that has been assigned to this screen.
+     * @param table table that has been assigned to this screen.
      */
-    public void setUpInterface(Table table) {
+    void setUpInterface(Table table) {
         // FIXME: This method should be abstract.
         // However, I cannot make it abstract until I refactor every class
         // or errors may happen.
@@ -109,6 +119,12 @@ public abstract class AbstractScreen implements Screen {
 
     @Override
     public void show() {
+        // Dispatch an analytic event.
+        AnalyticEvent event = new AnalyticEvent();
+        event.setUserData("action", AnalyticEvent.ACTION_SCREEN);
+        event.setUserData("screen", getClass().getCanonicalName());
+        game.getPlatform().analytic().sendEvent(event);
+
         table.clear();
         setUpInterface(table);
 
@@ -135,13 +151,13 @@ public abstract class AbstractScreen implements Screen {
 
     public abstract int getID();
 
-    public Stage getStage() {
+    Stage getStage() {
         return stage;
     }
 
     private class BackButtonInputProcessor extends InputAdapter {
 
-        private RectballGame game;
+        private final RectballGame game;
 
         public BackButtonInputProcessor(RectballGame game) {
             this.game = game;

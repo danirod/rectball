@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -22,10 +23,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.actors.ui.SwitchActor;
-import es.danirod.rectball.listeners.ScreenJumper;
-import es.danirod.rectball.listeners.ScreenPopper;
-import es.danirod.rectball.utils.SoundPlayer.SoundCode;
+import es.danirod.rectball.SoundPlayer.SoundCode;
+import es.danirod.rectball.scene2d.listeners.ScreenJumper;
+import es.danirod.rectball.scene2d.listeners.ScreenPopper;
+import es.danirod.rectball.scene2d.ui.SwitchActor;
 
 public class SettingsScreen extends AbstractScreen {
 
@@ -35,20 +36,18 @@ public class SettingsScreen extends AbstractScreen {
 
     @Override
     public void setUpInterface(Table table) {
-        table.add(new Label(game.getLocale().get("main.settings"), game.getSkin(), "bold")).expandX().align(Align.top).height(100).row();
-
         Table settingsTable = new Table();
         settingsTable.setFillParent(true);
         settingsTable.defaults().align(Align.top);
 
         // Sound
         final SwitchActor sound = new SwitchActor(game.getLocale().get("settings.sound"), game.getSkin());
-        sound.setChecked(game.settings.isSoundEnabled());
+        sound.setChecked(game.getPlatform().preferences().getBoolean("sound", true));
         sound.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                game.settings.setSoundEnabled(sound.isChecked());
-                game.settings.save();
+                game.getPlatform().preferences().putBoolean("sound", sound.isChecked());
+                game.getPlatform().preferences().flush();
                 game.player.playSound(SoundCode.SELECT);
             }
         });
@@ -56,12 +55,12 @@ public class SettingsScreen extends AbstractScreen {
 
         // Color
         final SwitchActor color = new SwitchActor(game.getLocale().get("settings.colorblind"), game.getSkin());
-        color.setChecked(game.settings.isColorblind());
+        color.setChecked(game.getPlatform().preferences().getBoolean("colorblind"));
         color.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                game.settings.setColorblind(color.isChecked());
-                game.settings.save();
+                game.getPlatform().preferences().putBoolean("colorblind", color.isChecked());
+                game.getPlatform().preferences().flush();
                 game.updateBallAtlas();
                 game.player.playSound(SoundCode.SELECT);
             }

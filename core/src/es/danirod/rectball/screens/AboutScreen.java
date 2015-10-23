@@ -1,46 +1,53 @@
+/*
+ * This file is part of Rectball
+ * Copyright (C) 2015 Dani Rodríguez
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.actors.StatsTable;
-import es.danirod.rectball.listeners.ScreenJumper;
-import es.danirod.rectball.listeners.ScreenPopper;
-import es.danirod.rectball.utils.SoundPlayer;
+import es.danirod.rectball.SoundPlayer;
+import es.danirod.rectball.scene2d.listeners.ScreenPopper;
 
 /**
  * About screen.
  */
 public class AboutScreen extends AbstractScreen {
 
+    private static final int SCREEN_CREDITS = 1;
+    private static final int SCREEN_LICENSE = 2;
+    private int screen = SCREEN_CREDITS;
+    private Table innerContainer;
+
     public AboutScreen(RectballGame game) {
         super(game);
     }
 
-    private static final int SCREEN_CREDITS = 1;
-    private static final int SCREEN_LICENSE = 2;
-    private int screen = SCREEN_CREDITS;
-
-    private Table innerContainer;
-
     @Override
     public void setUpInterface(Table table) {
-        // TODO: Move this to the skin.
-        ScrollPane.ScrollPaneStyle style = new ScrollPane.ScrollPaneStyle();
-
-        table.pad(20);
-
-        Label header = new Label(game.getLocale().get("main.about"), game.getSkin(), "bold");
-        table.add(header).expandX().align(Align.center).height(80).row();
-
         innerContainer = new Table();
-        ScrollPane scroll = new ScrollPane(innerContainer, style);
+        ScrollPane scroll = new ScrollPane(innerContainer, game.getSkin());
+        scroll.setFadeScrollBars(false);
         table.add(scroll).expand().fill().align(Align.top).row();
-        innerContainer.defaults().fill().expand();
+        innerContainer.defaults().fill().expand().padRight(10);
 
         screen = SCREEN_CREDITS;
         updateScrollPane();
