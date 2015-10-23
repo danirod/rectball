@@ -326,6 +326,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         help.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                // Don't act if the game hasn't started yet.
+                if (!countdownFinished) {
+                    event.cancel();
+                    return;
+                }
+
                 // Wiggle a valid combination.
                 if (wiggledBounds == null) {
                     CombinationFinder finder = new CombinationFinder(game.getState().getBoard());
@@ -509,6 +515,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 }
             }
         }
+        wiggledBounds = null;
 
         // Animate the transition to game over.
         board.addAction(Actions.delay(2f, board.hideBoard()));
