@@ -18,9 +18,6 @@
 
 package es.danirod.rectball;
 
-import java.util.Calendar;
-import java.util.Date;
-
 /**
  * Class for holding constant values to keep them centralized.
  */
@@ -31,7 +28,7 @@ public class Constants {
      * enabled or not during development. Debug mode should be disabled on
      * final game release.
      */
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     /**
      * The width of the Scene2D stage. The bigger this value is, the greater

@@ -83,7 +83,8 @@ public class AndroidSharing implements Sharing {
             sharingIntent.setAction(Intent.ACTION_SEND);
             sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(handle.file()));
             sharingIntent.putExtra(Intent.EXTRA_TEXT, text);
-            sharingIntent.setType("text/plain");
+            sharingIntent.setType("image/png");
+            sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             String title = game.getLocale().get("sharing.intent");
             app.startActivity(Intent.createChooser(sharingIntent, title));
         } catch (Exception ex) {
