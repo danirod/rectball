@@ -498,11 +498,13 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         game.getPlatform().statistics().saveStatistics(game.statistics);
 
         // Mark a combination that the user could do if he had enough time.
-        CombinationFinder finder = new CombinationFinder(game.getState().getBoard());
-        Bounds combination = finder.getCombination();
+        if (wiggledBounds == null) {
+            CombinationFinder combo = new CombinationFinder(game.getState().getBoard());
+            wiggledBounds = combo.getCombination();
+        }
         for (int y = 0; y < game.getState().getBoard().getSize(); y++) {
             for (int x = 0; x < game.getState().getBoard().getSize(); x++) {
-                if (combination != null && !combination.inBounds(x, y)) {
+                if (wiggledBounds != null && !wiggledBounds.inBounds(x, y)) {
                     board.getBall(x, y).addAction(Actions.color(Color.DARK_GRAY, 0.15f));
                 }
             }
