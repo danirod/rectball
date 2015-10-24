@@ -332,6 +332,13 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                     return;
                 }
 
+                // Don't do anything if there are less than 5 seconds.
+                if (timer.getSeconds() <= 5 && wiggledBounds == null) {
+                    game.player.playSound(SoundCode.FAIL);
+                    event.cancel();
+                    return;
+                }
+
                 // Wiggle a valid combination.
                 if (wiggledBounds == null) {
                     CombinationFinder finder = new CombinationFinder(game.getState().getBoard());

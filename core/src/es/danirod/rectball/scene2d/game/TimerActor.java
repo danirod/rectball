@@ -147,12 +147,6 @@ public class TimerActor extends Actor {
     public void act(float delta) {
         if (running) {
             seconds -= delta;
-            if (seconds < 0) {
-                seconds = 0;
-                for (TimerCallback subscriber : subscribers) {
-                    subscriber.onTimeOut();
-                }
-            }
         }
 
         if (remainingTime > 0) {
@@ -161,7 +155,14 @@ public class TimerActor extends Actor {
             seconds += givenTime;
         }
 
+        // Clamp the score both on max seconds and on min seconds.
         seconds = Math.min(seconds, maxSeconds);
+        if (seconds < 0) {
+            seconds = 0;
+            for (TimerCallback subscriber : subscribers) {
+                subscriber.onTimeOut();
+            }
+        }
     }
 
     @Override
