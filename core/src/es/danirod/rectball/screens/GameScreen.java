@@ -585,10 +585,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         game.getState().addScore(givenScore);
         score.giveScore(givenScore);
 
-        // Give some time to the user.
-        float givenTime = 4f;
-        timer.giveTime(givenTime);
-
         // Put information about this combination in the stats.
         int rows = bounds.maxY - bounds.minY + 1;
         int cols = bounds.maxX - bounds.minX + 1;
@@ -604,6 +600,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // PERFECT combination, just display PERFECT.
         int boardSize = game.getState().getBoard().getSize() - 1;
         if (bounds.equals(new Bounds(0, 0, boardSize, boardSize))) {
+            // Give score
             Label label = new Label("PERFECT", game.getSkin(), "big");
             label.setX((getStage().getViewport().getWorldWidth() - label.getWidth()) / 2);
             label.setY((getStage().getViewport().getWorldHeight() - label.getHeight()) / 2);
@@ -615,9 +612,18 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             ));
             getStage().addActor(label);
             game.player.playSound(SoundCode.PERFECT);
+
+            // Give time
+            float givenTime = Constants.SECONDS - timer.getSeconds();
+            timer.giveTime(givenTime, 4f);
         } else {
+            // Give score
             showPartialScore(givenScore, bounds);
             game.player.playSound(SoundCode.SUCCESS);
+
+            // Give time
+            float givenTime = 4f;
+            timer.giveTime(givenTime, 0.25f);
         }
     }
 
