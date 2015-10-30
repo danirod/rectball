@@ -76,7 +76,7 @@ public class TimerActor extends Actor {
      */
     private boolean running = true;
 
-    private float remainingTime;
+    private float remainingTime, remainingTimeSpeed;
 
     /**
      * Set up a new timer.
@@ -150,7 +150,7 @@ public class TimerActor extends Actor {
         }
 
         if (remainingTime > 0) {
-            float givenTime = Math.min(remainingTime, 0.25f);
+            float givenTime = Math.min(remainingTime, remainingTimeSpeed);
             remainingTime -= givenTime;
             seconds += givenTime;
         }
@@ -190,8 +190,9 @@ public class TimerActor extends Actor {
         batch.setColor(color.r, color.g, color.b, color.a);
     }
 
-    public void giveTime(float time) {
+    public void giveTime(float time, float speed) {
         remainingTime += time;
+        remainingTimeSpeed = speed;
     }
 
     /**

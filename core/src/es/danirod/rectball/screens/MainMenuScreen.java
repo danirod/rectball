@@ -18,8 +18,7 @@
 
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -87,13 +86,10 @@ public class MainMenuScreen extends AbstractScreen {
     public void show() {
         super.show();
 
-        // overrides default to provide a
-        // way to quit the game
-        Gdx.input.setCatchBackKey(false);
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
-            Gdx.app.exit();
-        }
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(getStage());
+        multiplexer.addProcessor(new MainMenuInputProcessor());
+        Gdx.input.setInputProcessor(multiplexer);
 
         // On first run, show the tutorial.
         if (!game.getPlatform().preferences().getBoolean("tutorialAsked")) {
@@ -139,5 +135,17 @@ public class MainMenuScreen extends AbstractScreen {
             }
         });
         return dialog;
+    }
+
+    private class MainMenuInputProcessor extends InputAdapter {
+
+        @Override
+        public boolean keyDown(int keycode) {
+            if (keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE) {
+                Gdx.app.exit();
+                return true;
+            }
+            return false;
+        }
     }
 }
