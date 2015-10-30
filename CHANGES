@@ -1,3 +1,8 @@
+[0.4.2]
+- Improved the PERFECT bonus to fill the timer no matter what the remaining time was.
+- Fix screenshots not being able to be shared on Android 6.0 due to runtime permissions.
+- Fix back key not working correctly when pressed on Game Over screen.
+
 [0.4.1]
 - Fix timer being negative if a hint was made when almost game over.
 
