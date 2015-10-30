@@ -20,6 +20,8 @@ package es.danirod.rectball.android;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
+import android.support.v4.content.FileProvider;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.files.FileHandle;
@@ -27,6 +29,8 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.platform.Sharing;
+
+import java.io.File;
 
 /**
  * This contains Android-related sharing utilities. For instance, sharing
@@ -73,22 +77,66 @@ public class AndroidSharing implements Sharing {
         RectballGame game = (RectballGame) app.getApplicationListener();
 
         try {
-            // Save the pixmap to a file.
-            String location = "rectball/screenshot" + System.currentTimeMillis() + ".png";
-            FileHandle handle = Gdx.files.external(location);
-            PixmapIO.writePNG(handle, pixmap);
-
-            // Now attempt to share the screenshot.
-            Intent sharingIntent = new Intent();
-            sharingIntent.setAction(Intent.ACTION_SEND);
-            sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(handle.file()));
-            sharingIntent.putExtra(Intent.EXTRA_TEXT, text);
-            sharingIntent.setType("image/png");
-            sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            Uri screenshot = createScreenshotURI(pixmap);
+            Intent sharingIntent = shareScreenshotURI(screenshot, text);
             String title = game.getLocale().get("sharing.intent");
             app.startActivity(Intent.createChooser(sharingIntent, title));
         } catch (Exception ex) {
             Gdx.app.error("SharingServices", "Couldn't share photo", ex);
         }
+    }
+
+    /**
+     * Save the provided screenshot and return a URI for accessing that file
+     * from an Android intent. This method has been designed for being as
+     * compatible as possible with older pre-23 devices and with 23+ devices
+     * that use the new Android Runtime Permission system.
+     *
+     * @param pixmap  the screenshot to save
+     * @return  an URI for accessing this screenshot from the Intent
+     */
+    private Uri createScreenshotURI(Pixmap pixmap) {
+        /*
+            FIXME: THIS HACK MAKES GOD KILL KITTENS
+            Should investigate on how to use the Android compatibility library.
+            However, even the compatibility library seems to break compatibility
+            since I cannot share anymore using SMS. Oh, well, how beautifully
+            broken Android seems to be anyway.
+         */
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Use the fucking new Android permission system.
+            File sharingPath = new File(app.getFilesDir(), "rectball-screenshots");
+            File newScreenshot = new File(sharingPath, "screenshot.png");
+            FileHandle screenshotHandle = Gdx.files.absolute(newScreenshot.getAbsolutePath());
+            PixmapIO.writePNG(screenshotHandle, pixmap);
+            return FileProvider.getUriForFile(app, app.getString(R.string.provider), newScreenshot);
+        } else {
+            // Use the fucking old Android permission system.
+            FileHandle sharingPath = Gdx.files.external("rectball");
+            sharingPath.mkdirs();
+            FileHandle newScreenshot = Gdx.files.external("rectball/screenshot.png");
+            PixmapIO.writePNG(newScreenshot, pixmap);
+            return Uri.fromFile(newScreenshot.file());
+        }
+    }
+
+    /**
+     * This method builds an Intent for sharing the screenshot with other apps
+     * present in the mobile phone. The URI should point to the screenshot.
+     *
+     * @param uri  URI that points to the screenshot to be saved
+     * @param message  message to be present in the screenshot
+     * @return  the Intent ready to be passed to the activity.
+     */
+    private Intent shareScreenshotURI(Uri uri, CharSequence message) {
+        Intent sharingIntent = new Intent();
+        sharingIntent.setAction(Intent.ACTION_SEND);
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, message);
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, message);
+        sharingIntent.setType("image/png");
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        return sharingIntent;
     }
 }
