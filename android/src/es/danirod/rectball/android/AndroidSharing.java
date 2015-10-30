@@ -20,6 +20,7 @@ package es.danirod.rectball.android;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.content.FileProvider;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.files.FileHandle;
@@ -27,6 +28,8 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.platform.Sharing;
+
+import java.io.File;
 
 /**
  * This contains Android-related sharing utilities. For instance, sharing
@@ -73,22 +76,32 @@ public class AndroidSharing implements Sharing {
         RectballGame game = (RectballGame) app.getApplicationListener();
 
         try {
-            // Save the pixmap to a file.
-            String location = "rectball/screenshot" + System.currentTimeMillis() + ".png";
-            FileHandle handle = Gdx.files.external(location);
-            PixmapIO.writePNG(handle, pixmap);
-
-            // Now attempt to share the screenshot.
-            Intent sharingIntent = new Intent();
-            sharingIntent.setAction(Intent.ACTION_SEND);
-            sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(handle.file()));
-            sharingIntent.putExtra(Intent.EXTRA_TEXT, text);
-            sharingIntent.setType("image/png");
-            sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            File screenshotFile = getSharingFile();
+            Uri screenshotUri = FileProvider.getUriForFile(app, "es.danirod.rectball.android.fileprovider", screenshotFile);
+            FileHandle screenshotHandle = Gdx.files.absolute(screenshotFile.getAbsolutePath());
+            PixmapIO.writePNG(screenshotHandle, pixmap);
+            Intent sharingIntent = buildSharingIntent(screenshotUri, text);
             String title = game.getLocale().get("sharing.intent");
             app.startActivity(Intent.createChooser(sharingIntent, title));
         } catch (Exception ex) {
             Gdx.app.error("SharingServices", "Couldn't share photo", ex);
         }
+    }
+
+    private File getSharingFile() {
+        File sharingPath = new File(app.getFilesDir(), "rectball-screenshots");
+        File newScreenshot = new File(sharingPath, "screenshot.png");
+        return newScreenshot;
+    }
+
+    private Intent buildSharingIntent(Uri uri, CharSequence text) {
+        Intent sharingIntent = new Intent();
+        sharingIntent.setAction(Intent.ACTION_SEND);
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, text);
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, text);
+        sharingIntent.setType("image/png");
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        return sharingIntent;
     }
 }
