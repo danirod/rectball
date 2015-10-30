@@ -183,6 +183,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         game.getState().reset();
         score.setValue(game.getState().getScore());
         paused = running = countdownFinished = askingLeave = timeout = false;
+        wiggledBounds = null;
+        seenCheat = false;
+
         countdown(2, new Runnable() {
 
             @Override
@@ -522,7 +525,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 }
             }
         }
-        wiggledBounds = null;
 
         // Animate the transition to game over.
         board.addAction(Actions.delay(2f, board.hideBoard()));
