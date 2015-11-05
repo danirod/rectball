@@ -144,7 +144,7 @@ public class StatsTable extends Table {
         color.defaults().expandX().fillX().align(Align.center).size(60).padTop(5);
         for (Map.Entry<Integer, List<String>> entry : colorScore.entrySet()) {
             for (String ballColor : entry.getValue()) {
-                color.add(new Image(game.getBallAtlas().findRegion("ball_" + ballColor)));
+                color.add(new Image(game.getBallAssets().get(ballColor)));
             }
         }
         color.row();

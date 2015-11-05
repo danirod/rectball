@@ -29,5 +29,6 @@ public enum BallColor {
     BLUE,
     GREEN,
     RED,
-    YELLOW
+    YELLOW,
+    GRAY
 }

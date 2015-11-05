@@ -19,24 +19,29 @@
 package es.danirod.rectball.scene2d.game;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import es.danirod.rectball.model.Ball;
+import es.danirod.rectball.model.BallColor;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class BallActor extends Image {
 
     private final Ball ball;
     private final BoardActor board;
-    private final TextureAtlas atlas;
+    private final Map<BallColor, Drawable> assets;
     private boolean selected;
 
-    public BallActor(BoardActor board, Ball ball, TextureAtlas atlas) {
+    public BallActor(BoardActor board, Ball ball, Map<BallColor, Drawable> assets) {
         this.board = board;
         this.ball = ball;
-        this.atlas = atlas;
         setScaling(Scaling.fit);
         addListener(new InputListener() {
             @Override
@@ -45,6 +50,8 @@ public class BallActor extends Image {
                 return true;
             }
         });
+
+        this.assets = assets;
     }
 
     public Ball getBall() {
@@ -53,11 +60,7 @@ public class BallActor extends Image {
 
     @Override
     public void act(float delta) {
-        if (board.isColoured()) {
-            setDrawable(new TextureRegionDrawable(atlas.findRegion("ball_" + ball.getColor().toString().toLowerCase())));
-        } else {
-            setDrawable(new TextureRegionDrawable(atlas.findRegion("ball_gray")));
-        }
+        setDrawable(assets.get(board.isColoured() ? ball.getColor() : BallColor.GRAY));
         super.act(delta);
     }
 
