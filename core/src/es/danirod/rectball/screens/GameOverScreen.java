@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.*;
 import es.danirod.rectball.scene2d.listeners.ScreenPopper;
@@ -56,12 +57,12 @@ public class GameOverScreen extends AbstractScreen {
         scoresTable.add(highScoreLabel).expandX().height(120).colspan(2).align(Align.center).row();
 
         // Alive time.
-        Drawable clock = game.getSkin().newDrawable("iconClock");
+        Drawable clock = new TextureRegionDrawable(game.getAtlas().findRegion("IconClock"));
         scoresTable.add(new Image(clock)).size(60).expandX().align(Align.right).padRight(20);
         scoresTable.add(new Label(aliveTime, game.getSkin())).expandX().align(Align.left).padLeft(20).row();
 
         // High score.
-        Drawable crown = game.getSkin().newDrawable("iconCrown");
+        Drawable crown = new TextureRegionDrawable(game.getAtlas().findRegion("IconCrown"));
         scoresTable.add(new Image(crown)).size(60).expandX().align(Align.right).padRight(20);
         scoresTable.add(new Label(highScore, game.getSkin())).expandX().align(Align.left).padLeft(20).row();
 

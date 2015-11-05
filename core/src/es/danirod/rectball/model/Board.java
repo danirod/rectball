@@ -46,7 +46,7 @@ public class Board {
         while (!valid) {
             for (int x = bottomLeft.x; x <= upperRight.x; x++) {
                 for (int y = bottomLeft.y; y <= upperRight.y; y++) {
-                    int index = MathUtils.random(colors.length - 1);
+                    int index = MathUtils.random(colors.length - 2);
                     balls[x][y].setColor(colors[index]);
                 }
             }

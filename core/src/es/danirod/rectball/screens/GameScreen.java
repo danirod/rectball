@@ -320,9 +320,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     @Override
     public void setUpInterface(Table table) {
         // Create the actors for this screen.
-        timer = new TimerActor(Constants.SECONDS, game.getSkin());
+        timer = new TimerActor(Constants.SECONDS, game.getAtlas());
         score = new ScoreActor(game.getSkin());
-        board = new BoardActor(game.getBallAtlas(), game.getState().getBoard());
+        board = new BoardActor(game.getBallAssets(), game.getState().getBoard());
 
         // Add the help button.
         ImageButton help = new ImageButton(game.getSkin(), "blueHelp");

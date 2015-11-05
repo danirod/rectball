@@ -18,12 +18,14 @@
 
 package es.danirod.rectball.scene2d.game;
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
-import es.danirod.rectball.model.*;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import es.danirod.rectball.model.Ball;
+import es.danirod.rectball.model.BallColor;
+import es.danirod.rectball.model.Board;
+import es.danirod.rectball.model.Bounds;
 import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
 
 import java.util.*;
@@ -49,13 +51,13 @@ public class BoardActor extends Table {
      */
     private boolean coloured = false;
 
-    public BoardActor(TextureAtlas atlas, Board board) {
+    public BoardActor(Map<BallColor, Drawable> assets, Board board) {
         this.board = board;
         this.actors = new BallActor[board.getSize()][board.getSize()];
 
         for (int y = board.getSize() - 1; y >= 0; y--) {
             for (int x = 0; x < board.getSize(); x++) {
-                actors[x][y] = new BallActor(this, board.getBall(x, y), atlas);
+                actors[x][y] = new BallActor(this, board.getBall(x, y), assets);
                 add(actors[x][y]).pad(4, 2, 4, 2);
             }
             row();
