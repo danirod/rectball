@@ -61,7 +61,7 @@ public class SettingsScreen extends AbstractScreen {
             public void changed(ChangeEvent changeEvent, Actor actor) {
                 game.getPlatform().preferences().putBoolean("colorblind", color.isChecked());
                 game.getPlatform().preferences().flush();
-                game.updateBallAssets();
+                game.updateBallAtlas();
                 game.player.playSound(SoundCode.SELECT);
             }
         });

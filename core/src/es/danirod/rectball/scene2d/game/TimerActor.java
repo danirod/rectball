@@ -21,8 +21,6 @@ package es.danirod.rectball.scene2d.game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
@@ -62,7 +60,7 @@ public class TimerActor extends Actor {
     /**
      * The skin used by the game.
      */
-    private final TextureAtlas atlas;
+    private final Skin skin;
     /**
      * The countdown value for the timer. The value of this countdown
      * represents how many seconds are there remaining until game over. The
@@ -70,8 +68,6 @@ public class TimerActor extends Actor {
      * could increment.
      */
     private float seconds;
-
-    private TextureRegion progress;
 
     /**
      * Whether the time is running or not. This variable could be set to false
@@ -87,11 +83,10 @@ public class TimerActor extends Actor {
      *
      * @param seconds the maximum seconds for this timer.
      */
-    public TimerActor(int seconds, TextureAtlas atlas) {
+    public TimerActor(int seconds, Skin skin) {
         this.seconds = seconds;
         this.maxSeconds = seconds;
-        this.atlas = atlas;
-        this.progress = atlas.findRegion("Progress");
+        this.skin = skin;
     }
 
     /**
@@ -176,6 +171,7 @@ public class TimerActor extends Actor {
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
 
         // Draw the progress bar background.
+        Texture progress = skin.get("progress", Texture.class);
         batch.setColor(0.5f, 0.5f, 0.5f, color.a * parentAlpha);
         batch.draw(progress, getX(), getY(), getWidth(), getHeight());
 

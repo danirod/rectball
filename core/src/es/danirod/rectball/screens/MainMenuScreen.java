@@ -42,7 +42,7 @@ public class MainMenuScreen extends AbstractScreen {
     @Override
     public void setUpInterface(Table table) {
         // Build the actors.
-        Image title = new Image(game.getAtlas().findRegion("Logo"));
+        Image title = new Image(game.manager.get("logo.png", Texture.class));
         title.setScaling(Scaling.fit);
         ImageButton play = new ImageButton(game.getSkin(), "greenPlay");
         ImageButton settings = new ImageButton(game.getSkin(), "settings");

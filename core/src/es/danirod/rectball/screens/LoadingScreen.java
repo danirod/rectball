@@ -23,16 +23,11 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.model.BallColor;
 import es.danirod.rectball.model.Board;
 import es.danirod.rectball.scene2d.game.BoardActor;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class LoadingScreen extends AbstractScreen {
 
@@ -41,7 +36,11 @@ public class LoadingScreen extends AbstractScreen {
     private static final float BALL_SPEED = 0.15f;
 
     private final Board board;
+
     private BoardActor boardActor;
+
+    private Texture ballsTexture;
+
     private boolean canUpdate;
     private TextureAtlas ballAtlas;
 
@@ -56,15 +55,16 @@ public class LoadingScreen extends AbstractScreen {
 
     @Override
     public void setUpInterface(Table table) {
-        ballAtlas = new TextureAtlas("pack.atlas");
+        ballsTexture = new Texture("board/normal.png");
+        TextureRegion[][] regions = TextureRegion.split(ballsTexture, 256, 256);
+        ballAtlas = new TextureAtlas();
+        ballAtlas.addRegion("ball_red", regions[0][0]);
+        ballAtlas.addRegion("ball_yellow", regions[0][1]);
+        ballAtlas.addRegion("ball_blue", regions[1][0]);
+        ballAtlas.addRegion("ball_green", regions[1][1]);
+        ballAtlas.addRegion("ball_gray", regions[1][2]);
 
-        Map<BallColor, Drawable> balls = new HashMap<>();
-        balls.put(BallColor.BLUE, new TextureRegionDrawable(ballAtlas.findRegion("Blue")));
-        balls.put(BallColor.RED, new TextureRegionDrawable(ballAtlas.findRegion("Red")));
-        balls.put(BallColor.GREEN, new TextureRegionDrawable(ballAtlas.findRegion("Green")));
-        balls.put(BallColor.YELLOW, new TextureRegionDrawable(ballAtlas.findRegion("Yellow")));
-
-        boardActor = new BoardActor(balls, board);
+        boardActor = new BoardActor(ballAtlas, board);
         boardActor.setColoured(true);
         table.add(boardActor).size(100).align(Align.center);
     }
@@ -103,6 +103,7 @@ public class LoadingScreen extends AbstractScreen {
                                                              public void run() {
                                                                  boardActor.remove();
                                                                  ballAtlas.dispose();
+                                                                 ballsTexture.dispose();
                                                                  game.finishLoading();
                                                              }
                                                          }))

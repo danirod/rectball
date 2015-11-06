@@ -26,15 +26,13 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ScreenUtils;
-import es.danirod.rectball.model.BallColor;
 import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.model.Statistics;
 import es.danirod.rectball.platform.Platform;
@@ -62,8 +60,7 @@ public class RectballGame extends Game {
     public AssetManager manager;
     public SoundPlayer player;
     private RectballSkin uiSkin;
-    private TextureAtlas atlas;
-    private Map<BallColor, Drawable> ballAssets = new HashMap<>();
+    private TextureAtlas ballAtlas;
     private I18NBundle locale;
 
     /**
@@ -116,19 +113,13 @@ public class RectballGame extends Game {
         setScreen(screens.get(Screens.LOADING));
     }
 
-    /** Get the atlas with all the images. */
-    public TextureAtlas getAtlas() {
-        return atlas;
-    }
-
     public void finishLoading() {
         // Load the remaining data.
         platform.score().readData();
         statistics = platform.statistics().loadStatistics();
         player = new SoundPlayer(this);
-        atlas = manager.get("pack.atlas", TextureAtlas.class);
-        updateBallAssets();
         uiSkin = new RectballSkin(this);
+        updateBallAtlas();
         locale = setUpLocalization();
 
         // Load the screens.
@@ -163,7 +154,17 @@ public class RectballGame extends Game {
         linearParameters.minFilter = linearParameters.magFilter = TextureFilter.Linear;
 
         // Load game assets.
-        manager.load("pack.atlas", TextureAtlas.class);
+        manager.load("logo.png", Texture.class, linearParameters);
+        manager.load("board/normal.png", Texture.class, linearParameters);
+        manager.load("board/colorblind.png", Texture.class, linearParameters);
+        manager.load("board/spooky.png", Texture.class, linearParameters);
+        manager.load("board/blindspooky.png", Texture.class, linearParameters);
+
+        // Load UI resources.
+        manager.load("ui/progress.png", Texture.class, linearParameters);
+        manager.load("ui/icons.png", Texture.class, linearParameters);
+        manager.load("ui/yellow_patch.png", Texture.class);
+        manager.load("ui/switch.png", Texture.class, linearParameters);
 
         // Load TTF font for normal text
         FreeTypeFontLoaderParameter normalFont = new FreeTypeFontLoaderParameter();
@@ -290,6 +291,24 @@ public class RectballGame extends Game {
         return currentGame;
     }
 
+    public void updateBallAtlas() {
+        boolean isColorblind = platform.preferences().getBoolean("colorblind");
+        String ballsTexture;
+        if (isColorblind) {
+            ballsTexture = Constants.SPOOKY_MODE ? "board/blindspooky.png" : "board/colorblind.png";
+        } else {
+            ballsTexture = Constants.SPOOKY_MODE ? "board/spooky.png" : "board/normal.png";
+        }
+        Texture balls = manager.get(ballsTexture);
+        TextureRegion[][] regions = TextureRegion.split(balls, 256, 256);
+        ballAtlas = new TextureAtlas();
+        ballAtlas.addRegion("ball_red", regions[0][0]);
+        ballAtlas.addRegion("ball_yellow", regions[0][1]);
+        ballAtlas.addRegion("ball_blue", regions[1][0]);
+        ballAtlas.addRegion("ball_green", regions[1][1]);
+        ballAtlas.addRegion("ball_gray", regions[1][2]);
+    }
+
     /**
      * Create a screenshot and return the generated Pixmap. Since the game
      * goes yUp, the returned screenshot is flipped so that it's correctly
@@ -316,25 +335,7 @@ public class RectballGame extends Game {
         return screenshot;
     }
 
-    public void updateBallAssets() {
-        ballAssets.clear();
-
-        // Load default assets if it's not colorblind.
-        if (platform.preferences().getBoolean("colorblind")) {
-            ballAssets.put(BallColor.BLUE, new TextureRegionDrawable(atlas.findRegion("BlindBlue")));
-            ballAssets.put(BallColor.RED, new TextureRegionDrawable(atlas.findRegion("BlindRed")));
-            ballAssets.put(BallColor.GREEN, new TextureRegionDrawable(atlas.findRegion("BlindGreen")));
-            ballAssets.put(BallColor.YELLOW, new TextureRegionDrawable(atlas.findRegion("BlindYellow")));
-        } else {
-            ballAssets.put(BallColor.BLUE, new TextureRegionDrawable(atlas.findRegion("Blue")));
-            ballAssets.put(BallColor.RED, new TextureRegionDrawable(atlas.findRegion("Red")));
-            ballAssets.put(BallColor.GREEN, new TextureRegionDrawable(atlas.findRegion("Green")));
-            ballAssets.put(BallColor.YELLOW, new TextureRegionDrawable(atlas.findRegion("Yellow")));
-        }
-        ballAssets.put(BallColor.GRAY, new TextureRegionDrawable(atlas.findRegion("Gray")));
-    }
-
-    public Map<BallColor, Drawable> getBallAssets() {
-        return ballAssets;
+    public TextureAtlas getBallAtlas() {
+        return ballAtlas;
     }
 }

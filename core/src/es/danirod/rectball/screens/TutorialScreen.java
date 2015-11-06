@@ -86,9 +86,9 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         addStates();
 
         // Create the actors for this screen.
-        timer = new TimerActor(1, game.getAtlas());
+        timer = new TimerActor(1, game.getSkin());
         score = new ScoreActor(game.getSkin());
-        board = new BoardActor(game.getBallAssets(), game.getState().getBoard());
+        board = new BoardActor(game.getBallAtlas(), game.getState().getBoard());
 
         scoreBorder = new BorderedContainer(game.getSkin(), score);
         timerBorder = new BorderedContainer(game.getSkin(), timer);
