@@ -30,57 +30,88 @@ import es.danirod.rectball.scene2d.ui.SwitchActor;
 
 public class SettingsScreen extends AbstractScreen {
 
+
+
     public SettingsScreen(RectballGame game) {
         super(game);
     }
 
+    private Table settingsTable = null;
+
+    private SwitchActor sound = null, color = null;
+
+    private TextButton doTutorial = null, backButton = null;
+
+    private ScrollPane pane = null;
+
     @Override
     public void setUpInterface(Table table) {
-        Table settingsTable = new Table();
-        settingsTable.setFillParent(true);
-        settingsTable.defaults().align(Align.top);
-
         // Sound
-        final SwitchActor sound = new SwitchActor(game.getLocale().get("settings.sound"), game.getSkin());
-        sound.setChecked(game.getPlatform().preferences().getBoolean("sound", true));
-        sound.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent changeEvent, Actor actor) {
-                game.getPlatform().preferences().putBoolean("sound", sound.isChecked());
-                game.getPlatform().preferences().flush();
-                game.player.playSound(SoundCode.SELECT);
-            }
-        });
-        settingsTable.add(sound).fillX().expandX().row();
+        if (sound == null) {
+            sound = new SwitchActor(game.getLocale().get("settings.sound"), game.getSkin());
+            sound.setChecked(game.getPlatform().preferences().getBoolean("sound", true));
+            sound.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent changeEvent, Actor actor) {
+                    game.getPlatform().preferences().putBoolean("sound", sound.isChecked());
+                    game.getPlatform().preferences().flush();
+                    game.player.playSound(SoundCode.SELECT);
+                }
+            });
+        }
 
         // Color
-        final SwitchActor color = new SwitchActor(game.getLocale().get("settings.colorblind"), game.getSkin());
-        color.setChecked(game.getPlatform().preferences().getBoolean("colorblind"));
-        color.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent changeEvent, Actor actor) {
-                game.getPlatform().preferences().putBoolean("colorblind", color.isChecked());
-                game.getPlatform().preferences().flush();
-                game.updateBallAtlas();
-                game.player.playSound(SoundCode.SELECT);
-            }
-        });
-        settingsTable.add(color).fillX().expandX().row();
+        if (color == null) {
+            color = new SwitchActor(game.getLocale().get("settings.colorblind"), game.getSkin());
+            color.setChecked(game.getPlatform().preferences().getBoolean("colorblind"));
+            color.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent changeEvent, Actor actor) {
+                    game.getPlatform().preferences().putBoolean("colorblind", color.isChecked());
+                    game.getPlatform().preferences().flush();
+                    game.updateBallAtlas();
+                    game.player.playSound(SoundCode.SELECT);
+                }
+            });
+        }
 
         // Do tutorial button.
-        TextButton doTutorial = new TextButton(game.getLocale().get("settings.playTutorial"), game.getSkin());
-        doTutorial.addListener(new ScreenJumper(game, Screens.TUTORIAL));
-        settingsTable.add(doTutorial).padTop(50).height(60).fillX().expandX().row();
+        if (doTutorial == null) {
+            doTutorial = new TextButton(game.getLocale().get("settings.playTutorial"), game.getSkin());
+            doTutorial.addListener(new ScreenJumper(game, Screens.TUTORIAL));
+        }
+
+        if (settingsTable == null) {
+            settingsTable = new Table();
+            settingsTable.setFillParent(true);
+            settingsTable.defaults().align(Align.top);
+            settingsTable.add(sound).fillX().expandX().row();
+            settingsTable.add(color).fillX().expandX().row();
+            settingsTable.add(doTutorial).padTop(50).height(60).fillX().expandX().row();
+        }
 
         // Settings pane.
-        ScrollPane.ScrollPaneStyle style = new ScrollPane.ScrollPaneStyle();
-        ScrollPane pane = new ScrollPane(settingsTable, style);
-        table.add(pane).align(Align.top).expand().fill().row();
+        if (pane == null) {
+            ScrollPane.ScrollPaneStyle style = new ScrollPane.ScrollPaneStyle();
+            pane = new ScrollPane(settingsTable, style);
+        }
 
         // Back button
-        TextButton backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());
+        if (backButton == null) {
+            backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());
+            backButton.addListener(new ScreenPopper(game));
+        }
+
+        table.add(pane).align(Align.top).expand().fill().row();
         table.add(backButton).fillX().height(80).padTop(20).align(Align.bottom).row();
-        backButton.addListener(new ScreenPopper(game));
+    }
+
+    @Override
+    public void dispose() {
+        settingsTable = null;
+        sound = color = null;
+        doTutorial = backButton = null;
+        pane = null;
     }
 
     @Override

@@ -30,23 +30,36 @@ import es.danirod.rectball.scene2d.ui.StatsTable;
  */
 public class StatisticsScreen extends AbstractScreen {
 
+    private StatsTable statsTable = null;
+
+    private ScrollPane pane = null;
+
+    private TextButton backButton = null;
+
     public StatisticsScreen(RectballGame game) {
         super(game);
     }
 
     @Override
     public void setUpInterface(Table table) {
-        LabelStyle bold = game.getSkin().get("bold", LabelStyle.class);
-        LabelStyle normal = game.getSkin().get("small", LabelStyle.class);
+        if (statsTable == null) {
+            LabelStyle bold = game.getSkin().get("bold", LabelStyle.class);
+            LabelStyle normal = game.getSkin().get("small", LabelStyle.class);
+            statsTable = new StatsTable(game, bold, normal);
+        }
 
-        StatsTable statsTable = new StatsTable(game, bold, normal);
-        ScrollPane pane = new ScrollPane(statsTable, game.getSkin());
-        pane.setFadeScrollBars(false);
+        if (pane == null) {
+            pane = new ScrollPane(statsTable, game.getSkin());
+            pane.setFadeScrollBars(false);
+        }
+
+        if (backButton == null) {
+            backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());
+            backButton.addListener(new ScreenPopper(game));
+        }
+
         table.add(pane).align(Align.topLeft).expand().fill().row();
-
-        TextButton backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());
         table.add(backButton).fillX().expandY().height(80).padTop(20).align(Align.bottom).row();
-        backButton.addListener(new ScreenPopper(game));
     }
 
     @Override
@@ -54,4 +67,10 @@ public class StatisticsScreen extends AbstractScreen {
         return Screens.STATISTICS;
     }
 
+    @Override
+    public void dispose() {
+        statsTable = null;
+        pane = null;
+        backButton = null;
+    }
 }

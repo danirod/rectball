@@ -32,10 +32,15 @@ import es.danirod.rectball.scene2d.listeners.ScreenPopper;
  */
 public class AboutScreen extends AbstractScreen {
 
-    private static final int SCREEN_CREDITS = 1;
-    private static final int SCREEN_LICENSE = 2;
-    private int screen = SCREEN_CREDITS;
-    private Table innerContainer;
+    private Table innerContainer = null;
+
+    private String credits = null;
+
+    private ScrollPane scroll = null;
+
+    private TextButton backButton = null;
+
+    private Label creditsLabel = null;
 
     public AboutScreen(RectballGame game) {
         super(game);
@@ -43,68 +48,37 @@ public class AboutScreen extends AbstractScreen {
 
     @Override
     public void setUpInterface(Table table) {
-        innerContainer = new Table();
-        ScrollPane scroll = new ScrollPane(innerContainer, game.getSkin());
-        scroll.setFadeScrollBars(false);
-        table.add(scroll).expand().fill().align(Align.top).row();
-        innerContainer.defaults().fill().expand().padRight(10);
-
-        screen = SCREEN_CREDITS;
-        updateScrollPane();
-
-        final TextButton changeButton = new TextButton(game.getLocale().get("about.license"), game.getSkin());
-        changeButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                if (screen == SCREEN_CREDITS) {
-                    screen = SCREEN_LICENSE;
-                    changeButton.setText(game.getLocale().get("about.credits"));
-                    updateScrollPane();
-                } else {
-                    screen = SCREEN_CREDITS;
-                    changeButton.setText(game.getLocale().get("about.license"));
-                    updateScrollPane();
-                }
-                game.player.playSound(SoundPlayer.SoundCode.SELECT);
-                event.cancel();
-            }
-        });
-
-        Table buttonRow = new Table();
-        buttonRow.defaults().fill().expand().width(Value.maxWidth).space(10);
-        buttonRow.add(changeButton);
-
-        TextButton backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());
-        buttonRow.add(backButton).row();
-        backButton.addListener(new ScreenPopper(game));
-
-        table.add(buttonRow).expandX().fillX().height(60).padTop(20).align(Align.bottom).row();
-    }
-
-    private void updateScrollPane() {
-        innerContainer.clear();
-        switch (screen) {
-            case SCREEN_LICENSE:
-                innerContainer.add(getLicenseWidget()).row();
-                break;
-            case SCREEN_CREDITS:
-                innerContainer.add(getCreditsWidget()).row();
-                break;
+        if (credits == null) {
+            credits = RectballGame.VERSION + "\n" + Gdx.files.internal("credits.txt").readString("UTF-8");
         }
+        if (creditsLabel == null) {
+            creditsLabel = new Label(credits, game.getSkin(), "small");
+            creditsLabel.setWrap(true);
+        }
+        if (innerContainer == null) {
+            innerContainer = new Table();
+            innerContainer.defaults().fill().expand().padRight(10);
+            innerContainer.add(creditsLabel);
+        }
+        if (scroll == null) {
+            scroll = new ScrollPane(innerContainer, game.getSkin());
+            scroll.setFadeScrollBars(false);
+        }
+        if (backButton == null) {
+            backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());
+            backButton.addListener(new ScreenPopper(game));
+        }
+        table.add(scroll).expand().fill().align(Align.top).row();
+        table.add(backButton).fillX().height(80).padTop(20).align(Align.bottom).row();
     }
 
-    private Widget getCreditsWidget() {
-        String credits = RectballGame.VERSION + "\n" + Gdx.files.internal("credits.txt").readString("UTF-8");
-        Label creditsLabel = new Label(credits, game.getSkin(), "small");
-        creditsLabel.setWrap(true);
-        return creditsLabel;
-    }
-
-    private Widget getLicenseWidget() {
-        String license = Gdx.files.internal("license.txt").readString("UTF-8");
-        Label licenseLabel = new Label(license, game.getSkin(), "small");
-        licenseLabel.setWrap(true);
-        return licenseLabel;
+    @Override
+    public void dispose() {
+        credits = null;
+        creditsLabel = null;
+        backButton = null;
+        innerContainer = null;
+        scroll = null;
     }
 
     @Override
