@@ -338,4 +338,8 @@ public class RectballGame extends Game {
     public TextureAtlas getBallAtlas() {
         return ballAtlas;
     }
+
+    public AbstractScreen getScreen(int id) {
+        return screens.get(id);
+    }
 }
