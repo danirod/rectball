@@ -35,51 +35,81 @@ import static es.danirod.rectball.Constants.STAGE_PADDING;
 
 public class MainMenuScreen extends AbstractScreen {
 
+    private Image title = null;
+
+    private ImageButton play = null, settings = null, statistics = null, about = null, quit = null;
+
+    private Table extraButtons = null;
+
     public MainMenuScreen(RectballGame game) {
         super(game, false);
     }
 
     @Override
+    public void dispose() {
+        title = null;
+        play = settings = statistics = about = quit = null;
+        extraButtons = null;
+    }
+
+    @Override
     public void setUpInterface(Table table) {
         // Build the actors.
-        Image title = new Image(game.manager.get("logo.png", Texture.class));
-        title.setScaling(Scaling.fit);
-        ImageButton play = new ImageButton(game.getSkin(), "greenPlay");
-        ImageButton settings = new ImageButton(game.getSkin(), "settings");
-        ImageButton statistics = new ImageButton(game.getSkin(), "charts");
-        ImageButton about = new ImageButton(game.getSkin(), "info");
+        if (title == null) {
+            title = new Image(game.manager.get("logo.png", Texture.class));
+            title.setScaling(Scaling.fit);
+        }
 
-        // Add the title button and the clickable about text.
+        if (play == null) {
+            play = new ImageButton(game.getSkin(), "greenPlay");
+            play.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    game.getScreen(Screens.ABOUT).dispose();
+                    game.getScreen(Screens.SETTINGS).dispose();
+                    game.getScreen(Screens.STATISTICS).dispose();
+                    game.player.playSound(SoundPlayer.SoundCode.SELECT);
+                    game.pushScreen(Screens.GAME);
+                    event.cancel();
+                }
+            });
+        }
+        if (settings == null) {
+            settings = new ImageButton(game.getSkin(), "settings");
+            settings.addListener(new ScreenJumper(game, Screens.SETTINGS));
+        }
+        if (statistics == null) {
+            statistics = new ImageButton(game.getSkin(), "charts");
+            statistics.addListener(new ScreenJumper(game, Screens.STATISTICS));
+        }
+        if (about == null) {
+            about = new ImageButton(game.getSkin(), "info");
+            about.addListener(new ScreenJumper(game, Screens.ABOUT));
+        }
+        if (quit == null) {
+            quit = new ImageButton(game.getSkin(), "quit");
+            quit.setSize(50, 50);
+            quit.setPosition(getStage().getViewport().getWorldWidth() - 60, getStage().getViewport().getWorldHeight() - 60);
+            quit.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    Gdx.app.exit();
+                }
+            });
+            getStage().addActor(quit);
+        }
+
+        if (extraButtons == null) {
+            extraButtons = new Table();
+            extraButtons.defaults().expandX().fillX();
+            extraButtons.add(settings);
+            extraButtons.add(statistics).pad(0, 20, 0, 20);
+            extraButtons.add(about).row();
+        }
+
         table.add(title).pad(40).padBottom(60).row();
-
-        // Add the big green play button.
         table.add(play).fillX().height(150).row();
-
-        // Add the table layout for all the extra buttons.
-        Table extraButtons = new Table();
-        extraButtons.defaults().expandX().fillX();
-        extraButtons.add(settings);
-        extraButtons.add(statistics).pad(0, 20, 0, 20);
-        extraButtons.add(about).row();
         table.add(extraButtons).fillX().height(150).row();
-
-        // Then add the capture listeners for the buttons.
-        play.addListener(new ScreenJumper(game, Screens.GAME));
-        settings.addListener(new ScreenJumper(game, Screens.SETTINGS));
-        statistics.addListener(new ScreenJumper(game, Screens.STATISTICS));
-        about.addListener(new ScreenJumper(game, Screens.ABOUT));
-
-        // Add a quit button.
-        ImageButton quit = new ImageButton(game.getSkin(), "quit");
-        quit.setSize(50, 50);
-        quit.setPosition(getStage().getViewport().getWorldWidth() - 60, getStage().getViewport().getWorldHeight() - 60);
-        quit.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.exit();
-            }
-        });
-        getStage().addActor(quit);
     }
 
     @Override

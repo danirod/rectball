@@ -21,6 +21,7 @@ package es.danirod.rectball.screens;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -50,12 +51,12 @@ public abstract class AbstractScreen implements Screen {
     /**
      * Common stage.
      */
-    private Stage stage;
+    private Stage stage = null;
 
     /**
      * Common table.
      */
-    private Table table;
+    private Table table = null;
 
     AbstractScreen(RectballGame game) {
         this(game, true);
@@ -72,18 +73,7 @@ public abstract class AbstractScreen implements Screen {
     }
 
     public void load() {
-        boolean landscape = Gdx.graphics.getWidth() > Gdx.graphics.getHeight();
-        float ar = landscape ?
-                (float) Gdx.graphics.getWidth() / Gdx.graphics.getHeight() :
-                (float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
-        float width = (float) VIEWPORT_WIDTH;
-        float height = landscape ? width : width * ar;
-        Viewport viewport = new FitViewport(width, height);
-        stage = new Stage(viewport);
-        table = new Table();
-        table.setFillParent(true);
-        table.pad(STAGE_PADDING);
-        stage.addActor(table);
+
     }
 
     /**
@@ -125,7 +115,25 @@ public abstract class AbstractScreen implements Screen {
         event.setUserData("screen", getClass().getCanonicalName());
         game.getPlatform().analytic().sendEvent(event);
 
-        table.clear();
+        if (stage == null) {
+            boolean landscape = Gdx.graphics.getWidth() > Gdx.graphics.getHeight();
+            float ar = landscape ?
+                    (float) Gdx.graphics.getWidth() / Gdx.graphics.getHeight() :
+                    (float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
+            float width = (float) VIEWPORT_WIDTH;
+            float height = landscape ? width : width * ar;
+            Viewport viewport = new FitViewport(width, height);
+            stage = new Stage(viewport);
+        }
+
+        if (table == null) {
+            table = new Table();
+            table.setFillParent(true);
+            table.pad(STAGE_PADDING);
+            stage.addActor(table);
+        } else {
+            table.clear();
+        }
         setUpInterface(table);
 
         Gdx.input.setCatchBackKey(true);
@@ -147,6 +155,8 @@ public abstract class AbstractScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        stage = null;
+        table = null;
     }
 
     public abstract int getID();

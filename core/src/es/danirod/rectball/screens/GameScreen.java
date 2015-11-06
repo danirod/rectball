@@ -136,7 +136,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 // The user wants to resume the game.
                 game.player.playSound(SoundCode.FAIL);
                 askingLeave = false;
-                resume();
+                resumeGame();
             }
         });
 
@@ -144,7 +144,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         askingLeave = true;
     }
 
-    private void showPreLeaveDialog() {
+    private void showPauseDialog() {
         ConfirmDialog dialog = new ConfirmDialog(game.getSkin(),
                 game.getLocale().get("game.paused"),
                 game.getLocale().get("game.continue"),
@@ -155,7 +155,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 // Continue
                 game.player.playSound(SoundCode.SELECT);
                 askingLeave = false;
-                resume();
+                resumeGame();
             }
 
             @Override
@@ -373,7 +373,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.player.playSound(SoundCode.FAIL);
-                pause();
+                pauseGame();
                 event.cancel();
             }
         });
@@ -446,18 +446,26 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // The user should be able to leave during the game.
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             if (!paused && !timeout) {
-                pause();
+                pauseGame();
             }
         }
     }
 
-    @Override
-    public void pause() {
-        if (!askingLeave && !timeout) {
-            showPreLeaveDialog();
+    /**
+     * This method pauses the game. It is executed in one of the following
+     * situations: first, the user presses PAUSE button. Second, the user
+     * presses BACK button. Third, the user pauses the game (when the game
+     * is restored the game is still paused).
+     */
+    private void pauseGame() {
+        paused = true;
+
+        // Show the pause dialog unless you have already stop the game.
+        if (!timeout) {
+            showPauseDialog();
         }
 
-        paused = true;
+        // If the game has started, pause it.
         if (running && !timeout) {
             board.setColoured(false);
             board.setTouchable(Touchable.disabled);
@@ -465,12 +473,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         }
     }
 
-    @Override
-    public void resume() {
-        if (askingLeave) {
-            return;
-        }
-
+    /**
+     * This method resumes the game. It is executed in one of the following
+     * situations: first, the user presses CONTINUE button on pause screen.
+     * Second, the user presses BACK on the pause screen.
+     */
+    private void resumeGame() {
         paused = false;
 
         // If the countdown has finished but the game is not running is a
@@ -489,6 +497,19 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             board.setTouchable(Touchable.enabled);
             timer.setRunning(true);
         }
+    }
+
+    @Override
+    public void pause() {
+        // Show the pause dialog if it is not already visible.
+        if (!paused) {
+            pauseGame();
+        }
+    }
+
+    @Override
+    public void resume() {
+
     }
 
     @Override

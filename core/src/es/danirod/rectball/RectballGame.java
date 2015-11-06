@@ -47,7 +47,7 @@ import java.util.*;
  */
 public class RectballGame extends Game {
 
-    public static final String VERSION = "Rectball 0.4.2";
+    public static final String VERSION = "Rectball 0.4.3";
 
     private final Platform platform;
 
@@ -337,5 +337,9 @@ public class RectballGame extends Game {
 
     public TextureAtlas getBallAtlas() {
         return ballAtlas;
+    }
+
+    public AbstractScreen getScreen(int id) {
+        return screens.get(id);
     }
 }
