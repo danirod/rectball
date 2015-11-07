@@ -77,7 +77,7 @@ public class GameState {
         boolean valid = false;
         while (!valid) {
             board.randomize();
-            CombinationFinder finder = new CombinationFinder(board);
+            CombinationFinder finder = CombinationFinder.create(board);
             valid = finder.areThereCombinations();
         }
     }

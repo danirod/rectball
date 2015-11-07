@@ -1,6 +1,5 @@
 package es.danirod.rectball.model;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
@@ -19,7 +18,7 @@ public class CombinationFinderTest {
                 { 'Y', 'R', 'B', 'R', 'Y', 'R' },
                 { 'B', 'R', 'R', 'Y', 'R', 'B' }
         });
-        CombinationFinder finder = new CombinationFinder(board);
+        CombinationFinder finder = CombinationFinder.create(board);
         assertEquals(new Bounds(2, 2, 3, 3), finder.getCombination());
         assertEquals(1, finder.getPossibleBounds().size());
 
@@ -37,7 +36,7 @@ public class CombinationFinderTest {
                 { 'B', 'R', 'G', 'B', 'Y', 'B' },
                 { 'G', 'R', 'B', 'G', 'R', 'G' }
         });
-        CombinationFinder finder = new CombinationFinder(board);
+        CombinationFinder finder = CombinationFinder.create(board);
         assertEquals(2, finder.getPossibleBounds().size());
 
         Bounds bounds1 = new Bounds(0, 0, 2, 2);
@@ -59,7 +58,7 @@ public class CombinationFinderTest {
                 { 'B', 'R', 'G', 'B', 'Y', 'B' },
                 { 'G', 'R', 'B', 'G', 'R', 'G' }
         });
-        CombinationFinder finder = new CombinationFinder(board);
+        CombinationFinder finder = CombinationFinder.create(board);
         assertEquals(3, finder.getPossibleBounds().size());
 
         Bounds bounds1 = new Bounds(0, 0, 2, 2);
@@ -85,7 +84,7 @@ public class CombinationFinderTest {
                 { 'Y', 'R', 'B', 'R', 'Y', 'R' },
                 { 'B', 'R', 'B', 'Y', 'R', 'B' }
         });
-        CombinationFinder finder = new CombinationFinder(board);
+        CombinationFinder finder = CombinationFinder.create(board);
 
         /*
          * We have a RRR - RRR combination in (2,2 -> 4,3). This is actually
