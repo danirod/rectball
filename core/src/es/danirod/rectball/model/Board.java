@@ -52,7 +52,7 @@ public class Board {
             }
 
             // Check that we have a combination.
-            CombinationFinder finder = new CombinationFinder(this);
+            CombinationFinder finder = CombinationFinder.create(this);
             valid = finder.areThereCombinations();
         }
     }

@@ -266,7 +266,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 new Coordinate(bounds.maxX, bounds.maxY));
 
         // Check the new board for valid combinations.
-        CombinationFinder newFinder = new CombinationFinder(game.getState().getBoard());
+        CombinationFinder newFinder = CombinationFinder.create(game.getState().getBoard());
         if (newFinder.getPossibleBounds().size() == 1) {
             // Only one combination? This is trouble.
             Bounds newCombinationBounds = newFinder.getCombination();
@@ -344,7 +344,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
                 // Wiggle a valid combination.
                 if (wiggledBounds == null) {
-                    CombinationFinder finder = new CombinationFinder(game.getState().getBoard());
+                    CombinationFinder finder = CombinationFinder.create(game.getState().getBoard());
                     wiggledBounds = finder.getPossibleBounds().get(MathUtils.random(finder.getPossibleBounds().size() - 1));
                 }
                 board.addAction(board.shake(wiggledBounds, 10, 5, 0.1f));
@@ -536,7 +536,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // Mark a combination that the user could do if he had enough time.
         if (wiggledBounds == null) {
-            CombinationFinder combo = new CombinationFinder(game.getState().getBoard());
+            CombinationFinder combo = CombinationFinder.create(game.getState().getBoard());
             wiggledBounds = combo.getCombination();
         }
         for (int y = 0; y < game.getState().getBoard().getSize(); y++) {

@@ -38,7 +38,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
     private final Timer.Task watchdogTask = new Timer.Task() {
         @Override
         public void run() {
-            CombinationFinder finder = new CombinationFinder(game.getState().getBoard());
+            CombinationFinder finder = CombinationFinder.create(game.getState().getBoard());
             for (Bounds bounds : finder.getPossibleBounds()) {
                 board.addAction(board.shake(bounds, 10, 5, 0.1f));
             }
