@@ -43,7 +43,7 @@ public class GameOverScreen extends AbstractScreen {
         // Set up the label data.
         String lastScore = Integer.toString(game.getState().getScore());
         while (lastScore.length() < 4) lastScore = "0" + lastScore;
-        String aliveTime = Integer.toString(Math.round(game.getState().getTime()));
+        String aliveTime = Integer.toString(Math.round(game.getState().getElapsedTime()));
         String highScore = Long.toString(game.getPlatform().score().getHighScore());
 
         // Scores table
@@ -88,7 +88,7 @@ public class GameOverScreen extends AbstractScreen {
                 int height = width / 2;
                 int y = (int) (Gdx.graphics.getHeight() * 0.375f);
                 Pixmap screenshot = game.requestScreenshot(0, y, width, height);
-                game.getPlatform().sharing().shareGameOverScreenshot(screenshot, game.getState().getScore(), Math.round(game.getState().getTime()));
+                game.getPlatform().sharing().shareGameOverScreenshot(screenshot, game.getState().getScore(), Math.round(game.getState().getElapsedTime()));
                 event.cancel();
             }
         });

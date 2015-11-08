@@ -77,36 +77,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     private boolean running;
 
     /**
-     * Has the countdown already finished?
-     */
-    private boolean countdownFinished;
-
-    /**
      * True if the user is asking to leave.
      */
     private boolean askingLeave;
-
-    /**
-     * True if the game has finished.
-     */
-    private boolean timeout;
-
-    /**
-     * Whether the player has seen the next combination. When the user presses
-     * the HELP button, a valid combination is displayed to help the player and
-     * some time is subtracted. To prevent happening this more than once,
-     * this variable will flag whether to subtract or not. It will be reset
-     * every time a new combination is made.
-     */
-    private boolean seenCheat;
-
-    /**
-     * These are the bounds selected when the user presses the Help button.
-     * They are cached so that the same bounds are always used. Otherwise,
-     * each time the user presses HELP without selecting a combination, a
-     * different one would be used.
-     */
-    private Bounds wiggledBounds;
 
     public GameScreen(RectballGame game) {
         super(game, false);
@@ -180,28 +153,41 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         super.show();
 
         // Reset data
-        game.getState().reset();
-        score.setValue(game.getState().getScore());
-        paused = running = countdownFinished = askingLeave = timeout = false;
-        wiggledBounds = null;
-        seenCheat = false;
-
-        countdown(2, new Runnable() {
-
-            @Override
-            public void run() {
-                countdownFinished = true;
-
-                // Start the game unless the user is leaving or is paused.
-                if (!paused && !askingLeave) {
-                    running = true;
-                    board.setColoured(true);
-                    timer.setRunning(true);
-                    board.setTouchable(Touchable.enabled);
-                    game.player.playSound(SoundCode.SUCCESS);
-                }
+        if (!game.isRestoredState()) {
+            game.getState().reset();
+        } else {
+            game.setRestoredState(false);
+            if (game.getState().isTimeout()) {
+                game.pushScreen(Screens.GAME_OVER);
             }
-        });
+        }
+
+        // The player is playing
+        game.getState().setPlaying(true);
+        score.setValue(game.getState().getScore());
+        timer.setSeconds(game.getState().getRemainingTime());
+
+        paused = running = askingLeave = false;
+
+        if (!game.getState().isCountdownFinished()) {
+            countdown(2, new Runnable() {
+                @Override
+                public void run() {
+                    game.getState().setCountdownFinished(true);
+
+                    // Start the game unless the user is leaving or is paused.
+                    if (!paused && !askingLeave) {
+                        running = true;
+                        board.setColoured(true);
+                        timer.setRunning(true);
+                        board.setTouchable(Touchable.enabled);
+                        game.player.playSound(SoundCode.SUCCESS);
+                    }
+                }
+            });
+        } else {
+            pauseGame();
+        }
     }
 
     /**
@@ -330,26 +316,26 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 // Don't act if the game hasn't started yet.
-                if (!countdownFinished) {
+                if (!game.getState().isCountdownFinished()) {
                     event.cancel();
                     return;
                 }
 
                 // Don't do anything if there are less than 5 seconds.
-                if (timer.getSeconds() <= 5 && wiggledBounds == null) {
+                if (timer.getSeconds() <= 5 && game.getState().getWiggledBounds() == null) {
                     game.player.playSound(SoundCode.FAIL);
                     event.cancel();
                     return;
                 }
 
                 // Wiggle a valid combination.
-                if (wiggledBounds == null) {
+                if (game.getState().getWiggledBounds() == null) {
                     CombinationFinder finder = CombinationFinder.create(game.getState().getBoard());
-                    wiggledBounds = finder.getPossibleBounds().get(MathUtils.random(finder.getPossibleBounds().size() - 1));
+                    game.getState().setWiggledBounds(finder.getPossibleBounds().get(MathUtils.random(finder.getPossibleBounds().size() - 1)));
                 }
-                board.addAction(board.shake(wiggledBounds, 10, 5, 0.1f));
+                board.addAction(board.shake(game.getState().getWiggledBounds(), 10, 5, 0.1f));
 
-                if (!seenCheat) {
+                if (!game.getState().isCheatSeen()) {
                     // Subtract some time.
                     float subtractedTime = 5f;
                     final float step = subtractedTime / 10;
@@ -360,7 +346,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                                     timer.setSeconds(timer.getSeconds() - step);
                                 }
                             }))));
-                    seenCheat = true;
+                    game.getState().setCheatSeen(true);
                 }
 
                 event.cancel();
@@ -424,6 +410,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
     @Override
     public void hide() {
+        // The player is not playing anymore.
+        game.getState().setPlaying(false);
+
         // Just in case, remove any dialogs that might be forgotten.
         for (Actor actor : getStage().getActors()) {
             if (actor instanceof Dialog) {
@@ -441,11 +430,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // If the timer is running, keep incrementing the timer.
         if (timer.isRunning()) {
             game.getState().addTime(delta);
+            game.getState().setRemainingTime(timer.getSeconds());
         }
 
         // The user should be able to leave during the game.
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            if (!paused && !timeout) {
+            if (!paused && !game.getState().isTimeout()) {
                 pauseGame();
             }
         }
@@ -461,12 +451,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         paused = true;
 
         // Show the pause dialog unless you have already stop the game.
-        if (!timeout) {
+        if (!game.getState().isTimeout()) {
             showPauseDialog();
         }
 
         // If the game has started, pause it.
-        if (running && !timeout) {
+        if (running && !game.getState().isTimeout()) {
             board.setColoured(false);
             board.setTouchable(Touchable.disabled);
             timer.setRunning(false);
@@ -487,12 +477,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         //    countdown finishes, because the game is paused, the game does
         //    not start.
         // 2) The user was leaving the game during the countdown. Same.
-        if (!running && countdownFinished) {
+        if (!running && game.getState().isCountdownFinished()) {
             running = true;
             game.player.playSound(SoundCode.SUCCESS);
         }
 
-        if (running && !timeout) {
+        if (running && !game.getState().isTimeout()) {
             board.setColoured(true);
             board.setTouchable(Touchable.enabled);
             timer.setRunning(true);
@@ -515,7 +505,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     @Override
     public void onTimeOut() {
         // Disable any further interactions.
-        timeout = true;
         board.clearSelection();
         board.setColoured(true);
         board.setTouchable(Touchable.disabled);
@@ -524,24 +513,24 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // Update the score... and the record.
         int score = game.getState().getScore();
-        int time = Math.round(game.getState().getTime());
+        int time = Math.round(game.getState().getElapsedTime());
         game.getPlatform().score().registerScore(score, time);
         game.getPlatform().score().flushData();
 
         // Save information about this game in the statistics.
         game.statistics.getTotalData().incrementValue("score", game.getState().getScore());
         game.statistics.getTotalData().incrementValue("games");
-        game.statistics.getTotalData().incrementValue("time", Math.round(game.getState().getTime()));
+        game.statistics.getTotalData().incrementValue("time", Math.round(game.getState().getElapsedTime()));
         game.getPlatform().statistics().saveStatistics(game.statistics);
 
         // Mark a combination that the user could do if he had enough time.
-        if (wiggledBounds == null) {
+        if (game.getState().getWiggledBounds() == null) {
             CombinationFinder combo = CombinationFinder.create(game.getState().getBoard());
-            wiggledBounds = combo.getCombination();
+            game.getState().setWiggledBounds(combo.getCombination());
         }
         for (int y = 0; y < game.getState().getBoard().getSize(); y++) {
             for (int x = 0; x < game.getState().getBoard().getSize(); x++) {
-                if (wiggledBounds != null && !wiggledBounds.inBounds(x, y)) {
+                if (game.getState().getWiggledBounds() != null && !game.getState().getWiggledBounds().inBounds(x, y)) {
                     board.getBall(x, y).addAction(Actions.color(Color.DARK_GRAY, 0.15f));
                 }
             }
@@ -558,6 +547,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 game.pushScreen(Screens.GAME_OVER);
             }
         })));
+
+        // Mark the game as finished.
+        game.getState().setTimeout(true);
     }
 
     @Override
@@ -597,8 +589,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         ));
 
         // Reset the cheat
-        seenCheat = false;
-        wiggledBounds = null;
+        game.getState().setCheatSeen(false);
+        game.getState().setWiggledBounds(null);
 
         // Give some score to the user.
         ScoreCalculator calculator = new ScoreCalculator(game.getState().getBoard(), bounds);

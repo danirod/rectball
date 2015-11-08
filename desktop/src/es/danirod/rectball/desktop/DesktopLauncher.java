@@ -21,6 +21,8 @@ import com.badlogic.gdx.Files;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.model.BallColor;
+import es.danirod.rectball.model.GameState;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
