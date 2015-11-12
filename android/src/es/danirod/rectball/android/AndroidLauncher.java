@@ -22,6 +22,7 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import com.badlogic.gdx.Gdx;
@@ -47,6 +48,7 @@ public class AndroidLauncher extends AndroidApplication {
         if (platform.preferences().getBoolean("fullscreen")) {
             config.useImmersiveMode = true;
             config.hideStatusBar = true;
+            putFullscreen();
         }
 
         if (savedInstanceState != null) {
@@ -68,6 +70,16 @@ public class AndroidLauncher extends AndroidApplication {
         RelativeLayout layout = new RelativeLayout(this);
         layout.addView(rectballView);
         setContentView(layout);
+    }
+
+    private void putFullscreen() {
+        try {
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+        } catch (Exception ex) {
+            log("AndroidApplication", "Cannot put FEATURE_NO_TITLE", ex);
+        }
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
     }
 
     @Override
