@@ -118,7 +118,12 @@ public class RectballGame extends Game {
         // Load the resources.
         manager = createManager();
         screens.get(Screens.LOADING).load();
-        setScreen(screens.get(Screens.LOADING));
+        if (!restoredState) {
+            setScreen(screens.get(Screens.LOADING));
+        } else {
+            manager.finishLoading();
+            finishLoading();
+        }
     }
 
     public void finishLoading() {

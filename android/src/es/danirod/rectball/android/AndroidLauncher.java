@@ -44,8 +44,12 @@ public class AndroidLauncher extends AndroidApplication {
         if (savedInstanceState != null) {
             Json json = new Json();
             String jsonBoard = savedInstanceState.getString("state");
-            GameState state = json.fromJson(GameState.class, jsonBoard);
-            game = new RectballGame(new AndroidPlatform(this), state);
+            if (jsonBoard != null) {
+                GameState state = json.fromJson(GameState.class, jsonBoard);
+                game = new RectballGame(new AndroidPlatform(this), state);
+            } else {
+                game = new RectballGame(new AndroidPlatform(this));
+            }
             Log.d("Rectball", "Restoring state: " + jsonBoard);
         } else {
             game = new RectballGame(new AndroidPlatform(this));
