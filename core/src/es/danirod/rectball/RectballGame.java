@@ -54,7 +54,7 @@ public class RectballGame extends Game {
     /* FIXME: Privatize this. */
 
     private final Map<Integer, AbstractScreen> screens = new HashMap<>();
-    private final GameState currentGame = new GameState();
+    private final GameState currentGame;
     private final Deque<AbstractScreen> screenStack = new ArrayDeque<>();
     public Statistics statistics;
     public AssetManager manager;
@@ -63,13 +63,25 @@ public class RectballGame extends Game {
     private TextureAtlas ballAtlas;
     private I18NBundle locale;
 
+    /** Whether the game is restoring state from an Android kill or not. */
+    private boolean restoredState;
+
     /**
      * Create a new instance of Rectball.
      *
      * @param platform the platform this game is using.
+     * @param state
      */
+    public RectballGame(Platform platform, GameState state) {
+        this.platform = platform;
+        this.currentGame = state;
+        this.restoredState = true;
+    }
+
     public RectballGame(Platform platform) {
         this.platform = platform;
+        this.currentGame = new GameState();
+        this.restoredState = false;
     }
 
     /**
@@ -90,12 +102,8 @@ public class RectballGame extends Game {
         }
 
         Calendar halloween = Calendar.getInstance();
-        if (halloween.get(Calendar.MONTH) == Calendar.OCTOBER &&
-                halloween.get(Calendar.DATE) == 31) {
-            Constants.SPOOKY_MODE = true;
-        } else {
-            Constants.SPOOKY_MODE = false;
-        }
+        Constants.SPOOKY_MODE = halloween.get(Calendar.MONTH) == Calendar.OCTOBER &&
+                halloween.get(Calendar.DATE) == 31;
 
         // Add the screens.
         addScreen(new GameScreen(this));
@@ -129,6 +137,17 @@ public class RectballGame extends Game {
 
         // Enter main menu.
         pushScreen(Screens.MAIN_MENU);
+
+        // If we are restoring the game, push also the game screen.
+        // Keep the main menu screen in the stack, we are going to need it
+        // when we finish the game.
+        if (restoredState) {
+            pushScreen(Screens.GAME);
+        }
+    }
+
+    public boolean isRestoredState() {
+        return restoredState;
     }
 
     private I18NBundle setUpLocalization() {
@@ -341,5 +360,9 @@ public class RectballGame extends Game {
 
     public AbstractScreen getScreen(int id) {
         return screens.get(id);
+    }
+
+    public void setRestoredState(boolean restoredState) {
+        this.restoredState = restoredState;
     }
 }
