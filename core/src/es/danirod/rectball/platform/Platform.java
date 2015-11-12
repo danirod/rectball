@@ -39,8 +39,6 @@ public interface Platform {
      */
     Sharing sharing();
 
-    Analytics analytic();
-
     Scores score();
 
     Preferences preferences();

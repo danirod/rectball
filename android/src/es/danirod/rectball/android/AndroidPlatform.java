@@ -25,7 +25,6 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidPreferences;
 import com.badlogic.gdx.files.FileHandle;
 import es.danirod.rectball.platform.*;
-import es.danirod.rectball.platform.Analytics;
 import es.danirod.rectball.platform.LegacyScores;
 import es.danirod.rectball.platform.Scores;
 import es.danirod.rectball.platform.Sharing;
@@ -44,8 +43,6 @@ public class AndroidPlatform implements Platform {
 
     private final Sharing sharing;
 
-    private final Analytics analytic;
-
     private final Scores score;
 
     private final Preferences preferences;
@@ -54,7 +51,6 @@ public class AndroidPlatform implements Platform {
 
     protected AndroidPlatform(AndroidApplication app) {
         sharing = new AndroidSharing(app);
-        analytic = new AndroidAnalytics();
         score = new LegacyScores() {
             @Override
             protected FileHandle getScoresFile() {
@@ -73,11 +69,6 @@ public class AndroidPlatform implements Platform {
     @Override
     public Sharing sharing() {
         return sharing;
-    }
-
-    @Override
-    public Analytics analytic() {
-        return analytic;
     }
 
     @Override
