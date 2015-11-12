@@ -95,7 +95,7 @@ public class MainMenuScreen extends AbstractScreen {
                     Gdx.app.exit();
                 }
             });
-            getStage().addActor(quit);
+            // getStage().addActor(quit);
         }
 
         if (extraButtons == null) {

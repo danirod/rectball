@@ -18,10 +18,14 @@
 
 package es.danirod.rectball.android;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -39,7 +43,6 @@ public class AndroidLauncher extends AndroidApplication {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-        config.useImmersiveMode = true;
 
         if (savedInstanceState != null) {
             Json json = new Json();
@@ -55,7 +58,22 @@ public class AndroidLauncher extends AndroidApplication {
             game = new RectballGame(new AndroidPlatform(this));
             Log.d("Rectball", "New execution. No restoring state needed.");
         }
-        initialize(game, config);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            tintNavigationBar();
+        }
+
+        try {
+            View rectballView = initializeForView(game, config);
+            RelativeLayout layout = new RelativeLayout(this);
+            layout.addView(rectballView);
+            setContentView(layout);
+        } catch (RuntimeException rex) {
+            // For some reason you cannot initializeForView on Android 2.3.
+            if (rex.getMessage().equals("Libgdx requires OpenGL ES 2.0")) {
+                initialize(game, config);
+            }
+        }
     }
 
     @Override
@@ -72,5 +90,10 @@ public class AndroidLauncher extends AndroidApplication {
         } else {
             Gdx.app.debug("Rectball", "Not playing, no need to save state.");
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void tintNavigationBar() {
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.rectballColor));
     }
 }
