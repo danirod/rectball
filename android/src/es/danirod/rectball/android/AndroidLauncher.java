@@ -18,8 +18,6 @@
 
 package es.danirod.rectball.android;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -44,36 +42,32 @@ public class AndroidLauncher extends AndroidApplication {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 
+        AndroidPlatform platform = new AndroidPlatform(this);
+
+        if (platform.preferences().getBoolean("fullscreen")) {
+            config.useImmersiveMode = true;
+            config.hideStatusBar = true;
+        }
+
         if (savedInstanceState != null) {
             Json json = new Json();
             String jsonBoard = savedInstanceState.getString("state");
             if (jsonBoard != null) {
                 GameState state = json.fromJson(GameState.class, jsonBoard);
-                game = new RectballGame(new AndroidPlatform(this), state);
+                game = new RectballGame(platform, state);
             } else {
-                game = new RectballGame(new AndroidPlatform(this));
+                game = new RectballGame(platform);
             }
             Log.d("Rectball", "Restoring state: " + jsonBoard);
         } else {
-            game = new RectballGame(new AndroidPlatform(this));
+            game = new RectballGame(platform);
             Log.d("Rectball", "New execution. No restoring state needed.");
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            tintNavigationBar();
-        }
-
-        try {
-            View rectballView = initializeForView(game, config);
-            RelativeLayout layout = new RelativeLayout(this);
-            layout.addView(rectballView);
-            setContentView(layout);
-        } catch (RuntimeException rex) {
-            // For some reason you cannot initializeForView on Android 2.3.
-            if (rex.getMessage().equals("Libgdx requires OpenGL ES 2.0")) {
-                initialize(game, config);
-            }
-        }
+        View rectballView = initializeForView(game, config);
+        RelativeLayout layout = new RelativeLayout(this);
+        layout.addView(rectballView);
+        setContentView(layout);
     }
 
     @Override
@@ -90,10 +84,5 @@ public class AndroidLauncher extends AndroidApplication {
         } else {
             Gdx.app.debug("Rectball", "Not playing, no need to save state.");
         }
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void tintNavigationBar() {
-        getWindow().setNavigationBarColor(getResources().getColor(R.color.rectballColor));
     }
 }

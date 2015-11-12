@@ -122,8 +122,7 @@ public class RectballGame extends Game {
         if (!restoredState) {
             setScreen(screens.get(Screens.LOADING));
         } else {
-            manager.finishLoading();
-            finishLoading();
+            setScreen(screens.get(Screens.LOADING));
         }
     }
 
