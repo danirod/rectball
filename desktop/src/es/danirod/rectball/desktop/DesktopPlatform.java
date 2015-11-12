@@ -24,7 +24,6 @@ import com.badlogic.gdx.backends.lwjgl.LwjglPreferences;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
 import es.danirod.rectball.platform.*;
-import es.danirod.rectball.platform.Analytics;
 import es.danirod.rectball.platform.LegacyScores;
 import es.danirod.rectball.platform.Scores;
 import es.danirod.rectball.platform.Sharing;
@@ -43,8 +42,6 @@ public class DesktopPlatform implements Platform {
 
     private Sharing sharing;
 
-    private Analytics analytic;
-
     private Scores score;
 
     private Preferences preferences;
@@ -53,7 +50,6 @@ public class DesktopPlatform implements Platform {
 
     protected DesktopPlatform() {
         sharing = new DesktopSharing();
-        analytic = new DesktopAnalytics();
         score = new LegacyScores() {
             @Override
             protected FileHandle getScoresFile() {
@@ -90,11 +86,6 @@ public class DesktopPlatform implements Platform {
     @Override
     public Sharing sharing() {
         return sharing;
-    }
-
-    @Override
-    public Analytics analytic() {
-        return analytic;
     }
 
     @Override
