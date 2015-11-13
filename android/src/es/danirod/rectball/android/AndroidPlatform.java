@@ -19,13 +19,13 @@
 package es.danirod.rectball.android;
 
 import android.content.Context;
+import android.widget.Toast;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidPreferences;
 import com.badlogic.gdx.files.FileHandle;
 import es.danirod.rectball.platform.*;
-import es.danirod.rectball.platform.Analytics;
 import es.danirod.rectball.platform.LegacyScores;
 import es.danirod.rectball.platform.Scores;
 import es.danirod.rectball.platform.Sharing;
@@ -44,17 +44,18 @@ public class AndroidPlatform implements Platform {
 
     private final Sharing sharing;
 
-    private final Analytics analytic;
-
     private final Scores score;
 
     private final Preferences preferences;
 
     private final Statistics statistics;
 
+    private final AndroidApplication app;
+
     protected AndroidPlatform(AndroidApplication app) {
+        this.app = app;
+
         sharing = new AndroidSharing(app);
-        analytic = new AndroidAnalytics();
         score = new LegacyScores() {
             @Override
             protected FileHandle getScoresFile() {
@@ -76,11 +77,6 @@ public class AndroidPlatform implements Platform {
     }
 
     @Override
-    public Analytics analytic() {
-        return analytic;
-    }
-
-    @Override
     public Scores score() {
         return score;
     }
@@ -93,5 +89,15 @@ public class AndroidPlatform implements Platform {
     @Override
     public Statistics statistics() {
         return statistics;
+    }
+
+    @Override
+    public void toast(final CharSequence msg) {
+        app.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(app, msg, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

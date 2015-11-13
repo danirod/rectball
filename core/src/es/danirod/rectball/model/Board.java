@@ -24,9 +24,13 @@ import java.util.List;
 
 public class Board {
 
-    private final int size;
+    private int size;
 
-    private final Ball[][] balls;
+    private Ball[][] balls;
+
+    public Board() {
+        // No arg constructor.
+    }
 
     public Board(int size) {
         this.size = size;
@@ -52,7 +56,7 @@ public class Board {
             }
 
             // Check that we have a combination.
-            CombinationFinder finder = new CombinationFinder(this);
+            CombinationFinder finder = CombinationFinder.create(this);
             valid = finder.areThereCombinations();
         }
     }

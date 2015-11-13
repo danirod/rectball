@@ -22,65 +22,56 @@ import java.util.*;
 
 public class CombinationFinder {
 
-    private final Board board;
+    private static CombinationFinder instance = null;
 
-    private final int width, height;
+    private Board board;
+
+    private int width, height;
 
     private final List<Bounds> bounds;
 
-    public CombinationFinder(Board board) {
-        this.board = board;
-        width = height = board.getSize();
-        bounds = calculateCombinations();
+    private CombinationFinder() {
+        bounds = new ArrayList<>();
     }
 
-    private List<Bounds> calculateCombinations() {
-        List<Bounds> possibleBounds = new ArrayList<>();
+    public static CombinationFinder create(Board board) {
+        if (instance == null)
+            instance = new CombinationFinder();
+        instance.board = board;
+        instance.width = instance.height = board.getSize();
+        instance.calculateCombinations();
+        return instance;
+    }
+
+    private void calculateCombinations() {
+        if (!bounds.isEmpty())
+            bounds.clear();
         for (int y = 0; y < height - 1; y++) {
             for (int x = 0; x < width - 1; x++) {
-                Coordinate coordinate = new Coordinate(x, y);
-                BallColor reference = board.getBall(x, y).getColor();
-                List<Coordinate> inRow = sameColorInRow(coordinate);
-                List<Coordinate> inCol = sameColorInCol(coordinate);
+                BallColor refColor = board.getBall(x, y).getColor();
 
-                for (Coordinate rowCandidate : inRow) {
-                    for (Coordinate colCandidate : inCol) {
-                        int cx = rowCandidate.x;
-                        int cy = colCandidate.y;
-                        if (board.getBall(cx, cy).getColor() == reference) {
-                            int bx = Math.min(cx, x);
-                            int by = Math.min(cy, y);
-                            int BX = Math.max(cx, x);
-                            int BY = Math.max(cy, y);
-                            possibleBounds.add(new Bounds(bx, by, BX, BY));
+                // Iterate through all the balls in the same row
+                for (int row = x + 1; row < width; row++) {
+                    // Skip through this ball if it's not of the same color.
+                    if (board.getBall(row, y).getColor() != refColor)
+                        continue;
+                    // Ok, it is. Let's see if we can find two balls in the
+                    // same columns as our ref and the one we just found with
+                    // the same color.
+                    for (int col = y + 1; col < height; col++) {
+                        if (board.getBall(x, col).getColor() == refColor
+                            && board.getBall(row, col).getColor() == refColor)
+                        {
+                            int bx = Math.min(x, row);
+                            int by = Math.min(y, col);
+                            int BX = Math.max(x, row);
+                            int BY = Math.max(y, col);
+                            bounds.add(new Bounds(bx, by, BX, BY));
                         }
                     }
                 }
             }
         }
-        return possibleBounds;
-    }
-
-    private List<Coordinate> sameColorInRow(Coordinate ref) {
-        List<Coordinate> candidates = new ArrayList<>();
-        BallColor refColor = board.getBall(ref.x, ref.y).getColor();
-        for (int i = ref.x + 1; i < width; i++) {
-            if (board.getBall(i, ref.y).getColor() == refColor) {
-                candidates.add(new Coordinate(i, ref.y));
-            }
-        }
-        return candidates;
-    }
-
-    private List<Coordinate> sameColorInCol(Coordinate ref) {
-        List<Coordinate> candidates = new ArrayList<>();
-        BallColor refColor = board.getBall(ref.x, ref.y).getColor();
-        for (int j = ref.y + 1; j < height; j++) {
-            if (board.getBall(ref.x, j).getColor() == refColor) {
-                candidates.add(new Coordinate(ref.x, j));
-            }
-        }
-        return candidates;
     }
 
     public List<Bounds> getPossibleBounds() {
@@ -92,32 +83,22 @@ public class CombinationFinder {
     }
 
     public Bounds getBestCombination() {
-        if (bounds.isEmpty()) {
+        if (bounds.isEmpty())
             return null;
-        }
-
-        // Imagine this with lambdas and Java 8. Android PLEASE.
         Bounds maxBounds = bounds.get(0);
-        for (Bounds thisBounds : bounds) {
-            if (getWeightForCombination(thisBounds) > getWeightForCombination(maxBounds)) {
+        for (Bounds thisBounds : bounds)
+            if (getWeightForCombination(thisBounds) > getWeightForCombination(maxBounds))
                 maxBounds = thisBounds;
-            }
-        }
         return maxBounds;
     }
 
     public Bounds getWorstCombination() {
-        if (bounds.isEmpty()) {
+        if (bounds.isEmpty())
             return null;
-        }
-
         Bounds minBounds = bounds.get(0);
-        for (Bounds thisBounds : bounds) {
-            if (getWeightForCombination(thisBounds) < getWeightForCombination(minBounds)) {
+        for (Bounds thisBounds : bounds)
+            if (getWeightForCombination(thisBounds) < getWeightForCombination(minBounds))
                 minBounds = thisBounds;
-            }
-        }
-
         return minBounds;
     }
 
@@ -128,7 +109,7 @@ public class CombinationFinder {
     /**
      * Calculate the weight of the provided combination. Please note that the
      * weight is not the same as the score that the user receives from this
-     * combination. Weight is a local comparation system used by the
+     * combination. Weight is a local comparing system used by the
      * CombinationFinder to decide what is the greatest combination can be
      * offered to the user.
      *
@@ -137,11 +118,7 @@ public class CombinationFinder {
      * @param bounds  the bounds whose weight we want to know.
      * @return  the weight for this combination
      */
-    private int getWeightForCombination(Bounds bounds) {
-        /*
-         * For now let's just use the number of balls in the combination. This
-         * is an experimental formula that might be tweaked in future releases.
-         */
+    private static int getWeightForCombination(Bounds bounds) {
         int cols = bounds.maxX - bounds.minX + 1;
         int rows = bounds.maxY - bounds.minY + 1;
         return cols * rows;

@@ -20,7 +20,6 @@ package es.danirod.rectball.scene2d.game;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -59,10 +58,10 @@ public class ScoreActor extends Group {
 
     public ScoreActor(Skin skin) {
         background = skin.newDrawable("pixel", Color.BLACK);
-        label = new Label(getScore(), skin, "monospace");
+        label = new Label(getScore(), skin, "monospace2");
         label.setAlignment(Align.bottom, Align.bottom);
         label.setFillParent(true);
-        label.setFontScale(calculateFontScale());
+        label.setFontScale(6);
         addActor(label);
     }
 
@@ -104,22 +103,6 @@ public class ScoreActor extends Group {
     public void setValue(int value) {
         this.value = value;
         label.setText(getScore());
-        label.setFontScale(calculateFontScale());
-    }
-
-    @Override
-    protected void sizeChanged() {
-        label.setFontScale(calculateFontScale());
-    }
-
-    private float calculateFontScale() {
-        GlyphLayout layout = new GlyphLayout(label.getStyle().font, label.getText());
-        int requiredWidth = Math.round(layout.width);
-        int requiredHeight = Math.round(layout.height);
-
-        int maxHorizontalScale = Math.round(getWidth() / requiredWidth);
-        int maxVerticalScale = Math.round(getHeight() / requiredHeight);
-        return Math.min(maxHorizontalScale, maxVerticalScale) - 1;
     }
 
     @Override
@@ -129,16 +112,13 @@ public class ScoreActor extends Group {
             remainingValue -= givenValue;
             value += givenValue;
             label.setText(getScore());
-            label.setFontScale(calculateFontScale());
         }
         if (goNuts) {
             if (nutTime < 1) {
                 label.setText(Integer.toString(MathUtils.random(1000, 9999)));
-                label.setFontScale(calculateFontScale());
                 nutTime += delta;
             } else {
                 label.setText(getScore());
-                label.setFontScale(calculateFontScale());
                 goNuts = false;
                 nutTime = 0;
             }

@@ -20,9 +20,13 @@ package es.danirod.rectball.model;
 
 public class Ball {
 
-    private final int x, y;
+    private int x, y;
 
     private BallColor color = null;
+
+    public Ball() {
+
+    }
 
     public Ball(int x, int y) {
         this.x = x;

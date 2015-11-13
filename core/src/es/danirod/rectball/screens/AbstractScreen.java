@@ -21,13 +21,11 @@ package es.danirod.rectball.screens;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
-import es.danirod.rectball.platform.AnalyticEvent;
 
 import static es.danirod.rectball.Constants.*;
 
@@ -109,12 +107,6 @@ public abstract class AbstractScreen implements Screen {
 
     @Override
     public void show() {
-        // Dispatch an analytic event.
-        AnalyticEvent event = new AnalyticEvent();
-        event.setUserData("action", AnalyticEvent.ACTION_SCREEN);
-        event.setUserData("screen", getClass().getCanonicalName());
-        game.getPlatform().analytic().sendEvent(event);
-
         if (stage == null) {
             boolean landscape = Gdx.graphics.getWidth() > Gdx.graphics.getHeight();
             float ar = landscape ?

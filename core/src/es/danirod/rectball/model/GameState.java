@@ -18,6 +18,9 @@
 
 package es.danirod.rectball.model;
 
+import com.badlogic.gdx.math.Rectangle;
+import es.danirod.rectball.Constants;
+
 /**
  * Information about a game. Usually the game we want information from is
  * the game the player is currently playing. This data structure can contain
@@ -39,11 +42,88 @@ public class GameState {
      * many seconds has the player lasted when the game is over. Every tick
      * this value should be updated.
      */
-    private float time;
+    private float elapsedTime;
+
+    /**
+     * This is the remaining time. When reaches 0.
+     */
+    private float remainingTime;
+
+    public boolean isCountdownFinished() {
+        return countdownFinished;
+    }
+
+    public void setCountdownFinished(boolean countdownFinished) {
+        this.countdownFinished = countdownFinished;
+    }
+
+    /**
+     * Whether or not the countdown has finished on the game. If this variable
+     * is true, then the game has officially started. This is used when
+     * restoring the game to decide whether to display the countdown again or
+     * not.
+     */
+    private boolean countdownFinished;
+
+    public boolean isCheatSeen() {
+        return cheatSeen;
+    }
+
+    public void setCheatSeen(boolean cheatSeen) {
+        this.cheatSeen = cheatSeen;
+    }
+
+    /**
+     * These are the bounds selected when the user presses the Help button.
+     * They are cached so that the same bounds are always used. Otherwise,
+     * each time the user presses HELP without selecting a combination, a
+     * different one would be used.
+     */
+    private Bounds wiggledBounds;
+
+    public Bounds getWiggledBounds() {
+        return wiggledBounds;
+    }
+
+    public void setWiggledBounds(Bounds wiggledBounds) {
+        this.wiggledBounds = wiggledBounds;
+    }
+
+    /**
+     * Whether the player has seen the next combination. When the user presses
+     * the HELP button, a valid combination is displayed to help the player and
+     * some time is subtracted. To prevent happening this more than once,
+     * this variable will flag whether to subtract or not. It will be reset
+     * every time a new combination is made.
+     */
+    private boolean cheatSeen;
+
+    public boolean isPlaying() {
+        return playing;
+    }
+
+    public void setPlaying(boolean playing) {
+        this.playing = playing;
+    }
+
+    private boolean playing;
+
+    public boolean isTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(boolean timeout) {
+        this.timeout = timeout;
+    }
+
+    private boolean timeout;
+
+    private Rectangle boardBounds = new Rectangle();
 
     public GameState() {
         this.score = 0;
-        this.time = 0;
+        this.elapsedTime = 0;
+        this.remainingTime = Constants.SECONDS;
         board = new Board(6);
     }
 
@@ -55,12 +135,20 @@ public class GameState {
         this.score += score;
     }
 
-    public float getTime() {
-        return time;
+    public float getElapsedTime() {
+        return elapsedTime;
     }
 
     public void addTime(float time) {
-        this.time += time;
+        this.elapsedTime += time;
+    }
+
+    public float getRemainingTime() {
+        return remainingTime;
+    }
+
+    public void setRemainingTime(float remainingTime) {
+        this.remainingTime = remainingTime;
     }
 
     public Board getBoard() {
@@ -68,8 +156,14 @@ public class GameState {
     }
 
     public void reset() {
-        time = 0;
+        elapsedTime = 0;
+        remainingTime = Constants.SECONDS;
         score = 0;
+        wiggledBounds = null;
+        cheatSeen = false;
+        playing = false;
+        countdownFinished = false;
+        timeout = false;
         resetBoard();
     }
 
@@ -77,8 +171,16 @@ public class GameState {
         boolean valid = false;
         while (!valid) {
             board.randomize();
-            CombinationFinder finder = new CombinationFinder(board);
+            CombinationFinder finder = CombinationFinder.create(board);
             valid = finder.areThereCombinations();
         }
+    }
+
+    public void setBoardBounds(Rectangle boardBounds) {
+        this.boardBounds.set(boardBounds);
+    }
+
+    public Rectangle getBoardBounds() {
+        return boardBounds;
     }
 }

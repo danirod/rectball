@@ -17,7 +17,7 @@ public class ScoreCalculator {
     public ScoreCalculator(Board board, Bounds bounds) {
         this.bounds = bounds;
         this.board = board;
-        this.finder = new CombinationFinder(board);
+        this.finder = CombinationFinder.create(board);
     }
 
     public int calculate() {

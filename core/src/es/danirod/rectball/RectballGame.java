@@ -25,6 +25,7 @@ import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -47,14 +48,14 @@ import java.util.*;
  */
 public class RectballGame extends Game {
 
-    public static final String VERSION = "Rectball 0.4.3";
+    public static final String VERSION = "Rectball 0.4.4";
 
     private final Platform platform;
 
     /* FIXME: Privatize this. */
 
     private final Map<Integer, AbstractScreen> screens = new HashMap<>();
-    private final GameState currentGame = new GameState();
+    private final GameState currentGame;
     private final Deque<AbstractScreen> screenStack = new ArrayDeque<>();
     public Statistics statistics;
     public AssetManager manager;
@@ -63,13 +64,25 @@ public class RectballGame extends Game {
     private TextureAtlas ballAtlas;
     private I18NBundle locale;
 
+    /** Whether the game is restoring state from an Android kill or not. */
+    private boolean restoredState;
+
     /**
      * Create a new instance of Rectball.
      *
      * @param platform the platform this game is using.
+     * @param state
      */
+    public RectballGame(Platform platform, GameState state) {
+        this.platform = platform;
+        this.currentGame = state;
+        this.restoredState = true;
+    }
+
     public RectballGame(Platform platform) {
         this.platform = platform;
+        this.currentGame = new GameState();
+        this.restoredState = false;
     }
 
     /**
@@ -90,12 +103,6 @@ public class RectballGame extends Game {
         }
 
         Calendar halloween = Calendar.getInstance();
-        if (halloween.get(Calendar.MONTH) == Calendar.OCTOBER &&
-                halloween.get(Calendar.DATE) == 31) {
-            Constants.SPOOKY_MODE = true;
-        } else {
-            Constants.SPOOKY_MODE = false;
-        }
 
         // Add the screens.
         addScreen(new GameScreen(this));
@@ -103,6 +110,7 @@ public class RectballGame extends Game {
         addScreen(new MainMenuScreen(this));
         addScreen(new SettingsScreen(this));
         addScreen(new LoadingScreen(this));
+        addScreen(new LoadingBackScreen(this));
         addScreen(new StatisticsScreen(this));
         addScreen(new AboutScreen(this));
         addScreen(new TutorialScreen(this));
@@ -110,7 +118,11 @@ public class RectballGame extends Game {
         // Load the resources.
         manager = createManager();
         screens.get(Screens.LOADING).load();
-        setScreen(screens.get(Screens.LOADING));
+        if (!restoredState) {
+            setScreen(screens.get(Screens.LOADING));
+        } else {
+            setScreen(screens.get(Screens.LOADING_BACK));
+        }
     }
 
     public void finishLoading() {
@@ -129,6 +141,17 @@ public class RectballGame extends Game {
 
         // Enter main menu.
         pushScreen(Screens.MAIN_MENU);
+
+        // If we are restoring the game, push also the game screen.
+        // Keep the main menu screen in the stack, we are going to need it
+        // when we finish the game.
+        if (restoredState) {
+            pushScreen(Screens.GAME);
+        }
+    }
+
+    public boolean isRestoredState() {
+        return restoredState;
     }
 
     private I18NBundle setUpLocalization() {
@@ -157,8 +180,6 @@ public class RectballGame extends Game {
         manager.load("logo.png", Texture.class, linearParameters);
         manager.load("board/normal.png", Texture.class, linearParameters);
         manager.load("board/colorblind.png", Texture.class, linearParameters);
-        manager.load("board/spooky.png", Texture.class, linearParameters);
-        manager.load("board/blindspooky.png", Texture.class, linearParameters);
 
         // Load UI resources.
         manager.load("ui/progress.png", Texture.class, linearParameters);
@@ -208,10 +229,19 @@ public class RectballGame extends Game {
         // Load TTF font for Press Start.
         FreeTypeFontLoaderParameter monospace = new FreeTypeFontLoaderParameter();
         monospace.fontFileName = "fonts/PressStart2P-Regular.ttf";
-        monospace.fontParameters.size = 8;
+        monospace.fontParameters.size = 16;
         monospace.fontParameters.minFilter = TextureFilter.Nearest;
         monospace.fontParameters.magFilter = TextureFilter.Nearest;
+        monospace.fontParameters.borderWidth = 1;
+        monospace.fontParameters.borderStraight = true;
         manager.load("monospace.ttf", BitmapFont.class, monospace);
+
+        FreeTypeFontLoaderParameter monospace2 = new FreeTypeFontLoaderParameter();
+        monospace2.fontFileName = "fonts/PressStart2P-Regular.ttf";
+        monospace2.fontParameters.size = 8;
+        monospace2.fontParameters.minFilter = TextureFilter.Nearest;
+        monospace2.fontParameters.magFilter = TextureFilter.Nearest;
+        manager.load("monospace2.ttf", BitmapFont.class, monospace2);
 
         // Load sounds
         manager.load("sound/fail.ogg", Sound.class);
@@ -293,12 +323,7 @@ public class RectballGame extends Game {
 
     public void updateBallAtlas() {
         boolean isColorblind = platform.preferences().getBoolean("colorblind");
-        String ballsTexture;
-        if (isColorblind) {
-            ballsTexture = Constants.SPOOKY_MODE ? "board/blindspooky.png" : "board/colorblind.png";
-        } else {
-            ballsTexture = Constants.SPOOKY_MODE ? "board/spooky.png" : "board/normal.png";
-        }
+        String ballsTexture = isColorblind ? "board/colorblind.png" : "board/normal.png";
         Texture balls = manager.get(ballsTexture);
         TextureRegion[][] regions = TextureRegion.split(balls, 256, 256);
         ballAtlas = new TextureAtlas();
@@ -341,5 +366,9 @@ public class RectballGame extends Game {
 
     public AbstractScreen getScreen(int id) {
         return screens.get(id);
+    }
+
+    public void setRestoredState(boolean restoredState) {
+        this.restoredState = restoredState;
     }
 }

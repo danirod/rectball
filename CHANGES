@@ -1,3 +1,14 @@
+[0.4.4]
+- More memory optimizations to avoid leaks and undesired garbage cleans.
+- Show bonus combinations using a different color in the score (#48)
+- Game state is saved on Android and recreated via Bundle and SavedState.
+- Fixed a bug on the Android navigation bar not hiding when restoring game (#54).
+- Fix Help Button throwing race conditions when pressed in some situations (#52).
+- Fix infinite game over loop when the Help button is pressed in some situations (#53).
+
+[0.4.3]
+- Fix memory leaks in the game.
+
 [0.4.2]
 - Improved the PERFECT bonus to fill the timer no matter what the remaining time was.
 - Fix screenshots not being able to be shared on Android 6.0 due to runtime permissions.

@@ -39,12 +39,11 @@ public interface Platform {
      */
     Sharing sharing();
 
-    Analytics analytic();
-
     Scores score();
 
     Preferences preferences();
 
     Statistics statistics();
 
+    void toast(CharSequence msg);
 }
