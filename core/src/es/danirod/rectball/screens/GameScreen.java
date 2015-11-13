@@ -317,7 +317,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 // Don't act if the game hasn't started yet.
-                if (!game.getState().isCountdownFinished()) {
+                if (!timer.isRunning() || game.getState().isTimeout()) {
                     event.cancel();
                     return;
                 }
