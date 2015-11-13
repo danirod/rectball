@@ -317,7 +317,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 // Don't act if the game hasn't started yet.
-                if (!game.getState().isCountdownFinished()) {
+                if (!timer.isRunning() || game.getState().isTimeout()) {
                     event.cancel();
                     return;
                 }
@@ -548,6 +548,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         getStage().addAction(Actions.delay(2.5f, Actions.run(new Runnable() {
             @Override
             public void run() {
+                getStage().getRoot().clearActions();
                 game.pushScreen(Screens.GAME_OVER);
             }
         })));
@@ -588,13 +589,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                             selectedBall.setColor(Color.WHITE);
                         }
                         generate(bounds);
+                        // Reset the cheat
+                        game.getState().setCheatSeen(false);
+                        game.getState().setWiggledBounds(null);
                     }
                 })
         ));
-
-        // Reset the cheat
-        game.getState().setCheatSeen(false);
-        game.getState().setWiggledBounds(null);
 
         // Give some score to the user.
         ScoreCalculator calculator = new ScoreCalculator(game.getState().getBoard(), bounds);
