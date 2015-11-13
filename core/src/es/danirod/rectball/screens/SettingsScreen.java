@@ -18,6 +18,8 @@
 
 package es.danirod.rectball.screens;
 
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -38,7 +40,7 @@ public class SettingsScreen extends AbstractScreen {
 
     private Table settingsTable = null;
 
-    private SwitchActor sound = null, color = null;
+    private SwitchActor sound = null, color = null, fullscreen = null;
 
     private TextButton doTutorial = null, backButton = null;
 
@@ -75,6 +77,21 @@ public class SettingsScreen extends AbstractScreen {
             });
         }
 
+        // Fullscreen
+        if (fullscreen == null) {
+            fullscreen = new SwitchActor(game.getLocale().get("settings.fullscreen"), game.getSkin());
+            fullscreen.setChecked(game.getPlatform().preferences().getBoolean("fullscreen"));
+            fullscreen.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    game.getPlatform().preferences().putBoolean("fullscreen", fullscreen.isChecked());
+                    game.getPlatform().preferences().flush();
+                    game.getPlatform().toast(game.getLocale().get("settings.fullscreenReset"));
+                    game.player.playSound(SoundCode.SELECT);
+                }
+            });
+        }
+
         // Do tutorial button.
         if (doTutorial == null) {
             doTutorial = new TextButton(game.getLocale().get("settings.playTutorial"), game.getSkin());
@@ -87,6 +104,9 @@ public class SettingsScreen extends AbstractScreen {
             settingsTable.defaults().align(Align.top);
             settingsTable.add(sound).fillX().expandX().row();
             settingsTable.add(color).fillX().expandX().row();
+            if (Gdx.app.getType() == Application.ApplicationType.Android) {
+                settingsTable.add(fullscreen).fillX().expandX().row();
+            }
             settingsTable.add(doTutorial).padTop(50).height(60).fillX().expandX().row();
         }
 

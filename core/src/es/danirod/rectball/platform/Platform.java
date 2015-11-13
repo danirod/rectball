@@ -45,4 +45,5 @@ public interface Platform {
 
     Statistics statistics();
 
+    void toast(CharSequence msg);
 }

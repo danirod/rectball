@@ -21,7 +21,10 @@ package es.danirod.rectball.android;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -39,23 +42,44 @@ public class AndroidLauncher extends AndroidApplication {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-        config.useImmersiveMode = true;
+
+        AndroidPlatform platform = new AndroidPlatform(this);
+
+        if (platform.preferences().getBoolean("fullscreen")) {
+            config.useImmersiveMode = true;
+            config.hideStatusBar = true;
+            putFullscreen();
+        }
 
         if (savedInstanceState != null) {
             Json json = new Json();
             String jsonBoard = savedInstanceState.getString("state");
             if (jsonBoard != null) {
                 GameState state = json.fromJson(GameState.class, jsonBoard);
-                game = new RectballGame(new AndroidPlatform(this), state);
+                game = new RectballGame(platform, state);
             } else {
-                game = new RectballGame(new AndroidPlatform(this));
+                game = new RectballGame(platform);
             }
             Log.d("Rectball", "Restoring state: " + jsonBoard);
         } else {
-            game = new RectballGame(new AndroidPlatform(this));
+            game = new RectballGame(platform);
             Log.d("Rectball", "New execution. No restoring state needed.");
         }
-        initialize(game, config);
+
+        View rectballView = initializeForView(game, config);
+        RelativeLayout layout = new RelativeLayout(this);
+        layout.addView(rectballView);
+        setContentView(layout);
+    }
+
+    private void putFullscreen() {
+        try {
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+        } catch (Exception ex) {
+            log("AndroidApplication", "Cannot put FEATURE_NO_TITLE", ex);
+        }
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
     }
 
     @Override

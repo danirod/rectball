@@ -19,6 +19,7 @@
 package es.danirod.rectball.android;
 
 import android.content.Context;
+import android.widget.Toast;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -49,7 +50,11 @@ public class AndroidPlatform implements Platform {
 
     private final Statistics statistics;
 
+    private final AndroidApplication app;
+
     protected AndroidPlatform(AndroidApplication app) {
+        this.app = app;
+
         sharing = new AndroidSharing(app);
         score = new LegacyScores() {
             @Override
@@ -84,5 +89,15 @@ public class AndroidPlatform implements Platform {
     @Override
     public Statistics statistics() {
         return statistics;
+    }
+
+    @Override
+    public void toast(final CharSequence msg) {
+        app.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(app, msg, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

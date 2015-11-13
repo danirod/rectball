@@ -25,6 +25,7 @@ import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -121,8 +122,7 @@ public class RectballGame extends Game {
         if (!restoredState) {
             setScreen(screens.get(Screens.LOADING));
         } else {
-            manager.finishLoading();
-            finishLoading();
+            setScreen(screens.get(Screens.LOADING));
         }
     }
 

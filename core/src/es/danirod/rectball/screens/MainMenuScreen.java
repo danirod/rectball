@@ -95,7 +95,9 @@ public class MainMenuScreen extends AbstractScreen {
                     Gdx.app.exit();
                 }
             });
-            getStage().addActor(quit);
+            if (game.getPlatform().preferences().getBoolean("fullscreen")) {
+                getStage().addActor(quit);
+            }
         }
 
         if (extraButtons == null) {
