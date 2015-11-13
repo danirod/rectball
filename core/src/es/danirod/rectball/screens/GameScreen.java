@@ -278,7 +278,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         board.addAction(board.showRegion(bounds));
     }
 
-    private void showPartialScore(int score, Bounds bounds) {
+    private void showPartialScore(int score, Bounds bounds, boolean special) {
         // Calculate the center of the region.
         BallActor bottomLeftBall = board.getBall(bounds.minX, bounds.minY);
         BallActor upperRightBall = board.getBall(bounds.maxX, bounds.maxY);
@@ -302,6 +302,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 Actions.removeActor()
         ));
         getStage().addActor(label);
+
+        if (special) {
+            label.setColor(Color.CYAN);
+        }
     }
 
     @Override
@@ -634,8 +638,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             float givenTime = Constants.SECONDS - timer.getSeconds();
             timer.giveTime(givenTime, 4f);
         } else {
+            // Was special?
+            boolean special = givenScore != rows * cols;
             // Give score
-            showPartialScore(givenScore, bounds);
+            showPartialScore(givenScore, bounds, special);
             game.player.playSound(SoundCode.SUCCESS);
 
             // Give time
