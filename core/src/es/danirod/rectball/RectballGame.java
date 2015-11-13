@@ -48,7 +48,7 @@ import java.util.*;
  */
 public class RectballGame extends Game {
 
-    public static final String VERSION = "Rectball 1.0.0-dev";
+    public static final String VERSION = "Rectball 0.4.4-dev";
 
     private final Platform platform;
 
