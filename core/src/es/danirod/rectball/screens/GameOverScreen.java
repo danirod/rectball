@@ -50,7 +50,7 @@ public class GameOverScreen extends AbstractScreen {
         Table scoresTable = new Table();
 
         // Last score.
-        Label highScoreLabel = new Label(lastScore, game.getSkin(), "monospace");
+        Label highScoreLabel = new Label(lastScore, game.getSkin(), "monospace2");
         highScoreLabel.setFontScale(10f);
         highScoreLabel.setAlignment(Align.bottom);
         scoresTable.add(highScoreLabel).expandX().height(120).colspan(2).align(Align.center).row();
