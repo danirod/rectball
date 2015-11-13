@@ -208,7 +208,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // Create the label that will contain this number
         String number = Integer.toString(seconds);
         final Label label = new Label(number, game.getSkin(), "monospace");
-        label.setFontScale(20f);
+        label.setFontScale(10f);
         label.setSize(150, 150);
         label.setAlignment(Align.center);
         label.setPosition(
@@ -291,7 +291,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         float centerY = (minY + maxY) / 2;
 
         Label label = new Label("+" + score, game.getSkin(), "monospace");
-        label.setFontScale(10f);
+        label.setFontScale(5f);
         label.setSize(140, 70);
         label.setAlignment(Align.center);
         label.setPosition(centerX - label.getWidth() / 2, centerY - label.getHeight() / 2);

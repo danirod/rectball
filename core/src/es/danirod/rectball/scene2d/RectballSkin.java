@@ -119,6 +119,10 @@ public class RectballSkin extends Skin {
         BitmapFont monospaceFont = game.manager.get("monospace.ttf");
         LabelStyle monospaceStyle = new LabelStyle(monospaceFont, Color.WHITE);
         this.add("monospace", monospaceStyle);
+
+        BitmapFont monospaceFont2 = game.manager.get("monospace2.ttf");
+        LabelStyle monospaceStyle2 = new LabelStyle(monospaceFont2, Color.WHITE);
+        this.add("monospace2", monospaceStyle2);
     }
 
     private NinePatchDrawable generateButton(Color color, Color down) {
