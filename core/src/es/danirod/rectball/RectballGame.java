@@ -112,6 +112,7 @@ public class RectballGame extends Game {
         addScreen(new MainMenuScreen(this));
         addScreen(new SettingsScreen(this));
         addScreen(new LoadingScreen(this));
+        addScreen(new LoadingBackScreen(this));
         addScreen(new StatisticsScreen(this));
         addScreen(new AboutScreen(this));
         addScreen(new TutorialScreen(this));
@@ -122,7 +123,7 @@ public class RectballGame extends Game {
         if (!restoredState) {
             setScreen(screens.get(Screens.LOADING));
         } else {
-            setScreen(screens.get(Screens.LOADING));
+            setScreen(screens.get(Screens.LOADING_BACK));
         }
     }
 
