@@ -22,6 +22,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -491,6 +492,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
     @Override
     public void pause() {
+        // Put the bounds
+        game.getState().setBoardBounds(new Rectangle(board.getX(), board.getY(), board.getWidth(), board.getHeight()));
+
         // Show the pause dialog if it is not already visible.
         if (!paused) {
             pauseGame();

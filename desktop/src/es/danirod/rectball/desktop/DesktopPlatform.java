@@ -102,4 +102,9 @@ public class DesktopPlatform implements Platform {
     public Statistics statistics() {
         return statistics;
     }
+
+    @Override
+    public void toast(CharSequence msg) {
+        // Aquí no hay tostadas.
+    }
 }

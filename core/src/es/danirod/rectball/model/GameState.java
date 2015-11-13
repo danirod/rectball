@@ -18,6 +18,7 @@
 
 package es.danirod.rectball.model;
 
+import com.badlogic.gdx.math.Rectangle;
 import es.danirod.rectball.Constants;
 
 /**
@@ -117,6 +118,8 @@ public class GameState {
 
     private boolean timeout;
 
+    private Rectangle boardBounds = new Rectangle();
+
     public GameState() {
         this.score = 0;
         this.elapsedTime = 0;
@@ -171,5 +174,13 @@ public class GameState {
             CombinationFinder finder = CombinationFinder.create(board);
             valid = finder.areThereCombinations();
         }
+    }
+
+    public void setBoardBounds(Rectangle boardBounds) {
+        this.boardBounds.set(boardBounds);
+    }
+
+    public Rectangle getBoardBounds() {
+        return boardBounds;
     }
 }
