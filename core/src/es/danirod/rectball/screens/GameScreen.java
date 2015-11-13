@@ -588,13 +588,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                             selectedBall.setColor(Color.WHITE);
                         }
                         generate(bounds);
+                        // Reset the cheat
+                        game.getState().setCheatSeen(false);
+                        game.getState().setWiggledBounds(null);
                     }
                 })
         ));
-
-        // Reset the cheat
-        game.getState().setCheatSeen(false);
-        game.getState().setWiggledBounds(null);
 
         // Give some score to the user.
         ScoreCalculator calculator = new ScoreCalculator(game.getState().getBoard(), bounds);
