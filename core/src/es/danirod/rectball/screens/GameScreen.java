@@ -548,6 +548,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         getStage().addAction(Actions.delay(2.5f, Actions.run(new Runnable() {
             @Override
             public void run() {
+                getStage().getRoot().clearActions();
                 game.pushScreen(Screens.GAME_OVER);
             }
         })));
