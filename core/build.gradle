@@ -26,7 +26,6 @@ sourceSets.test.java.srcDirs = ["test/"]
 
 dependencies {
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-    compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
 
     testCompile "junit:junit:4.11"
     testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
