@@ -20,18 +20,14 @@ package es.danirod.rectball;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.g2d.freetype.*;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ScreenUtils;
 import es.danirod.rectball.model.GameState;
@@ -166,82 +162,30 @@ public class RectballGame extends Game {
     private AssetManager createManager() {
         AssetManager manager = new AssetManager();
 
-        // Set up the loaders required to load TTF files using gdx-freetype.
-        FileHandleResolver freetypeResolver = new InternalFileHandleResolver();
-        manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(freetypeResolver));
-        manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(freetypeResolver));
-
         // Set up the parameters for loading linear textures. Linear textures
         // use a linear filter to not have artifacts when they are scaled.
-        TextureParameter linearParameters = new TextureParameter();
-        linearParameters.minFilter = linearParameters.magFilter = TextureFilter.Linear;
+        TextureParameter texParameters = new TextureParameter();
+        BitmapFontParameter fntParameters = new BitmapFontParameter();
+        texParameters.minFilter = texParameters.magFilter = TextureFilter.Linear;
+        fntParameters.minFilter = texParameters.magFilter = TextureFilter.Linear;
 
         // Load game assets.
-        manager.load("logo.png", Texture.class, linearParameters);
-        manager.load("board/normal.png", Texture.class, linearParameters);
-        manager.load("board/colorblind.png", Texture.class, linearParameters);
+        manager.load("logo.png", Texture.class, texParameters);
+        manager.load("board/normal.png", Texture.class, texParameters);
+        manager.load("board/colorblind.png", Texture.class, texParameters);
 
         // Load UI resources.
-        manager.load("ui/progress.png", Texture.class, linearParameters);
-        manager.load("ui/icons.png", Texture.class, linearParameters);
+        manager.load("ui/progress.png", Texture.class, texParameters);
+        manager.load("ui/icons.png", Texture.class, texParameters);
         manager.load("ui/yellow_patch.png", Texture.class);
-        manager.load("ui/switch.png", Texture.class, linearParameters);
+        manager.load("ui/switch.png", Texture.class, texParameters);
 
-        // Load TTF font for normal text
-        FreeTypeFontLoaderParameter normalFont = new FreeTypeFontLoaderParameter();
-        normalFont.fontFileName = "fonts/Play-Regular.ttf";
-        normalFont.fontParameters.size = 36;
-        normalFont.fontParameters.minFilter = TextureFilter.Linear;
-        normalFont.fontParameters.magFilter = TextureFilter.Linear;
-        normalFont.fontParameters.shadowOffsetX = 2;
-        normalFont.fontParameters.shadowOffsetY = 2;
-        manager.load("normalFont.ttf", BitmapFont.class, normalFont);
+        manager.load("fonts/bold.fnt", BitmapFont.class, fntParameters);
+        manager.load("fonts/monospace.fnt", BitmapFont.class);
+        manager.load("fonts/monospaceOutline.fnt", BitmapFont.class);
+        manager.load("fonts/normal.fnt", BitmapFont.class, fntParameters);
+        manager.load("fonts/small.fnt", BitmapFont.class, fntParameters);
 
-        // Load TTF font for bold text
-        FreeTypeFontLoaderParameter boldFont = new FreeTypeFontLoaderParameter();
-        boldFont.fontFileName = "fonts/Play-Bold.ttf";
-        boldFont.fontParameters.size = 36;
-        boldFont.fontParameters.minFilter = TextureFilter.Linear;
-        boldFont.fontParameters.magFilter = TextureFilter.Linear;
-        boldFont.fontParameters.shadowOffsetX = 2;
-        boldFont.fontParameters.shadowOffsetY = 2;
-        manager.load("boldFont.ttf", BitmapFont.class, boldFont);
-
-        // Load TTF font for big text
-        FreeTypeFontLoaderParameter bigFont = new FreeTypeFontLoaderParameter();
-        bigFont.fontFileName = "fonts/Play-Bold.ttf";
-        bigFont.fontParameters.size = 80;
-        bigFont.fontParameters.minFilter = TextureFilter.Linear;
-        bigFont.fontParameters.magFilter = TextureFilter.Linear;
-        bigFont.fontParameters.borderWidth = 2;
-        bigFont.fontParameters.shadowOffsetX = 4;
-        bigFont.fontParameters.shadowOffsetY = 4;
-        manager.load("bigFont.ttf", BitmapFont.class, bigFont);
-
-        // Load TTF font for small text
-        FreeTypeFontLoaderParameter smallFont = new FreeTypeFontLoaderParameter();
-        smallFont.fontFileName = "fonts/Play-Regular.ttf";
-        smallFont.fontParameters.size = 28;
-        smallFont.fontParameters.minFilter = TextureFilter.Linear;
-        smallFont.fontParameters.magFilter = TextureFilter.Linear;
-        manager.load("smallFont.ttf", BitmapFont.class, smallFont);
-
-        // Load TTF font for Press Start.
-        FreeTypeFontLoaderParameter monospace = new FreeTypeFontLoaderParameter();
-        monospace.fontFileName = "fonts/PressStart2P-Regular.ttf";
-        monospace.fontParameters.size = 16;
-        monospace.fontParameters.minFilter = TextureFilter.Nearest;
-        monospace.fontParameters.magFilter = TextureFilter.Nearest;
-        monospace.fontParameters.borderWidth = 1;
-        monospace.fontParameters.borderStraight = true;
-        manager.load("monospace.ttf", BitmapFont.class, monospace);
-
-        FreeTypeFontLoaderParameter monospace2 = new FreeTypeFontLoaderParameter();
-        monospace2.fontFileName = "fonts/PressStart2P-Regular.ttf";
-        monospace2.fontParameters.size = 8;
-        monospace2.fontParameters.minFilter = TextureFilter.Nearest;
-        monospace2.fontParameters.magFilter = TextureFilter.Nearest;
-        manager.load("monospace2.ttf", BitmapFont.class, monospace2);
 
         // Load sounds
         manager.load("sound/fail.ogg", Sound.class);

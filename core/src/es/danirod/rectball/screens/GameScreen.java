@@ -208,7 +208,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // Create the label that will contain this number
         String number = Integer.toString(seconds);
         final Label label = new Label(number, game.getSkin(), "monospace");
-        label.setFontScale(10f);
+        label.setFontScale(5f);
         label.setSize(150, 150);
         label.setAlignment(Align.center);
         label.setPosition(
@@ -220,7 +220,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         game.player.playSound(SoundCode.SELECT);
 
         label.addAction(Actions.sequence(
-                Actions.parallel(Actions.fadeOut(1f), Actions.moveBy(0, 80, 1f)),
+                Actions.parallel(Actions.moveBy(0, 80, 1f)),
 
                 // After the animation, decide. If the countdown hasn't finished
                 // yet, run another countdown with 1 second less.
@@ -296,9 +296,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         label.setAlignment(Align.center);
         label.setPosition(centerX - label.getWidth() / 2, centerY - label.getHeight() / 2);
         label.addAction(Actions.sequence(
-                Actions.parallel(
-                        Actions.moveBy(0, 80, 0.5f),
-                        Actions.alpha(0.5f, 0.5f)),
+                Actions.moveBy(0, 80, 0.5f),
                 Actions.removeActor()
         ));
         getStage().addActor(label);
@@ -622,13 +620,13 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         int boardSize = game.getState().getBoard().getSize() - 1;
         if (bounds.equals(new Bounds(0, 0, boardSize, boardSize))) {
             // Give score
-            Label label = new Label("PERFECT", game.getSkin(), "big");
+            Label label = new Label("PERFECT", game.getSkin(), "monospace");
             label.setX((getStage().getViewport().getWorldWidth() - label.getWidth()) / 2);
             label.setY((getStage().getViewport().getWorldHeight() - label.getHeight()) / 2);
+            label.setFontScale(3);
+            label.setAlignment(Align.center);
             label.addAction(Actions.sequence(
-                    Actions.parallel(
                             Actions.moveBy(0, 80, 0.5f),
-                            Actions.alpha(0.5f, 0.5f)),
                     Actions.removeActor()
             ));
             getStage().addActor(label);
