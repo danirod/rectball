@@ -87,7 +87,7 @@ public class RectballSkin extends Skin {
         style.checkboxOn = new TextureRegionDrawable(on);
         style.checkboxOff = new TextureRegionDrawable(off);
         style.checkboxOnDisabled = style.checkboxOffDisabled = new TextureRegionDrawable(broken);
-        style.font = game.manager.get("fonts/normal.ttf");
+        style.font = game.manager.get("fonts/normal.fnt");
         add("default", style);
     }
 
@@ -97,30 +97,30 @@ public class RectballSkin extends Skin {
      */
     private void addLabelStyles() {
         // Build the label style for normal font.
-        BitmapFont normalFont = game.manager.get("fonts/normal.ttf");
+        BitmapFont normalFont = game.manager.get("fonts/normal.fnt");
         LabelStyle normalStyle = new LabelStyle(normalFont, Color.WHITE);
         this.add("default", normalStyle);
 
         // Build the label style for bold font.
-        BitmapFont boldFont = game.manager.get("fonts/bold.ttf");
+        BitmapFont boldFont = game.manager.get("fonts/bold.fnt");
         LabelStyle boldStyle = new LabelStyle(boldFont, Color.WHITE);
         this.add("bold", boldStyle);
 
         // Build the label style for bold font.
-        BitmapFont smallFont = game.manager.get("fonts/normal.ttf");
+        BitmapFont smallFont = game.manager.get("fonts/small.fnt");
         LabelStyle smallStyle = new LabelStyle(smallFont, Color.WHITE);
         this.add("small", smallStyle);
 
-        BitmapFont bigFont = game.manager.get("fonts/normal.ttf");
+        BitmapFont bigFont = game.manager.get("fonts/normal.fnt");
         LabelStyle bigStyle = new LabelStyle(bigFont, Color.WHITE);
         this.add("big", bigStyle);
 
         // Build the monospace style
-        BitmapFont monospaceFont = game.manager.get("fonts/monospace.ttf");
+        BitmapFont monospaceFont = game.manager.get("fonts/monospaceOutline.fnt");
         LabelStyle monospaceStyle = new LabelStyle(monospaceFont, Color.WHITE);
         this.add("monospace", monospaceStyle);
 
-        BitmapFont monospaceFont2 = game.manager.get("fonts/monospace.ttf");
+        BitmapFont monospaceFont2 = game.manager.get("fonts/monospace.fnt");
         LabelStyle monospaceStyle2 = new LabelStyle(monospaceFont2, Color.WHITE);
         this.add("monospace2", monospaceStyle2);
     }
@@ -141,7 +141,7 @@ public class RectballSkin extends Skin {
         {
             NinePatchDrawable upButton = generateButton(Color.GRAY, Color.DARK_GRAY);
             NinePatchDrawable downButton = generateButton(Color.DARK_GRAY, Color.GRAY);
-            BitmapFont font = game.manager.get("fonts/normal.ttf");
+            BitmapFont font = game.manager.get("fonts/normal.fnt");
             TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
             this.add("default", buttonStyle);
         }
@@ -149,7 +149,7 @@ public class RectballSkin extends Skin {
         {
             NinePatchDrawable upButton = generateButton(Color.valueOf("37c837"), Color.valueOf("37c837").lerp(Color.BLACK, 0.25f));
             NinePatchDrawable downButton = generateButton(Color.valueOf("37c837").lerp(Color.BLACK, 0.25f), Color.valueOf("37c837"));
-            BitmapFont font = game.manager.get("fonts/normal.ttf");
+            BitmapFont font = game.manager.get("fonts/normal.fnt");
             TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
             this.add("green", buttonStyle);
         }
@@ -157,7 +157,7 @@ public class RectballSkin extends Skin {
         {
             NinePatchDrawable upButton = generateButton(Color.valueOf("0066cc"), Color.valueOf("0066cc").lerp(Color.BLACK, 0.25f));
             NinePatchDrawable downButton = generateButton(Color.valueOf("0066cc").lerp(Color.BLACK, 0.25f), Color.valueOf("0066cc"));
-            BitmapFont font = game.manager.get("fonts/normal.ttf");
+            BitmapFont font = game.manager.get("fonts/normal.fnt");
             TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
             this.add("blue", buttonStyle);
         }
@@ -215,7 +215,7 @@ public class RectballSkin extends Skin {
         Texture backgroundWindow = new Texture(windowBackground);
         NinePatch backgroundPatch = new NinePatch(backgroundWindow, borderBorder + borderWidth, borderBorder + borderWidth, borderBorder + borderWidth, borderBorder + borderWidth);
         Drawable background = new NinePatchDrawable(backgroundPatch);
-        BitmapFont font = game.manager.get("fonts/normal.ttf");
+        BitmapFont font = game.manager.get("fonts/normal.fnt");
         WindowStyle window = new WindowStyle(font, Color.WHITE, background);
         add("default", window);
     }

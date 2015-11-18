@@ -20,6 +20,8 @@ package es.danirod.rectball;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.BitmapFontLoader;
+import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
@@ -173,45 +175,28 @@ public class RectballGame extends Game {
 
         // Set up the parameters for loading linear textures. Linear textures
         // use a linear filter to not have artifacts when they are scaled.
-        TextureParameter linearParameters = new TextureParameter();
-        linearParameters.minFilter = linearParameters.magFilter = TextureFilter.Linear;
+        TextureParameter texParameters = new TextureParameter();
+        BitmapFontParameter fntParameters = new BitmapFontParameter();
+        texParameters.minFilter = texParameters.magFilter = TextureFilter.Linear;
+        fntParameters.minFilter = texParameters.magFilter = TextureFilter.Linear;
 
         // Load game assets.
-        manager.load("logo.png", Texture.class, linearParameters);
-        manager.load("board/normal.png", Texture.class, linearParameters);
-        manager.load("board/colorblind.png", Texture.class, linearParameters);
+        manager.load("logo.png", Texture.class, texParameters);
+        manager.load("board/normal.png", Texture.class, texParameters);
+        manager.load("board/colorblind.png", Texture.class, texParameters);
 
         // Load UI resources.
-        manager.load("ui/progress.png", Texture.class, linearParameters);
-        manager.load("ui/icons.png", Texture.class, linearParameters);
+        manager.load("ui/progress.png", Texture.class, texParameters);
+        manager.load("ui/icons.png", Texture.class, texParameters);
         manager.load("ui/yellow_patch.png", Texture.class);
-        manager.load("ui/switch.png", Texture.class, linearParameters);
+        manager.load("ui/switch.png", Texture.class, texParameters);
 
-        // Load TTF font for normal text
-        FreeTypeFontLoaderParameter normalFont = new FreeTypeFontLoaderParameter();
-        normalFont.fontFileName = "fonts/Play-Regular.ttf";
-        normalFont.fontParameters.size = 28;
-        normalFont.fontParameters.minFilter = TextureFilter.Linear;
-        normalFont.fontParameters.magFilter = TextureFilter.Linear;
-        manager.load("fonts/normal.ttf", BitmapFont.class, normalFont);
+        manager.load("fonts/bold.fnt", BitmapFont.class, fntParameters);
+        manager.load("fonts/monospace.fnt", BitmapFont.class);
+        manager.load("fonts/monospaceOutline.fnt", BitmapFont.class);
+        manager.load("fonts/normal.fnt", BitmapFont.class, fntParameters);
+        manager.load("fonts/small.fnt", BitmapFont.class, fntParameters);
 
-        // Load TTF font for bold text
-        FreeTypeFontLoaderParameter boldFont = new FreeTypeFontLoaderParameter();
-        boldFont.fontFileName = "fonts/Play-Bold.ttf";
-        boldFont.fontParameters.size = 28;
-        boldFont.fontParameters.minFilter = TextureFilter.Linear;
-        boldFont.fontParameters.magFilter = TextureFilter.Linear;
-        manager.load("fonts/bold.ttf", BitmapFont.class, boldFont);
-
-        // Load TTF font for Press Start.
-        FreeTypeFontLoaderParameter monospace = new FreeTypeFontLoaderParameter();
-        monospace.fontFileName = "fonts/PressStart2P-Regular.ttf";
-        monospace.fontParameters.size = 16;
-        monospace.fontParameters.minFilter = TextureFilter.Nearest;
-        monospace.fontParameters.magFilter = TextureFilter.Nearest;
-        monospace.fontParameters.borderWidth = 1;
-        monospace.fontParameters.borderStraight = true;
-        manager.load("fonts/monospace.ttf", BitmapFont.class, monospace);
 
         // Load sounds
         manager.load("sound/fail.ogg", Sound.class);

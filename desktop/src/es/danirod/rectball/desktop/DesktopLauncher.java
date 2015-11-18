@@ -28,8 +28,8 @@ import es.danirod.rectball.model.GameState;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = Constants.VIEWPORT_WIDTH;
-		config.height = Constants.VIEWPORT_HEIGHT;
+		config.width = 400;
+		config.height = 640;
 		config.title = RectballGame.VERSION;
 		config.useHDPI = true;
 		config.addIcon("icon.png", Files.FileType.Internal);

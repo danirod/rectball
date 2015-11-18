@@ -158,7 +158,7 @@ public class GameState {
     public void reset() {
         elapsedTime = 0;
         remainingTime = Constants.SECONDS;
-        score = 9990;
+        score = 0;
         wiggledBounds = null;
         cheatSeen = false;
         playing = false;
@@ -174,10 +174,6 @@ public class GameState {
             CombinationFinder finder = CombinationFinder.create(board);
             valid = finder.areThereCombinations();
         }
-        board.getBall(0, 0).setColor(BallColor.BLUE);
-        board.getBall(0, 5).setColor(BallColor.BLUE);
-        board.getBall(5, 0).setColor(BallColor.BLUE);
-        board.getBall(5, 5).setColor(BallColor.BLUE);
     }
 
     public void setBoardBounds(Rectangle boardBounds) {
