@@ -622,9 +622,11 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         int boardSize = game.getState().getBoard().getSize() - 1;
         if (bounds.equals(new Bounds(0, 0, boardSize, boardSize))) {
             // Give score
-            Label label = new Label("PERFECT", game.getSkin(), "big");
+            Label label = new Label("PERFECT", game.getSkin(), "monospace");
             label.setX((getStage().getViewport().getWorldWidth() - label.getWidth()) / 2);
             label.setY((getStage().getViewport().getWorldHeight() - label.getHeight()) / 2);
+            label.setFontScale(3);
+            label.setAlignment(Align.center);
             label.addAction(Actions.sequence(
                     Actions.parallel(
                             Actions.moveBy(0, 80, 0.5f),

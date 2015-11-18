@@ -190,41 +190,18 @@ public class RectballGame extends Game {
         // Load TTF font for normal text
         FreeTypeFontLoaderParameter normalFont = new FreeTypeFontLoaderParameter();
         normalFont.fontFileName = "fonts/Play-Regular.ttf";
-        normalFont.fontParameters.size = 36;
+        normalFont.fontParameters.size = 28;
         normalFont.fontParameters.minFilter = TextureFilter.Linear;
         normalFont.fontParameters.magFilter = TextureFilter.Linear;
-        normalFont.fontParameters.shadowOffsetX = 2;
-        normalFont.fontParameters.shadowOffsetY = 2;
-        manager.load("normalFont.ttf", BitmapFont.class, normalFont);
+        manager.load("fonts/normal.ttf", BitmapFont.class, normalFont);
 
         // Load TTF font for bold text
         FreeTypeFontLoaderParameter boldFont = new FreeTypeFontLoaderParameter();
         boldFont.fontFileName = "fonts/Play-Bold.ttf";
-        boldFont.fontParameters.size = 36;
+        boldFont.fontParameters.size = 28;
         boldFont.fontParameters.minFilter = TextureFilter.Linear;
         boldFont.fontParameters.magFilter = TextureFilter.Linear;
-        boldFont.fontParameters.shadowOffsetX = 2;
-        boldFont.fontParameters.shadowOffsetY = 2;
-        manager.load("boldFont.ttf", BitmapFont.class, boldFont);
-
-        // Load TTF font for big text
-        FreeTypeFontLoaderParameter bigFont = new FreeTypeFontLoaderParameter();
-        bigFont.fontFileName = "fonts/Play-Bold.ttf";
-        bigFont.fontParameters.size = 80;
-        bigFont.fontParameters.minFilter = TextureFilter.Linear;
-        bigFont.fontParameters.magFilter = TextureFilter.Linear;
-        bigFont.fontParameters.borderWidth = 2;
-        bigFont.fontParameters.shadowOffsetX = 4;
-        bigFont.fontParameters.shadowOffsetY = 4;
-        manager.load("bigFont.ttf", BitmapFont.class, bigFont);
-
-        // Load TTF font for small text
-        FreeTypeFontLoaderParameter smallFont = new FreeTypeFontLoaderParameter();
-        smallFont.fontFileName = "fonts/Play-Regular.ttf";
-        smallFont.fontParameters.size = 28;
-        smallFont.fontParameters.minFilter = TextureFilter.Linear;
-        smallFont.fontParameters.magFilter = TextureFilter.Linear;
-        manager.load("smallFont.ttf", BitmapFont.class, smallFont);
+        manager.load("fonts/bold.ttf", BitmapFont.class, boldFont);
 
         // Load TTF font for Press Start.
         FreeTypeFontLoaderParameter monospace = new FreeTypeFontLoaderParameter();
@@ -234,14 +211,7 @@ public class RectballGame extends Game {
         monospace.fontParameters.magFilter = TextureFilter.Nearest;
         monospace.fontParameters.borderWidth = 1;
         monospace.fontParameters.borderStraight = true;
-        manager.load("monospace.ttf", BitmapFont.class, monospace);
-
-        FreeTypeFontLoaderParameter monospace2 = new FreeTypeFontLoaderParameter();
-        monospace2.fontFileName = "fonts/PressStart2P-Regular.ttf";
-        monospace2.fontParameters.size = 8;
-        monospace2.fontParameters.minFilter = TextureFilter.Nearest;
-        monospace2.fontParameters.magFilter = TextureFilter.Nearest;
-        manager.load("monospace2.ttf", BitmapFont.class, monospace2);
+        manager.load("fonts/monospace.ttf", BitmapFont.class, monospace);
 
         // Load sounds
         manager.load("sound/fail.ogg", Sound.class);

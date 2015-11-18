@@ -59,9 +59,10 @@ public class ScoreActor extends Group {
     public ScoreActor(Skin skin) {
         background = skin.newDrawable("pixel", Color.BLACK);
         label = new Label(getScore(), skin, "monospace2");
-        label.setAlignment(Align.bottom, Align.bottom);
+        label.setAlignment(Align.center);
         label.setFillParent(true);
-        label.setFontScale(6);
+        label.setFontScale(2.75f);
+        label.setY(label.getY() - 5);
         addActor(label);
     }
 
