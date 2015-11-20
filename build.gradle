@@ -35,8 +35,6 @@ ext {
 }
 
 allprojects {
-    apply plugin: "eclipse"
-    apply plugin: "idea"
     apply plugin: "maven"
 
     archivesBaseName = 'rectball'
@@ -46,8 +44,4 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
-}
-
-tasks.eclipse.doLast {
-    delete ".project"
 }

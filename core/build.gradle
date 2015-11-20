@@ -29,7 +29,3 @@ dependencies {
     testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
     testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 }
-
-eclipse.project {
-    name = appName + "-core"
-}
