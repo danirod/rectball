@@ -128,7 +128,6 @@ public class ScoreActor extends Group {
     public void giveScore(int score) {
         if (value < 10000 && (value + score) >= 10000) {
             goNuts = true;
-            value += score;
             if (listener != null) {
                 listener.onScoreGoNuts();
             }
