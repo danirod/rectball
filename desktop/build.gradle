@@ -27,7 +27,7 @@ dependencies {
 }
 
 project.ext.mainClassName = packageName + ".desktop.DesktopLauncher"
-project.ext.assetsDir = new File("../android/assets");
+project.ext.assetsDir = new File("../android/src/main/assets");
 
 task run(dependsOn: classes, type: JavaExec) {
     main = project.mainClassName

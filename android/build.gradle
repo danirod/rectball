@@ -36,20 +36,6 @@ dependencies {
 android {
     buildToolsVersion project.androidToolsVersion
     compileSdkVersion project.androidSdkVersion.toInteger()
-
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
-            jniLibs.srcDirs = ['libs']
-        }
-
-        instrumentTest.setRoot('tests')
-    }
 }
 
 
@@ -76,18 +62,18 @@ task copyAndroidNatives() {
             }
         }
 
-        into("./")
+        into("./src/main/")
     }
 
-    file("libs/armeabi/").mkdirs();
-    file("libs/armeabi-v7a/").mkdirs();
-    file("libs/x86/").mkdirs();
+    file("src/main/jniLibs/armeabi/").mkdirs();
+    file("src/main/jniLibs/armeabi-v7a/").mkdirs();
+    file("src/main/jniLibs/x86/").mkdirs();
 
     configurations.natives.files.each { jar ->
         def outputDir = null
-        if(jar.name.endsWith("natives-armeabi-v7a.jar")) outputDir = file("libs/armeabi-v7a")
-        if(jar.name.endsWith("natives-armeabi.jar")) outputDir = file("libs/armeabi")
-        if(jar.name.endsWith("natives-x86.jar")) outputDir = file("libs/x86")
+        if(jar.name.endsWith("natives-armeabi-v7a.jar")) outputDir = file("src/main/jniLibs/armeabi-v7a")
+        if(jar.name.endsWith("natives-armeabi.jar")) outputDir = file("src/main/jniLibs/armeabi")
+        if(jar.name.endsWith("natives-x86.jar")) outputDir = file("src/main/jniLibs/x86")
         if(outputDir != null) {
             copy {
                 from zipTree(jar)
