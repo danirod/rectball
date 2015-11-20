@@ -19,12 +19,10 @@
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.SoundPlayer;
 import es.danirod.rectball.scene2d.listeners.ScreenPopper;
 
 /**
@@ -49,7 +47,7 @@ public class AboutScreen extends AbstractScreen {
     @Override
     public void setUpInterface(Table table) {
         if (credits == null) {
-            credits = RectballGame.VERSION + "\n" + Gdx.files.internal("credits.txt").readString("UTF-8");
+            credits = "Rectball " + Constants.VERSION + "\n" + Gdx.files.internal("credits.txt").readString("UTF-8");
         }
         if (creditsLabel == null) {
             creditsLabel = new Label(credits, game.getSkin(), "small");

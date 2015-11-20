@@ -59,9 +59,9 @@ public class ScoreActor extends Group {
     public ScoreActor(Skin skin) {
         background = skin.newDrawable("pixel", Color.BLACK);
         label = new Label(getScore(), skin, "monospace2");
-        label.setAlignment(Align.bottom, Align.bottom);
+        label.setAlignment(Align.center);
         label.setFillParent(true);
-        label.setFontScale(6);
+        label.setFontScale(6f);
         addActor(label);
     }
 
@@ -128,7 +128,6 @@ public class ScoreActor extends Group {
     public void giveScore(int score) {
         if (value < 10000 && (value + score) >= 10000) {
             goNuts = true;
-            value += score;
             if (listener != null) {
                 listener.onScoreGoNuts();
             }

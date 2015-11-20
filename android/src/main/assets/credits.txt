@@ -1,0 +1,13 @@
+www.danirod.es/rectball
+www.github.com/danirod/rectball
+Follow me on Twitter: @danirod93
+
+Copyright (C) 2015 Dani Rodríguez
+
+TRANSLATIONS
+Spanish (ES) - by danirod
+Spanish (AR) - by matiuri
+
+THIRD PARTY LIBRARIES
+This game makes use of the following libraries.
+libGDX.- libGDX is licensed under the Apache license version 2, which can be found here: http://www.apache.org/licenses/
