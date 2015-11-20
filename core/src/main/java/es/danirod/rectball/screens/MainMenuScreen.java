@@ -70,6 +70,7 @@ public class MainMenuScreen extends AbstractScreen {
                     game.getScreen(Screens.STATISTICS).dispose();
                     game.player.playSound(SoundPlayer.SoundCode.SELECT);
                     game.pushScreen(Screens.GAME);
+                    event.cancel();
                 }
             });
         }
