@@ -98,8 +98,6 @@ public class RectballGame extends Game {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
         }
 
-        Calendar halloween = Calendar.getInstance();
-
         // Add the screens.
         addScreen(new GameScreen(this));
         addScreen(new GameOverScreen(this));
