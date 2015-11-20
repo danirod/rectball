@@ -42,7 +42,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 23
         versionCode 404
-        versionName rootProject.ext.version
+        versionName rectballVersion
     }
 }
 

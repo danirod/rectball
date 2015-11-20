@@ -29,7 +29,7 @@ buildscript {
 ext {
     appName = 'Rectball'
     packageName = 'es.danirod.rectball'
-    version = "0.4.4"
+    rectballVersion = "0.4.5"
 
     gdxVersion = '1.7.0'
 }
@@ -38,6 +38,7 @@ allprojects {
     apply plugin: "maven"
 
     archivesBaseName = 'rectball'
+    version = rectballVersion
 
     repositories {
         mavenCentral()
