@@ -26,33 +26,25 @@ buildscript {
     }
 }
 
+ext {
+    appName = 'Rectball'
+    packageName = 'es.danirod.rectball'
+    version = "0.4.4"
+
+    gdxVersion = '1.7.0'
+}
+
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
     apply plugin: "maven"
 
     archivesBaseName = 'rectball'
-    version = '0.4.4'
-
-    ext {
-        appName = 'Rectball'
-        packageName = 'es.danirod.rectball'
-        gdxVersion = '1.7.0'
-    }
 
     repositories {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
-    }
-}
-
-project(":android") {
-    ext {
-        androidToolsVersion = "23.0.1"
-        androidSdkVersion = "23"
-        androidVersionCode = "404"
-        androidScreenOrientation = "portrait"
     }
 }
 

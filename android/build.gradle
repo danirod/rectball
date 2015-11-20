@@ -34,8 +34,16 @@ dependencies {
 }
 
 android {
-    buildToolsVersion project.androidToolsVersion
-    compileSdkVersion project.androidSdkVersion.toInteger()
+    buildToolsVersion "23.0.1"
+    compileSdkVersion 23
+
+    defaultConfig {
+        applicationId "${rootProject.ext.packageName}.android"
+        minSdkVersion 9
+        targetSdkVersion 23
+        versionCode 404
+        versionName rootProject.ext.version
+    }
 }
 
 
