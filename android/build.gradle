@@ -43,28 +43,6 @@ android {
 // the natives configuration, and extracts them to the proper libs/ folders
 // so they get packed with the APK.
 task copyAndroidNatives() {
-    copy {
-        from("cfg/AndroidManifest.xml") {
-            filter { line ->
-                line.replaceAll(/PACKAGE/, packageName);
-            }
-            filter { line ->
-                line.replaceAll(/ANDROID_VERSION_CODE/, androidVersionCode);
-            }
-            filter { line ->
-                line.replaceAll(/ANDROID_VERSION_NAME/, version);
-            }
-            filter { line ->
-                line.replaceAll(/ANDROID_SDK_VERSION/, androidSdkVersion);
-            }
-            filter { line ->
-                line.replaceAll(/ANDROID_SCREEN_ORIENTATION/, androidScreenOrientation);
-            }
-        }
-
-        into("./src/main/")
-    }
-
     file("src/main/jniLibs/armeabi/").mkdirs();
     file("src/main/jniLibs/armeabi-v7a/").mkdirs();
     file("src/main/jniLibs/x86/").mkdirs();
