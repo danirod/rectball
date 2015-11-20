@@ -29,7 +29,7 @@ buildscript {
 ext {
     appName = 'Rectball'
     packageName = 'es.danirod.rectball'
-    rectballVersion = "0.4.5"
+    rectballVersion = "0.4.6-dev"
 
     gdxVersion = '1.7.0'
 }
