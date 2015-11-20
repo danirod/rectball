@@ -1,3 +1,8 @@
+[0.4.5]
+- TTF fonts have been removed in favour of good old BitmapFont files.
+- Fixed a bug on the Score actor adding the wrong score during the over-10K animation.
+- Changed the Gradle build process: moved directories, changed AndroidManifest.xml
+
 [0.4.4]
 - More memory optimizations to avoid leaks and undesired garbage cleans.
 - Show bonus combinations using a different color in the score (#48)

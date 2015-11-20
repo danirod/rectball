@@ -22,15 +22,13 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.model.BallColor;
-import es.danirod.rectball.model.GameState;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 400;
 		config.height = 640;
-		config.title = RectballGame.VERSION;
+		config.title = "Rectball " + Constants.VERSION;
 		config.useHDPI = true;
 		config.addIcon("icon.png", Files.FileType.Internal);
 		new LwjglApplication(new RectballGame(new DesktopPlatform()), config);

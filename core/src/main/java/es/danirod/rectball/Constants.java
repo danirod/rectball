@@ -24,6 +24,14 @@ package es.danirod.rectball;
 public class Constants {
 
     /**
+     * Game version. This can be used in the About menu and in the title
+     * on Desktop. In the near future this could come from Gradle but
+     * I'm still checking looking for a platform that works on any
+     * platform.
+     */
+    public static final String VERSION = "0.4.5";
+
+    /**
      * Whether the game is running in debug mode or not. Debug mode can be
      * enabled or not during development. Debug mode should be disabled on
      * final game release.
