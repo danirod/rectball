@@ -45,7 +45,7 @@ public class LoadingScreen extends AbstractScreen {
     private TextureAtlas ballAtlas;
 
     public LoadingScreen(RectballGame game) {
-        super(game);
+        super(game, false);
         board = new Board(2);
         board.getBall(0, 0).setColor(BallColor.BLUE);
         board.getBall(0, 1).setColor(BallColor.RED);

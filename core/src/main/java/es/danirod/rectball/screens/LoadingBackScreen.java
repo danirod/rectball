@@ -28,7 +28,7 @@ public class LoadingBackScreen extends AbstractScreen {
     private boolean canUpdate;
 
     public LoadingBackScreen(RectballGame game) {
-        super(game);
+        super(game, false);
         board = new Board(6);
     }
 
