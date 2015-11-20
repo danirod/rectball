@@ -1,6 +1,3 @@
-## Rectball
-android/AndroidManifest.xml
-
 ## Java
 
 *.class
@@ -21,9 +18,9 @@ www-test/
 .gwt-tmp/
 
 ## Android Studio and Intellij and Android in general
-android/libs/armeabi/
-android/libs/armeabi-v7a/
-android/libs/x86/
+android/src/main/jniLibs/armeabi/
+android/src/main/jniLibs/armeabi-v7a/
+android/src/main/jniLibs/x86/
 android/gen/
 .idea/
 *.ipr
