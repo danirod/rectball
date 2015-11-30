@@ -37,6 +37,8 @@ public class AndroidLauncher extends AndroidApplication {
 
     private RectballGame game;
 
+    private static final String PREF_GAME_STATE = "game_state";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,9 +53,9 @@ public class AndroidLauncher extends AndroidApplication {
             putFullscreen();
         }
 
-        if (savedInstanceState != null) {
+        if (platform.preferences().getString("game_state", null) != null) {
             Json json = new Json();
-            String jsonBoard = savedInstanceState.getString("state");
+            String jsonBoard = platform.preferences().getString(PREF_GAME_STATE);
             if (jsonBoard != null) {
                 GameState state = json.fromJson(GameState.class, jsonBoard);
                 game = new RectballGame(platform, state);
@@ -83,15 +85,15 @@ public class AndroidLauncher extends AndroidApplication {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
+    protected void onPause() {
+        super.onPause();
         // Save the game state if the game is running.
         if (game.getState().isPlaying()) {
+            AndroidPlatform platform = new AndroidPlatform(this);
             Json json = new Json();
             json.setOutputType(JsonWriter.OutputType.json);
             String jsonBoard = json.toJson(game.getState(), GameState.class);
-            outState.putString("state", jsonBoard);
+            platform.preferences().putString(PREF_GAME_STATE, jsonBoard).flush();
             Gdx.app.debug("Rectball", "Saving State: " + jsonBoard);
         } else {
             Gdx.app.debug("Rectball", "Not playing, no need to save state.");
