@@ -1,0 +1,6 @@
+language: java
+jdk:
+    - oraclejdk8
+    - oraclejdk7
+# This enables container based builds, newer and faster:
+sudo: false
