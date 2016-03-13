@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/danirod/rectball.svg)](https://travis-ci.org/danirod/rectball)
-[![Coverage Status](https://coveralls.io/repos/github/danirod/rectball/badge.svg)](https://coveralls.io/github/danirod/rectball)
+[![Coverage Status](https://coveralls.io/repos/github/danirod/rectball/badge.svg?branch=devel)](https://coveralls.io/github/danirod/rectball?branch=devel)
 [![GitHub tag](https://img.shields.io/github/tag/danirod/rectball.svg)](https://github.com/danirod/rectball/releases/latest)
 [![GitHub license](https://img.shields.io/badge/license-GPL3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
 
