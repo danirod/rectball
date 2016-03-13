@@ -44,6 +44,10 @@ android {
         versionCode 406
         versionName rectballVersion
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 // Extract the libGDX natives from the JARs.
