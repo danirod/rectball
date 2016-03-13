@@ -1,6 +1,9 @@
 language: android
 sudo: false
 
+env:
+    - TERM=dumb
+
 jdk:
     - oraclejdk8
     - oraclejdk7

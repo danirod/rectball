@@ -41,7 +41,4 @@ jacocoTestReport {
 }
 
 test { finalizedBy jacocoTestReport }
-
-tasks.coveralls {
-    dependsOn 'check'
-}
+tasks.coveralls { dependsOn 'check' }
