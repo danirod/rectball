@@ -1,6 +1,9 @@
 language: android
 sudo: false
-
+branches:
+    only:
+        - master
+        - devel
 env:
     - TERM=dumb
 
