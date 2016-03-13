@@ -16,8 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-apply plugin: "java"
-apply plugin: "jacoco"
+plugins {
+    id "java"
+    id "jacoco"
+    id "com.github.kt3k.coveralls" version "2.5.0"
+}
 
 sourceCompatibility = 1.7
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
@@ -40,3 +43,7 @@ jacocoTestReport {
 }
 
 test { finalizedBy jacocoTestReport }
+
+tasks.coveralls {
+    dependsOn 'check'
+}
