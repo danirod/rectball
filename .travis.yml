@@ -1,6 +1,11 @@
-language: java
+language: android
+sudo: false
+
 jdk:
     - oraclejdk8
     - oraclejdk7
-# This enables container based builds, newer and faster:
-sudo: false
+
+android:
+    components:
+        - build-tools-23.0.2
+        - android-23
