@@ -17,6 +17,7 @@
  */
 
 apply plugin: "java"
+apply plugin: "jacoco"
 
 sourceCompatibility = 1.7
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
@@ -29,3 +30,13 @@ dependencies {
     testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
     testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 }
+
+jacocoTestReport {
+    group = "core"
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+
+test { finalizedBy jacocoTestReport }
