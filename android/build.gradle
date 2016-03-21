@@ -41,7 +41,7 @@ android {
         applicationId "${rootProject.ext.packageName}.android"
         minSdkVersion 9
         targetSdkVersion 23
-        versionCode 407
+        versionCode 408
         versionName rectballVersion
     }
 
