@@ -48,8 +48,12 @@ public abstract class LegacyStatistics implements Statistics {
             String decodedJson = Base64Coder.decodeString(encodedJson);
 
             // Convert JSON to statistics
-            Json json = new Json();
-            return json.fromJson(es.danirod.rectball.model.Statistics.class, decodedJson);
+            JsonReader reader = new JsonReader();
+            JsonValue rootStats = reader.parse(decodedJson);
+            es.danirod.rectball.model.Statistics.StatisticSet total = parseTotal(rootStats);
+            es.danirod.rectball.model.Statistics.StatisticSet colors = parseColor(rootStats);
+            es.danirod.rectball.model.Statistics.StatisticSet sizes = parseSizes(rootStats);
+            return new es.danirod.rectball.model.Statistics(total, colors, sizes);
         } catch (Exception ex) {
             return new es.danirod.rectball.model.Statistics();
         }
@@ -57,4 +61,37 @@ public abstract class LegacyStatistics implements Statistics {
 
     protected abstract FileHandle getStatistics();
 
+    es.danirod.rectball.model.Statistics.StatisticSet parseTotal(JsonValue root) {
+        JsonValue total = root.get("total").get("values");
+        es.danirod.rectball.model.Statistics.StatisticSet stat = new es.danirod.rectball.model.Statistics.StatisticSet();
+        stat.incrementValue("score", total.getInt("score"));
+        stat.incrementValue("combinations", total.getInt("combinations"));
+        stat.incrementValue("balls", total.getInt("balls"));
+        stat.incrementValue("games", total.getInt("games"));
+        stat.incrementValue("time", total.getInt("time"));
+        return stat;
+    }
+
+    es.danirod.rectball.model.Statistics.StatisticSet parseColor(JsonValue root) {
+        JsonValue color = root.get("colors").get("values");
+        es.danirod.rectball.model.Statistics.StatisticSet stat = new es.danirod.rectball.model.Statistics.StatisticSet();
+        stat.incrementValue("red", color.getInt("red"));
+        stat.incrementValue("blue", color.getInt("blue"));
+        stat.incrementValue("green", color.getInt("green"));
+        stat.incrementValue("yellow", color.getInt("yellow"));
+        return stat;
+    }
+
+    es.danirod.rectball.model.Statistics.StatisticSet parseSizes(JsonValue root) {
+        JsonValue sizes = root.get("sizes").get("values");
+        es.danirod.rectball.model.Statistics.StatisticSet stat = new es.danirod.rectball.model.Statistics.StatisticSet();
+        JsonValue.JsonIterator size = sizes.iterator();
+        while (size.hasNext()) {
+            JsonValue val = size.next();
+            if (val.name.equals("class"))
+                continue;
+            stat.incrementValue(val.name, val.asInt());
+        }
+        return stat;
+    }
 }
