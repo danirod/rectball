@@ -29,7 +29,7 @@ public class Constants {
      * I'm still checking looking for a platform that works on any
      * platform.
      */
-    public static final String VERSION = "0.4.6";
+    public static final String VERSION = "0.4.7";
 
     /**
      * Whether the game is running in debug mode or not. Debug mode can be
