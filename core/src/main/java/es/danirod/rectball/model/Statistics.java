@@ -32,6 +32,12 @@ public class Statistics {
         sizes = new StatisticSet();
     }
 
+    public Statistics(StatisticSet total, StatisticSet colors, StatisticSet sizes) {
+        this.total = total;
+        this.colors = colors;
+        this.sizes = sizes;
+    }
+
     public StatisticSet getTotalData() {
         return total;
     }

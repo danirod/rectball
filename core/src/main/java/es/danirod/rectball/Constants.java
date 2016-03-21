@@ -29,14 +29,14 @@ public class Constants {
      * I'm still checking looking for a platform that works on any
      * platform.
      */
-    public static final String VERSION = "0.4.6";
+    public static final String VERSION = "0.4.7";
 
     /**
      * Whether the game is running in debug mode or not. Debug mode can be
      * enabled or not during development. Debug mode should be disabled on
      * final game release.
      */
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     /**
      * The width of the Scene2D stage. The bigger this value is, the greater
