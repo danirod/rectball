@@ -1,18 +1,23 @@
-# Rectball
+[![Build Status](https://travis-ci.org/danirod/rectball.svg)](https://travis-ci.org/danirod/rectball)
+[![Coverage Status](https://coveralls.io/repos/github/danirod/rectball/badge.svg?branch=devel)](https://coveralls.io/github/danirod/rectball?branch=devel)
+[![GitHub tag](https://img.shields.io/github/tag/danirod/rectball.svg)](https://github.com/danirod/rectball/releases/latest)
+[![GitHub license](https://img.shields.io/badge/license-GPL3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/danirod/rectball?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+![Rectball](docs/logo.jpg)
 
-This is the source code for Rectball.
+Rectball is a colorful puzzle game for Android. Make selections, clear rectangles and make points before the time runs out. Rectball is open source and runs on Android 2.3+.
+
+This is the open source repository for the Rectball code base. If you just want to download and play Rectball on your desktop, download the latest release [for Android](https://play.google.com/store/apps/details?id=es.danirod.rectball.android) and [PC (Windows / Linux / MacOS)](http://github.com/danirod/rectball/releases/latest).
 
 ## Building
 
-**NOTE**: Java 7 or greater is required to build this software.
+This project uses Gradle as build tool. You can use Gradle without installing anything right from your command line, as described below. It is also possible to integrate the project onto your IDE of choice. There are plugins for NetBeans and Eclipse. IntelliJ IDEA and Android Studio supports Gradle projects out of the box.
 
-Clone the repository or download the tarball or zipball.
+JDK 7 or greater is required to build the repository. Although JDK 8 is fully supported, source code uses Java 7 for Android compatibility.
 
-Open Terminal if you are on Linux or OS X or open PowerShell if you are on Microsoft Windows. Navigate to the directory where the source code that you have just downloaded is in, and build the software using Gradle.
+Open a Terminal if you are on Linux or MacOS X, or PowerShell / Command Prompt if you are on Windows, and go to the folder where you previously cloned Rectball. Use the following commands to build and run the software on Desktop and on Android.
 
-### Building the desktop version
+### Building the desktop version
 
 ```bash
 $ ./gradlew desktop:dist       on UNIX
@@ -35,9 +40,7 @@ $ ./gradlew android:assembleRelease     on UNIX
 > gradlew.bat android:assembleRelease   on Windows
 ```
 
-The generated APK can be found in **android/build/outputs/apk**. It cannot be installed in any Android phone unless it is signed.
-
-To quickly debug the software in your phone, connect your phone to your computer in USB debugging mode and run the following command:
+The generated APK can be found in **android/build/outputs/apk**. It cannot be installed in any Android phone unless it is signed. To quickly debug the software in your phone, connect your phone to your computer in USB debugging mode and run the following command:
 
 ```bash
 $ ./gradlew android:installDebug android:run    on UNIX

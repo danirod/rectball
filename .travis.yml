@@ -1,0 +1,21 @@
+language: android
+sudo: false
+branches:
+    only:
+        - master
+        - devel
+env:
+    - TERM=dumb
+
+jdk:
+    - oraclejdk8
+    - oraclejdk7
+
+android:
+    components:
+        - tools
+        - build-tools-23.0.2
+        - android-23
+        - extra-android-m2repository
+
+after_success: ./gradlew jacocoTestReport coveralls
