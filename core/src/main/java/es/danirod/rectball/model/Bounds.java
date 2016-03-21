@@ -26,6 +26,12 @@ public class Bounds {
     public final int minY;
     public final int maxX;
     public final int maxY;
+
+    public Bounds() {
+        // No arg constructor.
+        this.minX = this.minY = this.maxX = this.maxY = 0;
+    }
+
     public Bounds(int minX, int minY, int maxX, int maxY) {
         this.minX = minX;
         this.minY = minY;
