@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015 Dani Rodríguez.
+ * Copyright (C) 2015-2016 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,12 @@ public class Bounds {
     public final int minY;
     public final int maxX;
     public final int maxY;
+
+    public Bounds() {
+        // No arg constructor.
+        this.minX = this.minY = this.maxX = this.maxY = 0;
+    }
+
     public Bounds(int minX, int minY, int maxX, int maxY) {
         this.minX = minX;
         this.minY = minY;

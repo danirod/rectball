@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015 Dani Rodríguez.
+ * Copyright (C) 2015-2016 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,11 @@ public class Coordinate {
 
     public final int x;
     public final int y;
+
+    public Coordinate() {
+        this.x = 0;
+        this.y = 0;
+    }
 
     public Coordinate(int x, int y) {
         this.x = x;

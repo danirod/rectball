@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball
- * Copyright (C) 2015 Dani Rodríguez
+ * Copyright (C) 2015-2016 Dani Rodríguez
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +19,14 @@
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.scene2d.listeners.ScreenPopper;
+import es.danirod.rectball.SoundPlayer;
 
 /**
  * About screen.
@@ -34,11 +37,17 @@ public class AboutScreen extends AbstractScreen {
 
     private String credits = null;
 
+    private String license = null;
+
     private ScrollPane scroll = null;
+
+    private TextButton licenseButton = null;
 
     private TextButton backButton = null;
 
     private Label creditsLabel = null;
+
+    private boolean showingCredits;
 
     public AboutScreen(RectballGame game) {
         super(game);
@@ -46,12 +55,20 @@ public class AboutScreen extends AbstractScreen {
 
     @Override
     public void setUpInterface(Table table) {
+        // Credits are always visible.
+        showingCredits = true;
+
         if (credits == null) {
             credits = "Rectball " + Constants.VERSION + "\n" + Gdx.files.internal("credits.txt").readString("UTF-8");
+        }
+        if (license == null) {
+            license = Gdx.files.internal("license.txt").readString("UTF-8");
         }
         if (creditsLabel == null) {
             creditsLabel = new Label(credits, game.getSkin(), "small");
             creditsLabel.setWrap(true);
+        } else {
+            creditsLabel.setText(credits);
         }
         if (innerContainer == null) {
             innerContainer = new Table();
@@ -66,7 +83,29 @@ public class AboutScreen extends AbstractScreen {
             backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());
             backButton.addListener(new ScreenPopper(game));
         }
+        if (licenseButton == null) {
+            licenseButton = new TextButton(game.getLocale().get("about.license"), game.getSkin());
+            licenseButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    if (showingCredits) {
+                        game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
+                        creditsLabel.setText(license);
+                        licenseButton.setText(game.getLocale().get("about.credits"));
+                        event.cancel();
+                        showingCredits = false;
+                    } else {
+                        game.player.playSound(SoundPlayer.SoundCode.FAIL);
+                        creditsLabel.setText(credits);
+                        licenseButton.setText(game.getLocale().get("about.license"));
+                        event.cancel();
+                        showingCredits = true;
+                    }
+                }
+            });
+        }
         table.add(scroll).expand().fill().align(Align.top).row();
+        table.add(licenseButton).fillX().height(80).padTop(20).align(Align.bottom).row();
         table.add(backButton).fillX().height(80).padTop(20).align(Align.bottom).row();
     }
 
