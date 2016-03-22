@@ -157,7 +157,7 @@ public abstract class AbstractScreen implements Screen {
         return stage;
     }
 
-    private class BackButtonInputProcessor extends InputAdapter {
+    static class BackButtonInputProcessor extends InputAdapter {
 
         private final RectballGame game;
 
