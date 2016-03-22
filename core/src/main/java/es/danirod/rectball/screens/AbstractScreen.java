@@ -44,17 +44,17 @@ public abstract class AbstractScreen implements Screen {
      *
      * @since 0.3.0
      */
-    private final boolean handleBack;
+    final boolean handleBack;
 
     /**
      * Common stage.
      */
-    private Stage stage = null;
+    protected Stage stage = null;
 
     /**
      * Common table.
      */
-    private Table table = null;
+    protected Table table = null;
 
     AbstractScreen(RectballGame game) {
         this(game, true);
@@ -105,17 +105,20 @@ public abstract class AbstractScreen implements Screen {
         stage.draw();
     }
 
+    Viewport buildViewport() {
+        boolean landscape = Gdx.graphics.getWidth() > Gdx.graphics.getHeight();
+        float ar = landscape ?
+                (float) Gdx.graphics.getWidth() / Gdx.graphics.getHeight() :
+                (float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
+        float width = (float) VIEWPORT_WIDTH;
+        float height = landscape ? width : width * ar;
+        return new FitViewport(width, height);
+    }
+
     @Override
     public void show() {
         if (stage == null) {
-            boolean landscape = Gdx.graphics.getWidth() > Gdx.graphics.getHeight();
-            float ar = landscape ?
-                    (float) Gdx.graphics.getWidth() / Gdx.graphics.getHeight() :
-                    (float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
-            float width = (float) VIEWPORT_WIDTH;
-            float height = landscape ? width : width * ar;
-            Viewport viewport = new FitViewport(width, height);
-            stage = new Stage(viewport);
+            stage = new Stage(buildViewport(), game.getBatch());
         }
 
         if (table == null) {

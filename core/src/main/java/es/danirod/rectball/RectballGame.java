@@ -61,6 +61,9 @@ public class RectballGame extends Game {
     /** Whether the game is restoring state from an Android kill or not. */
     private boolean restoredState;
 
+    /** Batch instance in use by the game. */
+    Batch batch;
+
     /**
      * Create a new instance of Rectball.
      *
@@ -96,6 +99,9 @@ public class RectballGame extends Game {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
         }
 
+        // Set up SpriteBatch
+        batch = new SpriteBatch();
+
         // Add the screens.
         addScreen(new GameScreen(this));
         addScreen(new GameOverScreen(this));
@@ -115,6 +121,10 @@ public class RectballGame extends Game {
         } else {
             setScreen(screens.get(Screens.LOADING_BACK));
         }
+    }
+
+    public Batch getBatch() {
+        return batch;
     }
 
     public void finishLoading() {
