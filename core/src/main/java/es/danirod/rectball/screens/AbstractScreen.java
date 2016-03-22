@@ -81,11 +81,7 @@ public abstract class AbstractScreen implements Screen {
      *
      * @param table table that has been assigned to this screen.
      */
-    void setUpInterface(Table table) {
-        // FIXME: This method should be abstract.
-        // However, I cannot make it abstract until I refactor every class
-        // or errors may happen.
-    }
+    abstract void setUpInterface(Table table);
 
     @Override
     public void pause() {

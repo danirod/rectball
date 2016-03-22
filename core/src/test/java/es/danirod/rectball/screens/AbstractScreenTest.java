@@ -63,6 +63,7 @@ public class AbstractScreenTest {
         /* Tested screen. */
         screen = new AbstractScreen(fakeGame) {
             @Override public int getID() { return -1; }
+            @Override void setUpInterface(Table table) { }
             @Override Viewport buildViewport() { return fakeViewport; }
         };
     }
@@ -172,6 +173,7 @@ public class AbstractScreenTest {
     @Test public void whenBackIsNotHandledShouldUseStageForInput() {
         AbstractScreen screen = new AbstractScreen(fakeGame, false) {
             @Override public int getID() { return -1; }
+            @Override void setUpInterface(Table table) { }
             @Override Viewport buildViewport() { return fakeViewport; }
         };
         Gdx.input = mock(Input.class);
@@ -198,10 +200,8 @@ public class AbstractScreenTest {
      */
     @Test public void portraitViewportShouldBeVertical() {
         screen = new AbstractScreen(fakeGame) {
-            @Override
-            public int getID() {
-                return -1;
-            }
+            @Override public int getID() { return -1; }
+            @Override void setUpInterface(Table table) { }
         };
         Gdx.graphics = mock(Graphics.class);
         when(Gdx.graphics.getWidth()).thenReturn(240);
