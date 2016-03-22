@@ -278,7 +278,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         board.addAction(board.showRegion(bounds));
     }
 
-    private void showPartialScore(int score, Bounds bounds, boolean special) {
+    private void showPartialScore(int score, Bounds bounds, boolean special, boolean usedHelp) {
         // Calculate the center of the region.
         BallActor bottomLeftBall = board.getBall(bounds.minX, bounds.minY);
         BallActor upperRightBall = board.getBall(bounds.maxX, bounds.maxY);
@@ -301,7 +301,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         ));
         getStage().addActor(label);
 
-        if (special) {
+        if (usedHelp) {
+            label.setColor(Color.RED);
+        } else if (special) {
             label.setColor(Color.CYAN);
         }
     }
@@ -580,6 +582,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         for (BallActor selectedBall : selection)
             balls.add(selectedBall.getBall());
         final Bounds bounds = Bounds.fromBallList(balls);
+        boolean usedCheat = game.getState().getWiggledBounds() != null;
 
         // Change the colors of the selected region.
         board.addAction(Actions.sequence(
@@ -601,6 +604,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // Give some score to the user.
         ScoreCalculator calculator = new ScoreCalculator(game.getState().getBoard(), bounds);
         int givenScore = calculator.calculate();
+        if (usedCheat) {
+            givenScore *= 0.75f;
+        }
         game.getState().addScore(givenScore);
         score.giveScore(givenScore);
 
@@ -639,7 +645,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             // Was special?
             boolean special = givenScore != rows * cols;
             // Give score
-            showPartialScore(givenScore, bounds, special);
+            showPartialScore(givenScore, bounds, special, usedCheat);
             game.player.playSound(SoundCode.SUCCESS);
 
             // Give time
