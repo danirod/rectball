@@ -27,6 +27,8 @@ dependencies {
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"
 
     testCompile "junit:junit:4.11"
+    testCompile "org.mockito:mockito-all:1.10.19"
+
     testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
     testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
     testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
