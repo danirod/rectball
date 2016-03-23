@@ -1,3 +1,14 @@
+[0.4.8]
+- Added: Share button on Statistics screen (#50).
+- Added: Given score will be less if you have used a Hint to find the combo (#61).
+
+[0.4.7]
+- Fix critical bug on statistics loading that could lead to corruption (#66).
+
+[0.4.6]
+- Fixed: Game crashes if Back button is pressed while opening (#58).
+- Fixed: Game could crash during restoring on some cases (#64).
+
 [0.4.5]
 - TTF fonts have been removed in favour of good old BitmapFont files.
 - Fixed a bug on the Score actor adding the wrong score during the over-10K animation.
