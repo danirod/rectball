@@ -51,7 +51,7 @@ public class Statistics {
     }
 
     /**
-     * Group of related statistics. This class groups some related stats so that
+     * Group of related stats. This class groups some related stats so that
      * they can be stored together in the serialized file.
      */
     public static class StatisticSet {

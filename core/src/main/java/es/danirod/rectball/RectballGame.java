@@ -130,7 +130,7 @@ public class RectballGame extends Game {
     public void finishLoading() {
         // Load the remaining data.
         platform.score().readData();
-        statistics = platform.statistics().loadStatistics();
+        statistics = platform.stats().loadStatistics();
         player = new SoundPlayer(this);
         uiSkin = new RectballSkin(this);
         updateBallAtlas();

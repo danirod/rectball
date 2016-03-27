@@ -525,11 +525,11 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         game.getPlatform().score().registerScore(score, time);
         game.getPlatform().score().flushData();
 
-        // Save information about this game in the statistics.
+        // Save information about this game in the stats.
         game.statistics.getTotalData().incrementValue("score", game.getState().getScore());
         game.statistics.getTotalData().incrementValue("games");
         game.statistics.getTotalData().incrementValue("time", Math.round(game.getState().getElapsedTime()));
-        game.getPlatform().statistics().saveStatistics(game.statistics);
+        game.getPlatform().stats().saveStatistics(game.statistics);
 
         // Mark a combination that the user could do if he had enough time.
         if (game.getState().getWiggledBounds() == null) {

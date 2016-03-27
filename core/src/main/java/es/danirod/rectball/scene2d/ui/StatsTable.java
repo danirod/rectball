@@ -107,7 +107,7 @@ public class StatsTable extends Table {
         }
 
         for (Map.Entry<String, Integer> stat : set.getStats().entrySet()) {
-            String statName = game.getLocale().get("statistics.total." + stat.getKey());
+            String statName = game.getLocale().get("stats.total." + stat.getKey());
             String statValue = Integer.toString(stat.getValue());
 
             if (stat.getKey().equals("time")) {

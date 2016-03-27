@@ -38,7 +38,7 @@ import es.danirod.rectball.scene2d.listeners.ScreenPopper;
 import es.danirod.rectball.scene2d.ui.StatsTable;
 
 /**
- * Statistics screen.
+ * Stats screen.
  */
 public class StatisticsScreen extends AbstractScreen {
 

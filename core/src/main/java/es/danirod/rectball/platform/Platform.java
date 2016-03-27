@@ -43,7 +43,7 @@ public interface Platform {
 
     Preferences preferences();
 
-    Statistics statistics();
+    Stats stats();
 
     void toast(CharSequence msg);
 }
