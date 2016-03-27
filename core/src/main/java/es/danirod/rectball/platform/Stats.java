@@ -21,7 +21,7 @@ package es.danirod.rectball.platform;
 /**
  * @author danirod
  */
-public interface Statistics {
+public interface Stats {
 
     es.danirod.rectball.model.Statistics loadStatistics();
 

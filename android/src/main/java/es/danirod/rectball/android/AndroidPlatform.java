@@ -29,8 +29,8 @@ import es.danirod.rectball.platform.*;
 import es.danirod.rectball.platform.LegacyScores;
 import es.danirod.rectball.platform.Scores;
 import es.danirod.rectball.platform.Sharing;
-import es.danirod.rectball.platform.LegacyStatistics;
-import es.danirod.rectball.platform.Statistics;
+import es.danirod.rectball.platform.LegacyStats;
+import es.danirod.rectball.platform.Stats;
 
 /**
  * This contains code for the Android platform. Here code that uses Android
@@ -48,7 +48,7 @@ public class AndroidPlatform implements Platform {
 
     private final Preferences preferences;
 
-    private final Statistics statistics;
+    private final Stats stats;
 
     private final AndroidApplication app;
 
@@ -62,7 +62,7 @@ public class AndroidPlatform implements Platform {
                 return Gdx.files.local("scores");
             }
         };
-        statistics = new LegacyStatistics() {
+        stats = new LegacyStats() {
             @Override
             protected FileHandle getStatistics() {
                 return Gdx.files.local("stats");
@@ -87,8 +87,8 @@ public class AndroidPlatform implements Platform {
     }
 
     @Override
-    public Statistics statistics() {
-        return statistics;
+    public Stats stats() {
+        return stats;
     }
 
     @Override

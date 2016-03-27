@@ -21,18 +21,20 @@ package es.danirod.rectball.platform;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.*;
 
+import es.danirod.rectball.model.Statistics;
+
 /**
  * @author danirod
  */
-public abstract class LegacyStatistics implements Statistics {
+public abstract class LegacyStats implements Stats {
 
     @Override
-    public void saveStatistics(es.danirod.rectball.model.Statistics statistics) {
+    public void saveStatistics(Statistics statistics) {
         Json json = new Json();
         json.setOutputType(JsonWriter.OutputType.json);
         String jsonData = json.toJson(statistics);
 
-        // Encode statistics in Base64 and save it to a file.
+        // Encode stats in Base64 and save it to a file.
         String encodedJson = Base64Coder.encodeString(jsonData);
         FileHandle handle;
         handle = getStatistics();
@@ -40,30 +42,30 @@ public abstract class LegacyStatistics implements Statistics {
     }
 
     @Override
-    public es.danirod.rectball.model.Statistics loadStatistics() {
+    public Statistics loadStatistics() {
         try {
             // Read stats from file and decode them.
             FileHandle handle = getStatistics();
             String encodedJson = handle.readString();
             String decodedJson = Base64Coder.decodeString(encodedJson);
 
-            // Convert JSON to statistics
+            // Convert JSON to stats
             JsonReader reader = new JsonReader();
             JsonValue rootStats = reader.parse(decodedJson);
-            es.danirod.rectball.model.Statistics.StatisticSet total = parseTotal(rootStats);
-            es.danirod.rectball.model.Statistics.StatisticSet colors = parseColor(rootStats);
-            es.danirod.rectball.model.Statistics.StatisticSet sizes = parseSizes(rootStats);
-            return new es.danirod.rectball.model.Statistics(total, colors, sizes);
+            Statistics.StatisticSet total = parseTotal(rootStats);
+            Statistics.StatisticSet colors = parseColor(rootStats);
+            Statistics.StatisticSet sizes = parseSizes(rootStats);
+            return new Statistics(total, colors, sizes);
         } catch (Exception ex) {
-            return new es.danirod.rectball.model.Statistics();
+            return new Statistics();
         }
     }
 
     protected abstract FileHandle getStatistics();
 
-    es.danirod.rectball.model.Statistics.StatisticSet parseTotal(JsonValue root) {
+    Statistics.StatisticSet parseTotal(JsonValue root) {
         JsonValue total = root.get("total").get("values");
-        es.danirod.rectball.model.Statistics.StatisticSet stat = new es.danirod.rectball.model.Statistics.StatisticSet();
+        Statistics.StatisticSet stat = new Statistics.StatisticSet();
         stat.incrementValue("score", total.getInt("score"));
         stat.incrementValue("combinations", total.getInt("combinations"));
         stat.incrementValue("balls", total.getInt("balls"));
@@ -72,9 +74,9 @@ public abstract class LegacyStatistics implements Statistics {
         return stat;
     }
 
-    es.danirod.rectball.model.Statistics.StatisticSet parseColor(JsonValue root) {
+    Statistics.StatisticSet parseColor(JsonValue root) {
         JsonValue color = root.get("colors").get("values");
-        es.danirod.rectball.model.Statistics.StatisticSet stat = new es.danirod.rectball.model.Statistics.StatisticSet();
+        Statistics.StatisticSet stat = new Statistics.StatisticSet();
         stat.incrementValue("red", color.getInt("red"));
         stat.incrementValue("blue", color.getInt("blue"));
         stat.incrementValue("green", color.getInt("green"));
@@ -82,9 +84,9 @@ public abstract class LegacyStatistics implements Statistics {
         return stat;
     }
 
-    es.danirod.rectball.model.Statistics.StatisticSet parseSizes(JsonValue root) {
+    Statistics.StatisticSet parseSizes(JsonValue root) {
         JsonValue sizes = root.get("sizes").get("values");
-        es.danirod.rectball.model.Statistics.StatisticSet stat = new es.danirod.rectball.model.Statistics.StatisticSet();
+        Statistics.StatisticSet stat = new Statistics.StatisticSet();
         JsonValue.JsonIterator size = sizes.iterator();
         while (size.hasNext()) {
             JsonValue val = size.next();

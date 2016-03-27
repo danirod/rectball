@@ -27,8 +27,8 @@ import es.danirod.rectball.platform.*;
 import es.danirod.rectball.platform.LegacyScores;
 import es.danirod.rectball.platform.Scores;
 import es.danirod.rectball.platform.Sharing;
-import es.danirod.rectball.platform.LegacyStatistics;
-import es.danirod.rectball.platform.Statistics;
+import es.danirod.rectball.platform.LegacyStats;
+import es.danirod.rectball.platform.Stats;
 
 /**
  * This contains code for desktop platform. Here code that uses desktop JRE
@@ -46,7 +46,7 @@ public class DesktopPlatform implements Platform {
 
     private Preferences preferences;
 
-    private Statistics statistics;
+    private Stats stats;
 
     protected DesktopPlatform() {
         sharing = new DesktopSharing();
@@ -66,7 +66,7 @@ public class DesktopPlatform implements Platform {
             }
         };
         preferences = new LwjglPreferences("rectball", ".prefs/");
-        statistics = new LegacyStatistics() {
+        stats = new LegacyStats() {
             @Override
             protected FileHandle getStatistics() {
                 if (SharedLibraryLoader.isWindows) {
@@ -99,8 +99,8 @@ public class DesktopPlatform implements Platform {
     }
 
     @Override
-    public Statistics statistics() {
-        return statistics;
+    public Stats stats() {
+        return stats;
     }
 
     @Override
