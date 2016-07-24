@@ -142,7 +142,7 @@ public class RectballGame extends Game {
         }
 
         // Enter main menu.
-        pushScreen(Screens.MAIN_MENU);
+        pushScreen(Screens.GAME);
 
         // If we are restoring the game, push also the game screen.
         // Keep the main menu screen in the stack, we are going to need it

@@ -57,5 +57,13 @@ public class Constants {
      */
     public static final int STAGE_PADDING = 20;
 
+    /**
+     * Maximum time for the seconds.
+     */
     public static final int SECONDS = 30;
+
+    /**
+     * Warning trigger when the timer should render red.
+     */
+    public static final float WARNING = 0.2f;
 }
