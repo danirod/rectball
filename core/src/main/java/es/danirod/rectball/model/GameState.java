@@ -143,6 +143,16 @@ public class GameState {
         this.elapsedTime += time;
     }
 
+    /**
+     * Tells the game state that a few seconds have passed. This function will substract
+     * time from the remaining time and add it to the ellapsed time the user has lived.
+     * @param time
+     */
+    public void tick(float time) {
+        this.remainingTime -= time;
+        this.elapsedTime += time;
+    }
+
     public float getRemainingTime() {
         return remainingTime;
     }

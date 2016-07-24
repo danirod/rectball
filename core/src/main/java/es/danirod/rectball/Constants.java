@@ -29,7 +29,7 @@ public class Constants {
      * I'm still checking looking for a platform that works on any
      * platform.
      */
-    public static final String VERSION = "0.4.8";
+    public static final String VERSION = "0.5-dev";
 
     /**
      * Whether the game is running in debug mode or not. Debug mode can be
@@ -57,5 +57,13 @@ public class Constants {
      */
     public static final int STAGE_PADDING = 20;
 
+    /**
+     * Maximum time for the seconds.
+     */
     public static final int SECONDS = 30;
+
+    /**
+     * Warning trigger when the timer should render red.
+     */
+    public static final float WARNING = 0.2f;
 }
