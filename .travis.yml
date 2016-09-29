@@ -7,7 +7,7 @@ branches:
 env:
     - TERM=dumb
 
-jdk: oraclejdk7
+jdk: oraclejdk8
 
 android:
     components:
