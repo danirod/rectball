@@ -1,28 +1,21 @@
 language: android
 sudo: false
 branches:
-    only:
-        - master
-        - devel
-env:
-    - TERM=dumb
-
+  only:
+    - master
+    - devel
 jdk: oraclejdk8
 
-android:
-    components:
-        - tools
-        - tools
-        - platform-tools
-        - build-tools-24.0.2
-        - android-24
-        - extra-android-m2repository
-        - sys-img-armeabi-v7a-android-24
+cache:
+  directories:
+  - $HOME/.gradle/wrapper
+  - $HOME/.gradle/caches/modules-2/files-2.1
 
-before_script:
-- echo no | android create avd --force --name Test --target android-24 --abi armeabi-v7a
-- emulator -avd Test -no-skin -no-audio -no-window -gpu off &
-- android-wait-for-emulator
-- adb shell input keyevent 82 &
+android:
+  components:
+    - platform-tools
+    - build-tools-24.0.2
+    - android-24
+    - extra-android-m2repository
 
 after_success: ./gradlew jacocoTestReport coveralls
