@@ -17,10 +17,10 @@ android:
         - build-tools-24.0.2
         - android-24
         - extra-android-m2repository
-        - sys-img-x86-android-24
+        - sys-img-armeabi-v7a-android-24
 
 before_script:
-- echo no | android create avd --force --name Test --target android-24 --abi x86
+- echo no | android create avd --force --name Test --target android-24 --abi armeabi-v7a
 - emulator -avd Test -no-skin -no-audio -no-window -gpu off &
 - android-wait-for-emulator
 - adb shell input keyevent 82 &
