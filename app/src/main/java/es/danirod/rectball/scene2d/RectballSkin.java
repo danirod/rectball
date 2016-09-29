@@ -32,8 +32,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import es.danirod.rectball.RectballGame;
 
-import javax.xml.soap.Text;
-
 /**
  * Skin used in Rectball. Once this portion of code is more stable, this code
  * should be ported into a normal Skin file that can be used by Scene2D UI.

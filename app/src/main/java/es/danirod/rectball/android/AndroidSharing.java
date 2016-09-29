@@ -104,7 +104,7 @@ public class AndroidSharing implements Sharing {
             broken Android seems to be anyway.
          */
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // Use the fucking new Android permission system.
             File sharingPath = new File(app.getFilesDir(), "rectball-screenshots");
             File newScreenshot = new File(sharingPath, "screenshot.png");
