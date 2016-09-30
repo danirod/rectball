@@ -1,51 +1,27 @@
-/*
- * This file is part of Rectball
- * Copyright (C) 2015-2016 Dani Rodríguez
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 buildscript {
     repositories {
+        jcenter()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:2.1.3'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.4'
+        classpath 'net.saliman:gradle-cobertura-plugin:2.3.2'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
     }
 }
 
-ext {
-    appName = 'Rectball'
-    packageName = 'es.danirod.rectball'
-    rectballVersion = "0.4.8-dev"
-
-    gdxVersion = '1.9.2'
-}
-
 allprojects {
-    apply plugin: "maven"
-
-    archivesBaseName = 'rectball'
-    version = rectballVersion
-
     repositories {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
 
 task wrapper(type: Wrapper) {

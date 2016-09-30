@@ -3,7 +3,7 @@
 [![GitHub tag](https://img.shields.io/github/tag/danirod/rectball.svg)](https://github.com/danirod/rectball/releases/latest)
 [![GitHub license](https://img.shields.io/badge/license-GPL3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
 
-![Rectball](docs/logo.jpg)
+![Rectball](logo.jpg)
 
 Rectball is a colorful puzzle game for Android. Make selections, clear rectangles and make points before the time runs out. Rectball is open source and runs on Android 2.3+.
 

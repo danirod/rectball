@@ -1,0 +1,4 @@
+/build
+/src/main/jniLibs/armeabi/libgdx.so
+/src/main/jniLibs/armeabi-v7a/libgdx.so
+/src/main/jniLibs/x86/libgdx.so

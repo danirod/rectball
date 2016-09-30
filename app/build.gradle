@@ -1,0 +1,80 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'net.saliman.cobertura'
+apply plugin: 'com.github.kt3k.coveralls'
+
+configurations {
+    natives
+}
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+    defaultConfig {
+        applicationId "es.danirod.rectball.android"
+        minSdkVersion 9
+        targetSdkVersion 24
+        versionCode 408
+        versionName "0.4.8-dev"
+    }
+    lintOptions {
+        abortOnError false
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Kotlin
+    compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.4'
+
+    // libGDX
+    compile "com.badlogicgames.gdx:gdx-backend-android:1.9.2"
+    natives "com.badlogicgames.gdx:gdx-platform:1.9.2:natives-armeabi"
+    natives "com.badlogicgames.gdx:gdx-platform:1.9.2:natives-armeabi-v7a"
+    natives "com.badlogicgames.gdx:gdx-platform:1.9.2:natives-x86"
+
+    // Testing libraries.
+    testCompile "junit:junit:4.12"
+    testCompile "org.mockito:mockito-all:1.10.19"
+    testCompile "com.badlogicgames.gdx:gdx-backend-headless:1.9.2"
+    testCompile "com.badlogicgames.gdx:gdx:1.9.2"
+    testCompile "com.badlogicgames.gdx:gdx-platform:1.9.2:natives-desktop"
+    testCompile "org.slf4j:slf4j-api:1.7.10"
+
+    // Android compatibility libraries.
+    compile "com.android.support:appcompat-v7:24.2.0"
+}
+
+cobertura.coverageFormats = ['html', 'xml']
+
+// Extract the libGDX natives from the JARs.
+task copyAndroidNatives() {
+    file("src/main/jniLibs/armeabi/").mkdirs();
+    file("src/main/jniLibs/armeabi-v7a/").mkdirs();
+    file("src/main/jniLibs/x86/").mkdirs();
+
+    configurations.natives.files.each { jar ->
+        def outputDir = null
+        if(jar.name.endsWith("natives-armeabi-v7a.jar")) outputDir = file("src/main/jniLibs/armeabi-v7a")
+        if(jar.name.endsWith("natives-armeabi.jar")) outputDir = file("src/main/jniLibs/armeabi")
+        if(jar.name.endsWith("natives-x86.jar")) outputDir = file("src/main/jniLibs/x86")
+        if(outputDir != null) {
+            copy {
+                from zipTree(jar)
+                into outputDir
+                include "*.so"
+            }
+        }
+    }
+}
