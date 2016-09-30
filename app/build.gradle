@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'jacoco-android'
+apply plugin: 'net.saliman.cobertura'
 apply plugin: 'com.github.kt3k.coveralls'
 
 configurations {
@@ -43,16 +43,13 @@ dependencies {
     testCompile "com.badlogicgames.gdx:gdx-backend-headless:1.9.2"
     testCompile "com.badlogicgames.gdx:gdx:1.9.2"
     testCompile "com.badlogicgames.gdx:gdx-platform:1.9.2:natives-desktop"
+    testCompile "org.slf4j:slf4j-api:1.7.10"
 
     // Android compatibility libraries.
     compile "com.android.support:appcompat-v7:24.2.0"
 }
 
-jacocoAndroidUnitTestReport {
-    csv.enabled false
-    html.enabled true
-    xml.enabled true
-}
+cobertura.coverageFormats = ['html', 'xml']
 
 // Extract the libGDX natives from the JARs.
 task copyAndroidNatives() {
