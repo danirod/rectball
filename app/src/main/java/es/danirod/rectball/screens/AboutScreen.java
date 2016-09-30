@@ -25,8 +25,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.scene2d.listeners.ScreenPopper;
 import es.danirod.rectball.SoundPlayer;
+import es.danirod.rectball.scene2d.listeners.ScreenPopper;
 
 /**
  * About screen.
