@@ -535,6 +535,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         if (game.getState().getWiggledBounds() == null) {
             CombinationFinder combo = CombinationFinder.create(game.getState().getBoard());
             game.getState().setWiggledBounds(combo.getCombination());
+        } else {
+            game.statistics.getTotalData().incrementValue("cheats");
         }
         for (int y = 0; y < game.getState().getBoard().getSize(); y++) {
             for (int x = 0; x < game.getState().getBoard().getSize(); x++) {
@@ -583,6 +585,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             balls.add(selectedBall.getBall());
         final Bounds bounds = Bounds.fromBallList(balls);
         boolean usedCheat = game.getState().getWiggledBounds() != null;
+
+        if (usedCheat)
+            game.statistics.getTotalData().incrementValue("cheats");
 
         // Change the colors of the selected region.
         board.addAction(Actions.sequence(
