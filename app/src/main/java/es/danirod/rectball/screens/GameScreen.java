@@ -630,6 +630,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // PERFECT combination, just display PERFECT.
         int boardSize = game.getState().getBoard().getSize() - 1;
         if (bounds.equals(new Bounds(0, 0, boardSize, boardSize))) {
+            game.statistics.getTotalData().incrementValue("perfect");
+
             // Give score
             Label label = new Label("PERFECT", game.getSkin(), "monospace");
             label.setX((getStage().getViewport().getWorldWidth() - label.getWidth()) / 2);
