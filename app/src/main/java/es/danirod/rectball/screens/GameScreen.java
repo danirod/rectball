@@ -656,8 +656,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             game.player.playSound(SoundCode.SUCCESS);
 
             // Give time
-            float givenTime = 4f;
-            timer.giveTime(givenTime, 0.25f);
+            float givenTime = 4f + (givenScore) / 10f;
+            timer.giveTime(givenTime, 0.5f);
         }
     }
 
