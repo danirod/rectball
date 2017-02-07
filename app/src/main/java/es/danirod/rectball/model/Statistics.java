@@ -18,6 +18,8 @@
 
 package es.danirod.rectball.model;
 
+import com.badlogic.gdx.Gdx;
+
 import java.util.*;
 
 public class Statistics {
