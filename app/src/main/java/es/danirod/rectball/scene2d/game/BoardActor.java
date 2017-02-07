@@ -22,7 +22,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
+
 import es.danirod.rectball.model.*;
 import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
 
@@ -34,19 +34,10 @@ public class BoardActor extends Table {
 
     private final Set<BallActor> selection = new HashSet<>();
 
-    /**
-     * Subscribers that will receive notifications about selection events.
-     */
     private final List<BallSelectionListener> subscribers = new ArrayList<>();
 
-    /**
-     * The board.
-     */
     private final Board board;
 
-    /**
-     * Is the board coloured? If false, all the balls will be grayed.
-     */
     private boolean coloured = false;
 
     public BoardActor(TextureAtlas atlas, Board board) {
@@ -75,39 +66,96 @@ public class BoardActor extends Table {
     }
 
     /**
-     * Select a ball.
+     * Notifies the board that this ball has been selected. Because the board can see the entire board, it is the board
+     * the entity that checks whether the selection is complete and whether the selection is successful. This board
+     * can abort the current selection if the constraints for picking a valid combination fail at any point.
+     *
+     * @param x row index for the ball that has been selected.
+     * @param y column index for the ball that has been selected.
      */
     public void select(int x, int y) {
         BallActor selectedBall = actors[x][y];
         if (selection.add(selectedBall)) {
-            // This ball has been selected. Check if we already have four.
+            /* We can pick up to 4 balls */
             if (selection.size() == 4) {
-                // Yes we have, check the selection.
-                List<Ball> ballSelection = new ArrayList<>();
-                for (BallActor ball : selection)
-                    ballSelection.add(ball.getBall());
-                if (board.selection(ballSelection)) {
-                    // It is a valid selection. Notify our subscribers.
-                    for (BallSelectionListener subscriber : subscribers)
-                        subscriber.onSelectionSucceeded(new ArrayList<>(selection));
-                } else {
-                    // It is not a valid selection. Notify our subscribers.
-                    for (BallSelectionListener subscriber : subscribers)
-                        subscriber.onSelectionFailed(new ArrayList<>(selection));
-                }
-                // Valid or not, we clear our current selection. We don't notify
-                // our subscribers about the clear event. Subscribers should
-                // assume on selection events that the selection is cleared.
-                for (BallActor selected : selection) {
-                    selected.quietlyUnselect();
-                }
-                selection.clear();
+                finishSelection();
             } else {
-                // No we don't, just select it.
-                for (BallSelectionListener subscriber : subscribers)
-                    subscriber.onBallSelected(selectedBall);
+                selectBall(selectedBall);
             }
         }
+    }
+
+    private List<Ball> getModelBalls() {
+        List<Ball> ballSelection = new ArrayList<>();
+        for(BallActor ball : selection) {
+            ballSelection.add(ball.getBall());
+        }
+        return ballSelection;
+    }
+
+    /**
+     * This method is executed when the selection is not complete.
+     * @param ball
+     */
+    private void selectBall(BallActor ball) {
+        /* Every ball must have the same color. */
+        if (!sameColors(selection)) {
+            for (BallSelectionListener subscriber : subscribers)
+                subscriber.onSelectionFailed(new ArrayList<>(selection));
+            for (BallActor selected : selection) {
+                selected.quietlyUnselect();
+            }
+            selection.clear();
+        } else {
+            for (BallSelectionListener subscriber : subscribers) {
+                subscriber.onBallSelected(ball);
+            }
+        }
+    }
+
+    /**
+     * This method is executed when the selection is complete. It asserts the selection is valid and notifies the game
+     * so that it can trigger the proper animations depending on whether it has been successful or not.
+     */
+    private void finishSelection() {
+        if (selection.size() != 4) throw new IllegalStateException("Select 4 balls first");
+
+        /* Check whether the selection is valid and provide the valid message to our subscribers. */
+        if (board.selection(getModelBalls())) {
+            for (BallSelectionListener subscriber : subscribers) {
+                subscriber.onSelectionSucceeded(new ArrayList<>(selection));
+            }
+        } else {
+            for (BallSelectionListener subscriber : subscribers) {
+                subscriber.onSelectionFailed(new ArrayList<>(selection));
+            }
+        }
+
+        /* Clear the selection. */
+        for (BallActor selected : selection) {
+            selected.quietlyUnselect();
+        }
+        selection.clear();
+    }
+
+    /**
+     * Asserts that all the balls in this selection are of the same color.
+     * @param balls list of balls that should be checked.
+     * @return true if the balls have the same color; otherwise false.
+     */
+    private boolean sameColors(Iterable<BallActor> balls) {
+        BallColor color = null;
+        for (BallActor ball : balls) {
+            BallColor thisColor = ball.getBall().getColor();
+            if (color == null) {
+                color = thisColor;
+            } else {
+                if (color != thisColor) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
