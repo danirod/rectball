@@ -54,6 +54,7 @@ dependencies {
 
     // Android compatibility libraries.
     compile "com.android.support:appcompat-v7:24.2.0"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 cobertura.coverageFormats = ['html', 'xml']
@@ -77,4 +78,7 @@ task copyAndroidNatives() {
             }
         }
     }
+}
+repositories {
+    mavenCentral()
 }
