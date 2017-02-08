@@ -1,8 +1,7 @@
-www.danirod.es/rectball
-www.github.com/danirod/rectball
+http://rectball.danirod.es
 Follow me on Twitter: @danirod93
 
-Copyright (C) 2015-2016 danirod
+Copyright (C) 2015-2017 danirod
 This game is released under the terms of GNU General Public License v3. See the repository for details.
 
 TRANSLATIONS
