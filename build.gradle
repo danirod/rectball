@@ -5,7 +5,7 @@ buildscript {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
     dependencies {
-        classpath 'com.google.gms:google-services:1.4.0-beta3'
+        classpath 'com.google.gms:google-services:3.0.0'
         classpath 'com.android.tools.build:gradle:2.3.2'
         classpath 'net.saliman:gradle-cobertura-plugin:2.3.2'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
