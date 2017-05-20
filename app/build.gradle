@@ -23,7 +23,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 25
         versionCode 408
-        versionName "0.4.8-dev"
+        versionName "0.4.8"
         signingConfig signingConfigs.config
     }
     lintOptions {
@@ -39,6 +39,7 @@ android {
         debug {
             buildConfigField "boolean", "FINE_DEBUG", "true"
             buildConfigField "boolean", "ANALYTICS_DRY_RUN", "true"
+            versionNameSuffix "-dev"
         }
     }
     /*
