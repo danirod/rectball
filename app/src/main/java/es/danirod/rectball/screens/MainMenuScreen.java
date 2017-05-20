@@ -29,6 +29,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
+import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.scene2d.listeners.ScreenJumper;
 import es.danirod.rectball.scene2d.listeners.TrackingListener;
 import es.danirod.rectball.scene2d.ui.ConfirmDialog;
@@ -105,38 +106,40 @@ public class MainMenuScreen extends AbstractScreen {
                     }
             ));
         }
-        if (leaderboard == null) {
-            leaderboard = new ImageButton(game.getSkin(), "leaderboard");
-            leaderboard.addListener(new TrackingListener(game, "UX", "Clicked", "Leaderboard",
-                    new ChangeListener() {
-                        @Override
-                        public void changed(ChangeEvent event, Actor actor) {
-                            game.player.playSound(SoundPlayer.SoundCode.SELECT);
-                            if (!game.getPlatform().google().isSignedIn()) {
-                                game.getPlatform().google().signIn();
-                            } else {
-                                game.getPlatform().google().showLeaderboards();
+        if (BuildConfig.FLAVOR.equals("gpe")) {
+            if (leaderboard == null) {
+                leaderboard = new ImageButton(game.getSkin(), "leaderboard");
+                leaderboard.addListener(new TrackingListener(game, "UX", "Clicked", "Leaderboard",
+                        new ChangeListener() {
+                            @Override
+                            public void changed(ChangeEvent event, Actor actor) {
+                                game.player.playSound(SoundPlayer.SoundCode.SELECT);
+                                if (!game.getPlatform().google().isSignedIn()) {
+                                    game.getPlatform().google().signIn();
+                                } else {
+                                    game.getPlatform().google().showLeaderboards();
+                                }
+                                event.cancel();
                             }
-                            event.cancel();
-                        }
-                    }));
+                        }));
 
-        }
-        if (achievements == null) {
-            achievements = new ImageButton(game.getSkin(), "achievements");
-            achievements.addListener(new TrackingListener(game, "UX", "Clicked", "Achievements",
-                    new ChangeListener() {
-                        @Override
-                        public void changed(ChangeEvent event, Actor actor) {
-                            game.player.playSound(SoundPlayer.SoundCode.SELECT);
-                            if (!game.getPlatform().google().isSignedIn()) {
-                                game.getPlatform().google().signIn();
-                            } else {
-                                game.getPlatform().google().showAchievements();
+            }
+            if (achievements == null) {
+                achievements = new ImageButton(game.getSkin(), "achievements");
+                achievements.addListener(new TrackingListener(game, "UX", "Clicked", "Achievements",
+                        new ChangeListener() {
+                            @Override
+                            public void changed(ChangeEvent event, Actor actor) {
+                                game.player.playSound(SoundPlayer.SoundCode.SELECT);
+                                if (!game.getPlatform().google().isSignedIn()) {
+                                    game.getPlatform().google().signIn();
+                                } else {
+                                    game.getPlatform().google().showAchievements();
+                                }
+                                event.cancel();
                             }
-                            event.cancel();
-                        }
-                    }));
+                        }));
+            }
         }
         if (quit == null) {
             quit = new ImageButton(game.getSkin(), "quit");
@@ -158,10 +161,16 @@ public class MainMenuScreen extends AbstractScreen {
             extraButtons.defaults().expandX().fillX().pad(20).height(100).uniformX();
             extraButtons.add(settings);
             extraButtons.add(statistics);
-            extraButtons.add(leaderboard).row();
+            if (BuildConfig.FLAVOR.equals("gpe")) {
+                extraButtons.add(leaderboard);
+            }
+            extraButtons.row();
             extraButtons.add(star);
             extraButtons.add(about);
-            extraButtons.add(achievements).row();
+            if (BuildConfig.FLAVOR.equals("gpe")) {
+                extraButtons.add(achievements);
+            }
+            extraButtons.row();
         }
 
         table.add(title).padLeft(40).padRight(40).align(Align.top).row();

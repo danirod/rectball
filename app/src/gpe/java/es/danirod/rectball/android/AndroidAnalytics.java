@@ -18,7 +18,10 @@
 
 package es.danirod.rectball.android;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import es.danirod.rectball.platform.Analytics;
 
 import java.util.Map;
@@ -31,23 +34,30 @@ import java.util.Map;
  * @author danirod
  * @since 0.4.0
  */
-public class AndroidAnalytics implements Analytics {
+class AndroidAnalytics implements Analytics {
 
     private AndroidLauncher app;
 
+    private Tracker tracker;
+
     public AndroidAnalytics(AndroidLauncher app) {
         this.app = app;
+
+        GoogleAnalytics analytics = GoogleAnalytics.getInstance(app);
+        analytics.setDryRun(BuildConfig.ANALYTICS_DRY_RUN);
+        tracker = analytics.newTracker(R.xml.global_tracker);
+        tracker.enableExceptionReporting(true);
     }
 
     @Override
     public void sendScreen(String screenID) {
-        app.getTracker().setScreenName(screenID);
-        app.getTracker().send(new HitBuilders.ScreenViewBuilder().build());
+        tracker.setScreenName(screenID);
+        tracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override
     public void sendEvent(String category, String action) {
-        app.getTracker().send(new HitBuilders.EventBuilder()
+        tracker.send(new HitBuilders.EventBuilder()
                 .setCategory(category)
                 .setAction(action)
                 .build());
@@ -55,7 +65,7 @@ public class AndroidAnalytics implements Analytics {
 
     @Override
     public void sendEvent(String category, String action, String label) {
-        app.getTracker().send(new HitBuilders.EventBuilder()
+        tracker.send(new HitBuilders.EventBuilder()
                 .setCategory(category)
                 .setAction(action)
                 .setLabel(label)
@@ -70,7 +80,7 @@ public class AndroidAnalytics implements Analytics {
         for (Map.Entry<Integer, String> dimension : dimensions.entrySet()) {
             event.setCustomDimension(dimension.getKey(), dimension.getValue());
         }
-        app.getTracker().send(event.build());
+        tracker.send(event.build());
     }
 
     @Override
@@ -81,7 +91,7 @@ public class AndroidAnalytics implements Analytics {
         for (Map.Entry<Integer, Float> dimension : metrics.entrySet()) {
             event.setCustomMetric(dimension.getKey(), dimension.getValue());
         }
-        app.getTracker().send(event.build());
+        tracker.send(event.build());
     }
 
     @Override
@@ -95,6 +105,6 @@ public class AndroidAnalytics implements Analytics {
         for (Map.Entry<Integer, Float> dimension : metrics.entrySet()) {
             event.setCustomMetric(dimension.getKey(), dimension.getValue());
         }
-        app.getTracker().send(event.build());
+        tracker.send(event.build());
     }
 }

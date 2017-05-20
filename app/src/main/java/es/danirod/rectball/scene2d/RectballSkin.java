@@ -23,14 +23,13 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.android.BuildConfig;
 
 /**
  * Skin used in Rectball. Once this portion of code is more stable, this code
@@ -160,7 +159,7 @@ public class RectballSkin extends Skin {
             this.add("blue", buttonStyle);
         }
 
-        {
+        if (BuildConfig.FLAVOR.equals("gpe")) {
             NinePatchDrawable upButton = generateButton(Color.valueOf("8BC34A"), Color.valueOf("8BC34A").lerp(Color.BLACK, 0.25f));
             NinePatchDrawable downButton = generateButton(Color.valueOf("8BC34A").lerp(Color.BLACK, 0.25f), Color.valueOf("8BC34A"));
             BitmapFont font = game.manager.get("fonts/normal.fnt");
@@ -198,7 +197,7 @@ public class RectballSkin extends Skin {
             add("quit", crossStyle);
         }
 
-        {
+        if (BuildConfig.FLAVOR.equals("gpe")) {
             ImageButtonStyle buttonLeaderboard = new ImageButtonStyle(get("google", TextButtonStyle.class));
             Texture texture = game.manager.get("google/gpg_leaderboard.png");
             TextureRegion region = new TextureRegion(texture);
@@ -207,7 +206,7 @@ public class RectballSkin extends Skin {
             add("leaderboard", buttonLeaderboard);
         }
 
-        {
+        if (BuildConfig.FLAVOR.equals("gpe")) {
             ImageButtonStyle buttonAchievements = new ImageButtonStyle(get("google", TextButtonStyle.class));
             Texture texture = game.manager.get("google/gpg_achievements.png");
             TextureRegion region = new TextureRegion(texture);

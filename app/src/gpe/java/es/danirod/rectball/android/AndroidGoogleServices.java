@@ -18,6 +18,8 @@
 
 package es.danirod.rectball.android;
 
+import android.widget.Toast;
+
 import com.google.games.basegameutils.GameHelper;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -30,15 +32,29 @@ import es.danirod.rectball.platform.GoogleServices;
  * @author danirod
  * @since 0.4.0
  */
-public class AndroidGoogleServices implements GoogleServices {
+class AndroidGoogleServices implements GoogleServices {
 
     private AndroidApplication app;
 
-    private GameHelper helper;
+    GameHelper gameHelper;
 
-    public AndroidGoogleServices(AndroidLauncher app) {
+    public AndroidGoogleServices(final AndroidLauncher app) {
         this.app = app;
-        this.helper = app.getGameHelper();
+        this.gameHelper = new GameHelper(app, GameHelper.CLIENT_GAMES);
+
+        // Set up gameHelper.
+        this.gameHelper.setup(new GameHelper.GameHelperListener() {
+
+            @Override
+            public void onSignInFailed() {
+                Toast.makeText(app.getContext(), "Cannot sign in to Google Play Services", Toast.LENGTH_LONG);
+            }
+
+            @Override
+            public void onSignInSucceeded() {
+
+            }
+        });
     }
 
     @Override
@@ -47,7 +63,7 @@ public class AndroidGoogleServices implements GoogleServices {
             app.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    helper.beginUserInitiatedSignIn();
+                    gameHelper.beginUserInitiatedSignIn();
                 }
             });
         } catch (Exception ex) {
@@ -61,8 +77,8 @@ public class AndroidGoogleServices implements GoogleServices {
             app.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (helper.isSignedIn()) {
-                        helper.signOut();
+                    if (gameHelper.isSignedIn()) {
+                        gameHelper.signOut();
                     }
                 }
             });
@@ -73,7 +89,7 @@ public class AndroidGoogleServices implements GoogleServices {
 
     @Override
     public boolean isSignedIn() {
-        return helper.isSignedIn();
+        return gameHelper.isSignedIn();
     }
 
     @Override
@@ -81,38 +97,38 @@ public class AndroidGoogleServices implements GoogleServices {
         Gdx.app.debug("GoogleServices", "Submitting score: " + score);
         Gdx.app.debug("GoogleServices", "Submitting time: " + time);
 
-        if (helper.isSignedIn()) {
+        if (gameHelper.isSignedIn()) {
             // Submit information about scores and time for the leaderboards.
-            Games.Leaderboards.submitScore(helper.getApiClient(),
+            Games.Leaderboards.submitScore(gameHelper.getApiClient(),
                     app.getString(R.string.leaderboard_highest_score), score);
-            Games.Leaderboards.submitScore(helper.getApiClient(),
+            Games.Leaderboards.submitScore(gameHelper.getApiClient(),
                     app.getString(R.string.leaderboard_highest_length), time);
 
             // Increment the achievements.
             if (score > 250) {
-                Games.Achievements.unlock(helper.getApiClient(),
+                Games.Achievements.unlock(gameHelper.getApiClient(),
                         app.getString(R.string.achievement_starter));
             }
             if (score > 2500) {
-                Games.Achievements.unlock(helper.getApiClient(),
+                Games.Achievements.unlock(gameHelper.getApiClient(),
                         app.getString(R.string.achievement_experienced));
             }
             if (score > 7500) {
-                Games.Achievements.unlock(helper.getApiClient(),
+                Games.Achievements.unlock(gameHelper.getApiClient(),
                         app.getString(R.string.achievement_master));
             }
 
             if (score > 10000) {
-                Games.Achievements.unlock(helper.getApiClient(),
+                Games.Achievements.unlock(gameHelper.getApiClient(),
                         app.getString(R.string.achievement_score_breaker));
             }
 
             if (score > 500) {
-                Games.Achievements.increment(helper.getApiClient(),
+                Games.Achievements.increment(gameHelper.getApiClient(),
                         app.getString(R.string.achievement_casual_player), 1);
-                Games.Achievements.increment(helper.getApiClient(),
+                Games.Achievements.increment(gameHelper.getApiClient(),
                         app.getString(R.string.achievement_perseverant), 1);
-                Games.Achievements.increment(helper.getApiClient(),
+                Games.Achievements.increment(gameHelper.getApiClient(),
                         app.getString(R.string.achievement_commuter), 1);
             }
         }
@@ -120,11 +136,11 @@ public class AndroidGoogleServices implements GoogleServices {
 
     @Override
     public void showLeaderboards() {
-        app.startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(helper.getApiClient()), 0);
+        app.startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(gameHelper.getApiClient()), 0);
     }
 
     @Override
     public void showAchievements() {
-        app.startActivityForResult(Games.Achievements.getAchievementsIntent(helper.getApiClient()), 1);
+        app.startActivityForResult(Games.Achievements.getAchievementsIntent(gameHelper.getApiClient()), 1);
     }
 }
