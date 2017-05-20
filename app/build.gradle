@@ -8,8 +8,8 @@ configurations {
 }
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -17,7 +17,7 @@ android {
     defaultConfig {
         applicationId "es.danirod.rectball.android"
         minSdkVersion 9
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 408
         versionName "0.4.8-dev"
     }
@@ -53,7 +53,7 @@ dependencies {
     testCompile "org.slf4j:slf4j-api:1.7.10"
 
     // Android compatibility libraries.
-    compile "com.android.support:appcompat-v7:24.2.0"
+    compile "com.android.support:appcompat-v7:25.3.1"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
