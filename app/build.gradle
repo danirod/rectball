@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
 apply plugin: 'net.saliman.cobertura'
 apply plugin: 'com.github.kt3k.coveralls'
 
@@ -35,9 +34,6 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    // Kotlin
-    compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.4'
-
     // libGDX
     compile "com.badlogicgames.gdx:gdx-backend-android:1.9.2"
     natives "com.badlogicgames.gdx:gdx-platform:1.9.2:natives-armeabi"
@@ -54,7 +50,6 @@ dependencies {
 
     // Android compatibility libraries.
     compile "com.android.support:appcompat-v7:25.3.1"
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 cobertura.coverageFormats = ['html', 'xml']
