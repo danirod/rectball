@@ -24,15 +24,18 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Timer;
+
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer.SoundCode;
+import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.scene2d.listeners.ScreenJumper;
 import es.danirod.rectball.scene2d.listeners.ScreenPopper;
 import es.danirod.rectball.scene2d.ui.SwitchActor;
 
 public class SettingsScreen extends AbstractScreen {
 
-
+    private TextButton googlePlayLogin;
 
     public SettingsScreen(RectballGame game) {
         super(game);
@@ -108,6 +111,49 @@ public class SettingsScreen extends AbstractScreen {
                 settingsTable.add(fullscreen).fillX().expandX().row();
             }
             settingsTable.add(doTutorial).padTop(50).height(60).fillX().expandX().row();
+        }
+
+        // Log out button
+        if (BuildConfig.FLAVOR.equals("gpe")) {
+            String logoutText = game.getPlatform().google().isSignedIn() ?
+                    game.getLocale().get("gplay.logout") :
+                    game.getLocale().get("gplay.login");
+            if (googlePlayLogin == null) {
+                googlePlayLogin = new TextButton(logoutText, game.getSkin());
+                googlePlayLogin.addListener(new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        // TODO: This code will probably need to be made async due to how Google works.
+                        if (game.getPlatform().google().isSignedIn()) {
+                            // Proceed to sign out the user.
+                            game.getPlatform().analytic().sendEvent("UX", "Clicked", "Sign out from Google Play");
+                            game.getPlatform().google().signOut();
+                        } else {
+                            // Send signed out event.
+                            game.getPlatform().analytic().sendEvent("UX", "Clicked", "Sign in to Google Play");
+                            game.getPlatform().google().signIn();
+                        }
+                        game.player.playSound(SoundCode.SELECT);
+                        googlePlayLogin.setText(game.getLocale().get("gplay.updating"));
+                        googlePlayLogin.setDisabled(true);
+                        Timer.schedule(new Timer.Task() {
+
+                            @Override
+                            public void run() {
+                                String logoutText = game.getPlatform().google().isSignedIn() ?
+                                        game.getLocale().get("gplay.logout") :
+                                        game.getLocale().get("gplay.login");
+                                googlePlayLogin.setText(logoutText);
+                                googlePlayLogin.setDisabled(false);
+                            }
+                        }, 2f);
+                        event.cancel();
+                    }
+                });
+                settingsTable.add(googlePlayLogin).height(60).padTop(50).fillX().expandX().row();
+            } else {
+                googlePlayLogin.setText(logoutText);
+            }
         }
 
         // Settings pane.

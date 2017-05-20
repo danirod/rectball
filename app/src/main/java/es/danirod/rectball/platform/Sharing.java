@@ -51,4 +51,9 @@ public interface Sharing {
      */
     void shareGameOverScreenshot(Pixmap pixmap, int score, int time);
 
+    /**
+     * Open the game in the associated store.
+     */
+    void openInStore();
+
 }

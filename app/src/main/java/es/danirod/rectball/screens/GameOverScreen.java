@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.*;
 import es.danirod.rectball.scene2d.listeners.ScreenPopper;
+import es.danirod.rectball.scene2d.listeners.TrackingListener;
 
 public class GameOverScreen extends AbstractScreen {
 
@@ -70,7 +71,7 @@ public class GameOverScreen extends AbstractScreen {
 
         // Add replay button.
         ImageButton replay = new ImageButton(game.getSkin(), "repeat");
-        replay.addListener(new ScreenPopper(game));
+        replay.addListener(new TrackingListener(game, "UX", "Clicked", "Replay", new ScreenPopper(game)));
         buttonRow.add(replay);
 
         // Add share button
@@ -78,6 +79,7 @@ public class GameOverScreen extends AbstractScreen {
         share.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                game.getPlatform().analytic().sendEvent("UX", "Clicked", "Share score");
                 game.player.playSound(SoundPlayer.SoundCode.SELECT);
 
                 // Request a screenshot of the score region. The following
@@ -96,7 +98,7 @@ public class GameOverScreen extends AbstractScreen {
 
         // Add menu button.
         ImageButton menu = new ImageButton(game.getSkin(), "house");
-        menu.addListener(new ScreenPopper(game, true));
+        menu.addListener(new TrackingListener(game, "UX", "Clicked", "Main menu", new ScreenPopper(game, true)));
         buttonRow.add(menu);
 
         table.add(scoresTable).fillX().expand().row();
@@ -128,6 +130,11 @@ public class GameOverScreen extends AbstractScreen {
 
         @Override
         public boolean keyDown(int keycode) {
+            return keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE;
+        }
+
+        @Override
+        public boolean keyUp(int keycode) {
             if (keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE) {
                 game.player.playSound(SoundPlayer.SoundCode.FAIL);
                 game.clearStack();

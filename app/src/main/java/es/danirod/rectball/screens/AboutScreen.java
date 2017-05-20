@@ -26,6 +26,7 @@ import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
+import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.scene2d.listeners.ScreenPopper;
 
 /**
@@ -59,7 +60,7 @@ public class AboutScreen extends AbstractScreen {
         showingCredits = true;
 
         if (credits == null) {
-            credits = "Rectball " + Constants.VERSION + "\n" + Gdx.files.internal("credits.txt").readString("UTF-8");
+            credits = "Rectball " + BuildConfig.VERSION_NAME + "\n" + Gdx.files.internal("credits.txt").readString("UTF-8");
         }
         if (license == null) {
             license = Gdx.files.internal("license.txt").readString("UTF-8");

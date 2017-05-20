@@ -167,6 +167,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
                             getStage().addAction(Actions.delay(waitingTime, Actions.run(new Runnable() {
                                 @Override
                                 public void run() {
+                                    game.getPlatform().analytic().sendEvent("Tutorial", "Finished");
                                     game.getPlatform().preferences().putBoolean("tutorialAsked", true);
                                     game.getPlatform().preferences().flush();
                                     game.popScreen();
@@ -510,6 +511,8 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
          */
         private final int alignment;
 
+        private final int messageID;
+
         /**
          * Create a new state.
          *
@@ -520,6 +523,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
          */
         public State(int messageID, int alignment, String button, final Runnable dismiss) {
             this.alignment = alignment;
+            this.messageID = messageID;
 
             dialog = new MessageDialog(game.getSkin(), game.getLocale().get("tutorial.line" + messageID), game.getLocale().get(button));
             dialog.setCallback(new MessageDialog.MessageCallback() {
@@ -534,6 +538,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         }
 
         public void start() {
+            game.getPlatform().analytic().sendEvent("Tutorial", "Step reached", "Step " + messageID);
             dialog.show(getStage(), Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.1f)));
             float height;
             if ((alignment & Align.top) != 0) {

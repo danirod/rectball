@@ -24,21 +24,6 @@ package es.danirod.rectball;
 public class Constants {
 
     /**
-     * Game version. This can be used in the About menu and in the title
-     * on Desktop. In the near future this could come from Gradle but
-     * I'm still checking looking for a platform that works on any
-     * platform.
-     */
-    public static final String VERSION = "0.4.8";
-
-    /**
-     * Whether the game is running in debug mode or not. Debug mode can be
-     * enabled or not during development. Debug mode should be disabled on
-     * final game release.
-     */
-    public static final boolean DEBUG = true;
-
-    /**
      * The width of the Scene2D stage. The bigger this value is, the greater
      * the space is going to be for child elements of this screen. However,
      * the smallest everything is going to be seen, specially in small screen.s

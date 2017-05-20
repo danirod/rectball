@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
 apply plugin: 'net.saliman.cobertura'
 apply plugin: 'com.github.kt3k.coveralls'
 
@@ -8,53 +7,86 @@ configurations {
 }
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
+    signingConfigs {
+        config {
+            // Declare these variables on gradle.properties. Do not put sensitive data here.
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+            storeFile file(RELEASE_STORE_FILE)
+            storePassword RELEASE_STORE_PASSWORD
+        }
     }
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId "es.danirod.rectball.android"
         minSdkVersion 9
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 408
         versionName "0.4.8-dev"
+        signingConfig signingConfigs.config
     }
     lintOptions {
         abortOnError false
     }
     buildTypes {
         release {
-            minifyEnabled false
+            buildConfigField "boolean", "FINE_DEBUG", "false"
+            buildConfigField "boolean", "ANALYTICS_DRY_RUN", "false"
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            buildConfigField "boolean", "FINE_DEBUG", "true"
+            buildConfigField "boolean", "ANALYTICS_DRY_RUN", "true"
+        }
+    }
+    /*
+     * Support multiple product flavours in order to have two builds. The default one is the
+     * GPE (Google Play Edition). This is the flavour you download from the Google Play Store.
+     * However, there is the OSP (Open Source Project), which has the same features but it is
+     * not linked against Google Play SDK nor Firebase SDK, therefore it doesn't depend on
+     * non-free components.
+     *
+     * People who don't want non-free in their coffee should build the OSP version. In fact,
+     * the GPE version will probably fail to build unless you provide the API keys for the SDKs
+     * and I'm not sharing these in the repository.
+     */
+    productFlavors {
+        gpe {
+            // No version name suffix because this is the default version.
+        }
+        osp {
+            // Mark this version as the Open Source Project.
+            versionNameSuffix "-OSP"
         }
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
-    // Kotlin
-    compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.4'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
 
     // libGDX
-    compile "com.badlogicgames.gdx:gdx-backend-android:1.9.2"
+    compile 'com.badlogicgames.gdx:gdx-backend-android:1.9.2'
     natives "com.badlogicgames.gdx:gdx-platform:1.9.2:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-platform:1.9.2:natives-armeabi-v7a"
     natives "com.badlogicgames.gdx:gdx-platform:1.9.2:natives-x86"
 
     // Testing libraries.
-    testCompile "junit:junit:4.12"
-    testCompile "org.mockito:mockito-all:1.10.19"
-    testCompile "com.badlogicgames.gdx:gdx-backend-headless:1.9.2"
-    testCompile "com.badlogicgames.gdx:gdx:1.9.2"
-    testCompile "com.badlogicgames.gdx:gdx-platform:1.9.2:natives-desktop"
-    testCompile "org.slf4j:slf4j-api:1.7.10"
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-all:1.10.19'
+    testCompile 'com.badlogicgames.gdx:gdx-backend-headless:1.9.2'
+    testCompile 'com.badlogicgames.gdx:gdx:1.9.2'
+    testCompile 'com.badlogicgames.gdx:gdx-platform:1.9.2:natives-desktop'
+    testCompile 'org.slf4j:slf4j-api:1.7.10'
 
     // Android compatibility libraries.
-    compile "com.android.support:appcompat-v7:24.2.0"
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile 'com.android.support:appcompat-v7:25.3.1'
+
+    // Google Play Services. DON'T BUMP to 10.2.0 or it will require a min SDK version of 14.
+    // TODO: Investigate how many people are still playing on Android 2.3 and Android 3.0.
+    gpeCompile "com.google.android.gms:play-services-analytics:10.0.1"
+    gpeCompile "com.google.android.gms:play-services-games:10.0.1"
 }
 
 cobertura.coverageFormats = ['html', 'xml']
@@ -82,3 +114,5 @@ task copyAndroidNatives() {
 repositories {
     mavenCentral()
 }
+
+apply plugin: 'com.google.gms.google-services'

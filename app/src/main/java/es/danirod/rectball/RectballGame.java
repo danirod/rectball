@@ -30,6 +30,8 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ScreenUtils;
+
+import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.model.Statistics;
 import es.danirod.rectball.platform.Platform;
@@ -95,7 +97,7 @@ public class RectballGame extends Game {
 
     @Override
     public void create() {
-        if (Constants.DEBUG) {
+        if (BuildConfig.FINE_DEBUG) {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
         }
 
@@ -185,6 +187,12 @@ public class RectballGame extends Game {
         manager.load("ui/icons.png", Texture.class, texParameters);
         manager.load("ui/yellow_patch.png", Texture.class);
         manager.load("ui/switch.png", Texture.class, texParameters);
+
+        // Load Google Play Games assets.
+        if (BuildConfig.FLAVOR.equals("gpe")) {
+            manager.load("google/gpg_achievements.png", Texture.class, texParameters);
+            manager.load("google/gpg_leaderboard.png", Texture.class, texParameters);
+        }
 
         manager.load("fonts/bold.fnt", BitmapFont.class, fntParameters);
         manager.load("fonts/monospace.fnt", BitmapFont.class);

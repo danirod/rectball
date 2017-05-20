@@ -18,32 +18,40 @@
 
 package es.danirod.rectball.android;
 
+import android.content.Intent;
 import android.os.Bundle;
-
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
+
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.model.GameState;
 
 public class AndroidLauncher extends AndroidApplication {
+
+    public static final String PACKAGE = "es.danirod.rectball.android";
+
+    private AndroidPlatform platform;
 
     private RectballGame game;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Set up platform.
+        platform = new AndroidPlatform(this);
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-
-        AndroidPlatform platform = new AndroidPlatform(this);
 
         if (platform.preferences().getBoolean("fullscreen")) {
             config.useImmersiveMode = true;
@@ -96,5 +104,23 @@ public class AndroidLauncher extends AndroidApplication {
         } else {
             Gdx.app.debug("Rectball", "Not playing, no need to save state.");
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        platform.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        platform.onStop();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        platform.onActivityResult(requestCode, resultCode, data);
     }
 }
