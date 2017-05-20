@@ -51,7 +51,7 @@ public class AndroidLauncher extends AndroidApplication {
     synchronized Tracker getTracker() {
         if (tracker == null) {
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-            analytics.setDryRun(Constants.DEBUG);
+            analytics.setDryRun(BuildConfig.ANALYTICS_DRY_RUN);
             tracker = analytics.newTracker(R.xml.global_tracker);
             tracker.enableExceptionReporting(true);
         }

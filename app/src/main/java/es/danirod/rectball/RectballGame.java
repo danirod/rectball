@@ -30,6 +30,8 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ScreenUtils;
+
+import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.model.Statistics;
 import es.danirod.rectball.platform.Platform;
@@ -95,7 +97,7 @@ public class RectballGame extends Game {
 
     @Override
     public void create() {
-        if (Constants.DEBUG) {
+        if (BuildConfig.FINE_DEBUG) {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
         }
 
