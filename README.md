@@ -1,33 +1,31 @@
-[![Build Status](https://travis-ci.org/danirod/rectball.svg)](https://travis-ci.org/danirod/rectball)
-[![Coverage Status](https://coveralls.io/repos/github/danirod/rectball/badge.svg?branch=devel)](https://coveralls.io/github/danirod/rectball?branch=devel)
-[![GitHub tag](https://img.shields.io/github/tag/danirod/rectball.svg)](https://github.com/danirod/rectball/releases/latest)
-[![GitHub license](https://img.shields.io/badge/license-GPL3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
+<p align="center">
+    <a href="https://github.com/danirod/rectball/releases/latest"><img src="https://img.shields.io/github/tag/danirod/rectball.svg"></a>
+    <a href="http://www.gnu.org/licenses/gpl-3.0.html"><img src="https://img.shields.io/badge/license-GPL3-blue.svg"></a>
+</p>
 
-![Rectball](logo.jpg)
+<p align="center">
+  <img src="http://i.imgur.com/HLGaW33.jpg" alt="Rectball">
+</p>
 
-<a href='https://play.google.com/store/apps/details?id=es.danirod.rectball.android&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' style='width: 25%; height: 25%;'/></a>
+<p align="center">
+  <a href='https://play.google.com/store/apps/details?id=es.danirod.rectball.android&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' style='width: 25%; height: 25%;'/></a>
+</p>
 
 Rectball is a colorful puzzle game for Android. Make selections, clear rectangles and make points before the time runs out. Rectball is open source and runs on Android 2.3+.
 
-## Building
+## Requirements
 
-This project uses Gradle as build tool. You can use Gradle without installing anything right from your command line, as described below. It is also possible to integrate the project onto your IDE of choice. There are plugins for NetBeans and Eclipse. IntelliJ IDEA and Android Studio supports Gradle projects out of the box.
+* [libGDX](http://libgdx.badlogicgames.com/)
 
-The JDK 8 or greater is required to build this project. Note that JDK 7 is not supported since Android Tools version 24. Note that the development branch has not been tested with older versions of Android yet.
+## Flavors
 
-Open a Terminal if you are on Linux or MacOS X, or PowerShell / Command Prompt if you are on Windows, and go to the folder where you previously cloned Rectball.
+This project has two flavors: OSP (Open Source) and GPE (Google Play).
 
-```bash
-$ ./gradlew app:assembleRelease     on UNIX
-> gradlew.bat app:assembleRelease   on Windows
-```
+GPE is linked against non-free SDKs such as Firebase and Google Play Services SDK. This is the default version that you get from the Play Store and the one that has achievements, leaderboards and such.
 
-The generated APK can be found in **android/build/outputs/apk**. It cannot be installed in any Android phone unless it is signed. To quickly debug the software in your phone, connect your phone to your computer in USB debugging mode and run the following command:
+However, GPE requires API keys for those services so you won't probably be able to build those versions. In fact I don't expect you to be able to, because those files are stripped from the repository and can only be downloaded from the Developer Console using my Google Account credentials.
 
-```bash
-$ ./gradlew app:installDebug android:run    on UNIX
-> gradlew.bat app:installDebug android:run  on Windows
-```
+So, yeah. If you want to build the project from sources, you'll have to use the Open Source version. This one is 100% free and only depends on the libGDX framework.
 
 ## License
 
