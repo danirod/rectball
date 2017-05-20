@@ -1,4 +1,10 @@
 [0.4.8]
+- Dropped support for desktop. Rectball is now a mobile first application.
+- Google Play Edition version of the game is now open source -- API keys are removed.
+- Streamlined development: both Open Source and Play Edition will coexists as flavours.
+- Fixed: Combination is now unselected as soon as a ball with the wrong color is selected (#56).
+- Added: Statistics now track how many hints the user has used (#70).
+- Added: More time is now rewarded the bigger the combination made is (#72).
 - Added: Share button on Statistics screen (#50).
 - Added: Given score will be less if you have used a Hint to find the combo (#61).
 
