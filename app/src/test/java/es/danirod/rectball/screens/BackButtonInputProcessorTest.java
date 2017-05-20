@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.SoundPlayer;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

@@ -18,36 +18,27 @@
 
 package es.danirod.rectball.platform;
 
-import com.badlogic.gdx.Preferences;
+import java.util.Map;
 
 /**
- * This is the interface for platform code. Platform code is code that depends
- * on the platform that the application is running. Whenever features can only
- * in a particular platform, platform dependent code should be used. For
- * instance, adding Google APIs or Android APIs must be done in Android code
- * to prevent desktop releases from failing.
+ * This interface provides analytic services integration. Analytic services
+ * allow to get information about the game. This can be used, for instance,
+ * for getting information about the game during an error report.
  *
  * @author danirod
  * @since 0.4.0
  */
-public interface Platform {
+public interface Analytics {
 
-    /**
-     * Get the sharing services instance attached to this platform.
-     *
-     * @return sharing services instance.
-     */
-    Sharing sharing();
+    void sendEvent(String category, String action);
 
-    Scores score();
+    void sendEvent(String category, String action, String label);
 
-    Preferences preferences();
+    void sendScreen(String screenID);
 
-    Statistics statistics();
+    void sendEventWithDimensions(String category, String action, Map<Integer, String> dimensions);
 
-    Analytics analytic();
+    void sendEventWithMetrics(String category, String action, Map<Integer, Float> metrics);
 
-    GoogleServices google();
-
-    void toast(CharSequence msg);
+    void sendEventWithDimensionsAndMetrics(String category, String action, Map<Integer, String> dimensions, Map<Integer, Float> metrics);
 }

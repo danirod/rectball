@@ -159,6 +159,14 @@ public class RectballSkin extends Skin {
             TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
             this.add("blue", buttonStyle);
         }
+
+        {
+            NinePatchDrawable upButton = generateButton(Color.valueOf("8BC34A"), Color.valueOf("8BC34A").lerp(Color.BLACK, 0.25f));
+            NinePatchDrawable downButton = generateButton(Color.valueOf("8BC34A").lerp(Color.BLACK, 0.25f), Color.valueOf("8BC34A"));
+            BitmapFont font = game.manager.get("fonts/normal.fnt");
+            TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
+            this.add("google", buttonStyle);
+        }
     }
 
     private ImageButtonStyle buildImageButton(TextButtonStyle source, String region) {
@@ -188,6 +196,24 @@ public class RectballSkin extends Skin {
             Drawable redCross = newDrawable("iconCross", 0.9f, 0.1f, 0.1f, 1f);
             ImageButtonStyle crossStyle = new ImageButtonStyle(null, null, null, redCross, null, null);
             add("quit", crossStyle);
+        }
+
+        {
+            ImageButtonStyle buttonLeaderboard = new ImageButtonStyle(get("google", TextButtonStyle.class));
+            Texture texture = game.manager.get("google/gpg_leaderboard.png");
+            TextureRegion region = new TextureRegion(texture);
+            TextureRegionDrawable leaderboard = new TextureRegionDrawable(region);
+            buttonLeaderboard.imageUp = leaderboard;
+            add("leaderboard", buttonLeaderboard);
+        }
+
+        {
+            ImageButtonStyle buttonAchievements = new ImageButtonStyle(get("google", TextButtonStyle.class));
+            Texture texture = game.manager.get("google/gpg_achievements.png");
+            TextureRegion region = new TextureRegion(texture);
+            TextureRegionDrawable achievements = new TextureRegionDrawable(region);
+            buttonAchievements.imageUp = achievements;
+            add("achievements", buttonAchievements);
         }
     }
 

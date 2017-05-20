@@ -18,6 +18,8 @@
 
 package es.danirod.rectball.android;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -64,6 +66,19 @@ public class AndroidSharing implements Sharing {
         String message = game.getLocale().format("sharing.text", score);
         message += " https://play.google.com/store/apps/details?id=es.danirod.rectball.android";
         shareScreenshotWithMessage(pixmap, message);
+    }
+
+    @Override
+    public void openInStore() {
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("market://details?id=" + AndroidLauncher.PACKAGE));
+            app.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("https://play.google.com/store/apps/details?id= " + AndroidLauncher.PACKAGE));
+            app.startActivity(intent);
+        }
     }
 
     /**

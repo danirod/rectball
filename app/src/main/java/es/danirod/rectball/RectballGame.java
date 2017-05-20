@@ -186,6 +186,10 @@ public class RectballGame extends Game {
         manager.load("ui/yellow_patch.png", Texture.class);
         manager.load("ui/switch.png", Texture.class, texParameters);
 
+        // Load Google Play Games assets.
+        manager.load("google/gpg_achievements.png", Texture.class, texParameters);
+        manager.load("google/gpg_leaderboard.png", Texture.class, texParameters);
+
         manager.load("fonts/bold.fnt", BitmapFont.class, fntParameters);
         manager.load("fonts/monospace.fnt", BitmapFont.class);
         manager.load("fonts/monospaceOutline.fnt", BitmapFont.class);

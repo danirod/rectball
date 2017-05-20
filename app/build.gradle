@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'net.saliman.cobertura'
 apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: 'com.google.gms.google-services'
 
 configurations {
     natives
@@ -50,6 +51,10 @@ dependencies {
 
     // Android compatibility libraries.
     compile "com.android.support:appcompat-v7:25.3.1"
+
+    // Google Play Services
+    compile "com.google.android.gms:play-services-analytics:8.1.0"
+    compile "com.google.android.gms:play-services-games:8.1.0"
 }
 
 cobertura.coverageFormats = ['html', 'xml']

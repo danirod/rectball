@@ -18,6 +18,7 @@
 
 package es.danirod.rectball.android;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -25,21 +26,59 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
+import com.google.games.basegameutils.GameHelper;
+
+import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.model.GameState;
 
 public class AndroidLauncher extends AndroidApplication {
+
+    public static final String PACKAGE = "es.danirod.rectball.android";
+    private GameHelper gameHelper;
+
+    private Tracker tracker;
+
+    synchronized Tracker getTracker() {
+        if (tracker == null) {
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            analytics.setDryRun(Constants.DEBUG);
+            tracker = analytics.newTracker(R.xml.global_tracker);
+            tracker.enableExceptionReporting(true);
+        }
+        return tracker;
+    }
 
     private RectballGame game;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Create game helper
+        gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
+        gameHelper.setup(new GameHelper.GameHelperListener() {
+
+            @Override
+            public void onSignInFailed() {
+                Toast.makeText(getContext(), "Cannot sign in to Google Play Services", Toast.LENGTH_LONG);
+            }
+
+            @Override
+            public void onSignInSucceeded() {
+
+            }
+        });
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 
@@ -96,5 +135,27 @@ public class AndroidLauncher extends AndroidApplication {
         } else {
             Gdx.app.debug("Rectball", "Not playing, no need to save state.");
         }
+    }
+
+    GameHelper getGameHelper() {
+        return gameHelper;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        gameHelper.onStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        gameHelper.onStop();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        gameHelper.onActivityResult(requestCode, resultCode, data);
     }
 }

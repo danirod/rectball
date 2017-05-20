@@ -50,12 +50,17 @@ public class AndroidPlatform implements Platform {
 
     private final Statistics statistics;
 
+    private final GoogleServices google;
+
+    private final AndroidAnalytics analytic;
+
     private final AndroidApplication app;
 
-    protected AndroidPlatform(AndroidApplication app) {
+    protected AndroidPlatform(AndroidLauncher app) {
         this.app = app;
 
         sharing = new AndroidSharing(app);
+        analytic = new AndroidAnalytics(app);
         score = new LegacyScores() {
             @Override
             protected FileHandle getScoresFile() {
@@ -69,6 +74,7 @@ public class AndroidPlatform implements Platform {
             }
         };
         preferences = new AndroidPreferences(app.getSharedPreferences("rectball", Context.MODE_PRIVATE));
+        google = new AndroidGoogleServices(app);
     }
 
     @Override
@@ -89,6 +95,16 @@ public class AndroidPlatform implements Platform {
     @Override
     public Statistics statistics() {
         return statistics;
+    }
+
+    @Override
+    public GoogleServices google() {
+        return google;
+    }
+
+    @Override
+    public Analytics analytic() {
+        return analytic;
     }
 
     @Override
