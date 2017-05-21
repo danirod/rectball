@@ -1,19 +1,31 @@
 language: android
-sudo: false
-branches:
-    only:
-        - master
-        - devel
+jdk: oraclejdk8
+
 env:
+  global:
     - TERM=dumb
 
-jdk: oraclejdk7
+cache:
+  directories:
+  - $HOME/.gradle/wrapper/
+  - $HOME/.gradle/caches/
 
 android:
-    components:
-        - tools
-        - build-tools-23.0.2
-        - android-23
-        - extra-android-m2repository
+  components:
+    - tools
+    - platform-tools
+    - build-tools-25.0.3
+    - android-25
+    - extra-android-m2repository
+  licenses:
+    - android-sdk-preview-license-52d11cd2
+    - android-sdk-license-.+
+    - google-gdk-license-.+
 
-after_success: ./gradlew jacocoTestReport coveralls
+after_success: ./gradlew cobertura coveralls
+
+sudo: false
+branches:
+  only:
+    - master
+    - devel
