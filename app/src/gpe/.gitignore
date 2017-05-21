@@ -2,4 +2,4 @@
 google-services.json
 
 # Game achievements and leaderboads keys. Download from the Play Console.
-src/main/res/values/games-ids.xml
+res/values/games-ids.xml
