@@ -16,14 +16,14 @@ android {
             storePassword RELEASE_STORE_PASSWORD
         }
     }
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "es.danirod.rectball.android"
-        minSdkVersion 9
-        targetSdkVersion 25
-        versionCode 409
-        versionName "0.4.8.1"
+        minSdkVersion 14
+        targetSdkVersion 26
+        versionCode 410
+        versionName "0.4.9"
         signingConfig signingConfigs.config
     }
     lintOptions {
@@ -82,12 +82,12 @@ dependencies {
     testCompile 'org.slf4j:slf4j-api:1.7.10'
 
     // Android compatibility libraries.
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:appcompat-v7:26.0.1'
 
     // Google Play Services. DON'T BUMP to 10.2.0 or it will require a min SDK version of 14.
     // TODO: Investigate how many people are still playing on Android 2.3 and Android 3.0.
-    gpeCompile "com.google.android.gms:play-services-analytics:10.0.1"
-    gpeCompile "com.google.android.gms:play-services-games:10.0.1"
+    gpeCompile "com.google.android.gms:play-services-analytics:11.0.4"
+    gpeCompile "com.google.android.gms:play-services-games:11.0.4"
 }
 
 cobertura.coverageFormats = ['html', 'xml']
