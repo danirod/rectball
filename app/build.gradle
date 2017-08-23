@@ -81,11 +81,7 @@ dependencies {
     testCompile 'com.badlogicgames.gdx:gdx-platform:1.9.2:natives-desktop'
     testCompile 'org.slf4j:slf4j-api:1.7.10'
 
-    // Android compatibility libraries.
-    compile 'com.android.support:appcompat-v7:26.0.1'
-
-    // Google Play Services. DON'T BUMP to 10.2.0 or it will require a min SDK version of 14.
-    // TODO: Investigate how many people are still playing on Android 2.3 and Android 3.0.
+    // Google Play Services are required on the Google Play version.
     gpeCompile "com.google.android.gms:play-services-analytics:11.0.4"
     gpeCompile "com.google.android.gms:play-services-games:11.0.4"
 }

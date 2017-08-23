@@ -1,15 +1,5 @@
 <resources>
-
-    <style name="GdxTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-
-        <!-- This makes the window title on the Recent Applications screen coloured on Android 5.0+ -->
-        <item name="colorPrimary">@color/rectballColor</item>
-
-        <!-- This makes the action bar the same colour than the Rectball background color on Android 5.0+ -->
-        <item name="colorPrimaryDark">@color/rectballColor</item>
-
-        <!-- Generic background color. -->
+    <style name="GdxTheme" parent="android:Theme.Holo.Light.NoActionBar">
         <item name="android:windowBackground">@color/rectballColor</item>
     </style>
-
 </resources>

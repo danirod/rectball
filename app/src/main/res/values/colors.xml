@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="rectballColor">#4C6666</color>
+    <color name="rectballColorDark">#365151</color>
 </resources>
