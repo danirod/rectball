@@ -18,8 +18,10 @@
 
 package es.danirod.rectball.scene2d;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -50,6 +52,7 @@ public class RectballSkin extends Skin {
      */
     public RectballSkin(RectballGame game) {
         this.game = game;
+        addBitmapFonts();
         addPixmapStyles();
         addLabelStyles();
         addTextButtonStyles();
@@ -59,6 +62,41 @@ public class RectballSkin extends Skin {
         addNinePatchesStyles();
         addCheckboxStyles();
         addScrollPaneStyles();
+    }
+
+    private void addBitmapFonts() {
+        FreeTypeFontGenerator ftgenRegular = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Coda-Regular.ttf"));
+        FreeTypeFontGenerator ftgenBold = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Coda-Regular.ttf"));
+
+        FreeTypeFontGenerator.FreeTypeFontParameter ftparNormal = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        ftparNormal.minFilter = Texture.TextureFilter.Linear;
+        ftparNormal.magFilter = Texture.TextureFilter.Linear;
+        ftparNormal.gamma = 1.2f;
+        ftparNormal.renderCount = 3;
+        ftparNormal.size = 30;
+        ftgenRegular.scaleForPixelHeight(ftparNormal.size);
+        add("normal", ftgenRegular.generateFont(ftparNormal));
+
+        FreeTypeFontGenerator.FreeTypeFontParameter ftparSmall = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        ftparSmall.minFilter = Texture.TextureFilter.Linear;
+        ftparSmall.magFilter = Texture.TextureFilter.Linear;
+        ftparSmall.gamma = 2f;
+        ftparSmall.renderCount = 2;
+        ftparSmall.size = 25;
+        ftgenRegular.scaleForPixelHeight(ftparSmall.size);
+        add("small", ftgenRegular.generateFont(ftparSmall));
+
+        FreeTypeFontGenerator.FreeTypeFontParameter ftparBold = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        ftparBold.minFilter = Texture.TextureFilter.Linear;
+        ftparBold.magFilter = Texture.TextureFilter.Linear;
+        ftparBold.gamma = 2f;
+        ftparBold.renderCount = 5;
+        ftparBold.size = 30;
+        ftgenBold.scaleForPixelHeight(ftparBold.size);
+        add("bold", ftgenBold.generateFont(ftparBold));
+
+        ftgenRegular.dispose();
+        ftgenBold.dispose();
     }
 
     private void addScrollPaneStyles() {
@@ -84,7 +122,7 @@ public class RectballSkin extends Skin {
         style.checkboxOn = new TextureRegionDrawable(on);
         style.checkboxOff = new TextureRegionDrawable(off);
         style.checkboxOnDisabled = style.checkboxOffDisabled = new TextureRegionDrawable(broken);
-        style.font = game.manager.get("fonts/normal.fnt");
+        style.font = get("normal", BitmapFont.class);
         add("default", style);
     }
 
@@ -94,21 +132,21 @@ public class RectballSkin extends Skin {
      */
     private void addLabelStyles() {
         // Build the label style for normal font.
-        BitmapFont normalFont = game.manager.get("fonts/normal.fnt");
+        BitmapFont normalFont = get("normal", BitmapFont.class);
         LabelStyle normalStyle = new LabelStyle(normalFont, Color.WHITE);
         this.add("default", normalStyle);
 
         // Build the label style for bold font.
-        BitmapFont boldFont = game.manager.get("fonts/bold.fnt");
+        BitmapFont boldFont = get("bold", BitmapFont.class);
         LabelStyle boldStyle = new LabelStyle(boldFont, Color.WHITE);
         this.add("bold", boldStyle);
 
         // Build the label style for bold font.
-        BitmapFont smallFont = game.manager.get("fonts/small.fnt");
+        BitmapFont smallFont = get("small", BitmapFont.class);
         LabelStyle smallStyle = new LabelStyle(smallFont, Color.WHITE);
         this.add("small", smallStyle);
 
-        BitmapFont bigFont = game.manager.get("fonts/normal.fnt");
+        BitmapFont bigFont = get("normal", BitmapFont.class);
         LabelStyle bigStyle = new LabelStyle(bigFont, Color.WHITE);
         this.add("big", bigStyle);
 
@@ -138,7 +176,7 @@ public class RectballSkin extends Skin {
         {
             NinePatchDrawable upButton = generateButton(Color.GRAY, Color.DARK_GRAY);
             NinePatchDrawable downButton = generateButton(Color.DARK_GRAY, Color.GRAY);
-            BitmapFont font = game.manager.get("fonts/normal.fnt");
+            BitmapFont font = get("normal", BitmapFont.class);
             TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
             this.add("default", buttonStyle);
         }
@@ -146,7 +184,7 @@ public class RectballSkin extends Skin {
         {
             NinePatchDrawable upButton = generateButton(Color.valueOf("37c837"), Color.valueOf("37c837").lerp(Color.BLACK, 0.25f));
             NinePatchDrawable downButton = generateButton(Color.valueOf("37c837").lerp(Color.BLACK, 0.25f), Color.valueOf("37c837"));
-            BitmapFont font = game.manager.get("fonts/normal.fnt");
+            BitmapFont font = get("normal", BitmapFont.class);
             TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
             this.add("green", buttonStyle);
         }
@@ -154,7 +192,7 @@ public class RectballSkin extends Skin {
         {
             NinePatchDrawable upButton = generateButton(Color.valueOf("0066cc"), Color.valueOf("0066cc").lerp(Color.BLACK, 0.25f));
             NinePatchDrawable downButton = generateButton(Color.valueOf("0066cc").lerp(Color.BLACK, 0.25f), Color.valueOf("0066cc"));
-            BitmapFont font = game.manager.get("fonts/normal.fnt");
+            BitmapFont font = get("normal", BitmapFont.class);
             TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
             this.add("blue", buttonStyle);
         }
@@ -162,7 +200,7 @@ public class RectballSkin extends Skin {
         if (BuildConfig.FLAVOR.equals("gpe")) {
             NinePatchDrawable upButton = generateButton(Color.valueOf("8BC34A"), Color.valueOf("8BC34A").lerp(Color.BLACK, 0.25f));
             NinePatchDrawable downButton = generateButton(Color.valueOf("8BC34A").lerp(Color.BLACK, 0.25f), Color.valueOf("8BC34A"));
-            BitmapFont font = game.manager.get("fonts/normal.fnt");
+            BitmapFont font = get("normal", BitmapFont.class);
             TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
             this.add("google", buttonStyle);
         }
@@ -238,7 +276,7 @@ public class RectballSkin extends Skin {
         Texture backgroundWindow = new Texture(windowBackground);
         NinePatch backgroundPatch = new NinePatch(backgroundWindow, borderBorder + borderWidth, borderBorder + borderWidth, borderBorder + borderWidth, borderBorder + borderWidth);
         Drawable background = new NinePatchDrawable(backgroundPatch);
-        BitmapFont font = game.manager.get("fonts/normal.fnt");
+        BitmapFont font = get("normal", BitmapFont.class);
         WindowStyle window = new WindowStyle(font, Color.WHITE, background);
         add("default", window);
     }

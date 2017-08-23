@@ -21,7 +21,9 @@ package es.danirod.rectball;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
@@ -29,6 +31,9 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -197,12 +202,8 @@ public class RectballGame extends Game {
             manager.load("google/gpg_leaderboard.png", Texture.class, texParameters);
         }
 
-        manager.load("fonts/bold.fnt", BitmapFont.class, fntParameters);
         manager.load("fonts/monospace.fnt", BitmapFont.class);
         manager.load("fonts/monospaceOutline.fnt", BitmapFont.class);
-        manager.load("fonts/normal.fnt", BitmapFont.class, fntParameters);
-        manager.load("fonts/small.fnt", BitmapFont.class, fntParameters);
-
 
         // Load sounds
         manager.load("sound/fail.ogg", Sound.class);
