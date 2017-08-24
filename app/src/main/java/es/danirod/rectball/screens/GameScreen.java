@@ -566,9 +566,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
 
         // Save information about this game in the statistics.
-        game.getStatistics().getStatistics().getTotalData().incrementValue("score", game.getState().getScore());
-        game.getStatistics().getStatistics().getTotalData().incrementValue("games");
-        game.getStatistics().getStatistics().getTotalData().incrementValue("time", Math.round(game.getState().getElapsedTime()));
+        game.getStatistics().getTotalData().incrementValue("score", game.getState().getScore());
+        game.getStatistics().getTotalData().incrementValue("games");
+        game.getStatistics().getTotalData().incrementValue("time", Math.round(game.getState().getElapsedTime()));
         game.getStatistics().saveStatistics();
 
         // Mark a combination that the user could do if he had enough time.
@@ -576,7 +576,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             CombinationFinder combo = CombinationFinder.create(game.getState().getBoard());
             game.getState().setWiggledBounds(combo.getCombination());
         } else {
-            game.getStatistics().getStatistics().getTotalData().incrementValue("cheats");
+            game.getStatistics().getTotalData().incrementValue("cheats");
         }
         for (int y = 0; y < game.getState().getBoard().getSize(); y++) {
             for (int x = 0; x < game.getState().getBoard().getSize(); x++) {
@@ -627,7 +627,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         boolean usedCheat = game.getState().getWiggledBounds() != null;
 
         if (usedCheat)
-            game.getStatistics().getStatistics().getTotalData().incrementValue("cheats");
+            game.getStatistics().getTotalData().incrementValue("cheats");
 
         // Change the colors of the selected region.
         board.addAction(Actions.sequence(
@@ -659,18 +659,18 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         int rows = bounds.maxY - bounds.minY + 1;
         int cols = bounds.maxX - bounds.minX + 1;
         String size = Math.max(rows, cols) + "x" + Math.min(rows, cols);
-        game.getStatistics().getStatistics().getSizesData().incrementValue(size);
+        game.getStatistics().getSizesData().incrementValue(size);
 
         BallColor color = board.getBall(bounds.minX, bounds.minY).getBall().getColor();
-        game.getStatistics().getStatistics().getColorData().incrementValue(color.toString().toLowerCase());
-        game.getStatistics().getStatistics().getTotalData().incrementValue("balls", rows * cols);
-        game.getStatistics().getStatistics().getTotalData().incrementValue("combinations");
+        game.getStatistics().getColorData().incrementValue(color.toString().toLowerCase());
+        game.getStatistics().getTotalData().incrementValue("balls", rows * cols);
+        game.getStatistics().getTotalData().incrementValue("combinations");
 
         // Now, display the score to the user. If the combination is a
         // PERFECT combination, just display PERFECT.
         int boardSize = game.getState().getBoard().getSize() - 1;
         if (bounds.equals(new Bounds(0, 0, boardSize, boardSize))) {
-            game.getStatistics().getStatistics().getTotalData().incrementValue("perfect");
+            game.getStatistics().getTotalData().incrementValue("perfect");
 
             // Give score
             Label label = new Label("PERFECT", game.getSkin(), "monospace");

@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.model.Statistics;
+import es.danirod.rectball.platform.StatisticsIO;
 
 public class StatsTable extends Table {
 
@@ -104,7 +104,7 @@ public class StatsTable extends Table {
         Table total = new Table();
         total.add(new Label(game.getLocale().get("statistics.total"), this.title)).colspan(2).row();
 
-        Statistics.StatisticSet set = game.getStatistics().getStatistics().getTotalData();
+        StatisticsIO.StatisticSet set = game.getStatistics().getTotalData();
         if (set.getStats().isEmpty()) {
             Label noData = new Label(game.getLocale().get("statistics.noData"), game.getSkin());
             noData.setAlignment(Align.center);
@@ -131,7 +131,7 @@ public class StatsTable extends Table {
         Table color = new Table();
         color.add(new Label(game.getLocale().get("statistics.color"), this.title)).colspan(4).row();
 
-        if (game.getStatistics().getStatistics().getColorData().getStats().isEmpty()) {
+        if (game.getStatistics().getColorData().getStats().isEmpty()) {
             Label noData = new Label(game.getLocale().get("statistics.noData"), game.getSkin());
             noData.setAlignment(Align.center);
             color.add(noData).colspan(4).fillX().expandX().padTop(10).padBottom(10).row();
@@ -140,7 +140,7 @@ public class StatsTable extends Table {
 
         // Put the data in a TreeMap. TreeMaps keep order. Use reverse to show bigger values on left.
         Map<Integer, List<String>> colorScore = new TreeMap<>(Collections.reverseOrder());
-        for (Map.Entry<String, Integer> stat : game.getStatistics().getStatistics().getColorData().getStats().entrySet()) {
+        for (Map.Entry<String, Integer> stat : game.getStatistics().getColorData().getStats().entrySet()) {
             if (!colorScore.containsKey(stat.getValue())) {
                 colorScore.put(stat.getValue(), new ArrayList<String>());
             }
@@ -171,7 +171,7 @@ public class StatsTable extends Table {
         Table sizes = new Table();
         sizes.add(new Label(game.getLocale().get("statistics.sizes"), this.title)).colspan(3).row();
 
-        Map<String, Integer> unsortedScores = game.getStatistics().getStatistics().getSizesData().getStats();
+        Map<String, Integer> unsortedScores = game.getStatistics().getSizesData().getStats();
         if (unsortedScores.isEmpty()) {
             Label noData = new Label(game.getLocale().get("statistics.noData"), game.getSkin());
             noData.setAlignment(Align.center);

@@ -26,21 +26,25 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 
-import es.danirod.rectball.model.Statistics;
-import es.danirod.rectball.model.Statistics.StatisticSet;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class StatisticsIO {
 
     private static final String STATISTICS_FILE = "stats";
 
-    private Statistics statistics = new Statistics(); /** Statistics instance. */
+    private StatisticSet total = new StatisticSet();
+    private StatisticSet colors = new StatisticSet();
+    private StatisticSet sizes = new StatisticSet();
 
     public void saveStatistics() {
         Gdx.app.log("StatisticsIO", "Saving statistics file...");
 
         Json json = new Json();
         json.setOutputType(JsonWriter.OutputType.json);
-        String jsonData = json.toJson(statistics);
+        String jsonData = json.toJson(this);
+        Gdx.app.debug("StatisticsIO", "Statistics contents: " + jsonData);
 
         // Encode statistics in Base64 and save it to a file.
         String encodedJson = Base64Coder.encodeString(jsonData);
@@ -62,18 +66,25 @@ public class StatisticsIO {
             // Convert JSON to statistics
             JsonReader reader = new JsonReader();
             JsonValue rootStats = reader.parse(decodedJson);
-            StatisticSet total = parseTotal(rootStats);
-            StatisticSet colors = parseColor(rootStats);
-            StatisticSet sizes = parseSizes(rootStats);
-            this.statistics = new Statistics(total, colors, sizes);
+            this.total = parseTotal(rootStats);
+            this.colors = parseColor(rootStats);
+            this.sizes = parseSizes(rootStats);
             Gdx.app.log("StatisticsIO", "Successfully loaded statistics");
         } catch (Exception ex) {
             Gdx.app.error("StatisticsIO", "Cannot load statistics", ex);
         }
     }
 
-    public Statistics getStatistics() {
-        return this.statistics;
+    public StatisticSet getTotalData() {
+        return total;
+    }
+
+    public StatisticSet getColorData() {
+        return colors;
+    }
+
+    public StatisticSet getSizesData() {
+        return sizes;
     }
 
     private StatisticSet parseTotal(JsonValue root) {
@@ -108,5 +119,41 @@ public class StatisticsIO {
             stat.incrementValue(val.name, val.asInt());
         }
         return stat;
+    }
+
+    /**
+     * Group of related statistics. This class groups some related stats so that
+     * they can be stored together in the serialized file.
+     */
+    public static class StatisticSet {
+
+        private final Map<String, Integer> values;
+
+        public StatisticSet() {
+            values = new HashMap<>();
+        }
+
+        public void incrementValue(String id) {
+            if (values.containsKey(id)) {
+                int combinations = values.get(id);
+                values.put(id, combinations + 1);
+            } else {
+                values.put(id, 1);
+            }
+        }
+
+        public void incrementValue(String id, int count) {
+            if (values.containsKey(id)) {
+                int combinations = values.get(id);
+                values.put(id, combinations + count);
+            } else {
+                values.put(id, count);
+            }
+        }
+
+        public Map<String, Integer> getStats() {
+            return Collections.unmodifiableMap(values);
+        }
+
     }
 }
