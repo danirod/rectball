@@ -19,8 +19,6 @@ package es.danirod.rectball.android;
 
 import com.badlogic.gdx.Gdx;
 
-import es.danirod.rectball.platform.GameServices;
-
 
 public class NullGameServices implements GameServices {
 

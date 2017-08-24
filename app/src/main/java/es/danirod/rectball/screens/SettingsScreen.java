@@ -17,6 +17,8 @@
  */
 package es.danirod.rectball.screens;
 
+import android.widget.Toast;
+
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -88,8 +90,13 @@ public class SettingsScreen extends AbstractScreen {
                 public void changed(ChangeEvent event, Actor actor) {
                     game.getPreferences().putBoolean("fullscreen", fullscreen.isChecked());
                     game.getPreferences().flush();
-                    game.getPlatform().toast(game.getLocale().get("settings.fullscreenReset"));
                     game.player.playSound(SoundCode.SELECT);
+                    game.getContext().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(game.getContext(), game.getLocale().get("settings.fullscreenReset"), Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
             });
         }

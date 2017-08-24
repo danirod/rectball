@@ -17,17 +17,14 @@
  */
 package es.danirod.rectball.android;
 
-import es.danirod.rectball.platform.Analytics;
-import es.danirod.rectball.platform.GameServices;
-
-class AndroidPlatform extends AndroidPlatformBase {
+class AndroidPlatform extends AbstractPlatform {
 
     private NullAnalytics analytics = new NullAnalytics();
 
     private NullGameServices services = new NullGameServices();
 
-    protected AndroidPlatform(AndroidLauncher app) {
-        super(app);
+    protected AndroidPlatform(AndroidLauncher context) {
+        super(context);
     }
 
     @Override

@@ -15,53 +15,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package es.danirod.rectball.android;
 
 import android.content.Intent;
 
 /**
- * This contains code for the Android platform. Here code that uses Android
- * SDK or Android API might be used. This code won't run on other platforms
- * than Android.
+ * This is the interface for platform code. Platform code is code that depends
+ * on the platform that the application is running. Whenever features can only
+ * in a particular platform, platform dependent code should be used. For
+ * instance, adding Google APIs or Android APIs must be done in Android code
+ * to prevent desktop releases from failing.
  *
  * @author danirod
  * @since 0.4.0
  */
-class AndroidPlatform extends AbstractPlatform {
+abstract class AbstractPlatform {
 
-    final GooglePlayGamesRuntime gpg;
+    final AndroidLauncher context;
 
-    final GoogleAnalyticsRuntime ga;
-
-    protected AndroidPlatform(AndroidLauncher context) {
-        super(context);
-        gpg = new GooglePlayGamesRuntime(context);
-        ga = new GoogleAnalyticsRuntime(context);
+    public AbstractPlatform(AndroidLauncher context) {
+        this.context = context;
     }
 
-    @Override
-    public GameServices getGameServices() {
-        return gpg;
-    }
-
-    @Override
-    public Analytics getAnalytics() {
-        return ga;
-    }
-
-    @Override
     public void onStart() {
-        gpg.gameHelper.onStart(context);
+
     }
 
-    @Override
     public void onStop() {
-        gpg.gameHelper.onStop();
+
     }
 
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        gpg.gameHelper.onActivityResult(requestCode, resultCode, data);
+
     }
+
+    public abstract Analytics getAnalytics();
+
+    public abstract GameServices getGameServices();
 }

@@ -99,7 +99,7 @@ public class GameOverScreen extends AbstractScreen {
                 int height = width / 2;
                 int y = (int) (Gdx.graphics.getHeight() * 0.375f);
                 Pixmap screenshot = game.requestScreenshot(0, y, width, height);
-                game.getPlatform().shareGameOverScreenshot(screenshot, game.getState().getScore(), Math.round(game.getState().getElapsedTime()));
+                game.shareGameOverScreenshot(screenshot, game.getState().getScore(), Math.round(game.getState().getElapsedTime()));
                 event.cancel();
             }
         });

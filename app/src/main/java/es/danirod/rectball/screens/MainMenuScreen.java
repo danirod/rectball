@@ -99,7 +99,7 @@ public class MainMenuScreen extends AbstractScreen {
                     new ChangeListener() {
                         @Override
                         public void changed(ChangeEvent event, Actor actor) {
-                            game.getPlatform().openInStore();
+                            game.openInStore();
                             event.cancel();
                         }
                     }

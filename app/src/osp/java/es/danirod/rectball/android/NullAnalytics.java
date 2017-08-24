@@ -21,8 +21,6 @@ import com.badlogic.gdx.Gdx;
 
 import java.util.Map;
 
-import es.danirod.rectball.platform.Analytics;
-
 class NullAnalytics implements Analytics {
     @Override
     public void sendEvent(String category, String action) {
