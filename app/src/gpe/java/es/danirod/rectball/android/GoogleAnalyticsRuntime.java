@@ -18,13 +18,12 @@
 
 package es.danirod.rectball.android;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-import es.danirod.rectball.platform.Analytics;
-
 import java.util.Map;
+
+import es.danirod.rectball.platform.Analytics;
 
 /**
  * Android implementation for the analytic services. This is a dummy
@@ -34,16 +33,16 @@ import java.util.Map;
  * @author danirod
  * @since 0.4.0
  */
-class AndroidAnalytics implements Analytics {
+class GoogleAnalyticsRuntime implements Analytics {
 
     private AndroidLauncher app;
 
     private Tracker tracker;
 
-    public AndroidAnalytics(AndroidLauncher app) {
+    public GoogleAnalyticsRuntime(AndroidLauncher app) {
         this.app = app;
 
-        GoogleAnalytics analytics = GoogleAnalytics.getInstance(app);
+        com.google.android.gms.analytics.GoogleAnalytics analytics = com.google.android.gms.analytics.GoogleAnalytics.getInstance(app);
         analytics.setDryRun(BuildConfig.ANALYTICS_DRY_RUN);
         tracker = analytics.newTracker(R.xml.global_tracker);
         tracker.enableExceptionReporting(true);

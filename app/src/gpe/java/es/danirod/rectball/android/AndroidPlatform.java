@@ -21,7 +21,7 @@ package es.danirod.rectball.android;
 import android.content.Intent;
 
 import es.danirod.rectball.platform.Analytics;
-import es.danirod.rectball.platform.GoogleServices;
+import es.danirod.rectball.platform.GameServices;
 
 /**
  * This contains code for the Android platform. Here code that uses Android
@@ -33,41 +33,41 @@ import es.danirod.rectball.platform.GoogleServices;
  */
 class AndroidPlatform extends AndroidPlatformBase {
 
-    private final AndroidGoogleServices google;
+    private final GooglePlayGamesRuntime gpg;
 
-    private final AndroidAnalytics analytic;
+    private final GoogleAnalyticsRuntime ga;
 
     private final AndroidLauncher application;
 
     protected AndroidPlatform(AndroidLauncher app) {
         super(app);
         this.application = app;
-        google = new AndroidGoogleServices(app);
-        analytic = new AndroidAnalytics(app);
+        gpg = new GooglePlayGamesRuntime(app);
+        ga = new GoogleAnalyticsRuntime(app);
     }
 
     @Override
-    public GoogleServices google() {
-        return google;
+    public GameServices getGameServices() {
+        return gpg;
     }
 
     @Override
-    public Analytics analytic() {
-        return analytic;
+    public Analytics getAnalytics() {
+        return ga;
     }
 
     @Override
     public void onStart() {
-        google.gameHelper.onStart(this.application);
+        gpg.gameHelper.onStart(this.application);
     }
 
     @Override
     public void onStop() {
-        google.gameHelper.onStop();
+        gpg.gameHelper.onStop();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        google.gameHelper.onActivityResult(requestCode, resultCode, data);
+        gpg.gameHelper.onActivityResult(requestCode, resultCode, data);
     }
 }

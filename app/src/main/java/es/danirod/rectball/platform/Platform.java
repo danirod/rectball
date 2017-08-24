@@ -31,9 +31,9 @@ import com.badlogic.gdx.graphics.Pixmap;
  */
 public interface Platform {
 
-    Analytics analytic();
+    Analytics getAnalytics();
 
-    GoogleServices google();
+    GameServices getGameServices();
 
     void toast(CharSequence msg);
 

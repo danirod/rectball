@@ -15,28 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.danirod.rectball.android;
+package es.danirod.rectball.platform;
 
-import es.danirod.rectball.platform.Analytics;
-import es.danirod.rectball.platform.GameServices;
+/**
+ * @author danirod
+ * @since 0.4.0
+ */
+public interface GameServices {
 
-class AndroidPlatform extends AndroidPlatformBase {
+    void signIn();
 
-    private NullAnalytics analytics = new NullAnalytics();
+    void signOut();
 
-    private NullGameServices services = new NullGameServices();
+    boolean isSignedIn();
 
-    protected AndroidPlatform(AndroidLauncher app) {
-        super(app);
-    }
+    void uploadScore(int score, int time);
 
-    @Override
-    public Analytics getAnalytics() {
-        return analytics;
-    }
+    void showLeaderboards();
 
-    @Override
-    public GameServices getGameServices() {
-        return services;
-    }
+    void showAchievements();
 }

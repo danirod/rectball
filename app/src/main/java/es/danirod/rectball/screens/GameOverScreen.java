@@ -88,7 +88,7 @@ public class GameOverScreen extends AbstractScreen {
         share.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.getPlatform().analytic().sendEvent("UX", "Clicked", "Share score");
+                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Share score");
                 game.player.playSound(SoundPlayer.SoundCode.SELECT);
 
                 // Request a screenshot of the score region. The following

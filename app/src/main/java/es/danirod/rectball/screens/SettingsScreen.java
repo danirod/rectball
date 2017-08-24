@@ -114,7 +114,7 @@ public class SettingsScreen extends AbstractScreen {
 
         // Log out button
         if (BuildConfig.FLAVOR.equals("gpe")) {
-            String logoutText = game.getPlatform().google().isSignedIn() ?
+            String logoutText = game.getContext().getGameServices().isSignedIn() ?
                     game.getLocale().get("gplay.logout") :
                     game.getLocale().get("gplay.login");
             if (googlePlayLogin == null) {
@@ -123,14 +123,14 @@ public class SettingsScreen extends AbstractScreen {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
                         // TODO: This code will probably need to be made async due to how Google works.
-                        if (game.getPlatform().google().isSignedIn()) {
+                        if (game.getContext().getGameServices().isSignedIn()) {
                             // Proceed to sign out the user.
-                            game.getPlatform().analytic().sendEvent("UX", "Clicked", "Sign out from Google Play");
-                            game.getPlatform().google().signOut();
+                            game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Sign out from Google Play");
+                            game.getContext().getGameServices().signOut();
                         } else {
                             // Send signed out event.
-                            game.getPlatform().analytic().sendEvent("UX", "Clicked", "Sign in to Google Play");
-                            game.getPlatform().google().signIn();
+                            game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Sign in to Google Play");
+                            game.getContext().getGameServices().signIn();
                         }
                         game.player.playSound(SoundCode.SELECT);
                         googlePlayLogin.setText(game.getLocale().get("gplay.updating"));
@@ -139,7 +139,7 @@ public class SettingsScreen extends AbstractScreen {
 
                             @Override
                             public void run() {
-                                String logoutText = game.getPlatform().google().isSignedIn() ?
+                                String logoutText = game.getContext().getGameServices().isSignedIn() ?
                                         game.getLocale().get("gplay.logout") :
                                         game.getLocale().get("gplay.login");
                                 googlePlayLogin.setText(logoutText);

@@ -24,7 +24,8 @@ import com.google.games.basegameutils.GameHelper;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.google.android.gms.games.Games;
-import es.danirod.rectball.platform.GoogleServices;
+
+import es.danirod.rectball.platform.GameServices;
 
 /**
  * Android implementation for the Google Play services.
@@ -32,13 +33,13 @@ import es.danirod.rectball.platform.GoogleServices;
  * @author danirod
  * @since 0.4.0
  */
-class AndroidGoogleServices implements GoogleServices {
+class GooglePlayGamesRuntime implements GameServices {
 
     private AndroidApplication app;
 
     GameHelper gameHelper;
 
-    public AndroidGoogleServices(final AndroidLauncher app) {
+    public GooglePlayGamesRuntime(final AndroidLauncher app) {
         this.app = app;
         this.gameHelper = new GameHelper(app, GameHelper.CLIENT_GAMES);
 
@@ -67,7 +68,7 @@ class AndroidGoogleServices implements GoogleServices {
                 }
             });
         } catch (Exception ex) {
-            Gdx.app.error("GoogleServices", "Google Play login failed", ex);
+            Gdx.app.error("GameServices", "Google Play login failed", ex);
         }
     }
 
@@ -83,7 +84,7 @@ class AndroidGoogleServices implements GoogleServices {
                 }
             });
         } catch (Exception ex) {
-            Gdx.app.error("GoogleServices", "Google Play log out failed", ex);
+            Gdx.app.error("GameServices", "Google Play log out failed", ex);
         }
     }
 
@@ -94,8 +95,8 @@ class AndroidGoogleServices implements GoogleServices {
 
     @Override
     public void uploadScore(int score, int time) {
-        Gdx.app.debug("GoogleServices", "Submitting score: " + score);
-        Gdx.app.debug("GoogleServices", "Submitting time: " + time);
+        Gdx.app.debug("GameServices", "Submitting score: " + score);
+        Gdx.app.debug("GameServices", "Submitting time: " + time);
 
         if (gameHelper.isSignedIn()) {
             // Submit information about scores and time for the leaderboards.

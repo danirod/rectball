@@ -51,6 +51,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 
+import es.danirod.rectball.android.AndroidLauncher;
 import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.io.Scores;
 import es.danirod.rectball.io.Statistics;
@@ -75,6 +76,8 @@ import es.danirod.rectball.screens.TutorialScreen;
 public class RectballGame extends Game {
 
     private final Platform platform;
+
+    private final AndroidLauncher context;
 
     /* FIXME: Privatize this. */
 
@@ -103,13 +106,15 @@ public class RectballGame extends Game {
      * @param platform the platform this game is using.
      * @param state
      */
-    public RectballGame(Platform platform, GameState state) {
+    public RectballGame(AndroidLauncher context, Platform platform, GameState state) {
+        this.context = context;
         this.platform = platform;
         this.currentGame = state;
         this.restoredState = true;
     }
 
-    public RectballGame(Platform platform) {
+    public RectballGame(AndroidLauncher context, Platform platform) {
+        this.context = context;
         this.platform = platform;
         this.currentGame = new GameState();
         this.restoredState = false;
@@ -370,6 +375,10 @@ public class RectballGame extends Game {
         data.clear();
 
         return screenshot;
+    }
+
+    public AndroidLauncher getContext() {
+        return context;
     }
 
     public Scores getScores() {

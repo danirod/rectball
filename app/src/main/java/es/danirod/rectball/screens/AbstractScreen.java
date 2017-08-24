@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015 Dani Rodríguez.
+ * Copyright (C) 2015-2017 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -114,7 +114,7 @@ public abstract class AbstractScreen implements Screen {
     @Override
     public void show() {
         // Dispatch an analytic event.
-        game.getPlatform().analytic().sendScreen(getClass().getCanonicalName());
+        game.getContext().getAnalytics().sendScreen(getClass().getCanonicalName());
 
         if (stage == null) {
             stage = new Stage(buildViewport(), game.getBatch());

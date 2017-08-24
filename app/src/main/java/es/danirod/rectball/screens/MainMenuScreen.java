@@ -113,10 +113,10 @@ public class MainMenuScreen extends AbstractScreen {
                             @Override
                             public void changed(ChangeEvent event, Actor actor) {
                                 game.player.playSound(SoundPlayer.SoundCode.SELECT);
-                                if (!game.getPlatform().google().isSignedIn()) {
-                                    game.getPlatform().google().signIn();
+                                if (!game.getContext().getGameServices().isSignedIn()) {
+                                    game.getContext().getGameServices().signIn();
                                 } else {
-                                    game.getPlatform().google().showLeaderboards();
+                                    game.getContext().getGameServices().showLeaderboards();
                                 }
                                 event.cancel();
                             }
@@ -130,10 +130,10 @@ public class MainMenuScreen extends AbstractScreen {
                             @Override
                             public void changed(ChangeEvent event, Actor actor) {
                                 game.player.playSound(SoundPlayer.SoundCode.SELECT);
-                                if (!game.getPlatform().google().isSignedIn()) {
-                                    game.getPlatform().google().signIn();
+                                if (!game.getContext().getGameServices().isSignedIn()) {
+                                    game.getContext().getGameServices().signIn();
                                 } else {
-                                    game.getPlatform().google().showAchievements();
+                                    game.getContext().getGameServices().showAchievements();
                                 }
                                 event.cancel();
                             }
@@ -195,7 +195,7 @@ public class MainMenuScreen extends AbstractScreen {
     @Override
     public void render(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
-            game.getPlatform().analytic().sendEvent("UX", "Key Pressed", "Back");
+            game.getContext().getAnalytics().sendEvent("UX", "Key Pressed", "Back");
             Gdx.app.exit();
         }
 
@@ -215,14 +215,14 @@ public class MainMenuScreen extends AbstractScreen {
         dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
             @Override
             public void ok() {
-                game.getPlatform().analytic().sendEvent("UX", "Clicked", "Enter Tutorial");
+                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Enter Tutorial");
                 game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
                 game.pushScreen(Screens.TUTORIAL);
             }
 
             @Override
             public void cancel() {
-                game.getPlatform().analytic().sendEvent("UX", "Clicked", "Dismiss Tutorial");
+                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Dismiss Tutorial");
                 game.player.playSound(SoundPlayer.SoundCode.FAIL);
                 game.getPreferences().putBoolean("tutorialAsked", true);
                 game.getPreferences().flush();

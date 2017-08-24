@@ -33,6 +33,8 @@ import com.badlogic.gdx.utils.JsonWriter;
 
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.model.GameState;
+import es.danirod.rectball.platform.Analytics;
+import es.danirod.rectball.platform.GameServices;
 
 public class AndroidLauncher extends AndroidApplication {
 
@@ -57,13 +59,13 @@ public class AndroidLauncher extends AndroidApplication {
             String jsonBoard = savedInstanceState.getString("state");
             if (jsonBoard != null) {
                 GameState state = json.fromJson(GameState.class, jsonBoard);
-                game = new RectballGame(platform, state);
+                game = new RectballGame(this, platform, state);
             } else {
-                game = new RectballGame(platform);
+                game = new RectballGame(this, platform);
             }
             Log.d("Rectball", "Restoring state: " + jsonBoard);
         } else {
-            game = new RectballGame(platform);
+            game = new RectballGame(this, platform);
             Log.d("Rectball", "New execution. No restoring state needed.");
         }
 
@@ -126,5 +128,13 @@ public class AndroidLauncher extends AndroidApplication {
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
+    }
+
+    public Analytics getAnalytics() {
+        return platform.getAnalytics();
+    }
+
+    public GameServices getGameServices() {
+        return platform.getGameServices();
     }
 }
