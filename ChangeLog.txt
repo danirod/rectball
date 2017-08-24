@@ -1,3 +1,13 @@
+[0.4.9]
+- Android O (8.0) is officially supported.
+- Minimum API level increased to 14 (Android 4.0).
+- AndroidManifest now declares the minimum OpenGL ES version as 2.0.
+- New font rendering fixes font blurrying (#59).
+- Renamed Colorblind mode in Spanish to 'differentiate without color'.
+- Fixed notification bar not hiding properly sometimes in fullscreen mode (#76).
+- Fixed a bug that could cause statistics to not be saved under certain conditions.
+- Removed Platforms API because desktop support was removed.
+
 [0.4.8]
 - Dropped support for desktop. Rectball is now a mobile first application.
 - Google Play Edition version of the game is now open source -- API keys are removed.
