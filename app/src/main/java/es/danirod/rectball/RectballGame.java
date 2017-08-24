@@ -103,6 +103,8 @@ public class RectballGame extends Game {
 
     private Statistics statistics; /** Holds information about the statistics. */
 
+    private Preferences preferences; /** Preferences instance. */
+
     /** Batch instance in use by the game. */
     Batch batch;
 
@@ -457,7 +459,10 @@ public class RectballGame extends Game {
     }
 
     public Preferences getPreferences() {
-        return Gdx.app.getPreferences("rectball");
+        if (preferences == null) {
+            this.preferences = Gdx.app.getPreferences("rectball");
+        }
+        return preferences;
     }
 
     public TextureAtlas getBallAtlas() {

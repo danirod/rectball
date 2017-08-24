@@ -1,5 +1,6 @@
 [0.4.9.1]
 - Fixes conflict between ProGuard optimizations and statistics reflection and serialization.
+- Fixes preferences not being properly saved when updated.
 
 [0.4.9]
 - Android O (8.0) is officially supported.
