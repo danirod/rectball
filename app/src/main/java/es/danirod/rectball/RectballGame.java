@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015 Dani Rodríguez.
+ * Copyright (C) 2015-2017 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,29 +18,54 @@
 
 package es.danirod.rectball;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ScreenUtils;
+
+import java.nio.ByteBuffer;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
 
 import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.model.Statistics;
 import es.danirod.rectball.platform.Platform;
 import es.danirod.rectball.scene2d.RectballSkin;
-import es.danirod.rectball.screens.*;
-
-import java.nio.ByteBuffer;
-import java.util.*;
+import es.danirod.rectball.screens.AboutScreen;
+import es.danirod.rectball.screens.AbstractScreen;
+import es.danirod.rectball.screens.GameOverScreen;
+import es.danirod.rectball.screens.GameScreen;
+import es.danirod.rectball.screens.LoadingBackScreen;
+import es.danirod.rectball.screens.LoadingScreen;
+import es.danirod.rectball.screens.MainMenuScreen;
+import es.danirod.rectball.screens.Screens;
+import es.danirod.rectball.screens.SettingsScreen;
+import es.danirod.rectball.screens.StatisticsScreen;
+import es.danirod.rectball.screens.TutorialScreen;
 
 /**
  * Main class for the game.
@@ -172,6 +197,16 @@ public class RectballGame extends Game {
 
     private AssetManager createManager() {
         AssetManager manager = new AssetManager();
+        FileHandleResolver resolver = new InternalFileHandleResolver();
+        manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
+        manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver) {
+            @Override
+            public BitmapFont loadSync(AssetManager manager, String fileName, FileHandle file, FreeTypeFontLoaderParameter parameter) {
+                BitmapFont font = super.loadSync(manager, fileName, file, parameter);
+                font.getData().setScale(1f / Gdx.graphics.getDensity());
+                return font;
+            }
+        });
 
         // Set up the parameters for loading linear textures. Linear textures
         // use a linear filter to not have artifacts when they are scaled.
@@ -197,12 +232,19 @@ public class RectballGame extends Game {
             manager.load("google/gpg_leaderboard.png", Texture.class, texParameters);
         }
 
-        manager.load("fonts/bold.fnt", BitmapFont.class, fntParameters);
+        // Load BitmapFonts
         manager.load("fonts/monospace.fnt", BitmapFont.class);
         manager.load("fonts/monospaceOutline.fnt", BitmapFont.class);
-        manager.load("fonts/normal.fnt", BitmapFont.class, fntParameters);
-        manager.load("fonts/small.fnt", BitmapFont.class, fntParameters);
 
+        // Load TrueType fonts
+        FreeTypeFontLoaderParameter normalPar = new FreeTypeFontLoaderParameter();
+        normalPar.fontFileName = "fonts/Coda-Regular.ttf";
+        normalPar.fontParameters.size = (int) Math.ceil(28 * Gdx.graphics.getDensity());
+        manager.load("fonts/normal.ttf", BitmapFont.class, normalPar);
+        FreeTypeFontLoaderParameter smallPar = new FreeTypeFontLoaderParameter();
+        smallPar.fontFileName = "fonts/Coda-Regular.ttf";
+        smallPar.fontParameters.size = (int) Math.ceil(23 * Gdx.graphics.getDensity());
+        manager.load("fonts/small.ttf", BitmapFont.class, smallPar);
 
         // Load sounds
         manager.load("sound/fail.ogg", Sound.class);

@@ -22,7 +22,7 @@ android {
         applicationId "es.danirod.rectball.android"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 411
+        versionCode 412
         versionName "0.4.9-dev"
         signingConfig signingConfigs.config
     }
@@ -69,9 +69,13 @@ dependencies {
 
     // libGDX
     compile 'com.badlogicgames.gdx:gdx-backend-android:1.9.2'
+    compile "com.badlogicgames.gdx:gdx-freetype:1.9.2"
     natives "com.badlogicgames.gdx:gdx-platform:1.9.2:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-platform:1.9.2:natives-armeabi-v7a"
     natives "com.badlogicgames.gdx:gdx-platform:1.9.2:natives-x86"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:1.9.2:natives-armeabi"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:1.9.2:natives-armeabi-v7a"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:1.9.2:natives-x86"
 
     // Testing libraries.
     testCompile 'junit:junit:4.12'

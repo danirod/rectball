@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball
- * Copyright (C) 2015 Dani Rodríguez
+ * Copyright (C) 2015-2017 Dani Rodríguez
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +18,12 @@
 
 package es.danirod.rectball.scene2d;
 
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -27,7 +31,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.*;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.android.BuildConfig;
 
@@ -50,6 +57,7 @@ public class RectballSkin extends Skin {
      */
     public RectballSkin(RectballGame game) {
         this.game = game;
+        addBitmapFonts();
         addPixmapStyles();
         addLabelStyles();
         addTextButtonStyles();
@@ -59,6 +67,11 @@ public class RectballSkin extends Skin {
         addNinePatchesStyles();
         addCheckboxStyles();
         addScrollPaneStyles();
+    }
+
+    private void addBitmapFonts() {
+        add("normal", game.manager.get("fonts/normal.ttf", BitmapFont.class));
+        add("small", game.manager.get("fonts/small.ttf", BitmapFont.class));
     }
 
     private void addScrollPaneStyles() {
@@ -84,7 +97,7 @@ public class RectballSkin extends Skin {
         style.checkboxOn = new TextureRegionDrawable(on);
         style.checkboxOff = new TextureRegionDrawable(off);
         style.checkboxOnDisabled = style.checkboxOffDisabled = new TextureRegionDrawable(broken);
-        style.font = game.manager.get("fonts/normal.fnt");
+        style.font = get("normal", BitmapFont.class);
         add("default", style);
     }
 
@@ -94,21 +107,21 @@ public class RectballSkin extends Skin {
      */
     private void addLabelStyles() {
         // Build the label style for normal font.
-        BitmapFont normalFont = game.manager.get("fonts/normal.fnt");
+        BitmapFont normalFont = get("normal", BitmapFont.class);
         LabelStyle normalStyle = new LabelStyle(normalFont, Color.WHITE);
         this.add("default", normalStyle);
 
         // Build the label style for bold font.
-        BitmapFont boldFont = game.manager.get("fonts/bold.fnt");
+        BitmapFont boldFont = get("normal", BitmapFont.class);
         LabelStyle boldStyle = new LabelStyle(boldFont, Color.WHITE);
         this.add("bold", boldStyle);
 
-        // Build the label style for bold font.
-        BitmapFont smallFont = game.manager.get("fonts/small.fnt");
+        // Build the label style for small font.
+        BitmapFont smallFont = get("small", BitmapFont.class);
         LabelStyle smallStyle = new LabelStyle(smallFont, Color.WHITE);
         this.add("small", smallStyle);
 
-        BitmapFont bigFont = game.manager.get("fonts/normal.fnt");
+        BitmapFont bigFont = get("normal", BitmapFont.class);
         LabelStyle bigStyle = new LabelStyle(bigFont, Color.WHITE);
         this.add("big", bigStyle);
 
@@ -138,7 +151,7 @@ public class RectballSkin extends Skin {
         {
             NinePatchDrawable upButton = generateButton(Color.GRAY, Color.DARK_GRAY);
             NinePatchDrawable downButton = generateButton(Color.DARK_GRAY, Color.GRAY);
-            BitmapFont font = game.manager.get("fonts/normal.fnt");
+            BitmapFont font = get("normal", BitmapFont.class);
             TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
             this.add("default", buttonStyle);
         }
@@ -146,7 +159,7 @@ public class RectballSkin extends Skin {
         {
             NinePatchDrawable upButton = generateButton(Color.valueOf("37c837"), Color.valueOf("37c837").lerp(Color.BLACK, 0.25f));
             NinePatchDrawable downButton = generateButton(Color.valueOf("37c837").lerp(Color.BLACK, 0.25f), Color.valueOf("37c837"));
-            BitmapFont font = game.manager.get("fonts/normal.fnt");
+            BitmapFont font = get("normal", BitmapFont.class);
             TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
             this.add("green", buttonStyle);
         }
@@ -154,7 +167,7 @@ public class RectballSkin extends Skin {
         {
             NinePatchDrawable upButton = generateButton(Color.valueOf("0066cc"), Color.valueOf("0066cc").lerp(Color.BLACK, 0.25f));
             NinePatchDrawable downButton = generateButton(Color.valueOf("0066cc").lerp(Color.BLACK, 0.25f), Color.valueOf("0066cc"));
-            BitmapFont font = game.manager.get("fonts/normal.fnt");
+            BitmapFont font = get("normal", BitmapFont.class);
             TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
             this.add("blue", buttonStyle);
         }
@@ -162,7 +175,7 @@ public class RectballSkin extends Skin {
         if (BuildConfig.FLAVOR.equals("gpe")) {
             NinePatchDrawable upButton = generateButton(Color.valueOf("8BC34A"), Color.valueOf("8BC34A").lerp(Color.BLACK, 0.25f));
             NinePatchDrawable downButton = generateButton(Color.valueOf("8BC34A").lerp(Color.BLACK, 0.25f), Color.valueOf("8BC34A"));
-            BitmapFont font = game.manager.get("fonts/normal.fnt");
+            BitmapFont font = get("normal", BitmapFont.class);
             TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
             this.add("google", buttonStyle);
         }
@@ -238,7 +251,7 @@ public class RectballSkin extends Skin {
         Texture backgroundWindow = new Texture(windowBackground);
         NinePatch backgroundPatch = new NinePatch(backgroundWindow, borderBorder + borderWidth, borderBorder + borderWidth, borderBorder + borderWidth, borderBorder + borderWidth);
         Drawable background = new NinePatchDrawable(backgroundPatch);
-        BitmapFont font = game.manager.get("fonts/normal.fnt");
+        BitmapFont font = get("normal", BitmapFont.class);
         WindowStyle window = new WindowStyle(font, Color.WHITE, background);
         add("default", window);
     }

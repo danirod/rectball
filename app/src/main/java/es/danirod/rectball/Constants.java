@@ -28,14 +28,14 @@ public class Constants {
      * the space is going to be for child elements of this screen. However,
      * the smallest everything is going to be seen, specially in small screen.s
      */
-    public static final int VIEWPORT_WIDTH = 500;
+    public static final int VIEWPORT_WIDTH = 480;
 
     /**
      * The height of the Scene2D stage. The bigger this value is, the greater
      * the space is going to be for child elements of this screen. However,
      * the smallest everything is going to be seen, specially in small screens.
      */
-    public static final int VIEWPORT_HEIGHT = 800;
+    public static final int VIEWPORT_HEIGHT = 768;
 
     /**
      * The padding for the table in every stage.
