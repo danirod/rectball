@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015 Dani Rodríguez.
+ * Copyright (C) 2015-2017 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,9 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
@@ -35,6 +37,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -191,6 +197,16 @@ public class RectballGame extends Game {
 
     private AssetManager createManager() {
         AssetManager manager = new AssetManager();
+        FileHandleResolver resolver = new InternalFileHandleResolver();
+        manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
+        manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver) {
+            @Override
+            public BitmapFont loadSync(AssetManager manager, String fileName, FileHandle file, FreeTypeFontLoaderParameter parameter) {
+                BitmapFont font = super.loadSync(manager, fileName, file, parameter);
+                font.getData().setScale(1f / Gdx.graphics.getDensity());
+                return font;
+            }
+        });
 
         // Set up the parameters for loading linear textures. Linear textures
         // use a linear filter to not have artifacts when they are scaled.
@@ -216,8 +232,19 @@ public class RectballGame extends Game {
             manager.load("google/gpg_leaderboard.png", Texture.class, texParameters);
         }
 
+        // Load BitmapFonts
         manager.load("fonts/monospace.fnt", BitmapFont.class);
         manager.load("fonts/monospaceOutline.fnt", BitmapFont.class);
+
+        // Load TrueType fonts
+        FreeTypeFontLoaderParameter normalPar = new FreeTypeFontLoaderParameter();
+        normalPar.fontFileName = "fonts/Coda-Regular.ttf";
+        normalPar.fontParameters.size = (int) Math.ceil(28 * Gdx.graphics.getDensity());
+        manager.load("fonts/normal.ttf", BitmapFont.class, normalPar);
+        FreeTypeFontLoaderParameter smallPar = new FreeTypeFontLoaderParameter();
+        smallPar.fontFileName = "fonts/Coda-Regular.ttf";
+        smallPar.fontParameters.size = (int) Math.ceil(23 * Gdx.graphics.getDensity());
+        manager.load("fonts/small.ttf", BitmapFont.class, smallPar);
 
         // Load sounds
         manager.load("sound/fail.ogg", Sound.class);

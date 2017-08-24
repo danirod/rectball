@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball
- * Copyright (C) 2015 Dani Rodríguez
+ * Copyright (C) 2015-2017 Dani Rodríguez
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,10 +18,12 @@
 
 package es.danirod.rectball.scene2d;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -29,7 +31,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.*;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.android.BuildConfig;
 
@@ -65,35 +70,8 @@ public class RectballSkin extends Skin {
     }
 
     private void addBitmapFonts() {
-        FreeTypeFontGenerator ftgenRegular = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Coda-Regular.ttf"));
-        FreeTypeFontGenerator ftgenBold = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Coda-Regular.ttf"));
-
-        FreeTypeFontGenerator.FreeTypeFontParameter ftparNormal = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        ftparNormal.minFilter = Texture.TextureFilter.Linear;
-        ftparNormal.magFilter = Texture.TextureFilter.Linear;
-        ftparNormal.size = (int) Math.ceil(30 * Gdx.graphics.getDensity());
-        BitmapFont fontRegular = ftgenRegular.generateFont(ftparNormal);
-        fontRegular.getData().setScale(1f / Gdx.graphics.getDensity());
-        add("normal", fontRegular);
-
-        FreeTypeFontGenerator.FreeTypeFontParameter ftparSmall = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        ftparSmall.minFilter = Texture.TextureFilter.Linear;
-        ftparSmall.magFilter = Texture.TextureFilter.Linear;
-        ftparSmall.size = (int) Math.ceil(25 * Gdx.graphics.getDensity());
-        BitmapFont fontSmall = ftgenRegular.generateFont(ftparSmall);
-        fontSmall.getData().setScale(1f / Gdx.graphics.getDensity());
-        add("small", fontSmall);
-
-        FreeTypeFontGenerator.FreeTypeFontParameter ftparBold = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        ftparBold.minFilter = Texture.TextureFilter.Linear;
-        ftparBold.magFilter = Texture.TextureFilter.Linear;
-        ftparBold.size = (int) Math.ceil(30 * Gdx.graphics.getDensity());
-        BitmapFont fontBold = ftgenBold.generateFont(ftparBold);
-        fontBold.getData().setScale(1f / Gdx.graphics.getDensity());
-        add("bold", fontBold);
-
-        ftgenRegular.dispose();
-        ftgenBold.dispose();
+        add("normal", game.manager.get("fonts/normal.ttf", BitmapFont.class));
+        add("small", game.manager.get("fonts/small.ttf", BitmapFont.class));
     }
 
     private void addScrollPaneStyles() {
@@ -134,11 +112,11 @@ public class RectballSkin extends Skin {
         this.add("default", normalStyle);
 
         // Build the label style for bold font.
-        BitmapFont boldFont = get("bold", BitmapFont.class);
+        BitmapFont boldFont = get("normal", BitmapFont.class);
         LabelStyle boldStyle = new LabelStyle(boldFont, Color.WHITE);
         this.add("bold", boldStyle);
 
-        // Build the label style for bold font.
+        // Build the label style for small font.
         BitmapFont smallFont = get("small", BitmapFont.class);
         LabelStyle smallStyle = new LabelStyle(smallFont, Color.WHITE);
         this.add("small", smallStyle);
