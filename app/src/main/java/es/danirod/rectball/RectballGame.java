@@ -21,6 +21,7 @@ package es.danirod.rectball;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
@@ -333,7 +334,7 @@ public class RectballGame extends Game {
     }
 
     public void updateBallAtlas() {
-        boolean isColorblind = platform.preferences().getBoolean("colorblind");
+        boolean isColorblind = getPreferences().getBoolean("colorblind");
         String ballsTexture = isColorblind ? "board/colorblind.png" : "board/normal.png";
         Texture balls = manager.get(ballsTexture);
         TextureRegion[][] regions = TextureRegion.split(balls, 256, 256);
@@ -377,6 +378,10 @@ public class RectballGame extends Game {
 
     public Statistics getStatistics() {
         return statistics;
+    }
+
+    public Preferences getPreferences() {
+        return Gdx.app.getPreferences("rectball");
     }
 
     public TextureAtlas getBallAtlas() {

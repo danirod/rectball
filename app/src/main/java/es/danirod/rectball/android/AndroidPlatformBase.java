@@ -17,13 +17,10 @@
  */
 package es.danirod.rectball.android;
 
-import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.backends.android.AndroidApplication;
-import com.badlogic.gdx.backends.android.AndroidPreferences;
 
 import es.danirod.rectball.platform.Platform;
 import es.danirod.rectball.platform.Sharing;
@@ -32,25 +29,17 @@ abstract class AndroidPlatformBase implements Platform {
 
     private final Sharing sharing;
 
-    private final Preferences preferences;
-
     private final AndroidApplication app;
 
     protected AndroidPlatformBase(AndroidLauncher app) {
         this.app = app;
         sharing = new AndroidSharing(app);
-        preferences = new AndroidPreferences(app.getSharedPreferences("rectball", Context.MODE_PRIVATE));
     }
 
 
     @Override
     public Sharing sharing() {
         return sharing;
-    }
-
-    @Override
-    public Preferences preferences() {
-        return preferences;
     }
 
     @Override

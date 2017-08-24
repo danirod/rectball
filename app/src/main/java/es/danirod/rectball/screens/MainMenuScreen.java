@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015 Dani Rodríguez.
+ * Copyright (C) 2015-2017 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.*;
@@ -151,7 +150,7 @@ public class MainMenuScreen extends AbstractScreen {
                     Gdx.app.exit();
                 }
             });
-            if (game.getPlatform().preferences().getBoolean("fullscreen")) {
+            if (game.getPreferences().getBoolean("fullscreen")) {
                 getStage().addActor(quit);
             }
         }
@@ -188,7 +187,7 @@ public class MainMenuScreen extends AbstractScreen {
         Gdx.input.setInputProcessor(multiplexer);
 
         // On first run, show the tutorial.
-        if (!game.getPlatform().preferences().getBoolean("tutorialAsked")) {
+        if (!game.getPreferences().getBoolean("tutorialAsked")) {
             askTutorial().show(getStage());
         }
     }
@@ -225,8 +224,8 @@ public class MainMenuScreen extends AbstractScreen {
             public void cancel() {
                 game.getPlatform().analytic().sendEvent("UX", "Clicked", "Dismiss Tutorial");
                 game.player.playSound(SoundPlayer.SoundCode.FAIL);
-                game.getPlatform().preferences().putBoolean("tutorialAsked", true);
-                game.getPlatform().preferences().flush();
+                game.getPreferences().putBoolean("tutorialAsked", true);
+                game.getPreferences().flush();
                 tutorialCancel().show(getStage());
             }
         });

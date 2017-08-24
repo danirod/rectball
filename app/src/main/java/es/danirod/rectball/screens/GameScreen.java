@@ -192,9 +192,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 public void run() {
                     // Report that a game is starting.
                     Map<Integer, String> dimensions = new HashMap<>();
-                    dimensions.put(1, game.getPlatform().preferences().getBoolean("sound") ? "Yes" : "No");
-                    dimensions.put(2, game.getPlatform().preferences().getBoolean("colorblind") ? "Yes" : "No");
-                    dimensions.put(3, game.getPlatform().preferences().getBoolean("fullscreen") ? "Yes" : "No");
+                    dimensions.put(1, game.getPreferences().getBoolean("sound") ? "Yes" : "No");
+                    dimensions.put(2, game.getPreferences().getBoolean("colorblind") ? "Yes" : "No");
+                    dimensions.put(3, game.getPreferences().getBoolean("fullscreen") ? "Yes" : "No");
                     game.getPlatform().analytic().sendEventWithDimensions("Game", "Game started", dimensions);
                     game.getState().setCountdownFinished(true);
 

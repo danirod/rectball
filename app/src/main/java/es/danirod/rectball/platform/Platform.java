@@ -15,10 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package es.danirod.rectball.platform;
-
-import com.badlogic.gdx.Preferences;
 
 /**
  * This is the interface for platform code. Platform code is code that depends
@@ -38,8 +35,6 @@ public interface Platform {
      * @return sharing services instance.
      */
     Sharing sharing();
-
-    Preferences preferences();
 
     Analytics analytic();
 

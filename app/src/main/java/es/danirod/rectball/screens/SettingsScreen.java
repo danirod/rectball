@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015 Dani Rodríguez.
+ * Copyright (C) 2015-2017 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Application;
@@ -54,12 +53,12 @@ public class SettingsScreen extends AbstractScreen {
         // Sound
         if (sound == null) {
             sound = new SwitchActor(game.getLocale().get("settings.sound"), game.getSkin());
-            sound.setChecked(game.getPlatform().preferences().getBoolean("sound", true));
+            sound.setChecked(game.getPreferences().getBoolean("sound", true));
             sound.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent changeEvent, Actor actor) {
-                    game.getPlatform().preferences().putBoolean("sound", sound.isChecked());
-                    game.getPlatform().preferences().flush();
+                    game.getPreferences().putBoolean("sound", sound.isChecked());
+                    game.getPreferences().flush();
                     game.player.playSound(SoundCode.SELECT);
                 }
             });
@@ -68,12 +67,12 @@ public class SettingsScreen extends AbstractScreen {
         // Color
         if (color == null) {
             color = new SwitchActor(game.getLocale().get("settings.colorblind"), game.getSkin());
-            color.setChecked(game.getPlatform().preferences().getBoolean("colorblind"));
+            color.setChecked(game.getPreferences().getBoolean("colorblind"));
             color.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent changeEvent, Actor actor) {
-                    game.getPlatform().preferences().putBoolean("colorblind", color.isChecked());
-                    game.getPlatform().preferences().flush();
+                    game.getPreferences().putBoolean("colorblind", color.isChecked());
+                    game.getPreferences().flush();
                     game.updateBallAtlas();
                     game.player.playSound(SoundCode.SELECT);
                 }
@@ -83,12 +82,12 @@ public class SettingsScreen extends AbstractScreen {
         // Fullscreen
         if (fullscreen == null) {
             fullscreen = new SwitchActor(game.getLocale().get("settings.fullscreen"), game.getSkin());
-            fullscreen.setChecked(game.getPlatform().preferences().getBoolean("fullscreen"));
+            fullscreen.setChecked(game.getPreferences().getBoolean("fullscreen"));
             fullscreen.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    game.getPlatform().preferences().putBoolean("fullscreen", fullscreen.isChecked());
-                    game.getPlatform().preferences().flush();
+                    game.getPreferences().putBoolean("fullscreen", fullscreen.isChecked());
+                    game.getPreferences().flush();
                     game.getPlatform().toast(game.getLocale().get("settings.fullscreenReset"));
                     game.player.playSound(SoundCode.SELECT);
                 }
