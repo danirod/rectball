@@ -239,10 +239,12 @@ public class RectballGame extends Game {
         // Load TrueType fonts
         FreeTypeFontLoaderParameter normalPar = new FreeTypeFontLoaderParameter();
         normalPar.fontFileName = "fonts/Coda-Regular.ttf";
+        normalPar.fontParameters.minFilter = normalPar.fontParameters.magFilter = TextureFilter.Linear;
         normalPar.fontParameters.size = (int) Math.ceil(28 * Gdx.graphics.getDensity());
         manager.load("fonts/normal.ttf", BitmapFont.class, normalPar);
         FreeTypeFontLoaderParameter smallPar = new FreeTypeFontLoaderParameter();
         smallPar.fontFileName = "fonts/Coda-Regular.ttf";
+        smallPar.fontParameters.minFilter = smallPar.fontParameters.magFilter = TextureFilter.Linear;
         smallPar.fontParameters.size = (int) Math.ceil(23 * Gdx.graphics.getDensity());
         manager.load("fonts/small.ttf", BitmapFont.class, smallPar);
 
