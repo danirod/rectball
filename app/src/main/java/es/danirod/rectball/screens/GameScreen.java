@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015 Dani Rodríguez.
+ * Copyright (C) 2015-2017 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,20 +32,30 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import es.danirod.rectball.Constants;
-import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.SoundPlayer.SoundCode;
-import es.danirod.rectball.model.*;
-import es.danirod.rectball.scene2d.game.*;
-import es.danirod.rectball.scene2d.game.ScoreActor.ScoreListener;
-import es.danirod.rectball.scene2d.game.TimerActor.TimerCallback;
-import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
-import es.danirod.rectball.scene2d.ui.ConfirmDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import es.danirod.rectball.Constants;
+import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.SoundPlayer.SoundCode;
+import es.danirod.rectball.model.Ball;
+import es.danirod.rectball.model.BallColor;
+import es.danirod.rectball.model.Bounds;
+import es.danirod.rectball.model.CombinationFinder;
+import es.danirod.rectball.model.Coordinate;
+import es.danirod.rectball.model.ScoreCalculator;
+import es.danirod.rectball.scene2d.game.BallActor;
+import es.danirod.rectball.scene2d.game.BoardActor;
+import es.danirod.rectball.scene2d.game.BorderedContainer;
+import es.danirod.rectball.scene2d.game.ScoreActor;
+import es.danirod.rectball.scene2d.game.ScoreActor.ScoreListener;
+import es.danirod.rectball.scene2d.game.TimerActor;
+import es.danirod.rectball.scene2d.game.TimerActor.TimerCallback;
+import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
+import es.danirod.rectball.scene2d.ui.ConfirmDialog;
 
 public class GameScreen extends AbstractScreen implements TimerCallback, BallSelectionListener, ScoreListener {
 
@@ -547,8 +557,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // Update the score... and the record.
         int score = game.getState().getScore();
         int time = Math.round(game.getState().getElapsedTime());
-        game.getPlatform().score().registerScore(score, time);
-        game.getPlatform().score().flushData();
+        game.getScores().registerScore(score, time);
+        game.getScores().flushData();
 
         if (game.getPlatform().google().isSignedIn()) {
             game.getPlatform().google().uploadScore(score, time * 1000);
@@ -556,17 +566,17 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
 
         // Save information about this game in the statistics.
-        game.statistics.getTotalData().incrementValue("score", game.getState().getScore());
-        game.statistics.getTotalData().incrementValue("games");
-        game.statistics.getTotalData().incrementValue("time", Math.round(game.getState().getElapsedTime()));
-        game.getPlatform().statistics().saveStatistics(game.statistics);
+        game.getStatistics().getStatistics().getTotalData().incrementValue("score", game.getState().getScore());
+        game.getStatistics().getStatistics().getTotalData().incrementValue("games");
+        game.getStatistics().getStatistics().getTotalData().incrementValue("time", Math.round(game.getState().getElapsedTime()));
+        game.getStatistics().saveStatistics();
 
         // Mark a combination that the user could do if he had enough time.
         if (game.getState().getWiggledBounds() == null) {
             CombinationFinder combo = CombinationFinder.create(game.getState().getBoard());
             game.getState().setWiggledBounds(combo.getCombination());
         } else {
-            game.statistics.getTotalData().incrementValue("cheats");
+            game.getStatistics().getStatistics().getTotalData().incrementValue("cheats");
         }
         for (int y = 0; y < game.getState().getBoard().getSize(); y++) {
             for (int x = 0; x < game.getState().getBoard().getSize(); x++) {
@@ -617,7 +627,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         boolean usedCheat = game.getState().getWiggledBounds() != null;
 
         if (usedCheat)
-            game.statistics.getTotalData().incrementValue("cheats");
+            game.getStatistics().getStatistics().getTotalData().incrementValue("cheats");
 
         // Change the colors of the selected region.
         board.addAction(Actions.sequence(
@@ -649,18 +659,18 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         int rows = bounds.maxY - bounds.minY + 1;
         int cols = bounds.maxX - bounds.minX + 1;
         String size = Math.max(rows, cols) + "x" + Math.min(rows, cols);
-        game.statistics.getSizesData().incrementValue(size);
+        game.getStatistics().getStatistics().getSizesData().incrementValue(size);
 
         BallColor color = board.getBall(bounds.minX, bounds.minY).getBall().getColor();
-        game.statistics.getColorData().incrementValue(color.toString().toLowerCase());
-        game.statistics.getTotalData().incrementValue("balls", rows * cols);
-        game.statistics.getTotalData().incrementValue("combinations");
+        game.getStatistics().getStatistics().getColorData().incrementValue(color.toString().toLowerCase());
+        game.getStatistics().getStatistics().getTotalData().incrementValue("balls", rows * cols);
+        game.getStatistics().getStatistics().getTotalData().incrementValue("combinations");
 
         // Now, display the score to the user. If the combination is a
         // PERFECT combination, just display PERFECT.
         int boardSize = game.getState().getBoard().getSize() - 1;
         if (bounds.equals(new Bounds(0, 0, boardSize, boardSize))) {
-            game.statistics.getTotalData().incrementValue("perfect");
+            game.getStatistics().getStatistics().getTotalData().incrementValue("perfect");
 
             // Give score
             Label label = new Label("PERFECT", game.getSkin(), "monospace");

@@ -52,8 +52,9 @@ import java.util.Map;
 
 import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.model.GameState;
-import es.danirod.rectball.model.Statistics;
 import es.danirod.rectball.platform.Platform;
+import es.danirod.rectball.platform.ScoreIO;
+import es.danirod.rectball.platform.StatisticsIO;
 import es.danirod.rectball.scene2d.RectballSkin;
 import es.danirod.rectball.screens.AboutScreen;
 import es.danirod.rectball.screens.AbstractScreen;
@@ -79,7 +80,6 @@ public class RectballGame extends Game {
     private final Map<Integer, AbstractScreen> screens = new HashMap<>();
     private final GameState currentGame;
     private final Deque<AbstractScreen> screenStack = new ArrayDeque<>();
-    public Statistics statistics;
     public AssetManager manager;
     public SoundPlayer player;
     private RectballSkin uiSkin;
@@ -88,6 +88,10 @@ public class RectballGame extends Game {
 
     /** Whether the game is restoring state from an Android kill or not. */
     private boolean restoredState;
+
+    private ScoreIO scores; /** Holds information about the high score. */
+
+    private StatisticsIO statistics; /** Holds information about the statistics. */
 
     /** Batch instance in use by the game. */
     Batch batch;
@@ -123,6 +127,10 @@ public class RectballGame extends Game {
 
     @Override
     public void create() {
+        // Initialize platform.
+        this.scores = new ScoreIO();
+        this.statistics = new StatisticsIO();
+
         if (BuildConfig.FINE_DEBUG) {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
         }
@@ -159,8 +167,8 @@ public class RectballGame extends Game {
 
     public void finishLoading() {
         // Load the remaining data.
-        platform.score().readData();
-        statistics = platform.statistics().loadStatistics();
+        scores.readData();
+        statistics.loadStatistics();
         player = new SoundPlayer(this);
         uiSkin = new RectballSkin(this);
         updateBallAtlas();
@@ -361,6 +369,14 @@ public class RectballGame extends Game {
         data.clear();
 
         return screenshot;
+    }
+
+    public ScoreIO getScores() {
+        return scores;
+    }
+
+    public StatisticsIO getStatistics() {
+        return statistics;
     }
 
     public TextureAtlas getBallAtlas() {

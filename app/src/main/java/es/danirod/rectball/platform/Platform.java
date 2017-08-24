@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball
- * Copyright (C) 2015 Dani Rodríguez
+ * Copyright (C) 2015-2017 Dani Rodríguez
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,11 +39,7 @@ public interface Platform {
      */
     Sharing sharing();
 
-    Scores score();
-
     Preferences preferences();
-
-    Statistics statistics();
 
     Analytics analytic();
 
