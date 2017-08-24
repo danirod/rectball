@@ -44,3 +44,11 @@
 
 # Analytic services will need to know which screen I'm on.
 -keepnames class es.danirod.rectball.screens.*
+
+# Keep the Statistics class members because this class uses Reflection to store the stats.
+-keepclassmembers class es.danirod.rectball.io.Statistics {
+    private <fields>;
+}
+-keepclassmembers class es.danirod.rectball.io.Statistics$StatisticSet {
+    private <fields>;
+}
