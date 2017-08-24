@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball
- * Copyright (C) 2015 Dani Rodríguez
+ * Copyright (C) 2015-2017 Dani Rodríguez
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,10 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package es.danirod.rectball.android;
 
-package es.danirod.rectball.platform;
-
-import com.badlogic.gdx.Preferences;
+import android.content.Intent;
 
 /**
  * This is the interface for platform code. Platform code is code that depends
@@ -30,24 +29,27 @@ import com.badlogic.gdx.Preferences;
  * @author danirod
  * @since 0.4.0
  */
-public interface Platform {
+abstract class AbstractPlatform {
 
-    /**
-     * Get the sharing services instance attached to this platform.
-     *
-     * @return sharing services instance.
-     */
-    Sharing sharing();
+    final AndroidLauncher context;
 
-    Scores score();
+    public AbstractPlatform(AndroidLauncher context) {
+        this.context = context;
+    }
 
-    Preferences preferences();
+    public void onStart() {
 
-    Statistics statistics();
+    }
 
-    Analytics analytic();
+    public void onStop() {
 
-    GoogleServices google();
+    }
 
-    void toast(CharSequence msg);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+    }
+
+    public abstract Analytics getAnalytics();
+
+    public abstract GameServices getGameServices();
 }

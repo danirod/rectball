@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball
- * Copyright (C) 2015 Dani Rodríguez
+ * Copyright (C) 2015-2017 Dani Rodríguez
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,8 +22,6 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-import es.danirod.rectball.platform.Analytics;
-
 import java.util.Map;
 
 /**
@@ -34,16 +32,12 @@ import java.util.Map;
  * @author danirod
  * @since 0.4.0
  */
-class AndroidAnalytics implements Analytics {
-
-    private AndroidLauncher app;
+class GoogleAnalyticsRuntime implements Analytics {
 
     private Tracker tracker;
 
-    public AndroidAnalytics(AndroidLauncher app) {
-        this.app = app;
-
-        GoogleAnalytics analytics = GoogleAnalytics.getInstance(app);
+    public GoogleAnalyticsRuntime(AndroidLauncher context) {
+        GoogleAnalytics analytics = GoogleAnalytics.getInstance(context);
         analytics.setDryRun(BuildConfig.ANALYTICS_DRY_RUN);
         tracker = analytics.newTracker(R.xml.global_tracker);
         tracker.enableExceptionReporting(true);

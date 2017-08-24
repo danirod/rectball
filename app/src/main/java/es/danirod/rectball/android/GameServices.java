@@ -1,6 +1,6 @@
 /*
- * This file is part of Rectball
- * Copyright (C) 2015 Dani Rodríguez
+ * This file is part of Rectball.
+ * Copyright (C) 2015-2017 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-package es.danirod.rectball.platform;
+package es.danirod.rectball.android;
 
 /**
  * @author danirod
+ * @since 0.4.0
  */
-public interface Statistics {
+public interface GameServices {
 
-    es.danirod.rectball.model.Statistics loadStatistics();
+    void signIn();
 
-    void saveStatistics(es.danirod.rectball.model.Statistics statistics);
+    void signOut();
 
+    boolean isSignedIn();
+
+    void uploadScore(int score, int time);
+
+    void showLeaderboards();
+
+    void showAchievements();
 }

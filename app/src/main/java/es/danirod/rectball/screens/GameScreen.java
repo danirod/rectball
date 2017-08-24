@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015 Dani Rodríguez.
+ * Copyright (C) 2015-2017 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,20 +32,30 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import es.danirod.rectball.Constants;
-import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.SoundPlayer.SoundCode;
-import es.danirod.rectball.model.*;
-import es.danirod.rectball.scene2d.game.*;
-import es.danirod.rectball.scene2d.game.ScoreActor.ScoreListener;
-import es.danirod.rectball.scene2d.game.TimerActor.TimerCallback;
-import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
-import es.danirod.rectball.scene2d.ui.ConfirmDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import es.danirod.rectball.Constants;
+import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.SoundPlayer.SoundCode;
+import es.danirod.rectball.model.Ball;
+import es.danirod.rectball.model.BallColor;
+import es.danirod.rectball.model.Bounds;
+import es.danirod.rectball.model.CombinationFinder;
+import es.danirod.rectball.model.Coordinate;
+import es.danirod.rectball.model.ScoreCalculator;
+import es.danirod.rectball.scene2d.game.BallActor;
+import es.danirod.rectball.scene2d.game.BoardActor;
+import es.danirod.rectball.scene2d.game.BorderedContainer;
+import es.danirod.rectball.scene2d.game.ScoreActor;
+import es.danirod.rectball.scene2d.game.ScoreActor.ScoreListener;
+import es.danirod.rectball.scene2d.game.TimerActor;
+import es.danirod.rectball.scene2d.game.TimerActor.TimerCallback;
+import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
+import es.danirod.rectball.scene2d.ui.ConfirmDialog;
 
 public class GameScreen extends AbstractScreen implements TimerCallback, BallSelectionListener, ScoreListener {
 
@@ -102,7 +112,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             @Override
             public void ok() {
                 // The user wants to leave the game.
-                game.getPlatform().analytic().sendEvent("UX", "Clicked", "Quit game");
+                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Quit game");
                 game.player.playSound(SoundCode.SUCCESS);
                 askingLeave = false;
                 onTimeOut();
@@ -111,7 +121,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             @Override
             public void cancel() {
                 // The user wants to resume the game.
-                game.getPlatform().analytic().sendEvent("UX", "Clicked", "Don't quit game");
+                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Don't quit game");
                 game.player.playSound(SoundCode.FAIL);
                 askingLeave = false;
                 resumeGame();
@@ -130,7 +140,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
             @Override
             public void ok() {
-                game.getPlatform().analytic().sendEvent("UX", "Clicked", "Continue game");
+                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Continue game");
                 // Continue
                 game.player.playSound(SoundCode.SELECT);
                 askingLeave = false;
@@ -140,7 +150,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             @Override
             public void cancel() {
                 // Leave
-                game.getPlatform().analytic().sendEvent("UX", "Clicked", "Leave game");
+                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Leave game");
                 game.player.playSound(SoundCode.SELECT);
                 showLeaveDialog();
             }
@@ -182,10 +192,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 public void run() {
                     // Report that a game is starting.
                     Map<Integer, String> dimensions = new HashMap<>();
-                    dimensions.put(1, game.getPlatform().preferences().getBoolean("sound") ? "Yes" : "No");
-                    dimensions.put(2, game.getPlatform().preferences().getBoolean("colorblind") ? "Yes" : "No");
-                    dimensions.put(3, game.getPlatform().preferences().getBoolean("fullscreen") ? "Yes" : "No");
-                    game.getPlatform().analytic().sendEventWithDimensions("Game", "Game started", dimensions);
+                    dimensions.put(1, game.getPreferences().getBoolean("sound") ? "Yes" : "No");
+                    dimensions.put(2, game.getPreferences().getBoolean("colorblind") ? "Yes" : "No");
+                    dimensions.put(3, game.getPreferences().getBoolean("fullscreen") ? "Yes" : "No");
+                    game.getContext().getAnalytics().sendEventWithDimensions("Game", "Game started", dimensions);
                     game.getState().setCountdownFinished(true);
 
                     // Start the game unless the user is leaving or is paused.
@@ -332,7 +342,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         help.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.getPlatform().analytic().sendEvent("UX", "Clicked", "Help");
+                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Help");
 
                 // Don't act if the game hasn't started yet.
                 if (!timer.isRunning() || game.getState().isTimeout()) {
@@ -377,7 +387,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         pause.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.getPlatform().analytic().sendEvent("UX", "Clicked", "Quit");
+                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Quit");
                 game.player.playSound(SoundCode.FAIL);
                 pauseGame();
                 event.cancel();
@@ -455,7 +465,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // The user should be able to leave during the game.
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.getPlatform().analytic().sendEvent("UX", "Pressed", "Back");
+            game.getContext().getAnalytics().sendEvent("UX", "Pressed", "Back");
             if (!paused && !game.getState().isTimeout()) {
                 pauseGame();
             }
@@ -535,7 +545,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         Map<Integer, String> dimensions = new HashMap<>();
         dimensions.put(3, timer.getSeconds() > 0 ? "Yes" : "No");
 
-        game.getPlatform().analytic().sendEventWithDimensionsAndMetrics("Game", "Game finished", dimensions, metrics);
+        game.getContext().getAnalytics().sendEventWithDimensionsAndMetrics("Game", "Game finished", dimensions, metrics);
 
         // Disable any further interactions.
         board.clearSelection();
@@ -547,26 +557,26 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // Update the score... and the record.
         int score = game.getState().getScore();
         int time = Math.round(game.getState().getElapsedTime());
-        game.getPlatform().score().registerScore(score, time);
-        game.getPlatform().score().flushData();
+        game.getScores().registerScore(score, time);
+        game.getScores().flushData();
 
-        if (game.getPlatform().google().isSignedIn()) {
-            game.getPlatform().google().uploadScore(score, time * 1000);
+        if (game.getContext().getGameServices().isSignedIn()) {
+            game.getContext().getGameServices().uploadScore(score, time * 1000);
         }
 
 
         // Save information about this game in the statistics.
-        game.statistics.getTotalData().incrementValue("score", game.getState().getScore());
-        game.statistics.getTotalData().incrementValue("games");
-        game.statistics.getTotalData().incrementValue("time", Math.round(game.getState().getElapsedTime()));
-        game.getPlatform().statistics().saveStatistics(game.statistics);
+        game.getStatistics().getTotalData().incrementValue("score", game.getState().getScore());
+        game.getStatistics().getTotalData().incrementValue("games");
+        game.getStatistics().getTotalData().incrementValue("time", Math.round(game.getState().getElapsedTime()));
+        game.getStatistics().saveStatistics();
 
         // Mark a combination that the user could do if he had enough time.
         if (game.getState().getWiggledBounds() == null) {
             CombinationFinder combo = CombinationFinder.create(game.getState().getBoard());
             game.getState().setWiggledBounds(combo.getCombination());
         } else {
-            game.statistics.getTotalData().incrementValue("cheats");
+            game.getStatistics().getTotalData().incrementValue("cheats");
         }
         for (int y = 0; y < game.getState().getBoard().getSize(); y++) {
             for (int x = 0; x < game.getState().getBoard().getSize(); x++) {
@@ -617,7 +627,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         boolean usedCheat = game.getState().getWiggledBounds() != null;
 
         if (usedCheat)
-            game.statistics.getTotalData().incrementValue("cheats");
+            game.getStatistics().getTotalData().incrementValue("cheats");
 
         // Change the colors of the selected region.
         board.addAction(Actions.sequence(
@@ -649,18 +659,18 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         int rows = bounds.maxY - bounds.minY + 1;
         int cols = bounds.maxX - bounds.minX + 1;
         String size = Math.max(rows, cols) + "x" + Math.min(rows, cols);
-        game.statistics.getSizesData().incrementValue(size);
+        game.getStatistics().getSizesData().incrementValue(size);
 
         BallColor color = board.getBall(bounds.minX, bounds.minY).getBall().getColor();
-        game.statistics.getColorData().incrementValue(color.toString().toLowerCase());
-        game.statistics.getTotalData().incrementValue("balls", rows * cols);
-        game.statistics.getTotalData().incrementValue("combinations");
+        game.getStatistics().getColorData().incrementValue(color.toString().toLowerCase());
+        game.getStatistics().getTotalData().incrementValue("balls", rows * cols);
+        game.getStatistics().getTotalData().incrementValue("combinations");
 
         // Now, display the score to the user. If the combination is a
         // PERFECT combination, just display PERFECT.
         int boardSize = game.getState().getBoard().getSize() - 1;
         if (bounds.equals(new Bounds(0, 0, boardSize, boardSize))) {
-            game.statistics.getTotalData().incrementValue("perfect");
+            game.getStatistics().getTotalData().incrementValue("perfect");
 
             // Give score
             Label label = new Label("PERFECT", game.getSkin(), "monospace");

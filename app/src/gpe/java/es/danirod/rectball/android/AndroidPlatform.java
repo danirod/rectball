@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball
- * Copyright (C) 2015 Dani Rodríguez
+ * Copyright (C) 2015-2017 Dani Rodríguez
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,9 +20,6 @@ package es.danirod.rectball.android;
 
 import android.content.Intent;
 
-import es.danirod.rectball.platform.Analytics;
-import es.danirod.rectball.platform.GoogleServices;
-
 /**
  * This contains code for the Android platform. Here code that uses Android
  * SDK or Android API might be used. This code won't run on other platforms
@@ -31,43 +28,40 @@ import es.danirod.rectball.platform.GoogleServices;
  * @author danirod
  * @since 0.4.0
  */
-class AndroidPlatform extends AndroidPlatformBase {
+class AndroidPlatform extends AbstractPlatform {
 
-    private final AndroidGoogleServices google;
+    final GooglePlayGamesRuntime gpg;
 
-    private final AndroidAnalytics analytic;
+    final GoogleAnalyticsRuntime ga;
 
-    private final AndroidLauncher application;
-
-    protected AndroidPlatform(AndroidLauncher app) {
-        super(app);
-        this.application = app;
-        google = new AndroidGoogleServices(app);
-        analytic = new AndroidAnalytics(app);
+    protected AndroidPlatform(AndroidLauncher context) {
+        super(context);
+        gpg = new GooglePlayGamesRuntime(context);
+        ga = new GoogleAnalyticsRuntime(context);
     }
 
     @Override
-    public GoogleServices google() {
-        return google;
+    public GameServices getGameServices() {
+        return gpg;
     }
 
     @Override
-    public Analytics analytic() {
-        return analytic;
+    public Analytics getAnalytics() {
+        return ga;
     }
 
     @Override
     public void onStart() {
-        google.gameHelper.onStart(this.application);
+        gpg.gameHelper.onStart(context);
     }
 
     @Override
     public void onStop() {
-        google.gameHelper.onStop();
+        gpg.gameHelper.onStop();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        google.gameHelper.onActivityResult(requestCode, resultCode, data);
+        gpg.gameHelper.onActivityResult(requestCode, resultCode, data);
     }
 }

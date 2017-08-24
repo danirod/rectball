@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015 Dani Rodríguez.
+ * Copyright (C) 2015-2017 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.*;
@@ -100,7 +99,7 @@ public class MainMenuScreen extends AbstractScreen {
                     new ChangeListener() {
                         @Override
                         public void changed(ChangeEvent event, Actor actor) {
-                            game.getPlatform().sharing().openInStore();
+                            game.openInStore();
                             event.cancel();
                         }
                     }
@@ -114,10 +113,10 @@ public class MainMenuScreen extends AbstractScreen {
                             @Override
                             public void changed(ChangeEvent event, Actor actor) {
                                 game.player.playSound(SoundPlayer.SoundCode.SELECT);
-                                if (!game.getPlatform().google().isSignedIn()) {
-                                    game.getPlatform().google().signIn();
+                                if (!game.getContext().getGameServices().isSignedIn()) {
+                                    game.getContext().getGameServices().signIn();
                                 } else {
-                                    game.getPlatform().google().showLeaderboards();
+                                    game.getContext().getGameServices().showLeaderboards();
                                 }
                                 event.cancel();
                             }
@@ -131,10 +130,10 @@ public class MainMenuScreen extends AbstractScreen {
                             @Override
                             public void changed(ChangeEvent event, Actor actor) {
                                 game.player.playSound(SoundPlayer.SoundCode.SELECT);
-                                if (!game.getPlatform().google().isSignedIn()) {
-                                    game.getPlatform().google().signIn();
+                                if (!game.getContext().getGameServices().isSignedIn()) {
+                                    game.getContext().getGameServices().signIn();
                                 } else {
-                                    game.getPlatform().google().showAchievements();
+                                    game.getContext().getGameServices().showAchievements();
                                 }
                                 event.cancel();
                             }
@@ -151,7 +150,7 @@ public class MainMenuScreen extends AbstractScreen {
                     Gdx.app.exit();
                 }
             });
-            if (game.getPlatform().preferences().getBoolean("fullscreen")) {
+            if (game.getPreferences().getBoolean("fullscreen")) {
                 getStage().addActor(quit);
             }
         }
@@ -188,7 +187,7 @@ public class MainMenuScreen extends AbstractScreen {
         Gdx.input.setInputProcessor(multiplexer);
 
         // On first run, show the tutorial.
-        if (!game.getPlatform().preferences().getBoolean("tutorialAsked")) {
+        if (!game.getPreferences().getBoolean("tutorialAsked")) {
             askTutorial().show(getStage());
         }
     }
@@ -196,7 +195,7 @@ public class MainMenuScreen extends AbstractScreen {
     @Override
     public void render(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
-            game.getPlatform().analytic().sendEvent("UX", "Key Pressed", "Back");
+            game.getContext().getAnalytics().sendEvent("UX", "Key Pressed", "Back");
             Gdx.app.exit();
         }
 
@@ -216,17 +215,17 @@ public class MainMenuScreen extends AbstractScreen {
         dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
             @Override
             public void ok() {
-                game.getPlatform().analytic().sendEvent("UX", "Clicked", "Enter Tutorial");
+                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Enter Tutorial");
                 game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
                 game.pushScreen(Screens.TUTORIAL);
             }
 
             @Override
             public void cancel() {
-                game.getPlatform().analytic().sendEvent("UX", "Clicked", "Dismiss Tutorial");
+                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Dismiss Tutorial");
                 game.player.playSound(SoundPlayer.SoundCode.FAIL);
-                game.getPlatform().preferences().putBoolean("tutorialAsked", true);
-                game.getPlatform().preferences().flush();
+                game.getPreferences().putBoolean("tutorialAsked", true);
+                game.getPreferences().flush();
                 tutorialCancel().show(getStage());
             }
         });

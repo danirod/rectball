@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015 Dani Rodríguez.
+ * Copyright (C) 2015-2017 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package es.danirod.rectball.android;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
@@ -60,13 +57,13 @@ public class AndroidLauncher extends AndroidApplication {
             String jsonBoard = savedInstanceState.getString("state");
             if (jsonBoard != null) {
                 GameState state = json.fromJson(GameState.class, jsonBoard);
-                game = new RectballGame(platform, state);
+                game = new RectballGame(this, state);
             } else {
-                game = new RectballGame(platform);
+                game = new RectballGame(this);
             }
             Log.d("Rectball", "Restoring state: " + jsonBoard);
         } else {
-            game = new RectballGame(platform);
+            game = new RectballGame(this);
             Log.d("Rectball", "New execution. No restoring state needed.");
         }
 
@@ -120,7 +117,7 @@ public class AndroidLauncher extends AndroidApplication {
 
     @TargetApi(19) // KitKat
     private void setFullscreenFlags() {
-        if (platform != null && platform.preferences().getBoolean("fullscreen")) {
+        if (this.getPreferences("rectball").getBoolean("fullscreen")) {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -129,5 +126,13 @@ public class AndroidLauncher extends AndroidApplication {
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
+    }
+
+    public Analytics getAnalytics() {
+        return platform.getAnalytics();
+    }
+
+    public GameServices getGameServices() {
+        return platform.getGameServices();
     }
 }

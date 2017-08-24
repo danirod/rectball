@@ -18,9 +18,16 @@
 
 package es.danirod.rectball;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.support.v4.content.FileProvider;
+
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
@@ -30,6 +37,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -44,16 +52,19 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoa
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 
+import es.danirod.rectball.android.AndroidLauncher;
 import es.danirod.rectball.android.BuildConfig;
+import es.danirod.rectball.android.R;
+import es.danirod.rectball.io.Scores;
+import es.danirod.rectball.io.Statistics;
 import es.danirod.rectball.model.GameState;
-import es.danirod.rectball.model.Statistics;
-import es.danirod.rectball.platform.Platform;
 import es.danirod.rectball.scene2d.RectballSkin;
 import es.danirod.rectball.screens.AboutScreen;
 import es.danirod.rectball.screens.AbstractScreen;
@@ -72,14 +83,13 @@ import es.danirod.rectball.screens.TutorialScreen;
  */
 public class RectballGame extends Game {
 
-    private final Platform platform;
+    private final AndroidLauncher context;
 
     /* FIXME: Privatize this. */
 
     private final Map<Integer, AbstractScreen> screens = new HashMap<>();
     private final GameState currentGame;
     private final Deque<AbstractScreen> screenStack = new ArrayDeque<>();
-    public Statistics statistics;
     public AssetManager manager;
     public SoundPlayer player;
     private RectballSkin uiSkin;
@@ -89,40 +99,31 @@ public class RectballGame extends Game {
     /** Whether the game is restoring state from an Android kill or not. */
     private boolean restoredState;
 
+    private Scores scores; /** Holds information about the high score. */
+
+    private Statistics statistics; /** Holds information about the statistics. */
+
     /** Batch instance in use by the game. */
     Batch batch;
 
-    /**
-     * Create a new instance of Rectball.
-     *
-     * @param platform the platform this game is using.
-     * @param state
-     */
-    public RectballGame(Platform platform, GameState state) {
-        this.platform = platform;
-        this.currentGame = state;
-        this.restoredState = true;
-    }
-
-    public RectballGame(Platform platform) {
-        this.platform = platform;
+    public RectballGame(AndroidLauncher context) {
+        this.context = context;
         this.currentGame = new GameState();
         this.restoredState = false;
     }
 
-    /**
-     * Get the common platform facade. This lets the application logic request
-     * the platform to do special things such as sharing the score or sending
-     * information.
-     *
-     * @return the platform this game is using.
-     */
-    public Platform getPlatform() {
-        return platform;
+    public RectballGame(AndroidLauncher context, GameState state) {
+        this.context = context;
+        this.currentGame = state;
+        this.restoredState = true;
     }
 
     @Override
     public void create() {
+        // Initialize platform.
+        this.scores = new Scores();
+        this.statistics = new Statistics();
+
         if (BuildConfig.FINE_DEBUG) {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
         }
@@ -159,8 +160,8 @@ public class RectballGame extends Game {
 
     public void finishLoading() {
         // Load the remaining data.
-        platform.score().readData();
-        statistics = platform.statistics().loadStatistics();
+        scores.readData();
+        statistics.loadStatistics();
         player = new SoundPlayer(this);
         uiSkin = new RectballSkin(this);
         updateBallAtlas();
@@ -327,7 +328,7 @@ public class RectballGame extends Game {
     }
 
     public void updateBallAtlas() {
-        boolean isColorblind = platform.preferences().getBoolean("colorblind");
+        boolean isColorblind = getPreferences().getBoolean("colorblind");
         String ballsTexture = isColorblind ? "board/colorblind.png" : "board/normal.png";
         Texture balls = manager.get(ballsTexture);
         TextureRegion[][] regions = TextureRegion.split(balls, 256, 256);
@@ -363,6 +364,100 @@ public class RectballGame extends Game {
         data.clear();
 
         return screenshot;
+    }
+
+    public void shareScreenshot(Pixmap pixmap) {
+        Gdx.app.debug("SharingServices", "Requested sharing a screenshot");
+        shareScreenshotWithMessage(pixmap, "");
+    }
+
+    public void shareGameOverScreenshot(Pixmap pixmap, int score, int time) {
+        Gdx.app.debug("SharingServices", "Requested sharing a screenshot");
+
+        // Let's make a dirty cast to get the game instance.
+        RectballGame game = (RectballGame) context.getApplicationListener();
+        String message = game.getLocale().format("sharing.text", score);
+        message += " https://play.google.com/store/apps/details?id=es.danirod.rectball.android";
+        shareScreenshotWithMessage(pixmap, message);
+    }
+
+    public void openInStore() {
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("market://details?id=" + AndroidLauncher.PACKAGE));
+            context.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=" + AndroidLauncher.PACKAGE));
+            context.startActivity(intent);
+        }
+    }
+
+    private void shareScreenshotWithMessage(Pixmap pixmap, String text) {
+        // Let's make a dirty cast to get the game instance.
+        RectballGame game = (RectballGame) context.getApplicationListener();
+
+        try {
+            Uri screenshot = createScreenshotURI(pixmap);
+            Intent sharingIntent = shareScreenshotURI(screenshot, text);
+            String title = game.getLocale().get("sharing.intent");
+            context.startActivity(Intent.createChooser(sharingIntent, title));
+        } catch (Exception ex) {
+            Gdx.app.error("SharingServices", "Couldn't share photo", ex);
+        }
+    }
+
+    private Uri createScreenshotURI(Pixmap pixmap) {
+        /*
+            FIXME: THIS HACK MAKES GOD KILL KITTENS
+            Should investigate on how to use the Android compatibility library.
+            However, even the compatibility library seems to break compatibility
+            since I cannot share anymore using SMS. Oh, well, how beautifully
+            broken Android seems to be anyway.
+         */
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Use the fucking new Android permission system.
+            File sharingPath = new File(context.getFilesDir(), "rectball-screenshots");
+            File newScreenshot = new File(sharingPath, "screenshot.png");
+            FileHandle screenshotHandle = Gdx.files.absolute(newScreenshot.getAbsolutePath());
+            PixmapIO.writePNG(screenshotHandle, pixmap);
+            return FileProvider.getUriForFile(context, context.getString(R.string.provider), newScreenshot);
+        } else {
+            // Use the fucking old Android permission system.
+            FileHandle sharingPath = Gdx.files.external("rectball");
+            sharingPath.mkdirs();
+            FileHandle newScreenshot = Gdx.files.external("rectball/screenshot.png");
+            PixmapIO.writePNG(newScreenshot, pixmap);
+            return Uri.fromFile(newScreenshot.file());
+        }
+    }
+
+    private Intent shareScreenshotURI(Uri uri, CharSequence message) {
+        Intent sharingIntent = new Intent();
+        sharingIntent.setAction(Intent.ACTION_SEND);
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, message);
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, message);
+        sharingIntent.setType("image/png");
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        return sharingIntent;
+    }
+
+    public AndroidLauncher getContext() {
+        return context;
+    }
+
+    public Scores getScores() {
+        return scores;
+    }
+
+    public Statistics getStatistics() {
+        return statistics;
+    }
+
+    public Preferences getPreferences() {
+        return Gdx.app.getPreferences("rectball");
     }
 
     public TextureAtlas getBallAtlas() {

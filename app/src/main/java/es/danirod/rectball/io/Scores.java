@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball
- * Copyright (C) 2015 Dani Rodríguez
+ * Copyright (C) 2015-2017 Dani Rodríguez
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,30 +15,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-package es.danirod.rectball.platform;
+package es.danirod.rectball.io;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.Base64Coder;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonWriter;
 
 import java.io.IOException;
 import java.io.StringWriter;
 
-/**
- * Class designed to emulate how the 0.4.0-pre Rectball stored scores.
- *
- * @author Dani Rodríguez
- */
-public abstract class LegacyScores implements Scores {
+public class Scores {
 
-    private int highScore;
+    private static final String SCORES_FILE = "scores"; /** Scores data file location. */
 
-    private int highTime;
+    private int highScore; /** The current high score. */
 
-    @Override
-    public final void readData() {
-        FileHandle scores = getScoresFile();
+    private int highTime; /** The current highest time. */
+
+    public void readData() {
+        FileHandle scores = Gdx.files.local(SCORES_FILE);
         if (scores.exists()) {
             Gdx.app.log("ScoreServices", "Score file found. Attempting to read it...");
 
@@ -55,8 +53,7 @@ public abstract class LegacyScores implements Scores {
         }
     }
 
-    @Override
-    public final void flushData() {
+    public void flushData() {
         String jsonData = "";
         try {
             // Convert the data to JSON.
@@ -73,25 +70,20 @@ public abstract class LegacyScores implements Scores {
         }
 
         String encodedData = Base64Coder.encodeString(jsonData);
-        getScoresFile().writeString(encodedData, false);
+        FileHandle scores = Gdx.files.local(SCORES_FILE);
+        scores.writeString(encodedData, false);
     }
 
-    @Override
-    public final void registerScore(int score, int time) {
+    public void registerScore(int score, int time) {
         highScore = Math.max(highScore, score);
         highTime = Math.max(highTime, time);
     }
 
-    @Override
-    public final int getHighScore() {
+    public int getHighScore() {
         return highScore;
     }
 
-    @Override
-    public final int getHighTime() {
+    public int getHighTime() {
         return highTime;
     }
-
-    protected abstract FileHandle getScoresFile();
-
 }

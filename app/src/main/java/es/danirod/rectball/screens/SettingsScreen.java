@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015 Dani Rodríguez.
+ * Copyright (C) 2015-2017 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package es.danirod.rectball.screens;
+
+import android.widget.Toast;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
@@ -54,12 +55,12 @@ public class SettingsScreen extends AbstractScreen {
         // Sound
         if (sound == null) {
             sound = new SwitchActor(game.getLocale().get("settings.sound"), game.getSkin());
-            sound.setChecked(game.getPlatform().preferences().getBoolean("sound", true));
+            sound.setChecked(game.getPreferences().getBoolean("sound", true));
             sound.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent changeEvent, Actor actor) {
-                    game.getPlatform().preferences().putBoolean("sound", sound.isChecked());
-                    game.getPlatform().preferences().flush();
+                    game.getPreferences().putBoolean("sound", sound.isChecked());
+                    game.getPreferences().flush();
                     game.player.playSound(SoundCode.SELECT);
                 }
             });
@@ -68,12 +69,12 @@ public class SettingsScreen extends AbstractScreen {
         // Color
         if (color == null) {
             color = new SwitchActor(game.getLocale().get("settings.colorblind"), game.getSkin());
-            color.setChecked(game.getPlatform().preferences().getBoolean("colorblind"));
+            color.setChecked(game.getPreferences().getBoolean("colorblind"));
             color.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent changeEvent, Actor actor) {
-                    game.getPlatform().preferences().putBoolean("colorblind", color.isChecked());
-                    game.getPlatform().preferences().flush();
+                    game.getPreferences().putBoolean("colorblind", color.isChecked());
+                    game.getPreferences().flush();
                     game.updateBallAtlas();
                     game.player.playSound(SoundCode.SELECT);
                 }
@@ -83,14 +84,19 @@ public class SettingsScreen extends AbstractScreen {
         // Fullscreen
         if (fullscreen == null) {
             fullscreen = new SwitchActor(game.getLocale().get("settings.fullscreen"), game.getSkin());
-            fullscreen.setChecked(game.getPlatform().preferences().getBoolean("fullscreen"));
+            fullscreen.setChecked(game.getPreferences().getBoolean("fullscreen"));
             fullscreen.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    game.getPlatform().preferences().putBoolean("fullscreen", fullscreen.isChecked());
-                    game.getPlatform().preferences().flush();
-                    game.getPlatform().toast(game.getLocale().get("settings.fullscreenReset"));
+                    game.getPreferences().putBoolean("fullscreen", fullscreen.isChecked());
+                    game.getPreferences().flush();
                     game.player.playSound(SoundCode.SELECT);
+                    game.getContext().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(game.getContext(), game.getLocale().get("settings.fullscreenReset"), Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
             });
         }
@@ -115,7 +121,7 @@ public class SettingsScreen extends AbstractScreen {
 
         // Log out button
         if (BuildConfig.FLAVOR.equals("gpe")) {
-            String logoutText = game.getPlatform().google().isSignedIn() ?
+            String logoutText = game.getContext().getGameServices().isSignedIn() ?
                     game.getLocale().get("gplay.logout") :
                     game.getLocale().get("gplay.login");
             if (googlePlayLogin == null) {
@@ -124,14 +130,14 @@ public class SettingsScreen extends AbstractScreen {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
                         // TODO: This code will probably need to be made async due to how Google works.
-                        if (game.getPlatform().google().isSignedIn()) {
+                        if (game.getContext().getGameServices().isSignedIn()) {
                             // Proceed to sign out the user.
-                            game.getPlatform().analytic().sendEvent("UX", "Clicked", "Sign out from Google Play");
-                            game.getPlatform().google().signOut();
+                            game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Sign out from Google Play");
+                            game.getContext().getGameServices().signOut();
                         } else {
                             // Send signed out event.
-                            game.getPlatform().analytic().sendEvent("UX", "Clicked", "Sign in to Google Play");
-                            game.getPlatform().google().signIn();
+                            game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Sign in to Google Play");
+                            game.getContext().getGameServices().signIn();
                         }
                         game.player.playSound(SoundCode.SELECT);
                         googlePlayLogin.setText(game.getLocale().get("gplay.updating"));
@@ -140,7 +146,7 @@ public class SettingsScreen extends AbstractScreen {
 
                             @Override
                             public void run() {
-                                String logoutText = game.getPlatform().google().isSignedIn() ?
+                                String logoutText = game.getContext().getGameServices().isSignedIn() ?
                                         game.getLocale().get("gplay.logout") :
                                         game.getLocale().get("gplay.login");
                                 googlePlayLogin.setText(logoutText);

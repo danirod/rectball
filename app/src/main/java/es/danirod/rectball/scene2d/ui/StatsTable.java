@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball
- * Copyright (C) 2015 Dani Rodríguez
+ * Copyright (C) 2015-2017 Dani Rodríguez
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,15 +19,21 @@
 package es.danirod.rectball.scene2d.ui;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
-import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.model.Statistics;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.io.Statistics;
 
 public class StatsTable extends Table {
 
@@ -69,16 +75,16 @@ public class StatsTable extends Table {
 
         boolean printedSomething = false;
         // Add best score.
-        if (game.getPlatform().score().getHighScore() != 0) {
-            String bestScore = Long.toString(game.getPlatform().score().getHighScore());
+        if (game.getScores().getHighScore() != 0) {
+            String bestScore = Long.toString(game.getScores().getHighScore());
             best.add(new Label(game.getLocale().get("statistics.best.score"), data)).align(Align.left).fillX();
             best.add(new Label(bestScore, data)).align(Align.right).expandX().row();
             printedSomething = true;
         }
 
         // Add best time.
-        if (game.getPlatform().score().getHighTime() != 0) {
-            String bestTime = secondsToTime(game.getPlatform().score().getHighTime());
+        if (game.getScores().getHighTime() != 0) {
+            String bestTime = secondsToTime(game.getScores().getHighTime());
             best.add(new Label(game.getLocale().get("statistics.best.time"), data)).align(Align.left).fillX();
             best.add(new Label(bestTime, data)).align(Align.right).expandX().row();
             printedSomething = true;
@@ -98,7 +104,7 @@ public class StatsTable extends Table {
         Table total = new Table();
         total.add(new Label(game.getLocale().get("statistics.total"), this.title)).colspan(2).row();
 
-        Statistics.StatisticSet set = game.statistics.getTotalData();
+        Statistics.StatisticSet set = game.getStatistics().getTotalData();
         if (set.getStats().isEmpty()) {
             Label noData = new Label(game.getLocale().get("statistics.noData"), game.getSkin());
             noData.setAlignment(Align.center);
@@ -125,7 +131,7 @@ public class StatsTable extends Table {
         Table color = new Table();
         color.add(new Label(game.getLocale().get("statistics.color"), this.title)).colspan(4).row();
 
-        if (game.statistics.getColorData().getStats().isEmpty()) {
+        if (game.getStatistics().getColorData().getStats().isEmpty()) {
             Label noData = new Label(game.getLocale().get("statistics.noData"), game.getSkin());
             noData.setAlignment(Align.center);
             color.add(noData).colspan(4).fillX().expandX().padTop(10).padBottom(10).row();
@@ -134,7 +140,7 @@ public class StatsTable extends Table {
 
         // Put the data in a TreeMap. TreeMaps keep order. Use reverse to show bigger values on left.
         Map<Integer, List<String>> colorScore = new TreeMap<>(Collections.reverseOrder());
-        for (Map.Entry<String, Integer> stat : game.statistics.getColorData().getStats().entrySet()) {
+        for (Map.Entry<String, Integer> stat : game.getStatistics().getColorData().getStats().entrySet()) {
             if (!colorScore.containsKey(stat.getValue())) {
                 colorScore.put(stat.getValue(), new ArrayList<String>());
             }
@@ -165,7 +171,7 @@ public class StatsTable extends Table {
         Table sizes = new Table();
         sizes.add(new Label(game.getLocale().get("statistics.sizes"), this.title)).colspan(3).row();
 
-        Map<String, Integer> unsortedScores = game.statistics.getSizesData().getStats();
+        Map<String, Integer> unsortedScores = game.getStatistics().getSizesData().getStats();
         if (unsortedScores.isEmpty()) {
             Label noData = new Label(game.getLocale().get("statistics.noData"), game.getSkin());
             noData.setAlignment(Align.center);

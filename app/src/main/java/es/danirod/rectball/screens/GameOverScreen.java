@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015 Dani Rodríguez.
+ * Copyright (C) 2015-2017 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,15 +18,24 @@
 
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
-import es.danirod.rectball.*;
+
+import es.danirod.rectball.Constants;
+import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.SoundPlayer;
 import es.danirod.rectball.scene2d.listeners.ScreenPopper;
 import es.danirod.rectball.scene2d.listeners.TrackingListener;
 
@@ -45,7 +54,7 @@ public class GameOverScreen extends AbstractScreen {
         String lastScore = Integer.toString(game.getState().getScore());
         while (lastScore.length() < 4) lastScore = "0" + lastScore;
         String aliveTime = Integer.toString(Math.round(game.getState().getElapsedTime()));
-        String highScore = Long.toString(game.getPlatform().score().getHighScore());
+        String highScore = Long.toString(game.getScores().getHighScore());
 
         // Scores table
         Table scoresTable = new Table();
@@ -79,7 +88,7 @@ public class GameOverScreen extends AbstractScreen {
         share.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.getPlatform().analytic().sendEvent("UX", "Clicked", "Share score");
+                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Share score");
                 game.player.playSound(SoundPlayer.SoundCode.SELECT);
 
                 // Request a screenshot of the score region. The following
@@ -90,7 +99,7 @@ public class GameOverScreen extends AbstractScreen {
                 int height = width / 2;
                 int y = (int) (Gdx.graphics.getHeight() * 0.375f);
                 Pixmap screenshot = game.requestScreenshot(0, y, width, height);
-                game.getPlatform().sharing().shareGameOverScreenshot(screenshot, game.getState().getScore(), Math.round(game.getState().getElapsedTime()));
+                game.shareGameOverScreenshot(screenshot, game.getState().getScore(), Math.round(game.getState().getElapsedTime()));
                 event.cancel();
             }
         });

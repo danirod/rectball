@@ -1,3 +1,20 @@
+/*
+ * This file is part of Rectball.
+ * Copyright (C) 2015-2017 Dani Rodríguez.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
@@ -10,15 +27,26 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
-import es.danirod.rectball.*;
-import es.danirod.rectball.model.*;
-import es.danirod.rectball.scene2d.game.*;
-import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
-import es.danirod.rectball.scene2d.ui.ConfirmDialog;
-import es.danirod.rectball.scene2d.ui.MessageDialog;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import es.danirod.rectball.Constants;
+import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.SoundPlayer;
+import es.danirod.rectball.model.Ball;
+import es.danirod.rectball.model.BallColor;
+import es.danirod.rectball.model.Bounds;
+import es.danirod.rectball.model.CombinationFinder;
+import es.danirod.rectball.model.Coordinate;
+import es.danirod.rectball.scene2d.game.BallActor;
+import es.danirod.rectball.scene2d.game.BoardActor;
+import es.danirod.rectball.scene2d.game.BorderedContainer;
+import es.danirod.rectball.scene2d.game.ScoreActor;
+import es.danirod.rectball.scene2d.game.TimerActor;
+import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
+import es.danirod.rectball.scene2d.ui.ConfirmDialog;
+import es.danirod.rectball.scene2d.ui.MessageDialog;
 
 import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
 
@@ -167,9 +195,9 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
                             getStage().addAction(Actions.delay(waitingTime, Actions.run(new Runnable() {
                                 @Override
                                 public void run() {
-                                    game.getPlatform().analytic().sendEvent("Tutorial", "Finished");
-                                    game.getPlatform().preferences().putBoolean("tutorialAsked", true);
-                                    game.getPlatform().preferences().flush();
+                                    game.getContext().getAnalytics().sendEvent("Tutorial", "Finished");
+                                    game.getPreferences().putBoolean("tutorialAsked", true);
+                                    game.getPreferences().flush();
                                     game.popScreen();
                                 }
                             })));
@@ -355,8 +383,8 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
                 getStage().addAction(Actions.delay(1.5f, Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        game.getPlatform().preferences().getBoolean("tutorialAsked", true);
-                        game.getPlatform().preferences().flush();
+                        game.getPreferences().getBoolean("tutorialAsked", true);
+                        game.getPreferences().flush();
                         game.popScreen();
                     }
                 })));
@@ -538,7 +566,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         }
 
         public void start() {
-            game.getPlatform().analytic().sendEvent("Tutorial", "Step reached", "Step " + messageID);
+            game.getContext().getAnalytics().sendEvent("Tutorial", "Step reached", "Step " + messageID);
             dialog.show(getStage(), Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.1f)));
             float height;
             if ((alignment & Align.top) != 0) {
