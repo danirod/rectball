@@ -17,29 +17,30 @@
  */
 package es.danirod.rectball.android;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.support.v4.content.FileProvider;
 import android.widget.Toast;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
 
+import java.io.File;
+
+import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.platform.Platform;
-import es.danirod.rectball.platform.Sharing;
 
 abstract class AndroidPlatformBase implements Platform {
 
-    private final Sharing sharing;
-
     private final AndroidApplication app;
 
-    protected AndroidPlatformBase(AndroidLauncher app) {
+    AndroidPlatformBase(AndroidLauncher app) {
         this.app = app;
-        sharing = new AndroidSharing(app);
-    }
-
-
-    @Override
-    public Sharing sharing() {
-        return sharing;
     }
 
     @Override
@@ -50,6 +51,87 @@ abstract class AndroidPlatformBase implements Platform {
                 Toast.makeText(app, msg, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    public void shareScreenshot(Pixmap pixmap) {
+        Gdx.app.debug("SharingServices", "Requested sharing a screenshot");
+        shareScreenshotWithMessage(pixmap, "");
+    }
+
+    @Override
+    public void shareGameOverScreenshot(Pixmap pixmap, int score, int time) {
+        Gdx.app.debug("SharingServices", "Requested sharing a screenshot");
+
+        // Let's make a dirty cast to get the game instance.
+        RectballGame game = (RectballGame) app.getApplicationListener();
+        String message = game.getLocale().format("sharing.text", score);
+        message += " https://play.google.com/store/apps/details?id=es.danirod.rectball.android";
+        shareScreenshotWithMessage(pixmap, message);
+    }
+
+    @Override
+    public void openInStore() {
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("market://details?id=" + AndroidLauncher.PACKAGE));
+            app.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=" + AndroidLauncher.PACKAGE));
+            app.startActivity(intent);
+        }
+    }
+
+    private void shareScreenshotWithMessage(Pixmap pixmap, String text) {
+        // Let's make a dirty cast to get the game instance.
+        RectballGame game = (RectballGame) app.getApplicationListener();
+
+        try {
+            Uri screenshot = createScreenshotURI(pixmap);
+            Intent sharingIntent = shareScreenshotURI(screenshot, text);
+            String title = game.getLocale().get("sharing.intent");
+            app.startActivity(Intent.createChooser(sharingIntent, title));
+        } catch (Exception ex) {
+            Gdx.app.error("SharingServices", "Couldn't share photo", ex);
+        }
+    }
+
+    private Uri createScreenshotURI(Pixmap pixmap) {
+        /*
+            FIXME: THIS HACK MAKES GOD KILL KITTENS
+            Should investigate on how to use the Android compatibility library.
+            However, even the compatibility library seems to break compatibility
+            since I cannot share anymore using SMS. Oh, well, how beautifully
+            broken Android seems to be anyway.
+         */
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Use the fucking new Android permission system.
+            File sharingPath = new File(app.getFilesDir(), "rectball-screenshots");
+            File newScreenshot = new File(sharingPath, "screenshot.png");
+            FileHandle screenshotHandle = Gdx.files.absolute(newScreenshot.getAbsolutePath());
+            PixmapIO.writePNG(screenshotHandle, pixmap);
+            return FileProvider.getUriForFile(app, app.getString(R.string.provider), newScreenshot);
+        } else {
+            // Use the fucking old Android permission system.
+            FileHandle sharingPath = Gdx.files.external("rectball");
+            sharingPath.mkdirs();
+            FileHandle newScreenshot = Gdx.files.external("rectball/screenshot.png");
+            PixmapIO.writePNG(newScreenshot, pixmap);
+            return Uri.fromFile(newScreenshot.file());
+        }
+    }
+
+    private Intent shareScreenshotURI(Uri uri, CharSequence message) {
+        Intent sharingIntent = new Intent();
+        sharingIntent.setAction(Intent.ACTION_SEND);
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, message);
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, message);
+        sharingIntent.setType("image/png");
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        return sharingIntent;
     }
 
     public void onStart() {

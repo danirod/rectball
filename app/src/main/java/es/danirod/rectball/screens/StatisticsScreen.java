@@ -103,7 +103,7 @@ public class StatisticsScreen extends AbstractScreen {
                     fbo.end();
                     fbo.dispose();
 
-                    game.getPlatform().sharing().shareScreenshot(pmap);
+                    game.getPlatform().shareScreenshot(pmap);
                     event.cancel();
                 }
             });

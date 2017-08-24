@@ -17,6 +17,8 @@
  */
 package es.danirod.rectball.platform;
 
+import com.badlogic.gdx.graphics.Pixmap;
+
 /**
  * This is the interface for platform code. Platform code is code that depends
  * on the platform that the application is running. Whenever features can only
@@ -29,16 +31,35 @@ package es.danirod.rectball.platform;
  */
 public interface Platform {
 
-    /**
-     * Get the sharing services instance attached to this platform.
-     *
-     * @return sharing services instance.
-     */
-    Sharing sharing();
-
     Analytics analytic();
 
     GoogleServices google();
 
     void toast(CharSequence msg);
+
+    /**
+     * Share a screenshot from the game. The platform should decide what to
+     * do with the screenshot. On Android, this could ask the user to share
+     * the screenshot in services such as Twitter or WhatsApp. On desktop
+     * the user might want to store the screenshot in a folder.
+     *
+     * @param pixmap the pixmap with the image data.
+     */
+    void shareScreenshot(Pixmap pixmap);
+
+    /**
+     * Share a screenshot from the game using the score and time. This is
+     * useful when the user has lost the game and want to share their score
+     * with other people using a tweet or sending it via WhatsApp.
+     *
+     * @param pixmap the pixmap with the image data.
+     * @param score  the score the player has or had.
+     * @param time   the time the player has lasted.
+     */
+    void shareGameOverScreenshot(Pixmap pixmap, int score, int time);
+
+    /**
+     * Open the game in the associated store.
+     */
+    void openInStore();
 }
