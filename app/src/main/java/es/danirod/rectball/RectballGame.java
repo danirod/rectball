@@ -18,34 +18,48 @@
 
 package es.danirod.rectball;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
-import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ScreenUtils;
+
+import java.nio.ByteBuffer;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
 
 import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.model.Statistics;
 import es.danirod.rectball.platform.Platform;
 import es.danirod.rectball.scene2d.RectballSkin;
-import es.danirod.rectball.screens.*;
-
-import java.nio.ByteBuffer;
-import java.util.*;
+import es.danirod.rectball.screens.AboutScreen;
+import es.danirod.rectball.screens.AbstractScreen;
+import es.danirod.rectball.screens.GameOverScreen;
+import es.danirod.rectball.screens.GameScreen;
+import es.danirod.rectball.screens.LoadingBackScreen;
+import es.danirod.rectball.screens.LoadingScreen;
+import es.danirod.rectball.screens.MainMenuScreen;
+import es.danirod.rectball.screens.Screens;
+import es.danirod.rectball.screens.SettingsScreen;
+import es.danirod.rectball.screens.StatisticsScreen;
+import es.danirod.rectball.screens.TutorialScreen;
 
 /**
  * Main class for the game.

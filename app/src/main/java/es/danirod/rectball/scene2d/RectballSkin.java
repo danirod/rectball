@@ -71,29 +71,26 @@ public class RectballSkin extends Skin {
         FreeTypeFontGenerator.FreeTypeFontParameter ftparNormal = new FreeTypeFontGenerator.FreeTypeFontParameter();
         ftparNormal.minFilter = Texture.TextureFilter.Linear;
         ftparNormal.magFilter = Texture.TextureFilter.Linear;
-        ftparNormal.gamma = 1.2f;
-        ftparNormal.renderCount = 3;
-        ftparNormal.size = 30;
-        ftgenRegular.scaleForPixelHeight(ftparNormal.size);
-        add("normal", ftgenRegular.generateFont(ftparNormal));
+        ftparNormal.size = (int) Math.ceil(30 * Gdx.graphics.getDensity());
+        BitmapFont fontRegular = ftgenRegular.generateFont(ftparNormal);
+        fontRegular.getData().setScale(1f / Gdx.graphics.getDensity());
+        add("normal", fontRegular);
 
         FreeTypeFontGenerator.FreeTypeFontParameter ftparSmall = new FreeTypeFontGenerator.FreeTypeFontParameter();
         ftparSmall.minFilter = Texture.TextureFilter.Linear;
         ftparSmall.magFilter = Texture.TextureFilter.Linear;
-        ftparSmall.gamma = 2f;
-        ftparSmall.renderCount = 2;
-        ftparSmall.size = 25;
-        ftgenRegular.scaleForPixelHeight(ftparSmall.size);
-        add("small", ftgenRegular.generateFont(ftparSmall));
+        ftparSmall.size = (int) Math.ceil(25 * Gdx.graphics.getDensity());
+        BitmapFont fontSmall = ftgenRegular.generateFont(ftparSmall);
+        fontSmall.getData().setScale(1f / Gdx.graphics.getDensity());
+        add("small", fontSmall);
 
         FreeTypeFontGenerator.FreeTypeFontParameter ftparBold = new FreeTypeFontGenerator.FreeTypeFontParameter();
         ftparBold.minFilter = Texture.TextureFilter.Linear;
         ftparBold.magFilter = Texture.TextureFilter.Linear;
-        ftparBold.gamma = 2f;
-        ftparBold.renderCount = 5;
-        ftparBold.size = 30;
-        ftgenBold.scaleForPixelHeight(ftparBold.size);
-        add("bold", ftgenBold.generateFont(ftparBold));
+        ftparBold.size = (int) Math.ceil(30 * Gdx.graphics.getDensity());
+        BitmapFont fontBold = ftgenBold.generateFont(ftparBold);
+        fontBold.getData().setScale(1f / Gdx.graphics.getDensity());
+        add("bold", fontBold);
 
         ftgenRegular.dispose();
         ftgenBold.dispose();
