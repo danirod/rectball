@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.danirod.rectball.platform;
+package es.danirod.rectball.io;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -27,7 +27,7 @@ import com.badlogic.gdx.utils.JsonWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 
-public class ScoreIO {
+public class Scores {
 
     private static final String SCORES_FILE = "scores"; /** Scores data file location. */
 

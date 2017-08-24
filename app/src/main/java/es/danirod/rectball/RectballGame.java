@@ -51,10 +51,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import es.danirod.rectball.android.BuildConfig;
+import es.danirod.rectball.io.Scores;
+import es.danirod.rectball.io.Statistics;
 import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.platform.Platform;
-import es.danirod.rectball.platform.ScoreIO;
-import es.danirod.rectball.platform.StatisticsIO;
 import es.danirod.rectball.scene2d.RectballSkin;
 import es.danirod.rectball.screens.AboutScreen;
 import es.danirod.rectball.screens.AbstractScreen;
@@ -89,9 +89,9 @@ public class RectballGame extends Game {
     /** Whether the game is restoring state from an Android kill or not. */
     private boolean restoredState;
 
-    private ScoreIO scores; /** Holds information about the high score. */
+    private Scores scores; /** Holds information about the high score. */
 
-    private StatisticsIO statistics; /** Holds information about the statistics. */
+    private Statistics statistics; /** Holds information about the statistics. */
 
     /** Batch instance in use by the game. */
     Batch batch;
@@ -128,8 +128,8 @@ public class RectballGame extends Game {
     @Override
     public void create() {
         // Initialize platform.
-        this.scores = new ScoreIO();
-        this.statistics = new StatisticsIO();
+        this.scores = new Scores();
+        this.statistics = new Statistics();
 
         if (BuildConfig.FINE_DEBUG) {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
@@ -371,11 +371,11 @@ public class RectballGame extends Game {
         return screenshot;
     }
 
-    public ScoreIO getScores() {
+    public Scores getScores() {
         return scores;
     }
 
-    public StatisticsIO getStatistics() {
+    public Statistics getStatistics() {
         return statistics;
     }
 

@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.platform.StatisticsIO;
+import es.danirod.rectball.io.Statistics;
 
 public class StatsTable extends Table {
 
@@ -104,7 +104,7 @@ public class StatsTable extends Table {
         Table total = new Table();
         total.add(new Label(game.getLocale().get("statistics.total"), this.title)).colspan(2).row();
 
-        StatisticsIO.StatisticSet set = game.getStatistics().getTotalData();
+        Statistics.StatisticSet set = game.getStatistics().getTotalData();
         if (set.getStats().isEmpty()) {
             Label noData = new Label(game.getLocale().get("statistics.noData"), game.getSkin());
             noData.setAlignment(Align.center);

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.platform;
+package es.danirod.rectball.io;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StatisticsIO {
+public class Statistics {
 
     private static final String STATISTICS_FILE = "stats";
 
@@ -39,29 +39,29 @@ public class StatisticsIO {
     private StatisticSet sizes = new StatisticSet();
 
     public void saveStatistics() {
-        Gdx.app.log("StatisticsIO", "Saving statistics file...");
+        Gdx.app.log("Statistics", "Saving statistics file...");
 
         Json json = new Json();
         json.setOutputType(JsonWriter.OutputType.json);
         String jsonData = json.toJson(this);
-        Gdx.app.debug("StatisticsIO", "Statistics contents: " + jsonData);
+        Gdx.app.debug("Statistics", "Statistics contents: " + jsonData);
 
         // Encode statistics in Base64 and save it to a file.
         String encodedJson = Base64Coder.encodeString(jsonData);
         FileHandle handle = Gdx.files.local(STATISTICS_FILE);
         handle.writeString(encodedJson, false);
 
-        Gdx.app.log("StatisticsIO", "Statistics file has been saved.");
+        Gdx.app.log("Statistics", "Statistics file has been saved.");
     }
 
     public void loadStatistics() {
-        Gdx.app.log("StatisticsIO", "Loading statistics file...");
+        Gdx.app.log("Statistics", "Loading statistics file...");
         try {
             // Read stats from file and decode them.
             FileHandle handle = Gdx.files.local(STATISTICS_FILE);
             String encodedJson = handle.readString();
             String decodedJson = Base64Coder.decodeString(encodedJson);
-            Gdx.app.log("StatisticsIO", "Successfully decoded statistics file");
+            Gdx.app.log("Statistics", "Successfully decoded statistics file");
 
             // Convert JSON to statistics
             JsonReader reader = new JsonReader();
@@ -69,9 +69,9 @@ public class StatisticsIO {
             this.total = parseTotal(rootStats);
             this.colors = parseColor(rootStats);
             this.sizes = parseSizes(rootStats);
-            Gdx.app.log("StatisticsIO", "Successfully loaded statistics");
+            Gdx.app.log("Statistics", "Successfully loaded statistics");
         } catch (Exception ex) {
-            Gdx.app.error("StatisticsIO", "Cannot load statistics", ex);
+            Gdx.app.error("Statistics", "Cannot load statistics", ex);
         }
     }
 
