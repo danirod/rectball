@@ -19,6 +19,7 @@ package es.danirod.rectball.android;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -110,21 +111,42 @@ public class AndroidLauncher extends AndroidApplication {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus && android.os.Build.VERSION.SDK_INT >= 19) {
-            setFullscreenFlags();
+        if (hasFocus && shouldEnableFullscreenMode()) {
+            if (Build.VERSION.SDK_INT >= 19) {
+                enableImmersiveMode();
+            } else {
+                legacyFullscreenMode();
+            }
         }
     }
 
-    @TargetApi(19) // KitKat
-    private void setFullscreenFlags() {
-        if (this.getPreferences("rectball").getBoolean("fullscreen")) {
+    private boolean shouldEnableFullscreenMode() {
+        return this.getPreferences("rectball").getBoolean("fullscreen");
+    }
+
+    @TargetApi(19)
+    private void enableImmersiveMode() {
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
+    /** Legacy fullscreen mode on Android 4.0, 4.1, 4.2 and 4.3. */
+    @TargetApi(14)
+    private void legacyFullscreenMode() {
+        if (Build.VERSION.SDK_INT < 16) {
+            // Android ICS doesn't have FULLSCREEN flag.
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        } else {
             getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                            | View.SYSTEM_UI_FLAG_LOW_PROFILE);
         }
     }
 
