@@ -1,3 +1,6 @@
+[0.4.10]
+- Fixes regression on Android 4.0, 4.1, 4.2 and 4.3 devices not being able to enter fullscreen mode.
+
 [0.4.9.1]
 - Fixes conflict between ProGuard optimizations and statistics reflection and serialization.
 - Fixes preferences not being properly saved when updated.
