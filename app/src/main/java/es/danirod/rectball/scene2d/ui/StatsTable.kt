@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
 import es.danirod.rectball.RectballGame
+import es.danirod.rectball.SettingsManager
 import java.util.*
 
 class StatsTable(private val game: RectballGame, private val title: LabelStyle, private val data: LabelStyle) : Table() {
@@ -42,17 +43,18 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
 
         best.add(Label(game.locale.get("statistics.best"), this.title)).colspan(2).row()
 
-        if (game.scores.highScore == 0 && game.scores.highTime == 0) {
+        if (game.preferences.getInt(SettingsManager.TAG_HIGH_SCORE, 0) == 0 &&
+                game.preferences.getInt(SettingsManager.TAG_HIGH_TIME, 0) == 0) {
             val noData = Label(game.locale.get("statistics.noData"), game.skin)
             noData.setAlignment(Align.center)
             best.add(noData).colspan(2).fillX().expandX().padTop(10f).padBottom(10f).row()
             return best
         }
-        if (game.scores.highScore != 0) {
-            append(best, game.locale["statistics.best.score"], game.scores.highScore.toString())
+        if (game.preferences.getInt(SettingsManager.TAG_HIGH_SCORE, 0) != 0) {
+            append(best, game.locale["statistics.best.score"], game.preferences.getInt(SettingsManager.TAG_HIGH_SCORE, 0).toString())
         }
-        if (game.scores.highTime != 0) {
-            append(best, game.locale["statistics.best.time"], secondsToTime(game.scores.highScore))
+        if (game.preferences.getInt(SettingsManager.TAG_HIGH_TIME, 0) != 0) {
+            append(best, game.locale["statistics.best.time"], secondsToTime(game.preferences.getInt(SettingsManager.TAG_HIGH_TIME, 0)))
         }
 
         return best

@@ -18,6 +18,8 @@
 
 package es.danirod.rectball.screens;
 
+import android.content.SharedPreferences;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -555,11 +557,17 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         timer.setRunning(false);
         game.player.playSound(SoundCode.GAME_OVER);
 
-        // Update the score... and the record.
+        // Update high score and high time.
         int score = game.getState().getScore();
         int time = Math.round(game.getState().getElapsedTime());
-        game.getScores().registerScore(score, time);
-        game.getScores().flushData();
+        SharedPreferences.Editor editor = game.getPreferences().edit();
+        if (score > game.getPreferences().getInt(SettingsManager.TAG_HIGH_SCORE, 0)) {
+            editor.putInt(SettingsManager.TAG_HIGH_SCORE, score);
+        }
+        if (time > game.getPreferences().getInt(SettingsManager.TAG_HIGH_TIME, 0)) {
+            editor.putInt(SettingsManager.TAG_HIGH_TIME, time);
+        }
+        editor.apply();
 
         if (game.getContext().getGameServices().isSignedIn()) {
             game.getContext().getGameServices().uploadScore(score, time * 1000);

@@ -21,13 +21,18 @@ package es.danirod.rectball
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.utils.Base64Coder
+import com.badlogic.gdx.utils.JsonReader
 import es.danirod.rectball.android.AndroidLauncher
 
 class SettingsManager(private val context: Context) {
 
     val preferences: SharedPreferences by lazy {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        if (prefs.getInt(TAG_SCHEMA_VERSION, 0) < SCHEMA_VERSION) {
+        while (prefs.getInt(TAG_SCHEMA_VERSION, 0) < SCHEMA_VERSION) {
+            val version = prefs.getInt(TAG_SCHEMA_VERSION, 0)
+            Gdx.app.log(LOG_TAG, "Preferences migration required (found $version, expected $SCHEMA_VERSION")
             migratePreferences(prefs)
         }
         prefs
@@ -51,6 +56,23 @@ class SettingsManager(private val context: Context) {
             legacyEditor.apply()
         }
 
+        /* Check if a legacy scores file exists. */
+        if (Gdx.files.local("scores").exists()) {
+            /* Decode old scores file. */
+            val rawScoresJSON = Base64Coder.decodeString(Gdx.files.local("scores").readString())
+            val jsonReader = JsonReader()
+            val jsonData = jsonReader.parse(rawScoresJSON)
+
+            /* Migrate data to the preferences file. */
+            val editor = prefs.edit()
+            editor.putInt(TAG_HIGH_SCORE, jsonData.getInt("highestScore", 0))
+            editor.putInt(TAG_HIGH_TIME, jsonData.getInt("highestTime", 0))
+            editor.apply()
+
+            /* Burn legacy file. */
+            Gdx.files.local("scores").delete()
+        }
+
         /* Bump the schema version. */
         if (prefs.getInt(TAG_SCHEMA_VERSION, 0) < SCHEMA_VERSION) {
             val editor = prefs.edit()
@@ -60,6 +82,8 @@ class SettingsManager(private val context: Context) {
     }
 
     companion object {
+        const val LOG_TAG = "SettingsManager"
+
         const val SCHEMA_VERSION = 1
 
         const val TAG_SCHEMA_VERSION = "${AndroidLauncher.PACKAGE}.SCHEMA_VERSION"
@@ -68,6 +92,9 @@ class SettingsManager(private val context: Context) {
         const val TAG_ENABLE_COLORBLIND = "${AndroidLauncher.PACKAGE}.ENABLE_COLORBLIND"
         const val TAG_ENABLE_FULLSCREEN = "${AndroidLauncher.PACKAGE}.ENABLE_FULLSCREEN"
         const val TAG_ASKED_TUTORIAL = "${AndroidLauncher.PACKAGE}.ASKED_TUTORIAL"
+
+        const val TAG_HIGH_SCORE = "${AndroidLauncher.PACKAGE}.HIGH_SCORE"
+        const val TAG_HIGH_TIME = "${AndroidLauncher.PACKAGE}.HIGH_TIME"
     }
 
 }

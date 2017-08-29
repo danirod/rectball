@@ -35,6 +35,7 @@ import com.badlogic.gdx.utils.Align;
 
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.SettingsManager;
 import es.danirod.rectball.SoundPlayer;
 import es.danirod.rectball.scene2d.listeners.ScreenPopper;
 import es.danirod.rectball.scene2d.listeners.TrackingListener;
@@ -54,7 +55,7 @@ public class GameOverScreen extends AbstractScreen {
         String lastScore = Integer.toString(game.getState().getScore());
         while (lastScore.length() < 4) lastScore = "0" + lastScore;
         String aliveTime = Integer.toString(Math.round(game.getState().getElapsedTime()));
-        String highScore = Long.toString(game.getScores().getHighScore());
+        String highScore = Long.toString(game.getPreferences().getInt(SettingsManager.TAG_HIGH_SCORE, 0));
 
         // Scores table
         Table scoresTable = new Table();
