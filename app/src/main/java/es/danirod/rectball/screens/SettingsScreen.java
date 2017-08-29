@@ -17,17 +17,21 @@
  */
 package es.danirod.rectball.screens;
 
+import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 
 import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.SettingsManager;
 import es.danirod.rectball.SoundPlayer.SoundCode;
 import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.scene2d.listeners.ScreenJumper;
@@ -55,12 +59,13 @@ public class SettingsScreen extends AbstractScreen {
         // Sound
         if (sound == null) {
             sound = new SwitchActor(game.getLocale().get("settings.sound"), game.getSkin());
-            sound.setChecked(game.getPreferences().getBoolean("sound", true));
+            sound.setChecked(game.getPreferences().getBoolean(SettingsManager.TAG_ENABLE_SOUND, true));
             sound.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent changeEvent, Actor actor) {
-                    game.getPreferences().putBoolean("sound", sound.isChecked());
-                    game.getPreferences().flush();
+                    SharedPreferences.Editor editor = game.getPreferences().edit();
+                    editor.putBoolean(SettingsManager.TAG_ENABLE_SOUND, sound.isChecked());
+                    editor.apply();
                     game.player.playSound(SoundCode.SELECT);
                 }
             });
@@ -69,12 +74,13 @@ public class SettingsScreen extends AbstractScreen {
         // Color
         if (color == null) {
             color = new SwitchActor(game.getLocale().get("settings.colorblind"), game.getSkin());
-            color.setChecked(game.getPreferences().getBoolean("colorblind"));
+            color.setChecked(game.getPreferences().getBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, false));
             color.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent changeEvent, Actor actor) {
-                    game.getPreferences().putBoolean("colorblind", color.isChecked());
-                    game.getPreferences().flush();
+                    SharedPreferences.Editor editor = game.getPreferences().edit();
+                    editor.putBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, color.isChecked());
+                    editor.apply();
                     game.updateBallAtlas();
                     game.player.playSound(SoundCode.SELECT);
                 }
@@ -84,19 +90,20 @@ public class SettingsScreen extends AbstractScreen {
         // Fullscreen
         if (fullscreen == null) {
             fullscreen = new SwitchActor(game.getLocale().get("settings.fullscreen"), game.getSkin());
-            fullscreen.setChecked(game.getPreferences().getBoolean("fullscreen"));
+            fullscreen.setChecked(game.getPreferences().getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false));
             fullscreen.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    game.getPreferences().putBoolean("fullscreen", fullscreen.isChecked());
-                    game.getPreferences().flush();
-                    game.player.playSound(SoundCode.SELECT);
+                    SharedPreferences.Editor editor = game.getPreferences().edit();
+                    editor.putBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, fullscreen.isChecked());
+                    editor.apply();
                     game.getContext().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             Toast.makeText(game.getContext(), game.getLocale().get("settings.fullscreenReset"), Toast.LENGTH_LONG).show();
                         }
                     });
+                    game.player.playSound(SoundCode.SELECT);
                 }
             });
         }

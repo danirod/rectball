@@ -40,6 +40,7 @@ import java.util.Map;
 
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.SettingsManager;
 import es.danirod.rectball.SoundPlayer.SoundCode;
 import es.danirod.rectball.model.Ball;
 import es.danirod.rectball.model.BallColor;
@@ -192,9 +193,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 public void run() {
                     // Report that a game is starting.
                     Map<Integer, String> dimensions = new HashMap<>();
-                    dimensions.put(1, game.getPreferences().getBoolean("sound") ? "Yes" : "No");
-                    dimensions.put(2, game.getPreferences().getBoolean("colorblind") ? "Yes" : "No");
-                    dimensions.put(3, game.getPreferences().getBoolean("fullscreen") ? "Yes" : "No");
+                    dimensions.put(1, game.getPreferences().getBoolean(SettingsManager.TAG_ENABLE_SOUND, false) ? "Yes" : "No");
+                    dimensions.put(2, game.getPreferences().getBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, false) ? "Yes" : "No");
+                    dimensions.put(3, game.getPreferences().getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false) ? "Yes" : "No");
                     game.getContext().getAnalytics().sendEventWithDimensions("Game", "Game started", dimensions);
                     game.getState().setCountdownFinished(true);
 

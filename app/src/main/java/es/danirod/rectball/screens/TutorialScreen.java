@@ -17,6 +17,8 @@
  */
 package es.danirod.rectball.screens;
 
+import android.content.SharedPreferences;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -33,6 +35,7 @@ import java.util.List;
 
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.SettingsManager;
 import es.danirod.rectball.SoundPlayer;
 import es.danirod.rectball.model.Ball;
 import es.danirod.rectball.model.BallColor;
@@ -196,8 +199,9 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
                                 @Override
                                 public void run() {
                                     game.getContext().getAnalytics().sendEvent("Tutorial", "Finished");
-                                    game.getPreferences().putBoolean("tutorialAsked", true);
-                                    game.getPreferences().flush();
+                                    SharedPreferences.Editor editor = game.getPreferences().edit();
+                                    editor.putBoolean(SettingsManager.TAG_ASKED_TUTORIAL, true);
+                                    editor.apply();
                                     game.popScreen();
                                 }
                             })));
@@ -383,8 +387,9 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
                 getStage().addAction(Actions.delay(1.5f, Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        game.getPreferences().getBoolean("tutorialAsked", true);
-                        game.getPreferences().flush();
+                        SharedPreferences.Editor editor = game.getPreferences().edit();
+                        editor.putBoolean(SettingsManager.TAG_ASKED_TUTORIAL, true);
+                        editor.apply();
                         game.popScreen();
                     }
                 })));

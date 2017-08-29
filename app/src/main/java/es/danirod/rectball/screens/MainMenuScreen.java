@@ -17,7 +17,12 @@
  */
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.*;
+import android.content.SharedPreferences;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -26,7 +31,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
+
 import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.SettingsManager;
 import es.danirod.rectball.SoundPlayer;
 import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.scene2d.listeners.ScreenJumper;
@@ -150,7 +157,7 @@ public class MainMenuScreen extends AbstractScreen {
                     Gdx.app.exit();
                 }
             });
-            if (game.getPreferences().getBoolean("fullscreen")) {
+            if (game.getPreferences().getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false)) {
                 getStage().addActor(quit);
             }
         }
@@ -187,7 +194,7 @@ public class MainMenuScreen extends AbstractScreen {
         Gdx.input.setInputProcessor(multiplexer);
 
         // On first run, show the tutorial.
-        if (!game.getPreferences().getBoolean("tutorialAsked")) {
+        if (!game.getPreferences().getBoolean(SettingsManager.TAG_ASKED_TUTORIAL, false)) {
             askTutorial().show(getStage());
         }
     }
@@ -224,8 +231,9 @@ public class MainMenuScreen extends AbstractScreen {
             public void cancel() {
                 game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Dismiss Tutorial");
                 game.player.playSound(SoundPlayer.SoundCode.FAIL);
-                game.getPreferences().putBoolean("tutorialAsked", true);
-                game.getPreferences().flush();
+                SharedPreferences.Editor editor = game.getPreferences().edit();
+                editor.putBoolean(SettingsManager.TAG_ASKED_TUTORIAL, true);
+                editor.apply();
                 tutorialCancel().show(getStage());
             }
         });
