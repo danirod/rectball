@@ -157,7 +157,7 @@ public class MainMenuScreen extends AbstractScreen {
                     Gdx.app.exit();
                 }
             });
-            if (game.getPreferences().getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false)) {
+            if (game.getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false)) {
                 getStage().addActor(quit);
             }
         }
@@ -194,7 +194,7 @@ public class MainMenuScreen extends AbstractScreen {
         Gdx.input.setInputProcessor(multiplexer);
 
         // On first run, show the tutorial.
-        if (!game.getPreferences().getBoolean(SettingsManager.TAG_ASKED_TUTORIAL, false)) {
+        if (!game.getSettings().getPreferences().getBoolean(SettingsManager.TAG_ASKED_TUTORIAL, false)) {
             askTutorial().show(getStage());
         }
     }
@@ -231,7 +231,7 @@ public class MainMenuScreen extends AbstractScreen {
             public void cancel() {
                 game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Dismiss Tutorial");
                 game.player.playSound(SoundPlayer.SoundCode.FAIL);
-                SharedPreferences.Editor editor = game.getPreferences().edit();
+                SharedPreferences.Editor editor = game.getSettings().getPreferences().edit();
                 editor.putBoolean(SettingsManager.TAG_ASKED_TUTORIAL, true);
                 editor.apply();
                 tutorialCancel().show(getStage());

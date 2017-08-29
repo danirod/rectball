@@ -81,6 +81,17 @@ class SettingsManager(private val context: Context) {
         }
     }
 
+    /** Update the highest score and the highest time. */
+    fun updateScores(score: Int, time: Int) {
+        val currentHighScore = preferences.getInt(SettingsManager.TAG_HIGH_SCORE, 0)
+        val currentHighTime = preferences.getInt(SettingsManager.TAG_HIGH_TIME, 0)
+
+        val editor = preferences.edit()
+        if (score > currentHighScore) editor.putInt(TAG_HIGH_SCORE, score)
+        if (time > currentHighTime) editor.putInt(TAG_HIGH_TIME, time)
+        editor.apply()
+    }
+
     companion object {
         const val LOG_TAG = "SettingsManager"
 

@@ -18,8 +18,6 @@
 
 package es.danirod.rectball.screens;
 
-import android.content.SharedPreferences;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -195,9 +193,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 public void run() {
                     // Report that a game is starting.
                     Map<Integer, String> dimensions = new HashMap<>();
-                    dimensions.put(1, game.getPreferences().getBoolean(SettingsManager.TAG_ENABLE_SOUND, false) ? "Yes" : "No");
-                    dimensions.put(2, game.getPreferences().getBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, false) ? "Yes" : "No");
-                    dimensions.put(3, game.getPreferences().getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false) ? "Yes" : "No");
+                    dimensions.put(1, game.getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_SOUND, false) ? "Yes" : "No");
+                    dimensions.put(2, game.getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, false) ? "Yes" : "No");
+                    dimensions.put(3, game.getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false) ? "Yes" : "No");
                     game.getContext().getAnalytics().sendEventWithDimensions("Game", "Game started", dimensions);
                     game.getState().setCountdownFinished(true);
 
@@ -560,14 +558,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // Update high score and high time.
         int score = game.getState().getScore();
         int time = Math.round(game.getState().getElapsedTime());
-        SharedPreferences.Editor editor = game.getPreferences().edit();
-        if (score > game.getPreferences().getInt(SettingsManager.TAG_HIGH_SCORE, 0)) {
-            editor.putInt(SettingsManager.TAG_HIGH_SCORE, score);
-        }
-        if (time > game.getPreferences().getInt(SettingsManager.TAG_HIGH_TIME, 0)) {
-            editor.putInt(SettingsManager.TAG_HIGH_TIME, time);
-        }
-        editor.apply();
+        game.getSettings().updateScores(score, time);
 
         if (game.getContext().getGameServices().isSignedIn()) {
             game.getContext().getGameServices().uploadScore(score, time * 1000);

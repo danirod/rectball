@@ -20,7 +20,6 @@ package es.danirod.rectball;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
@@ -328,7 +327,7 @@ public class RectballGame extends Game {
     }
 
     public void updateBallAtlas() {
-        boolean isColorblind = getPreferences().getBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, false);
+        boolean isColorblind = getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, false);
         String ballsTexture = isColorblind ? "board/colorblind.png" : "board/normal.png";
         Texture balls = manager.get(ballsTexture);
         TextureRegion[][] regions = TextureRegion.split(balls, 256, 256);
@@ -340,8 +339,8 @@ public class RectballGame extends Game {
         ballAtlas.addRegion("ball_gray", regions[1][2]);
     }
 
-    public SharedPreferences getPreferences() {
-        return settings.getPreferences();
+    public SettingsManager getSettings() {
+        return settings;
     }
 
     /**

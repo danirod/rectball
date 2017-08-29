@@ -43,19 +43,19 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
 
         best.add(Label(game.locale.get("statistics.best"), this.title)).colspan(2).row()
 
-        if (game.preferences.getInt(SettingsManager.TAG_HIGH_SCORE, 0) == 0 &&
-                game.preferences.getInt(SettingsManager.TAG_HIGH_TIME, 0) == 0) {
+        if (game.settings.preferences.getInt(SettingsManager.TAG_HIGH_SCORE, 0) == 0 &&
+                game.settings.preferences.getInt(SettingsManager.TAG_HIGH_TIME, 0) == 0) {
             val noData = Label(game.locale.get("statistics.noData"), game.skin)
             noData.setAlignment(Align.center)
             best.add(noData).colspan(2).fillX().expandX().padTop(10f).padBottom(10f).row()
             return best
         }
-        if (game.preferences.getInt(SettingsManager.TAG_HIGH_SCORE, 0) != 0) {
-            append(best, game.locale["statistics.best.score"], game.preferences.getInt(SettingsManager.TAG_HIGH_SCORE, 0).toString())
-        }
-        if (game.preferences.getInt(SettingsManager.TAG_HIGH_TIME, 0) != 0) {
-            append(best, game.locale["statistics.best.time"], secondsToTime(game.preferences.getInt(SettingsManager.TAG_HIGH_TIME, 0)))
-        }
+
+        val highScore = game.settings.preferences.getInt(SettingsManager.TAG_HIGH_SCORE, 0)
+        if (highScore > 0) append(best, game.locale["statistics.best.score"], highScore.toString())
+
+        val highTime = game.settings.preferences.getInt(SettingsManager.TAG_HIGH_TIME, 0)
+        if (highTime > 0) append(best, game.locale["statistics.best.time"], secondsToTime(highTime))
 
         return best
     }
