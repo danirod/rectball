@@ -95,6 +95,8 @@ public class Statistics {
         stat.incrementValue("balls", total.getInt("balls", 0));
         stat.incrementValue("games", total.getInt("games", 0));
         stat.incrementValue("time", total.getInt("time", 0));
+        stat.incrementValue("perfects", total.getInt("perfects", 0));
+        stat.incrementValue("cheats", total.getInt("cheats", 0));
         return stat;
     }
 
