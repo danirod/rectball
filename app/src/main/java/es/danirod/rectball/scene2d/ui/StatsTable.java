@@ -29,6 +29,7 @@ import com.badlogic.gdx.utils.Align;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -61,12 +62,17 @@ public class StatsTable extends Table {
         int sec = (seconds % 3600) % 60;
 
         if (hrs != 0) {
-            return String.format("%d:%02d:%02d", hrs, min, sec);
+            return String.format(Locale.getDefault(), "%d:%02d:%02d", hrs, min, sec);
         } else if (min != 0) {
-            return String.format("%d:%02d", min, sec);
+            return String.format(Locale.getDefault(), "%d:%02d", min, sec);
         } else {
-            return String.format("%d", sec);
+            return String.format(Locale.getDefault(), "%d", sec);
         }
+    }
+
+    private void append(Table table, String name, String value) {
+        table.add(new Label(name, data)).align(Align.left).fillX();
+        table.add(new Label(value, data)).align(Align.right).expandX().row();
     }
 
     private Table addBestScores() {
@@ -76,17 +82,13 @@ public class StatsTable extends Table {
         boolean printedSomething = false;
         // Add best score.
         if (game.getScores().getHighScore() != 0) {
-            String bestScore = Long.toString(game.getScores().getHighScore());
-            best.add(new Label(game.getLocale().get("statistics.best.score"), data)).align(Align.left).fillX();
-            best.add(new Label(bestScore, data)).align(Align.right).expandX().row();
+            append(best, game.getLocale().get("statistics.best.score"), Long.toString(game.getScores().getHighScore()));
             printedSomething = true;
         }
 
         // Add best time.
         if (game.getScores().getHighTime() != 0) {
-            String bestTime = secondsToTime(game.getScores().getHighTime());
-            best.add(new Label(game.getLocale().get("statistics.best.time"), data)).align(Align.left).fillX();
-            best.add(new Label(bestTime, data)).align(Align.right).expandX().row();
+            append(best, game.getLocale().get("statistics.best.time"), secondsToTime(game.getScores().getHighScore()));
             printedSomething = true;
         }
 
@@ -112,16 +114,26 @@ public class StatsTable extends Table {
             return total;
         }
 
-        for (Map.Entry<String, Integer> stat : set.getStats().entrySet()) {
-            String statName = game.getLocale().get("statistics.total." + stat.getKey());
-            String statValue = Integer.toString(stat.getValue());
-
-            if (stat.getKey().equals("time")) {
-                statValue = secondsToTime(stat.getValue());
-            }
-
-            total.add(new Label(statName, data)).align(Align.left).fillX();
-            total.add(new Label(statValue, data)).align(Align.right).expandX().row();
+        if (set.getStats().containsKey("score") && set.getStats().get("score") > 0) {
+            append(total, game.getLocale().get("statistics.total.score"), Long.toString(set.getStats().get("score")));
+        }
+        if (set.getStats().containsKey("combinations") && set.getStats().get("combinations") > 0) {
+            append(total, game.getLocale().get("statistics.total.combinations"), Long.toString(set.getStats().get("combinations")));
+        }
+        if (set.getStats().containsKey("balls") && set.getStats().get("balls") > 0) {
+            append(total, game.getLocale().get("statistics.total.balls"), Long.toString(set.getStats().get("balls")));
+        }
+        if (set.getStats().containsKey("games") && set.getStats().get("games") > 0) {
+            append(total, game.getLocale().get("statistics.total.games"), Long.toString(set.getStats().get("games")));
+        }
+        if (set.getStats().containsKey("time") && set.getStats().get("time") > 0) {
+            append(total, game.getLocale().get("statistics.total.time"), secondsToTime(set.getStats().get("time")));
+        }
+        if (set.getStats().containsKey("cheats") && set.getStats().get("cheats") > 0) {
+            append(total, game.getLocale().get("statistics.total.cheats"), Long.toString(set.getStats().get("cheats")));
+        }
+        if (set.getStats().containsKey("perfect") && set.getStats().get("perfect") > 0) {
+            append(total, game.getLocale().get("statistics.total.perfect"), Long.toString(set.getStats().get("perfect")));
         }
 
         return total;
