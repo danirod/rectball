@@ -43,18 +43,18 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
 
         best.add(Label(game.locale.get("statistics.best"), this.title)).colspan(2).row()
 
-        if (game.settings.preferences.getInt(SettingsManager.TAG_HIGH_SCORE, 0) == 0 &&
-                game.settings.preferences.getInt(SettingsManager.TAG_HIGH_TIME, 0) == 0) {
+        if (game.settings.preferences.getLong(SettingsManager.TAG_HIGH_SCORE, 0L) == 0L &&
+                game.settings.preferences.getLong(SettingsManager.TAG_HIGH_TIME, 0L) == 0L) {
             val noData = Label(game.locale.get("statistics.noData"), game.skin)
             noData.setAlignment(Align.center)
             best.add(noData).colspan(2).fillX().expandX().padTop(10f).padBottom(10f).row()
             return best
         }
 
-        val highScore = game.settings.preferences.getInt(SettingsManager.TAG_HIGH_SCORE, 0)
+        val highScore = game.settings.preferences.getLong(SettingsManager.TAG_HIGH_SCORE, 0L)
         if (highScore > 0) append(best, game.locale["statistics.best.score"], highScore.toString())
 
-        val highTime = game.settings.preferences.getInt(SettingsManager.TAG_HIGH_TIME, 0)
+        val highTime = game.settings.preferences.getLong(SettingsManager.TAG_HIGH_TIME, 0L)
         if (highTime > 0) append(best, game.locale["statistics.best.time"], secondsToTime(highTime))
 
         return best
@@ -138,36 +138,36 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
     /** A map that pairs an statistic label into the value for that statistic label. */
     private val totalStatistics: Map<String, Long>
         get() = mapOf(
-                game.locale["statistics.total.score"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_SCORE, 0),
-                game.locale["statistics.total.combinations"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COMBINATIONS, 0),
-                game.locale["statistics.total.balls"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_BALLS, 0),
-                game.locale["statistics.total.games"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_GAMES, 0),
-                game.locale["statistics.total.time"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_TIME, 0),
-                game.locale["statistics.total.perfect"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_PERFECTS, 0),
-                game.locale["statistics.total.cheats"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_HINTS, 0)
+                game.locale["statistics.total.score"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_SCORE, 0L),
+                game.locale["statistics.total.combinations"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COMBINATIONS, 0L),
+                game.locale["statistics.total.balls"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_BALLS, 0L),
+                game.locale["statistics.total.games"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_GAMES, 0L),
+                game.locale["statistics.total.time"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_TIME, 0L),
+                game.locale["statistics.total.perfect"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_PERFECTS, 0L),
+                game.locale["statistics.total.cheats"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_HINTS, 0L)
         )
 
     /** A map that pairs a color to the number of times a combination of that color was made. */
     private val colorStatistics: Map<String, Long>
         get() = mapOf(
-                "red" to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COLOR_RED, 0),
-                "green" to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COLOR_GREEN, 0),
-                "blue" to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COLOR_BLUE, 0),
-                "yellow" to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COLOR_YELLOW, 0)
-        )
+                "red" to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COLOR_RED, 0L),
+                "green" to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COLOR_GREEN, 0L),
+                "blue" to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COLOR_BLUE, 0L),
+                "yellow" to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COLOR_YELLOW, 0L)
+        ).filterValues { it > 0 }
 
     /** A map that pairs a combination size ("2x3", "3x4"...) to the number of times that combination was made. */
     private val sizesStatistics: Map<String, Long>
         get() = game.settings.sizeStatistics
 
     /** Converts the decimal [seconds] number of seconds to a sexagesimal value. */
-    private fun secondsToTime(seconds: Int): String {
+    private fun secondsToTime(seconds: Long): String {
         val hrs = seconds / 3600
         val min = seconds % 3600 / 60
         val sec = seconds % 3600 % 60
         return when {
-            hrs != 0 -> String.format(Locale.getDefault(), "%d:%02d:%02d", hrs, min, sec)
-            min != 0 -> String.format(Locale.getDefault(), "%d:%02d", min, sec)
+            hrs != 0L -> String.format(Locale.getDefault(), "%d:%02d:%02d", hrs, min, sec)
+            min != 0L -> String.format(Locale.getDefault(), "%d:%02d", min, sec)
             else -> String.format(Locale.getDefault(), "%d", sec)
         }
     }

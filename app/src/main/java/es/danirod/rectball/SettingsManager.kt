@@ -67,8 +67,8 @@ class SettingsManager(private val context: Context) {
             val editor = prefs.edit()
 
             /* Migrate data to the preferences file. */
-            editor.putInt(TAG_HIGH_SCORE, jsonData.getInt("highestScore", 0))
-            editor.putInt(TAG_HIGH_TIME, jsonData.getInt("highestTime", 0))
+            editor.putLong(TAG_HIGH_SCORE, jsonData.getLong("highestScore", 0L))
+            editor.putLong(TAG_HIGH_TIME, jsonData.getLong("highestTime", 0L))
 
             /* Save changes and burn old file. */
             editor.apply()
@@ -82,20 +82,20 @@ class SettingsManager(private val context: Context) {
 
             /* Migrate total data to the preferences file. */
             val total = jsonData["total"]["values"]
-            editor.putLong(TAG_TOTAL_SCORE, total.getLong("score", 0))
-            editor.putLong(TAG_TOTAL_COMBINATIONS, total.getLong("combinations", 0))
-            editor.putLong(TAG_TOTAL_BALLS, total.getLong("balls", 0))
-            editor.putLong(TAG_TOTAL_GAMES, total.getLong("games", 0))
-            editor.putLong(TAG_TOTAL_TIME, total.getLong("time", 0))
-            editor.putLong(TAG_TOTAL_PERFECTS, total.getLong("perfects", 0))
-            editor.putLong(TAG_TOTAL_HINTS, total.getLong("cheats", 0))
+            editor.putLong(TAG_TOTAL_SCORE, total.getLong("score", 0L))
+            editor.putLong(TAG_TOTAL_COMBINATIONS, total.getLong("combinations", 0L))
+            editor.putLong(TAG_TOTAL_BALLS, total.getLong("balls", 0L))
+            editor.putLong(TAG_TOTAL_GAMES, total.getLong("games", 0L))
+            editor.putLong(TAG_TOTAL_TIME, total.getLong("time", 0L))
+            editor.putLong(TAG_TOTAL_PERFECTS, total.getLong("perfects", 0L))
+            editor.putLong(TAG_TOTAL_HINTS, total.getLong("cheats", 0L))
 
             /* Migrate color data to the preferences file. */
             val colors = jsonData["colors"]["values"]
-            editor.putLong(TAG_TOTAL_COLOR_RED, colors.getLong("red", 0))
-            editor.putLong(TAG_TOTAL_COLOR_GREEN, colors.getLong("green", 0))
-            editor.putLong(TAG_TOTAL_COLOR_BLUE, colors.getLong("blue", 0))
-            editor.putLong(TAG_TOTAL_COLOR_YELLOW, colors.getLong("yellow", 0))
+            editor.putLong(TAG_TOTAL_COLOR_RED, colors.getLong("red", 0L))
+            editor.putLong(TAG_TOTAL_COLOR_GREEN, colors.getLong("green", 0L))
+            editor.putLong(TAG_TOTAL_COLOR_BLUE, colors.getLong("blue", 0L))
+            editor.putLong(TAG_TOTAL_COLOR_YELLOW, colors.getLong("yellow", 0L))
 
             /* Migrate sizes data to the preferences file. */
             val sizes = jsonData["sizes"]["values"]
@@ -118,38 +118,37 @@ class SettingsManager(private val context: Context) {
 
     fun commitState(state: GameState) {
         val editor = preferences.edit()
-        commitHighScore(state.score, state.elapsedTime.toInt(), editor)
-        commitScore(state.score, state.elapsedTime.toInt(), editor)
+        commitHighScore(state.score.toLong(), state.elapsedTime.toLong(), editor)
+        commitScore(state.score.toLong(), state.elapsedTime.toLong(), editor)
         commitTotalStatistics(state.totalStatistics, editor)
         commitColorStatistics(state.colorStatistics, editor)
         commitSizesStatistics(state.sizesStatistics, editor)
         editor.apply()
     }
 
-    private fun commitHighScore(score: Int, time: Int, editor: SharedPreferences.Editor) {
-        editor.putInt(TAG_HIGH_SCORE, maxOf(preferences.getInt(TAG_HIGH_SCORE, 0), score))
-        editor.putInt(TAG_HIGH_TIME, maxOf(preferences.getInt(TAG_HIGH_TIME,0), time))
+    private fun commitHighScore(score: Long, time: Long, editor: SharedPreferences.Editor) {
+        editor.putLong(TAG_HIGH_SCORE, maxOf(preferences.getLong(TAG_HIGH_SCORE, 0L), score))
+        editor.putLong(TAG_HIGH_TIME, maxOf(preferences.getLong(TAG_HIGH_TIME, 0L), time))
     }
 
-    private fun commitScore(score: Int, time: Int, editor: SharedPreferences.Editor) {
-        val increment = { key: String, value: Int -> editor.putInt(key, preferences.getInt(key, 0) + value) }
-        increment(TAG_TOTAL_SCORE, score)
-        increment(TAG_TOTAL_TIME, time)
+    private fun commitScore(score: Long, time: Long, editor: SharedPreferences.Editor) {
+        increment(editor, TAG_TOTAL_SCORE, score)
+        increment(editor, TAG_TOTAL_TIME, time)
     }
 
     private fun commitTotalStatistics(local: Bundle, editor: SharedPreferences.Editor) {
-        increment(editor, TAG_TOTAL_COMBINATIONS, local.getLong(TAG_TOTAL_COMBINATIONS, 0))
-        increment(editor, TAG_TOTAL_BALLS, local.getLong(TAG_TOTAL_BALLS, 0))
-        increment(editor, TAG_TOTAL_GAMES, 1)
-        increment(editor, TAG_TOTAL_PERFECTS, local.getLong(TAG_TOTAL_PERFECTS, 0))
-        increment(editor, TAG_TOTAL_HINTS, local.getLong(TAG_TOTAL_HINTS, 0))
+        increment(editor, TAG_TOTAL_COMBINATIONS, local.getLong(TAG_TOTAL_COMBINATIONS, 0L))
+        increment(editor, TAG_TOTAL_BALLS, local.getLong(TAG_TOTAL_BALLS, 0L))
+        increment(editor, TAG_TOTAL_GAMES, 1L)
+        increment(editor, TAG_TOTAL_PERFECTS, local.getLong(TAG_TOTAL_PERFECTS, 0L))
+        increment(editor, TAG_TOTAL_HINTS, local.getLong(TAG_TOTAL_HINTS, 0L))
     }
 
     private fun commitColorStatistics(local: Bundle, editor: SharedPreferences.Editor) {
-        increment(editor, TAG_TOTAL_COLOR_RED, local.getLong("red", 0))
-        increment(editor, TAG_TOTAL_COLOR_GREEN, local.getLong("green", 0))
-        increment(editor, TAG_TOTAL_COLOR_BLUE, local.getLong("blue", 0))
-        increment(editor, TAG_TOTAL_COLOR_YELLOW, local.getLong("yellow", 0))
+        increment(editor, TAG_TOTAL_COLOR_RED, local.getLong("red", 0L))
+        increment(editor, TAG_TOTAL_COLOR_GREEN, local.getLong("green", 0L))
+        increment(editor, TAG_TOTAL_COLOR_BLUE, local.getLong("blue", 0L))
+        increment(editor, TAG_TOTAL_COLOR_YELLOW, local.getLong("yellow", 0L))
     }
 
     private fun commitSizesStatistics(local: Bundle, editor: SharedPreferences.Editor) {
@@ -165,13 +164,13 @@ class SettingsManager(private val context: Context) {
      * @param [editor] the editor instance is currently modifying the preferences.
      */
     private inline fun increment(editor: SharedPreferences.Editor, key: String, value: Long) {
-        editor.putLong(key, preferences.getLong(key, 0) + value)
+        editor.putLong(key, preferences.getLong(key, 0L) + value)
     }
 
     private fun mergeSizesMaps(map1: Map<String, Long>, map2: Map<String, Long>): Map<String, Long> =
-            (map1.keys union map2.keys).associate { it to (map1[it] ?: 0) + (map2[it] ?: 0) }
+            (map1.keys union map2.keys).associate { it to (map1[it] ?: 0L) + (map2[it] ?: 0L) }
 
-    private fun bundleToMap(bundle: Bundle) = bundle.keySet().associate { it to bundle.getInt(it).toLong() }
+    private fun bundleToMap(bundle: Bundle) = bundle.keySet().associate { it to bundle.getLong(it) }
 
     /** Converts a sizes [map] into a serialized JSON string that can be saved in the settings. */
     private fun serializeSizes(map: Map<String, Long>): String =

@@ -197,19 +197,19 @@ public class GameState {
         return colorStatistics;
     }
 
-    public void incrementLocalStatistic(String key, int value) {
-        int count = localStatistics.getInt(key);
-        localStatistics.putInt(key, count + value);
+    public void incrementLocalStatistic(String key, long value) {
+        long count = localStatistics.getLong(key, 0);
+        localStatistics.putLong(key, count + value);
     }
 
-    public void incrementSizeStatistic(String key, int value) {
-        int count = sizesStatistics.getInt(key);
-        sizesStatistics.putInt(key, count + value);
+    public void incrementSizeStatistic(String key, long value) {
+        long count = sizesStatistics.getLong(key);
+        sizesStatistics.putLong(key, count + value);
     }
 
-    public void incrementColorStatistic(String key, int value) {
-        int count = colorStatistics.getInt(key);
-        colorStatistics.putInt(key, count + value);
+    public void incrementColorStatistic(String key, long value) {
+        long count = colorStatistics.getLong(key, 0);
+        colorStatistics.putLong(key, count + value);
     }
 
     public void resetBoard() {
