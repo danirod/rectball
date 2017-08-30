@@ -62,38 +62,22 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
 
     private fun addTotalData(): Table {
         val total = Table()
-        val set = game.statistics.totalData
-
         total.add(Label(game.locale["statistics.total"], title)).colspan(2).row()
-
-        /* No data case. */
-        if (set.stats.isEmpty()) {
+        val data = totalStatistics
+        if (data.isEmpty()) {
             val noData = Label(game.locale["statistics.noData"], game.skin)
             noData.setAlignment(Align.center)
             total.add(noData).colspan(2).fillX().expandX().padTop(10f).padBottom(10f).row()
-            return total
+        } else {
+            data.forEach { (key, value) -> if (value > 0) append(total, key, value.toString()) }
         }
-
-        /* This short lambda function appends a statistic to the table provided it is positive. */
-        val appendStat: (String, Int?) -> Unit = { key, value ->
-            value?.let { if (it > 0) append(total, key, it.toString()) }
-        }
-
-        /* Add all the possible statistics. */
-        appendStat(game.locale["statistics.total.score"], set.stats["score"])
-        appendStat(game.locale["statistics.total.combinations"], set.stats["combinations"])
-        appendStat(game.locale["statistics.total.balls"], set.stats["balls"])
-        appendStat(game.locale["statistics.total.games"], set.stats["games"])
-        appendStat(game.locale["statistics.total.time"], set.stats["time"])
-        appendStat(game.locale["statistics.total.cheats"], set.stats["cheats"])
-        appendStat(game.locale["statistics.total.perfect"], set.stats["perfect"])
-
         return total
     }
 
     private fun addColorData(): Table {
         val color = Table()
-        val stats = sortStatsMap(game.statistics.colorData.stats)
+
+        val stats = sortStatsMap(colorStatistics)
 
         color.add(Label(game.locale["statistics.color"], title)).colspan(stats.size).row()
         color.defaults().expandX().fillX().align(Align.center).size(60f).padTop(5f)
@@ -124,7 +108,7 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
 
     private fun addSizesData(): Table {
         val sizes = Table()
-        val stats = sortStatsMap(game.statistics.sizesData.stats)
+        val stats = sortStatsMap(sizesStatistics)
 
         sizes.add(Label(game.locale.get("statistics.sizes"), this.title)).colspan(3).row()
 
@@ -151,6 +135,31 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
         return sizes
     }
 
+    /** A map that pairs an statistic label into the value for that statistic label. */
+    private val totalStatistics: Map<String, Long>
+        get() = mapOf(
+                game.locale["statistics.total.score"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_SCORE, 0),
+                game.locale["statistics.total.combinations"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COMBINATIONS, 0),
+                game.locale["statistics.total.balls"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_BALLS, 0),
+                game.locale["statistics.total.games"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_GAMES, 0),
+                game.locale["statistics.total.time"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_TIME, 0),
+                game.locale["statistics.total.perfect"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_PERFECTS, 0),
+                game.locale["statistics.total.cheats"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_HINTS, 0)
+        )
+
+    /** A map that pairs a color to the number of times a combination of that color was made. */
+    private val colorStatistics: Map<String, Long>
+        get() = mapOf(
+                "red" to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COLOR_RED, 0),
+                "green" to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COLOR_GREEN, 0),
+                "blue" to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COLOR_BLUE, 0),
+                "yellow" to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COLOR_YELLOW, 0)
+        )
+
+    /** A map that pairs a combination size ("2x3", "3x4"...) to the number of times that combination was made. */
+    private val sizesStatistics: Map<String, Long>
+        get() = game.settings.sizeStatistics
+
     /** Converts the decimal [seconds] number of seconds to a sexagesimal value. */
     private fun secondsToTime(seconds: Int): String {
         val hrs = seconds / 3600
@@ -164,7 +173,7 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
     }
 
     /** Sorts a [statistics] map by score, highest scores come first. */
-    private fun sortStatsMap(statistics: Map<String, Int>): Map<String, Int> =
+    private fun sortStatsMap(statistics: Map<String, Long>): Map<String, Long> =
             statistics.toList().sortedBy { it.second }.reversed().toMap()
 
     /** Appends a statistic composed by the label [name] and the value [value] to a [table]. */

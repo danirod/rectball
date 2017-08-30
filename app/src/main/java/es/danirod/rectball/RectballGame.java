@@ -61,7 +61,6 @@ import java.util.Map;
 import es.danirod.rectball.android.AndroidLauncher;
 import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.android.R;
-import es.danirod.rectball.io.Statistics;
 import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.scene2d.RectballSkin;
 import es.danirod.rectball.screens.AboutScreen;
@@ -97,8 +96,6 @@ public class RectballGame extends Game {
     /** Whether the game is restoring state from an Android kill or not. */
     private boolean restoredState;
 
-    private Statistics statistics; /** Holds information about the statistics. */
-
     /** Settings manager saves game settings and statistics. */
     private SettingsManager settings;
 
@@ -121,9 +118,6 @@ public class RectballGame extends Game {
 
     @Override
     public void create() {
-        // Initialize platform.
-        this.statistics = new Statistics();
-
         if (BuildConfig.FINE_DEBUG) {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
         }
@@ -159,8 +153,6 @@ public class RectballGame extends Game {
     }
 
     public void finishLoading() {
-        // Load the remaining data.
-        statistics.loadStatistics();
         player = new SoundPlayer(this);
         uiSkin = new RectballSkin(this);
         updateBallAtlas();
@@ -449,10 +441,6 @@ public class RectballGame extends Game {
 
     public AndroidLauncher getContext() {
         return context;
-    }
-
-    public Statistics getStatistics() {
-        return statistics;
     }
 
     public TextureAtlas getBallAtlas() {
