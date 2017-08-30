@@ -33,7 +33,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.SettingsManager;
+import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.SoundPlayer;
 import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.scene2d.listeners.ScreenJumper;

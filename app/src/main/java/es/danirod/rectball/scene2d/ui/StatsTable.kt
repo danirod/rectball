@@ -25,7 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
 import es.danirod.rectball.RectballGame
-import es.danirod.rectball.SettingsManager
+import es.danirod.rectball.android.settings.SettingsManager
 import java.util.*
 
 class StatsTable(private val game: RectballGame, private val title: LabelStyle, private val data: LabelStyle) : Table() {

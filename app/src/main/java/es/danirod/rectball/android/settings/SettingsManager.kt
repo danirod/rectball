@@ -16,15 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball
+package es.danirod.rectball.android.settings
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.utils.Base64Coder
-import com.badlogic.gdx.utils.JsonReader
 import es.danirod.rectball.android.AndroidLauncher
 import es.danirod.rectball.model.GameState
 import org.json.JSONObject
@@ -34,7 +31,7 @@ class SettingsManager(private val context: Context) {
     /** Preferences, contains settings, high scores and statistics. */
     val preferences: SharedPreferences by lazy {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        if (prefs.getInt(TAG_SCHEMA_VERSION, 0) < SCHEMA_VERSION) migratePreferences(prefs)
+        if (prefs.getInt(TAG_SCHEMA_VERSION, 0) < SCHEMA_VERSION) MigrationV1(context, prefs).migrate()
         prefs
     }
 
@@ -42,80 +39,11 @@ class SettingsManager(private val context: Context) {
     val sizeStatistics: Map<String, Long>
         get() = deserializeSizes(preferences.getString(TAG_STAT_SIZES, "{}"))
 
-    private fun migratePreferences(prefs: SharedPreferences) {
-        /* Check if there is a legacy preferences file. */
-        val legacyPrefs = context.getSharedPreferences("rectball", Context.MODE_PRIVATE)
-        if (legacyPrefs.all.isNotEmpty()) {
-            /* Move preferences from that file to the default one. */
-            val editor = prefs.edit()
-            editor.putBoolean(TAG_ENABLE_SOUND, legacyPrefs.getBoolean("sound", true))
-            editor.putBoolean(TAG_ENABLE_COLORBLIND, legacyPrefs.getBoolean("colorblind", false))
-            editor.putBoolean(TAG_ENABLE_FULLSCREEN, legacyPrefs.getBoolean("fullscreen", false))
-            editor.putBoolean(TAG_ASKED_TUTORIAL, legacyPrefs.getBoolean("tutorialAsked", false))
-            editor.apply()
-
-            /* Then remove the legacy preferences file. */
-            val legacyEditor = legacyPrefs.edit()
-            legacyEditor.clear()
-            legacyEditor.apply()
-        }
-
-        /* Check if a legacy scores file exists. */
-        if (Gdx.files.local("scores").exists()) {
-            /* Decode old scores file. */
-            val jsonData = decodeJSON("scores")
-            val editor = prefs.edit()
-
-            /* Migrate data to the preferences file. */
-            editor.putLong(TAG_HIGH_SCORE, jsonData.getLong("highestScore", 0L))
-            editor.putLong(TAG_HIGH_TIME, jsonData.getLong("highestTime", 0L))
-
-            /* Save changes and burn old file. */
-            editor.apply()
-            Gdx.files.local("scores").delete()
-        }
-
-        if (Gdx.files.local("stats").exists()) {
-            /* Decode old statistics file. */
-            val jsonData = decodeJSON("stats")
-            val editor = prefs.edit()
-
-            /* Migrate total data to the preferences file. */
-            val total = jsonData["total"]["values"]
-            editor.putLong(TAG_TOTAL_SCORE, total.getLong("score", 0L))
-            editor.putLong(TAG_TOTAL_COMBINATIONS, total.getLong("combinations", 0L))
-            editor.putLong(TAG_TOTAL_BALLS, total.getLong("balls", 0L))
-            editor.putLong(TAG_TOTAL_GAMES, total.getLong("games", 0L))
-            editor.putLong(TAG_TOTAL_TIME, total.getLong("time", 0L))
-            editor.putLong(TAG_TOTAL_PERFECTS, total.getLong("perfects", 0L))
-            editor.putLong(TAG_TOTAL_HINTS, total.getLong("cheats", 0L))
-
-            /* Migrate color data to the preferences file. */
-            val colors = jsonData["colors"]["values"]
-            editor.putLong(TAG_TOTAL_COLOR_RED, colors.getLong("red", 0L))
-            editor.putLong(TAG_TOTAL_COLOR_GREEN, colors.getLong("green", 0L))
-            editor.putLong(TAG_TOTAL_COLOR_BLUE, colors.getLong("blue", 0L))
-            editor.putLong(TAG_TOTAL_COLOR_YELLOW, colors.getLong("yellow", 0L))
-
-            /* Migrate sizes data to the preferences file. */
-            val sizes = jsonData["sizes"]["values"]
-            sizes.remove("class") // This legacy field is sponsored by reflected serialization
-            val sizesMap = sizes.map { Pair<String, Long>(it.name, it.asLong()) }.toMap()
-            editor.putString(TAG_STAT_SIZES, serializeSizes(sizesMap))
-
-            /* Save changes and burn old file. */
-            editor.apply()
-            Gdx.files.local("stats").delete()
-        }
-
-        /* Bump the schema version. */
-        if (prefs.getInt(TAG_SCHEMA_VERSION, 0) < SCHEMA_VERSION) {
-            val editor = prefs.edit()
-            editor.putInt(TAG_SCHEMA_VERSION, SCHEMA_VERSION)
-            editor.apply()
-        }
-    }
-
+    /**
+     * Commit information about a game once finished. This method will extract the scores and other
+     * statistics about the game [state] and insert the data into the global statistics structure,
+     * as well as update the high scores if they are actually higher.
+     */
     fun commitState(state: GameState) {
         val editor = preferences.edit()
         commitHighScore(state.score.toLong(), state.elapsedTime.toLong(), editor)
@@ -156,14 +84,11 @@ class SettingsManager(private val context: Context) {
         editor.putString(TAG_STAT_SIZES, serializeSizes(combinedSizes))
     }
 
-    /** Decodes a Base64 scrambled JSON [file]. */
-    private inline fun decodeJSON(file: String) = JsonReader().parse(Base64Coder.decodeString(Gdx.files.local(file).readString()))
-
     /**
      * Increments the value of the preference [key] by the amount [value].
      * @param [editor] the editor instance is currently modifying the preferences.
      */
-    private inline fun increment(editor: SharedPreferences.Editor, key: String, value: Long) {
+    private fun increment(editor: SharedPreferences.Editor, key: String, value: Long) {
         editor.putLong(key, preferences.getLong(key, 0L) + value)
     }
 
@@ -173,8 +98,7 @@ class SettingsManager(private val context: Context) {
     private fun bundleToMap(bundle: Bundle) = bundle.keySet().associate { it to bundle.getLong(it) }
 
     /** Converts a sizes [map] into a serialized JSON string that can be saved in the settings. */
-    private fun serializeSizes(map: Map<String, Long>): String =
-            JSONObject(map).toString()
+    private fun serializeSizes(map: Map<String, Long>): String = JSONObject(map).toString()
 
     /** Converts a serialized [payload] JSON string into a sizes map structure. */
     private fun deserializeSizes(payload: String): Map<String, Long> = JSONObject(payload).let {
@@ -182,9 +106,6 @@ class SettingsManager(private val context: Context) {
     }
 
     companion object {
-        /** Tag used in the logger. Remove if I drop the logger. */
-        const val LOG_TAG = "SettingsManager"
-
         /** Current schema version. If the schema is modified, this number should be increased. */
         const val SCHEMA_VERSION = 1
 

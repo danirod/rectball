@@ -40,7 +40,7 @@ import java.util.Map;
 
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.SettingsManager;
+import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.SoundPlayer.SoundCode;
 import es.danirod.rectball.model.Ball;
 import es.danirod.rectball.model.BallColor;
