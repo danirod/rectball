@@ -79,29 +79,24 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
 
         val stats = sortStatsMap(colorStatistics)
 
-        color.add(Label(game.locale["statistics.color"], title)).colspan(stats.size).row()
-        color.defaults().expandX().fillX().align(Align.center).size(60f).padTop(5f)
-
         if (stats.isEmpty()) {
+            color.add(Label(game.locale["statistics.color"], title)).row()
             val noData = Label(game.locale["statistics.noData"], game.skin)
             noData.setAlignment(Align.center)
-            color.add(noData).colspan(stats.size).fillX().expandX().padTop(10f).padBottom(10f).row()
-            return color
+            color.add(noData).fillX().expandX().padTop(10f).padBottom(10f).row()
+        } else {
+            color.add(Label(game.locale["statistics.color"], title)).colspan(stats.size).row()
+            color.defaults().expandX().fillX().align(Align.center).size(60f).padTop(5f)
+
+            for ((key, _) in stats) { color.add(Image(game.ballAtlas.findRegion("ball_$key"))) }
+            color.row()
+            for ((_, value) in stats) {
+                val label = Label(value.toString(), data)
+                label.setAlignment(Align.center)
+                color.add(label)
+            }
+            color.row()
         }
-
-        /* Row 1: ball images. */
-        for ((key, _) in stats) { color.add(Image(game.ballAtlas.findRegion("ball_$key"))) }
-
-        color.row()
-
-        /* Row 2: ball settings. */
-        for ((_, value) in stats) {
-            val label = Label(value.toString(), data)
-            label.setAlignment(Align.center)
-            color.add(label)
-        }
-
-        color.row()
 
         return color
     }
@@ -145,7 +140,7 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
                 game.locale["statistics.total.time"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_TIME, 0L),
                 game.locale["statistics.total.perfect"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_PERFECTS, 0L),
                 game.locale["statistics.total.cheats"] to game.settings.preferences.getLong(SettingsManager.TAG_TOTAL_HINTS, 0L)
-        )
+        ).filterValues { it > 0 }
 
     /** A map that pairs a color to the number of times a combination of that color was made. */
     private val colorStatistics: Map<String, Long>
