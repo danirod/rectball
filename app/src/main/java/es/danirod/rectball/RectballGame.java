@@ -27,7 +27,6 @@ import android.support.v4.content.FileProvider;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
@@ -62,8 +61,6 @@ import java.util.Map;
 import es.danirod.rectball.android.AndroidLauncher;
 import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.android.R;
-import es.danirod.rectball.io.Scores;
-import es.danirod.rectball.io.Statistics;
 import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.scene2d.RectballSkin;
 import es.danirod.rectball.screens.AboutScreen;
@@ -77,6 +74,7 @@ import es.danirod.rectball.screens.Screens;
 import es.danirod.rectball.screens.SettingsScreen;
 import es.danirod.rectball.screens.StatisticsScreen;
 import es.danirod.rectball.screens.TutorialScreen;
+import es.danirod.rectball.android.settings.SettingsManager;
 
 /**
  * Main class for the game.
@@ -99,11 +97,8 @@ public class RectballGame extends Game {
     /** Whether the game is restoring state from an Android kill or not. */
     private boolean restoredState;
 
-    private Scores scores; /** Holds information about the high score. */
-
-    private Statistics statistics; /** Holds information about the statistics. */
-
-    private Preferences preferences; /** Preferences instance. */
+    /** Settings manager saves game settings and statistics. */
+    private SettingsManager settings;
 
     /** Batch instance in use by the game. */
     Batch batch;
@@ -112,20 +107,18 @@ public class RectballGame extends Game {
         this.context = context;
         this.currentGame = new GameState();
         this.restoredState = false;
+        this.settings = new SettingsManager(this.context);
     }
 
     public RectballGame(AndroidLauncher context, GameState state) {
         this.context = context;
         this.currentGame = state;
         this.restoredState = true;
+        this.settings = new SettingsManager(this.context);
     }
 
     @Override
     public void create() {
-        // Initialize platform.
-        this.scores = new Scores();
-        this.statistics = new Statistics();
-
         if (BuildConfig.FINE_DEBUG) {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
         }
@@ -161,9 +154,6 @@ public class RectballGame extends Game {
     }
 
     public void finishLoading() {
-        // Load the remaining data.
-        scores.readData();
-        statistics.loadStatistics();
         player = new SoundPlayer(this);
         uiSkin = new RectballSkin(this);
         updateBallAtlas();
@@ -330,7 +320,7 @@ public class RectballGame extends Game {
     }
 
     public void updateBallAtlas() {
-        boolean isColorblind = getPreferences().getBoolean("colorblind");
+        boolean isColorblind = getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, false);
         String ballsTexture = isColorblind ? "board/colorblind.png" : "board/normal.png";
         Texture balls = manager.get(ballsTexture);
         TextureRegion[][] regions = TextureRegion.split(balls, 256, 256);
@@ -340,6 +330,10 @@ public class RectballGame extends Game {
         ballAtlas.addRegion("ball_blue", regions[1][0]);
         ballAtlas.addRegion("ball_green", regions[1][1]);
         ballAtlas.addRegion("ball_gray", regions[1][2]);
+    }
+
+    public SettingsManager getSettings() {
+        return settings;
     }
 
     /**
@@ -448,21 +442,6 @@ public class RectballGame extends Game {
 
     public AndroidLauncher getContext() {
         return context;
-    }
-
-    public Scores getScores() {
-        return scores;
-    }
-
-    public Statistics getStatistics() {
-        return statistics;
-    }
-
-    public Preferences getPreferences() {
-        if (preferences == null) {
-            this.preferences = Gdx.app.getPreferences("rectball");
-        }
-        return preferences;
     }
 
     public TextureAtlas getBallAtlas() {

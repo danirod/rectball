@@ -18,7 +18,10 @@
 
 package es.danirod.rectball.model;
 
+import android.os.Bundle;
+
 import com.badlogic.gdx.math.Rectangle;
+
 import es.danirod.rectball.Constants;
 
 /**
@@ -48,6 +51,15 @@ public class GameState {
      * This is the remaining time. When reaches 0.
      */
     private float remainingTime;
+
+    /** Local associative statistics for a game before they are committed to the global settings. */
+    private final Bundle localStatistics;
+
+    /** Local size statistics for a game before they are committed to the global settings. */
+    private final Bundle sizesStatistics;
+
+    /** Local color statistics for a game before they are committed to the global settings. */
+    private final Bundle colorStatistics;
 
     public boolean isCountdownFinished() {
         return countdownFinished;
@@ -125,6 +137,9 @@ public class GameState {
         this.elapsedTime = 0;
         this.remainingTime = Constants.SECONDS;
         board = new Board(6);
+        localStatistics = new Bundle();
+        sizesStatistics = new Bundle();
+        colorStatistics = new Bundle();
     }
 
     public int getScore() {
@@ -165,6 +180,36 @@ public class GameState {
         countdownFinished = false;
         timeout = false;
         resetBoard();
+        localStatistics.clear();
+        sizesStatistics.clear();
+        colorStatistics.clear();
+    }
+
+    public Bundle getTotalStatistics() {
+        return localStatistics;
+    }
+
+    public Bundle getSizesStatistics() {
+        return sizesStatistics;
+    }
+
+    public Bundle getColorStatistics() {
+        return colorStatistics;
+    }
+
+    public void incrementLocalStatistic(String key, long value) {
+        long count = localStatistics.getLong(key, 0);
+        localStatistics.putLong(key, count + value);
+    }
+
+    public void incrementSizeStatistic(String key, long value) {
+        long count = sizesStatistics.getLong(key);
+        sizesStatistics.putLong(key, count + value);
+    }
+
+    public void incrementColorStatistic(String key, long value) {
+        long count = colorStatistics.getLong(key, 0);
+        colorStatistics.putLong(key, count + value);
     }
 
     public void resetBoard() {

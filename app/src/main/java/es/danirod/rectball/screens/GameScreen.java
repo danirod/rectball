@@ -40,6 +40,7 @@ import java.util.Map;
 
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
+import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.SoundPlayer.SoundCode;
 import es.danirod.rectball.model.Ball;
 import es.danirod.rectball.model.BallColor;
@@ -192,9 +193,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 public void run() {
                     // Report that a game is starting.
                     Map<Integer, String> dimensions = new HashMap<>();
-                    dimensions.put(1, game.getPreferences().getBoolean("sound") ? "Yes" : "No");
-                    dimensions.put(2, game.getPreferences().getBoolean("colorblind") ? "Yes" : "No");
-                    dimensions.put(3, game.getPreferences().getBoolean("fullscreen") ? "Yes" : "No");
+                    dimensions.put(1, game.getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_SOUND, false) ? "Yes" : "No");
+                    dimensions.put(2, game.getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, false) ? "Yes" : "No");
+                    dimensions.put(3, game.getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false) ? "Yes" : "No");
                     game.getContext().getAnalytics().sendEventWithDimensions("Game", "Game started", dimensions);
                     game.getState().setCountdownFinished(true);
 
@@ -554,29 +555,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         timer.setRunning(false);
         game.player.playSound(SoundCode.GAME_OVER);
 
-        // Update the score... and the record.
-        int score = game.getState().getScore();
-        int time = Math.round(game.getState().getElapsedTime());
-        game.getScores().registerScore(score, time);
-        game.getScores().flushData();
-
-        if (game.getContext().getGameServices().isSignedIn()) {
-            game.getContext().getGameServices().uploadScore(score, time * 1000);
-        }
-
-
-        // Save information about this game in the statistics.
-        game.getStatistics().getTotalData().incrementValue("score", game.getState().getScore());
-        game.getStatistics().getTotalData().incrementValue("games");
-        game.getStatistics().getTotalData().incrementValue("time", Math.round(game.getState().getElapsedTime()));
-        game.getStatistics().saveStatistics();
-
         // Mark a combination that the user could do if he had enough time.
         if (game.getState().getWiggledBounds() == null) {
             CombinationFinder combo = CombinationFinder.create(game.getState().getBoard());
             game.getState().setWiggledBounds(combo.getCombination());
         } else {
-            game.getStatistics().getTotalData().incrementValue("cheats");
+            game.getState().incrementLocalStatistic(SettingsManager.TAG_TOTAL_HINTS, 1);
         }
         for (int y = 0; y < game.getState().getBoard().getSize(); y++) {
             for (int x = 0; x < game.getState().getBoard().getSize(); x++) {
@@ -584,6 +568,15 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                     board.getBall(x, y).addAction(Actions.color(Color.DARK_GRAY, 0.15f));
                 }
             }
+        }
+
+        // Update scores and statistics.
+        int score = game.getState().getScore();
+        int time = Math.round(game.getState().getElapsedTime());
+        game.getSettings().commitState(game.getState());
+
+        if (game.getContext().getGameServices().isSignedIn()) {
+            game.getContext().getGameServices().uploadScore(score, time * 1000);
         }
 
         // Animate the transition to game over.
@@ -627,7 +620,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         boolean usedCheat = game.getState().getWiggledBounds() != null;
 
         if (usedCheat)
-            game.getStatistics().getTotalData().incrementValue("cheats");
+            game.getState().incrementLocalStatistic(SettingsManager.TAG_TOTAL_HINTS, 1);
 
         // Change the colors of the selected region.
         board.addAction(Actions.sequence(
@@ -658,19 +651,18 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // Put information about this combination in the stats.
         int rows = bounds.maxY - bounds.minY + 1;
         int cols = bounds.maxX - bounds.minX + 1;
-        String size = Math.max(rows, cols) + "x" + Math.min(rows, cols);
-        game.getStatistics().getSizesData().incrementValue(size);
+        game.getState().incrementSizeStatistic(Math.max(rows, cols) + "x" + Math.min(rows, cols), 1);
 
         BallColor color = board.getBall(bounds.minX, bounds.minY).getBall().getColor();
-        game.getStatistics().getColorData().incrementValue(color.toString().toLowerCase());
-        game.getStatistics().getTotalData().incrementValue("balls", rows * cols);
-        game.getStatistics().getTotalData().incrementValue("combinations");
+        game.getState().incrementColorStatistic(color.toString().toLowerCase(), 1);
+        game.getState().incrementLocalStatistic(SettingsManager.TAG_TOTAL_BALLS, rows * cols);
+        game.getState().incrementLocalStatistic(SettingsManager.TAG_TOTAL_COMBINATIONS, 1);
 
         // Now, display the score to the user. If the combination is a
         // PERFECT combination, just display PERFECT.
         int boardSize = game.getState().getBoard().getSize() - 1;
         if (bounds.equals(new Bounds(0, 0, boardSize, boardSize))) {
-            game.getStatistics().getTotalData().incrementValue("perfect");
+            game.getState().incrementLocalStatistic(SettingsManager.TAG_TOTAL_PERFECTS, 1);
 
             // Give score
             Label label = new Label("PERFECT", game.getSkin(), "monospace");

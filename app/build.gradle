@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'net.saliman.cobertura'
 apply plugin: 'com.github.kt3k.coveralls'
 
@@ -23,7 +24,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 26
         versionCode 417
-        versionName "0.4.10-beta1"
+        versionName "0.4.10"
         signingConfig signingConfigs.config
     }
     lintOptions {
@@ -88,6 +89,7 @@ dependencies {
     // Google Play Services are required on the Google Play version.
     gpeCompile "com.google.android.gms:play-services-analytics:11.0.4"
     gpeCompile "com.google.android.gms:play-services-games:11.0.4"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 
 cobertura.coverageFormats = ['html', 'xml']

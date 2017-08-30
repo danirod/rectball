@@ -20,6 +20,8 @@ package es.danirod.rectball;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.MathUtils;
 
+import es.danirod.rectball.android.settings.SettingsManager;
+
 public class SoundPlayer {
 
     private RectballGame game;
@@ -37,7 +39,7 @@ public class SoundPlayer {
     }
 
     private boolean canPlaySound() {
-        return game.getPreferences().getBoolean("sound", true);
+        return game.getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_SOUND, true);
     }
 
     public static enum SoundCode {
