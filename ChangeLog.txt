@@ -1,4 +1,5 @@
 [0.4.10]
+- Unified saved data: statistics and high scores are now stored in the Preferences.
 - Fixes regression on Android 4.0, 4.1, 4.2 and 4.3 devices not being able to enter fullscreen mode.
 
 [0.4.9.1]
