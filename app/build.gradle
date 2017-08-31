@@ -69,21 +69,21 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
     // libGDX
-    compile 'com.badlogicgames.gdx:gdx-backend-android:1.9.2'
-    compile "com.badlogicgames.gdx:gdx-freetype:1.9.2"
-    natives "com.badlogicgames.gdx:gdx-platform:1.9.2:natives-armeabi"
-    natives "com.badlogicgames.gdx:gdx-platform:1.9.2:natives-armeabi-v7a"
-    natives "com.badlogicgames.gdx:gdx-platform:1.9.2:natives-x86"
-    natives "com.badlogicgames.gdx:gdx-freetype-platform:1.9.2:natives-armeabi"
-    natives "com.badlogicgames.gdx:gdx-freetype-platform:1.9.2:natives-armeabi-v7a"
-    natives "com.badlogicgames.gdx:gdx-freetype-platform:1.9.2:natives-x86"
+    compile "com.badlogicgames.gdx:gdx-backend-android:$libgdx_version"
+    compile "com.badlogicgames.gdx:gdx-freetype:$libgdx_version"
+    natives "com.badlogicgames.gdx:gdx-platform:$libgdx_version:natives-armeabi"
+    natives "com.badlogicgames.gdx:gdx-platform:$libgdx_version:natives-armeabi-v7a"
+    natives "com.badlogicgames.gdx:gdx-platform:$libgdx_version:natives-x86"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:$libgdx_version:natives-armeabi"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:$libgdx_version:natives-armeabi-v7a"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:$libgdx_version:natives-x86"
 
     // Testing libraries.
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-all:1.10.19'
-    testCompile 'com.badlogicgames.gdx:gdx-backend-headless:1.9.2'
-    testCompile 'com.badlogicgames.gdx:gdx:1.9.2'
-    testCompile 'com.badlogicgames.gdx:gdx-platform:1.9.2:natives-desktop'
+    testCompile "com.badlogicgames.gdx:gdx-backend-headless:$libgdx_version"
+    testCompile "com.badlogicgames.gdx:gdx:$libgdx_version"
+    testCompile "com.badlogicgames.gdx:gdx-platform:$libgdx_version:natives-desktop"
     testCompile 'org.slf4j:slf4j-api:1.7.10'
 
     // Google Play Services are required on the Google Play version.
