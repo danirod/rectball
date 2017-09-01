@@ -15,25 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.danirod.rectball.android;
+package es.danirod.rectball.android
 
-class AndroidPlatform extends AbstractPlatform {
+/**
+ * @author danirod
+ * @since 0.4.0
+ */
+interface GameServices {
 
-    private NullAnalytics analytics = new NullAnalytics();
+    fun signIn()
 
-    private NullGameServices services = new NullGameServices();
+    fun signOut()
 
-    protected AndroidPlatform(AndroidLauncher context) {
-        super(context);
-    }
+    val isSignedIn: Boolean
 
-    @Override
-    public Analytics getAnalytics() {
-        return analytics;
-    }
+    fun uploadScore(score: Int, time: Int)
 
-    @Override
-    public GameServices getGameServices() {
-        return services;
-    }
+    fun showLeaderboards()
+
+    fun showAchievements()
 }

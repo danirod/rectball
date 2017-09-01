@@ -15,23 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.danirod.rectball.android;
+package es.danirod.rectball.android
 
-/**
- * @author danirod
- * @since 0.4.0
- */
-public interface GameServices {
+import android.content.Intent
 
-    void signIn();
+internal class AndroidPlatform(context: AndroidLauncher) : AbstractPlatform(context) {
 
-    void signOut();
+    override fun onStart() { }
 
-    boolean isSignedIn();
+    override fun onStop() { }
 
-    void uploadScore(int score, int time);
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) { }
 
-    void showLeaderboards();
+    override val analytics: Analytics
+        get() = NullAnalytics()
 
-    void showAchievements();
+    override val gameServices: GameServices
+        get() = NullGameServices()
 }

@@ -15,9 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.danirod.rectball.android;
+package es.danirod.rectball.android
 
-import android.content.Intent;
+import android.content.Intent
 
 /**
  * This is the interface for platform code. Platform code is code that depends
@@ -29,27 +29,15 @@ import android.content.Intent;
  * @author danirod
  * @since 0.4.0
  */
-abstract class AbstractPlatform {
+internal abstract class AbstractPlatform(val context: AndroidLauncher) {
 
-    final AndroidLauncher context;
+    abstract fun onStart()
 
-    public AbstractPlatform(AndroidLauncher context) {
-        this.context = context;
-    }
+    abstract fun onStop()
 
-    public void onStart() {
+    abstract fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent)
 
-    }
+    abstract val analytics: Analytics
 
-    public void onStop() {
-
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-    }
-
-    public abstract Analytics getAnalytics();
-
-    public abstract GameServices getGameServices();
+    abstract val gameServices: GameServices
 }

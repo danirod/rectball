@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.android;
+package es.danirod.rectball.android
 
-import android.content.Intent;
+import android.content.Intent
 
 /**
  * This contains code for the Android platform. Here code that uses Android
@@ -28,40 +28,27 @@ import android.content.Intent;
  * @author danirod
  * @since 0.4.0
  */
-class AndroidPlatform extends AbstractPlatform {
+internal class AndroidPlatform(context: AndroidLauncher) : AbstractPlatform(context) {
 
-    final GooglePlayGamesRuntime gpg;
+    private val gpg: GooglePlayGamesRuntime = GooglePlayGamesRuntime(context)
 
-    final GoogleAnalyticsRuntime ga;
+    private val ga: GoogleAnalyticsRuntime = GoogleAnalyticsRuntime(context)
 
-    protected AndroidPlatform(AndroidLauncher context) {
-        super(context);
-        gpg = new GooglePlayGamesRuntime(context);
-        ga = new GoogleAnalyticsRuntime(context);
+    override val gameServices: GameServices
+        get() = gpg
+
+    override val analytics: Analytics
+        get() = ga
+
+    override fun onStart() {
+        gpg.gameHelper.onStart(context)
     }
 
-    @Override
-    public GameServices getGameServices() {
-        return gpg;
+    override fun onStop() {
+        gpg.gameHelper.onStop()
     }
 
-    @Override
-    public Analytics getAnalytics() {
-        return ga;
-    }
-
-    @Override
-    public void onStart() {
-        gpg.gameHelper.onStart(context);
-    }
-
-    @Override
-    public void onStop() {
-        gpg.gameHelper.onStop();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        gpg.gameHelper.onActivityResult(requestCode, resultCode, data);
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        gpg.gameHelper.onActivityResult(requestCode, resultCode, data)
     }
 }

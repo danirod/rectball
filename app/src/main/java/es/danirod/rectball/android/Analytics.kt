@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package es.danirod.rectball.android;
-
-import java.util.Map;
+package es.danirod.rectball.android
 
 /**
  * This interface provides analytic services integration. Analytic services
@@ -28,17 +26,17 @@ import java.util.Map;
  * @author danirod
  * @since 0.4.0
  */
-public interface Analytics {
+interface Analytics {
 
-    void sendEvent(String category, String action);
+    fun sendEvent(category: String, action: String)
 
-    void sendEvent(String category, String action, String label);
+    fun sendEvent(category: String, action: String, label: String)
 
-    void sendScreen(String screenID);
+    fun sendScreen(screenID: String)
 
-    void sendEventWithDimensions(String category, String action, Map<Integer, String> dimensions);
+    fun sendEventWithDimensions(category: String, action: String, dimensions: Map<Int, String>)
 
-    void sendEventWithMetrics(String category, String action, Map<Integer, Float> metrics);
+    fun sendEventWithMetrics(category: String, action: String, metrics: Map<Int, Float>)
 
-    void sendEventWithDimensionsAndMetrics(String category, String action, Map<Integer, String> dimensions, Map<Integer, Float> metrics);
+    fun sendEventWithDimensionsAndMetrics(category: String, action: String, dimensions: Map<Int, String>, metrics: Map<Int, Float>)
 }
