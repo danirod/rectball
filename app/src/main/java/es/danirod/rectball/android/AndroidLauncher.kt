@@ -102,7 +102,7 @@ class AndroidLauncher : AndroidApplication() {
 
     private fun deserializeState(payload: String): GameState = Json().fromJson(GameState::class.java, payload)
 
-    private fun shouldEnableFullscreenMode(): Boolean = false
+    private fun shouldEnableFullscreenMode(): Boolean = settings.preferences.getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false)
 
     /**
      * Enables immersive mode on Android 4.4+. When in fullscreen mode, both status and navigation
