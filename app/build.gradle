@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'net.saliman.cobertura'
-apply plugin: 'com.github.kt3k.coveralls'
 
 configurations {
     natives
@@ -78,21 +76,11 @@ dependencies {
     natives "com.badlogicgames.gdx:gdx-freetype-platform:$libgdx_version:natives-armeabi-v7a"
     natives "com.badlogicgames.gdx:gdx-freetype-platform:$libgdx_version:natives-x86"
 
-    // Testing libraries.
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-all:1.10.19'
-    testCompile "com.badlogicgames.gdx:gdx-backend-headless:$libgdx_version"
-    testCompile "com.badlogicgames.gdx:gdx:$libgdx_version"
-    testCompile "com.badlogicgames.gdx:gdx-platform:$libgdx_version:natives-desktop"
-    testCompile 'org.slf4j:slf4j-api:1.7.10'
-
     // Google Play Services are required on the Google Play version.
     gpeCompile "com.google.android.gms:play-services-analytics:11.0.4"
     gpeCompile "com.google.android.gms:play-services-games:11.0.4"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
-
-cobertura.coverageFormats = ['html', 'xml']
 
 // Extract the libGDX natives from the JARs.
 task copyAndroidNatives() {
