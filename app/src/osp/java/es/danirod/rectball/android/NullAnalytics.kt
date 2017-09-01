@@ -17,6 +17,8 @@
  */
 package es.danirod.rectball.android
 
+import com.badlogic.gdx.Gdx
+
 internal class NullAnalytics : Analytics {
 
     override fun sendEvent(category: String, action: String) {

@@ -97,9 +97,6 @@ public class RectballGame extends Game {
     /** Whether the game is restoring state from an Android kill or not. */
     private boolean restoredState;
 
-    /** Settings manager saves game settings and statistics. */
-    private SettingsManager settings;
-
     /** Batch instance in use by the game. */
     Batch batch;
 
@@ -107,14 +104,12 @@ public class RectballGame extends Game {
         this.context = context;
         this.currentGame = new GameState();
         this.restoredState = false;
-        this.settings = new SettingsManager(this.context);
     }
 
     public RectballGame(AndroidLauncher context, GameState state) {
         this.context = context;
         this.currentGame = state;
         this.restoredState = true;
-        this.settings = new SettingsManager(this.context);
     }
 
     @Override
@@ -320,7 +315,7 @@ public class RectballGame extends Game {
     }
 
     public void updateBallAtlas() {
-        boolean isColorblind = getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, false);
+        boolean isColorblind = context.getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, false);
         String ballsTexture = isColorblind ? "board/colorblind.png" : "board/normal.png";
         Texture balls = manager.get(ballsTexture);
         TextureRegion[][] regions = TextureRegion.split(balls, 256, 256);
@@ -330,10 +325,6 @@ public class RectballGame extends Game {
         ballAtlas.addRegion("ball_blue", regions[1][0]);
         ballAtlas.addRegion("ball_green", regions[1][1]);
         ballAtlas.addRegion("ball_gray", regions[1][2]);
-    }
-
-    public SettingsManager getSettings() {
-        return settings;
     }
 
     /**

@@ -29,6 +29,7 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
 import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.JsonWriter
 import es.danirod.rectball.RectballGame
+import es.danirod.rectball.android.settings.SettingsManager
 import es.danirod.rectball.model.GameState
 
 class AndroidLauncher : AndroidApplication() {
@@ -37,11 +38,14 @@ class AndroidLauncher : AndroidApplication() {
 
     private lateinit var game: RectballGame
 
+    lateinit var settings: SettingsManager
+
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
         // Setup game state
         platform = AndroidPlatform(this)
+        settings = SettingsManager(this)
         game = if (savedState != null) buildGameInstance(savedState) else RectballGame(this)
 
         // Request wakelock
@@ -98,7 +102,7 @@ class AndroidLauncher : AndroidApplication() {
 
     private fun deserializeState(payload: String): GameState = Json().fromJson(GameState::class.java, payload)
 
-    private fun shouldEnableFullscreenMode(): Boolean = this.getPreferences("rectball").getBoolean("fullscreen")
+    private fun shouldEnableFullscreenMode(): Boolean = false
 
     /**
      * Enables immersive mode on Android 4.4+. When in fullscreen mode, both status and navigation

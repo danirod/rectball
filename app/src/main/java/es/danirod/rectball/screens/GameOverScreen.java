@@ -55,7 +55,7 @@ public class GameOverScreen extends AbstractScreen {
         String lastScore = Integer.toString(game.getState().getScore());
         while (lastScore.length() < 4) lastScore = "0" + lastScore;
         String aliveTime = Long.toString(Math.round(game.getState().getElapsedTime()));
-        String highScore = Long.toString(game.getSettings().getPreferences().getLong(SettingsManager.TAG_HIGH_SCORE, 0L));
+        String highScore = Long.toString(game.getContext().getSettings().getPreferences().getLong(SettingsManager.TAG_HIGH_SCORE, 0L));
 
         // Scores table
         Table scoresTable = new Table();

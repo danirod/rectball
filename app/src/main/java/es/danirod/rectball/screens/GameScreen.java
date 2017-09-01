@@ -193,9 +193,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 public void run() {
                     // Report that a game is starting.
                     Map<Integer, String> dimensions = new HashMap<>();
-                    dimensions.put(1, game.getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_SOUND, false) ? "Yes" : "No");
-                    dimensions.put(2, game.getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, false) ? "Yes" : "No");
-                    dimensions.put(3, game.getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false) ? "Yes" : "No");
+                    dimensions.put(1, game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_SOUND, false) ? "Yes" : "No");
+                    dimensions.put(2, game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, false) ? "Yes" : "No");
+                    dimensions.put(3, game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false) ? "Yes" : "No");
                     game.getContext().getAnalytics().sendEventWithDimensions("Game", "Game started", dimensions);
                     game.getState().setCountdownFinished(true);
 
@@ -573,7 +573,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // Update scores and statistics.
         int score = game.getState().getScore();
         int time = Math.round(game.getState().getElapsedTime());
-        game.getSettings().commitState(game.getState());
+        game.getContext().getSettings().commitState(game.getState());
 
         if (game.getContext().getGameServices().isSignedIn()) {
             game.getContext().getGameServices().uploadScore(score, time * 1000);

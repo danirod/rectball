@@ -59,11 +59,11 @@ public class SettingsScreen extends AbstractScreen {
         // Sound
         if (sound == null) {
             sound = new SwitchActor(game.getLocale().get("settings.sound"), game.getSkin());
-            sound.setChecked(game.getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_SOUND, true));
+            sound.setChecked(game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_SOUND, true));
             sound.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent changeEvent, Actor actor) {
-                    SharedPreferences.Editor editor = game.getSettings().getPreferences().edit();
+                    SharedPreferences.Editor editor = game.getContext().getSettings().getPreferences().edit();
                     editor.putBoolean(SettingsManager.TAG_ENABLE_SOUND, sound.isChecked());
                     editor.apply();
                     game.player.playSound(SoundCode.SELECT);
@@ -74,11 +74,11 @@ public class SettingsScreen extends AbstractScreen {
         // Color
         if (color == null) {
             color = new SwitchActor(game.getLocale().get("settings.colorblind"), game.getSkin());
-            color.setChecked(game.getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, false));
+            color.setChecked(game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, false));
             color.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent changeEvent, Actor actor) {
-                    SharedPreferences.Editor editor = game.getSettings().getPreferences().edit();
+                    SharedPreferences.Editor editor = game.getContext().getSettings().getPreferences().edit();
                     editor.putBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, color.isChecked());
                     editor.apply();
                     game.updateBallAtlas();
@@ -90,11 +90,11 @@ public class SettingsScreen extends AbstractScreen {
         // Fullscreen
         if (fullscreen == null) {
             fullscreen = new SwitchActor(game.getLocale().get("settings.fullscreen"), game.getSkin());
-            fullscreen.setChecked(game.getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false));
+            fullscreen.setChecked(game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false));
             fullscreen.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    SharedPreferences.Editor editor = game.getSettings().getPreferences().edit();
+                    SharedPreferences.Editor editor = game.getContext().getSettings().getPreferences().edit();
                     editor.putBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, fullscreen.isChecked());
                     editor.apply();
                     game.getContext().runOnUiThread(new Runnable() {

@@ -39,7 +39,7 @@ public class SoundPlayer {
     }
 
     private boolean canPlaySound() {
-        return game.getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_SOUND, true);
+        return game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_SOUND, true);
     }
 
     public static enum SoundCode {
