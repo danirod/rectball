@@ -18,7 +18,6 @@
 package es.danirod.rectball.screens;
 
 import android.content.SharedPreferences;
-import android.widget.Toast;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
@@ -31,9 +30,9 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.SoundPlayer.SoundCode;
 import es.danirod.rectball.android.BuildConfig;
+import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.scene2d.listeners.ScreenJumper;
 import es.danirod.rectball.scene2d.listeners.ScreenPopper;
 import es.danirod.rectball.scene2d.ui.SwitchActor;
@@ -100,7 +99,7 @@ public class SettingsScreen extends AbstractScreen {
                     game.getContext().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(game.getContext(), game.getLocale().get("settings.fullscreenReset"), Toast.LENGTH_LONG).show();
+                            game.getContext().toggleFullscreen();
                         }
                     });
                     game.player.playSound(SoundCode.SELECT);

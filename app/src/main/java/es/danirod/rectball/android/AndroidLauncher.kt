@@ -83,12 +83,20 @@ class AndroidLauncher : AndroidApplication() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus && shouldEnableFullscreenMode()) {
+        if (hasFocus) {
+            toggleFullscreen();
+        }
+    }
+
+    fun toggleFullscreen() {
+        if (shouldEnableFullscreenMode()) {
             if (Build.VERSION.SDK_INT >= 19) {
                 enableImmersiveMode()
             } else {
                 legacyFullscreenMode()
             }
+        } else {
+            disableFullscreen()
         }
     }
 
@@ -135,6 +143,14 @@ class AndroidLauncher : AndroidApplication() {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN or
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
                     View.SYSTEM_UI_FLAG_LOW_PROFILE
+        }
+    }
+
+    private fun disableFullscreen() {
+        if (Build.VERSION.SDK_INT < 16) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        } else {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
         }
     }
 
