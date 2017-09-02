@@ -18,8 +18,6 @@
 
 package es.danirod.rectball.android
 
-import android.content.Intent
-
 /**
  * This contains code for the Android platform. Here code that uses Android
  * SDK or Android API might be used. This code won't run on other platforms
@@ -48,7 +46,7 @@ internal class AndroidPlatform(context: AndroidLauncher) : AbstractPlatform(cont
         gpg.gameHelper.onStop()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         gpg.gameHelper.onActivityResult(requestCode, resultCode, data)
     }
 }

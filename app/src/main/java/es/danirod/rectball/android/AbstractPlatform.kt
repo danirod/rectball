@@ -35,7 +35,7 @@ internal abstract class AbstractPlatform(val context: AndroidLauncher) {
 
     abstract fun onStop()
 
-    abstract fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent)
+    abstract fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
 
     abstract val analytics: Analytics
 

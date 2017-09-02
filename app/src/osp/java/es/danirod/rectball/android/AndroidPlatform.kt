@@ -25,7 +25,7 @@ internal class AndroidPlatform(context: AndroidLauncher) : AbstractPlatform(cont
 
     override fun onStop() { }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) { }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) { }
 
     override val analytics: Analytics
         get() = NullAnalytics()
