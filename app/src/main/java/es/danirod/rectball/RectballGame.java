@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
+import android.util.SparseArray;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
@@ -55,12 +56,11 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
 
 import es.danirod.rectball.android.AndroidLauncher;
 import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.android.R;
+import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.scene2d.RectballSkin;
 import es.danirod.rectball.screens.AboutScreen;
@@ -74,7 +74,6 @@ import es.danirod.rectball.screens.Screens;
 import es.danirod.rectball.screens.SettingsScreen;
 import es.danirod.rectball.screens.StatisticsScreen;
 import es.danirod.rectball.screens.TutorialScreen;
-import es.danirod.rectball.android.settings.SettingsManager;
 
 /**
  * Main class for the game.
@@ -83,9 +82,9 @@ public class RectballGame extends Game {
 
     private final AndroidLauncher context;
 
-    /* FIXME: Privatize this. */
+    /** Contains all the screens in use by the game. */
+    private final SparseArray<AbstractScreen> screens = new SparseArray<>();
 
-    private final Map<Integer, AbstractScreen> screens = new HashMap<>();
     private final GameState currentGame;
     private final Deque<AbstractScreen> screenStack = new ArrayDeque<>();
     public AssetManager manager;
@@ -155,8 +154,8 @@ public class RectballGame extends Game {
         locale = setUpLocalization();
 
         // Load the screens.
-        for (Map.Entry<Integer, AbstractScreen> screen : screens.entrySet()) {
-            screen.getValue().load();
+        for (int i = 0; i < screens.size(); i++) {
+            screens.valueAt(i).load();
         }
 
         // Enter main menu.
