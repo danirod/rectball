@@ -27,26 +27,15 @@ import android.support.v4.content.FileProvider;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
-import com.badlogic.gdx.assets.loaders.FileHandleResolver;
-import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.io.File;
@@ -125,7 +114,7 @@ public class RectballGame extends StateBasedGame {
         addScreen(new TutorialScreen(this));
 
         // Load the resources.
-        manager = createManager();
+        manager = AssetManagerBuilder.INSTANCE.build();
         getScreen(Screens.LOADING).load();
         if (!restoredState) {
             setScreen(getScreen(Screens.LOADING));
@@ -161,70 +150,6 @@ public class RectballGame extends StateBasedGame {
 
     public boolean isRestoredState() {
         return restoredState;
-    }
-
-    private AssetManager createManager() {
-        AssetManager manager = new AssetManager();
-        FileHandleResolver resolver = new InternalFileHandleResolver();
-        manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
-        manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver) {
-            @Override
-            public BitmapFont loadSync(AssetManager manager, String fileName, FileHandle file, FreeTypeFontLoaderParameter parameter) {
-                BitmapFont font = super.loadSync(manager, fileName, file, parameter);
-                font.getData().setScale(1f / Gdx.graphics.getDensity());
-                return font;
-            }
-        });
-
-        // Set up the parameters for loading linear textures. Linear textures
-        // use a linear filter to not have artifacts when they are scaled.
-        TextureParameter texParameters = new TextureParameter();
-        BitmapFontParameter fntParameters = new BitmapFontParameter();
-        texParameters.minFilter = texParameters.magFilter = TextureFilter.Linear;
-        fntParameters.minFilter = texParameters.magFilter = TextureFilter.Linear;
-
-        // Load game assets.
-        manager.load("logo.png", Texture.class, texParameters);
-        manager.load("board/normal.png", Texture.class, texParameters);
-        manager.load("board/colorblind.png", Texture.class, texParameters);
-
-        // Load UI resources.
-        manager.load("ui/progress.png", Texture.class, texParameters);
-        manager.load("ui/icons.png", Texture.class, texParameters);
-        manager.load("ui/yellow_patch.png", Texture.class);
-        manager.load("ui/switch.png", Texture.class, texParameters);
-
-        // Load Google Play Games assets.
-        if (BuildConfig.FLAVOR.equals("gpe")) {
-            manager.load("google/gpg_achievements.png", Texture.class, texParameters);
-            manager.load("google/gpg_leaderboard.png", Texture.class, texParameters);
-        }
-
-        // Load BitmapFonts
-        manager.load("fonts/monospace.fnt", BitmapFont.class);
-        manager.load("fonts/monospaceOutline.fnt", BitmapFont.class);
-
-        // Load TrueType fonts
-        FreeTypeFontLoaderParameter normalPar = new FreeTypeFontLoaderParameter();
-        normalPar.fontFileName = "fonts/Coda-Regular.ttf";
-        normalPar.fontParameters.minFilter = normalPar.fontParameters.magFilter = TextureFilter.Linear;
-        normalPar.fontParameters.size = (int) Math.ceil(28 * Gdx.graphics.getDensity());
-        manager.load("fonts/normal.ttf", BitmapFont.class, normalPar);
-        FreeTypeFontLoaderParameter smallPar = new FreeTypeFontLoaderParameter();
-        smallPar.fontFileName = "fonts/Coda-Regular.ttf";
-        smallPar.fontParameters.minFilter = smallPar.fontParameters.magFilter = TextureFilter.Linear;
-        smallPar.fontParameters.size = (int) Math.ceil(23 * Gdx.graphics.getDensity());
-        manager.load("fonts/small.ttf", BitmapFont.class, smallPar);
-
-        // Load sounds
-        manager.load("sound/fail.ogg", Sound.class);
-        manager.load("sound/game_over.ogg", Sound.class);
-        manager.load("sound/perfect.ogg", Sound.class);
-        manager.load("sound/select.ogg", Sound.class);
-        manager.load("sound/success.ogg", Sound.class);
-        manager.load("sound/unselect.ogg", Sound.class);
-
-        return manager;
     }
 
     @Override
