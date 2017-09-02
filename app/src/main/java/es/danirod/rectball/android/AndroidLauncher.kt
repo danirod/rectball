@@ -86,7 +86,7 @@ class AndroidLauncher : AndroidApplication() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
-            toggleFullscreen();
+            toggleFullscreen()
         }
     }
 

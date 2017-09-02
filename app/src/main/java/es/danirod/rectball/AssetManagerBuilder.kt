@@ -1,8 +1,24 @@
+/*
+ * This file is part of Rectball.
+ * Copyright (C) 2015-2017 Dani Rodríguez.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package es.danirod.rectball
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetManager
-import com.badlogic.gdx.assets.loaders.BitmapFontLoader
 import com.badlogic.gdx.assets.loaders.TextureLoader
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver
 import com.badlogic.gdx.audio.Sound
@@ -25,6 +41,7 @@ object AssetManagerBuilder {
         return manager
     }
 
+    @Suppress("ConstantConditionIf")
     private fun loadTextures(manager: AssetManager) {
         // Graphic assets.
         manager.load("logo.png", Texture::class.java, textureParameters)
@@ -38,7 +55,7 @@ object AssetManagerBuilder {
         manager.load("ui/yellow_patch.png", Texture::class.java, textureParameters)
 
         // Google Play Games integration.
-        if (BuildConfig.FLAVOR.equals("gpe")) {
+        if (BuildConfig.FLAVOR == "gpe") {
             manager.load("google/gpg_achievements.png", Texture::class.java, textureParameters)
             manager.load("google/gpg_leaderboard.png", Texture::class.java, textureParameters)
         }
@@ -70,7 +87,7 @@ object AssetManagerBuilder {
         parameters.fontFileName = name
         parameters.fontParameters.minFilter = filter
         parameters.fontParameters.magFilter = filter
-        parameters.fontParameters.size = Math.ceil(size.toDouble() * Gdx.graphics.getDensity()).toInt()
+        parameters.fontParameters.size = Math.ceil(size.toDouble() * Gdx.graphics.density).toInt()
         return parameters
     }
 
@@ -80,17 +97,10 @@ object AssetManagerBuilder {
         manager.setLoader(BitmapFont::class.java, ".ttf", object: FreetypeFontLoader(resolver) {
             override fun loadSync(manager: AssetManager?, fileName: String?, file: FileHandle?, parameter: FreeTypeFontLoaderParameter?): BitmapFont {
                 val font = super.loadSync(manager, fileName, file, parameter)
-                font.data.setScale(1f / Gdx.graphics.getDensity())
+                font.data.setScale(1f / Gdx.graphics.density)
                 return font
             }
         })
-    }
-
-    private val fontParameters by lazy {
-        val parameters = BitmapFontLoader.BitmapFontParameter()
-        parameters.minFilter = Texture.TextureFilter.Linear
-        parameters.magFilter = Texture.TextureFilter.Linear
-        parameters
     }
 
     private val textureParameters by lazy {
