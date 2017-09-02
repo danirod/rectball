@@ -32,6 +32,7 @@ import com.badlogic.gdx.utils.Timer;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer.SoundCode;
 import es.danirod.rectball.android.BuildConfig;
+import es.danirod.rectball.android.R;
 import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.scene2d.listeners.ScreenJumper;
 import es.danirod.rectball.scene2d.listeners.ScreenPopper;
@@ -57,7 +58,7 @@ public class SettingsScreen extends AbstractScreen {
     public void setUpInterface(Table table) {
         // Sound
         if (sound == null) {
-            sound = new SwitchActor(game.getLocale().get("settings.sound"), game.getSkin());
+            sound = new SwitchActor(game.getContext().getString(R.string.settings_sound), game.getSkin());
             sound.setChecked(game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_SOUND, true));
             sound.addListener(new ChangeListener() {
                 @Override
@@ -72,7 +73,7 @@ public class SettingsScreen extends AbstractScreen {
 
         // Color
         if (color == null) {
-            color = new SwitchActor(game.getLocale().get("settings.colorblind"), game.getSkin());
+            color = new SwitchActor(game.getContext().getString(R.string.settings_colorblind), game.getSkin());
             color.setChecked(game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, false));
             color.addListener(new ChangeListener() {
                 @Override
@@ -88,7 +89,7 @@ public class SettingsScreen extends AbstractScreen {
 
         // Fullscreen
         if (fullscreen == null) {
-            fullscreen = new SwitchActor(game.getLocale().get("settings.fullscreen"), game.getSkin());
+            fullscreen = new SwitchActor(game.getContext().getString(R.string.settings_fullscreen), game.getSkin());
             fullscreen.setChecked(game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false));
             fullscreen.addListener(new ChangeListener() {
                 @Override
@@ -109,7 +110,7 @@ public class SettingsScreen extends AbstractScreen {
 
         // Do tutorial button.
         if (doTutorial == null) {
-            doTutorial = new TextButton(game.getLocale().get("settings.playTutorial"), game.getSkin());
+            doTutorial = new TextButton(game.getContext().getString(R.string.settings_play_tutorial), game.getSkin());
             doTutorial.addListener(new ScreenJumper(game, Screens.TUTORIAL));
         }
 
@@ -128,8 +129,8 @@ public class SettingsScreen extends AbstractScreen {
         // Log out button
         if (BuildConfig.FLAVOR.equals("gpe")) {
             String logoutText = game.getContext().getGameServices().isSignedIn() ?
-                    game.getLocale().get("gplay.logout") :
-                    game.getLocale().get("gplay.login");
+                    game.getContext().getString(R.string.settings_play_log_out) :
+                    game.getContext().getString(R.string.settings_play_log_in);
             if (googlePlayLogin == null) {
                 googlePlayLogin = new TextButton(logoutText, game.getSkin());
                 googlePlayLogin.addListener(new ChangeListener() {
@@ -146,15 +147,15 @@ public class SettingsScreen extends AbstractScreen {
                             game.getContext().getGameServices().signIn();
                         }
                         game.player.playSound(SoundCode.SELECT);
-                        googlePlayLogin.setText(game.getLocale().get("gplay.updating"));
+                        googlePlayLogin.setText(game.getContext().getString(R.string.settings_play_processing));
                         googlePlayLogin.setDisabled(true);
                         Timer.schedule(new Timer.Task() {
 
                             @Override
                             public void run() {
                                 String logoutText = game.getContext().getGameServices().isSignedIn() ?
-                                        game.getLocale().get("gplay.logout") :
-                                        game.getLocale().get("gplay.login");
+                                        game.getContext().getString(R.string.settings_play_log_out) :
+                                        game.getContext().getString(R.string.settings_play_log_in);
                                 googlePlayLogin.setText(logoutText);
                                 googlePlayLogin.setDisabled(false);
                             }
@@ -176,7 +177,7 @@ public class SettingsScreen extends AbstractScreen {
 
         // Back button
         if (backButton == null) {
-            backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());
+            backButton = new TextButton(game.getContext().getString(R.string.core_back), game.getSkin());
             backButton.addListener(new ScreenPopper(game));
         }
 

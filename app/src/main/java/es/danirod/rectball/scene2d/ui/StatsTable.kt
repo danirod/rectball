@@ -25,10 +25,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
 import es.danirod.rectball.RectballGame
+import es.danirod.rectball.android.R
 import es.danirod.rectball.android.settings.SettingsManager
 import java.util.*
 
 class StatsTable(private val game: RectballGame, private val title: LabelStyle, private val data: LabelStyle) : Table() {
+
+    private val context = game.context
 
     init {
         defaults().padBottom(30f).padRight(10f)
@@ -41,31 +44,31 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
     private fun addBestScores(): Table {
         val best = Table()
 
-        best.add(Label(game.locale.get("statistics.best"), this.title)).colspan(2).row()
+        best.add(Label(context.getString(R.string.statistics_best_data), this.title)).colspan(2).row()
 
         if (game.context.settings.preferences.getLong(SettingsManager.TAG_HIGH_SCORE, 0L) == 0L &&
                 game.context.settings.preferences.getLong(SettingsManager.TAG_HIGH_TIME, 0L) == 0L) {
-            val noData = Label(game.locale.get("statistics.noData"), game.skin)
+            val noData = Label(context.getString(R.string.statistics_no_data), game.skin)
             noData.setAlignment(Align.center)
             best.add(noData).colspan(2).fillX().expandX().padTop(10f).padBottom(10f).row()
             return best
         }
 
         val highScore = game.context.settings.preferences.getLong(SettingsManager.TAG_HIGH_SCORE, 0L)
-        if (highScore > 0) append(best, game.locale["statistics.best.score"], highScore.toString())
+        if (highScore > 0) append(best, context.getString(R.string.statistics_best_score), highScore.toString())
 
         val highTime = game.context.settings.preferences.getLong(SettingsManager.TAG_HIGH_TIME, 0L)
-        if (highTime > 0) append(best, game.locale["statistics.best.time"], secondsToTime(highTime))
+        if (highTime > 0) append(best, context.getString(R.string.statistics_best_time), secondsToTime(highTime))
 
         return best
     }
 
     private fun addTotalData(): Table {
         val total = Table()
-        total.add(Label(game.locale["statistics.total"], title)).colspan(2).row()
+        total.add(Label(context.getString(R.string.statistics_total), title)).colspan(2).row()
         val data = totalStatistics
         if (data.isEmpty()) {
-            val noData = Label(game.locale["statistics.noData"], game.skin)
+            val noData = Label(context.getString(R.string.statistics_no_data), game.skin)
             noData.setAlignment(Align.center)
             total.add(noData).colspan(2).fillX().expandX().padTop(10f).padBottom(10f).row()
         } else {
@@ -80,12 +83,12 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
         val stats = sortStatsMap(colorStatistics)
 
         if (stats.isEmpty()) {
-            color.add(Label(game.locale["statistics.color"], title)).row()
-            val noData = Label(game.locale["statistics.noData"], game.skin)
+            color.add(Label(context.getString(R.string.statistics_color), title)).row()
+            val noData = Label(context.getString(R.string.statistics_no_data), game.skin)
             noData.setAlignment(Align.center)
             color.add(noData).fillX().expandX().padTop(10f).padBottom(10f).row()
         } else {
-            color.add(Label(game.locale["statistics.color"], title)).colspan(stats.size).row()
+            color.add(Label(context.getString(R.string.statistics_color), title)).colspan(stats.size).row()
             color.defaults().expandX().fillX().align(Align.center).size(60f).padTop(5f)
 
             for ((key, _) in stats) { color.add(Image(game.ballAtlas.findRegion("ball_$key"))) }
@@ -105,11 +108,11 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
         val sizes = Table()
         val stats = sortStatsMap(sizesStatistics)
 
-        sizes.add(Label(game.locale.get("statistics.sizes"), this.title)).colspan(3).row()
+        sizes.add(Label(context.getString(R.string.statistics_sizes), this.title)).colspan(3).row()
 
         /* No data. */
         if (stats.isEmpty()) {
-            val noData = Label(game.locale.get("statistics.noData"), game.skin)
+            val noData = Label(context.getString(R.string.statistics_no_data), game.skin)
             noData.setAlignment(Align.center)
             sizes.add(noData).colspan(3).fillX().expandX().padTop(10f).padBottom(10f).row()
             return sizes
@@ -133,13 +136,13 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
     /** A map that pairs an statistic label into the value for that statistic label. */
     private val totalStatistics: Map<String, Long>
         get() = mapOf(
-                game.locale["statistics.total.score"] to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_SCORE, 0L),
-                game.locale["statistics.total.combinations"] to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COMBINATIONS, 0L),
-                game.locale["statistics.total.balls"] to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_BALLS, 0L),
-                game.locale["statistics.total.games"] to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_GAMES, 0L),
-                game.locale["statistics.total.time"] to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_TIME, 0L),
-                game.locale["statistics.total.perfect"] to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_PERFECTS, 0L),
-                game.locale["statistics.total.cheats"] to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_HINTS, 0L)
+                context.getString(R.string.statistics_total_score) to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_SCORE, 0L),
+                context.getString(R.string.statistics_total_combinations) to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COMBINATIONS, 0L),
+                context.getString(R.string.statistics_total_balls) to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_BALLS, 0L),
+                context.getString(R.string.statistics_total_games) to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_GAMES, 0L),
+                context.getString(R.string.statistics_best_time) to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_TIME, 0L),
+                context.getString(R.string.statistics_total_perfect) to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_PERFECTS, 0L),
+                context.getString(R.string.statistics_total_hints) to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_HINTS, 0L)
         ).filterValues { it > 0 }
 
     /** A map that pairs a color to the number of times a combination of that color was made. */

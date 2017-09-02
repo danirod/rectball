@@ -35,8 +35,9 @@ import com.badlogic.gdx.utils.Align;
 
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.SoundPlayer;
+import es.danirod.rectball.android.R;
+import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.scene2d.listeners.ScreenPopper;
 import es.danirod.rectball.scene2d.listeners.TrackingListener;
 
@@ -49,7 +50,7 @@ public class GameOverScreen extends AbstractScreen {
     @Override
     public void setUpInterface(Table table) {
         // GAME OVER!
-        table.add(new Label(game.getLocale().get("game.game_over"), game.getSkin())).row();
+        table.add(new Label(game.getContext().getString(R.string.game_over_title), game.getSkin())).row();
 
         // Set up the label data.
         String lastScore = Integer.toString(game.getState().getScore());
@@ -100,7 +101,7 @@ public class GameOverScreen extends AbstractScreen {
                 int height = width / 2;
                 int y = (int) (Gdx.graphics.getHeight() * 0.375f);
                 Pixmap screenshot = game.requestScreenshot(0, y, width, height);
-                game.shareGameOverScreenshot(screenshot, game.getState().getScore(), Math.round(game.getState().getElapsedTime()));
+                game.shareGameOverScreenshot(screenshot);
                 event.cancel();
             }
         });

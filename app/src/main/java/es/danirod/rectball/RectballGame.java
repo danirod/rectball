@@ -49,7 +49,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
-import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.io.File;
@@ -91,7 +90,6 @@ public class RectballGame extends Game {
     public SoundPlayer player;
     private RectballSkin uiSkin;
     private TextureAtlas ballAtlas;
-    private I18NBundle locale;
 
     /** Whether the game is restoring state from an Android kill or not. */
     private boolean restoredState;
@@ -151,7 +149,6 @@ public class RectballGame extends Game {
         player = new SoundPlayer(this);
         uiSkin = new RectballSkin(this);
         updateBallAtlas();
-        locale = setUpLocalization();
 
         // Load the screens.
         for (int i = 0; i < screens.size(); i++) {
@@ -171,15 +168,6 @@ public class RectballGame extends Game {
 
     public boolean isRestoredState() {
         return restoredState;
-    }
-
-    private I18NBundle setUpLocalization() {
-        FileHandle baseFileHandle = Gdx.files.internal("locale/rectball");
-        return I18NBundle.createBundle(baseFileHandle);
-    }
-
-    public I18NBundle getLocale() {
-        return locale;
     }
 
     private AssetManager createManager() {
@@ -357,12 +345,9 @@ public class RectballGame extends Game {
         shareScreenshotWithMessage(pixmap, "");
     }
 
-    public void shareGameOverScreenshot(Pixmap pixmap, int score, int time) {
+    public void shareGameOverScreenshot(Pixmap pixmap) {
         Gdx.app.debug("SharingServices", "Requested sharing a screenshot");
-
-        // Let's make a dirty cast to get the game instance.
-        RectballGame game = (RectballGame) context.getApplicationListener();
-        String message = game.getLocale().format("sharing.text", score);
+        String message = context.getString(R.string.sharing_intent_text);
         message += " https://play.google.com/store/apps/details?id=es.danirod.rectball.android";
         shareScreenshotWithMessage(pixmap, message);
     }
@@ -380,13 +365,10 @@ public class RectballGame extends Game {
     }
 
     private void shareScreenshotWithMessage(Pixmap pixmap, String text) {
-        // Let's make a dirty cast to get the game instance.
-        RectballGame game = (RectballGame) context.getApplicationListener();
-
         try {
             Uri screenshot = createScreenshotURI(pixmap);
             Intent sharingIntent = shareScreenshotURI(screenshot, text);
-            String title = game.getLocale().get("sharing.intent");
+            String title = context.getString(R.string.sharing_intent_title);
             context.startActivity(Intent.createChooser(sharingIntent, title));
         } catch (Exception ex) {
             Gdx.app.error("SharingServices", "Couldn't share photo", ex);

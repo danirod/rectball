@@ -33,9 +33,10 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.SoundPlayer;
 import es.danirod.rectball.android.BuildConfig;
+import es.danirod.rectball.android.R;
+import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.scene2d.listeners.ScreenJumper;
 import es.danirod.rectball.scene2d.listeners.TrackingListener;
 import es.danirod.rectball.scene2d.ui.ConfirmDialog;
@@ -215,9 +216,9 @@ public class MainMenuScreen extends AbstractScreen {
     }
 
     private ConfirmDialog askTutorial() {
-        String message = game.getLocale().get("main.askTutorial");
-        String yes = game.getLocale().get("core.yes");
-        String no = game.getLocale().get("core.no");
+        String message = game.getContext().getString(R.string.main_ask_tutorial);
+        String yes = game.getContext().getString(R.string.core_yes);
+        String no = game.getContext().getString(R.string.core_no);
         ConfirmDialog dialog = new ConfirmDialog(game.getSkin(), message, yes, no);
         dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
             @Override
@@ -241,7 +242,7 @@ public class MainMenuScreen extends AbstractScreen {
     }
 
     private MessageDialog tutorialCancel() {
-        String message = game.getLocale().get("main.cancelTutorial");
+        String message = game.getContext().getString(R.string.main_dismiss_tutorial);
         MessageDialog dialog = new MessageDialog(game.getSkin(), message);
         dialog.setCallback(new MessageDialog.MessageCallback() {
             @Override

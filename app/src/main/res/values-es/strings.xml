@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Rectball</string>
+    <string name="about_credits">Créditos</string>
+    <string name="about_license">Licencia</string>
+    <string name="core_back">Atrás</string>
+    <string name="core_continue">Continuar</string>
+    <string name="core_no">No</string>
+    <string name="core_ok">Vale</string>
+    <string name="core_yes">Sí</string>
+    <string name="game_continue">Continuar</string>
+    <string name="game_leave_game">Abandonar</string>
+    <string name="game_leave_game_title">¿Abandonar juego?</string>
+    <string name="game_over_title">Fin del juego</string>
+    <string name="game_paused_title">Juego en pausa</string>
+    <string name="main_ask_tutorial">Es la primera vez que abres Rectball. ¿Quieres ver un tutorial?</string>
+    <string name="main_dismiss_tutorial">Siempre encontrarás el tutorial en la pantalla Opciones.</string>
+    <string name="settings_sound">Activar sonido</string>
+    <string name="settings_colorblind">Distinguir sin color</string>
+    <string name="settings_fullscreen">Pantalla completa</string>
+    <string name="settings_play_log_in">Entrar en Google Play</string>
+    <string name="settings_play_log_out">Salir de Google Play</string>
+    <string name="settings_play_processing">Actualizando estado</string>
+    <string name="settings_play_tutorial">Jugar Tutorial</string>
+    <string name="sharing_intent_text">He hecho %d puntos en #Rectball. ¿Puedes superarlo?</string>
+    <string name="sharing_intent_title">Compartir resultado</string>
+    <string name="sign_in_failed">Problemas para iniciar sesión. Verifica la red e inténtalo de nuevo más tarde.</string>
+    <string name="statistics_best_data">Mejores resultados</string>
+    <string name="statistics_best_score">Mejor puntuación</string>
+    <string name="statistics_best_time">Mejor tiempo</string>
+    <string name="statistics_color">Datos de color</string>
+    <string name="statistics_no_data">¡No hay datos!</string>
+    <string name="statistics_sizes">Datos de tamaño</string>
+    <string name="statistics_total">Datos totales</string>
+    <string name="statistics_total_balls">Burbujas eliminadas</string>
+    <string name="statistics_total_combinations">Combinaciones totales</string>
+    <string name="statistics_total_games">Partidas jugadas</string>
+    <string name="statistics_total_hints">Pistas usadas</string>
+    <string name="statistics_total_perfect">Combinaciones perfectas</string>
+    <string name="statistics_total_score">Puntuación total</string>
+    <string name="statistics_total_time">Tiempo jugado</string>
+    <string name="tutorial_cancel">¿Quieres abandonar el tutorial?</string>
+</resources>

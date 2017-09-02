@@ -35,8 +35,9 @@ import java.util.List;
 
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.SoundPlayer;
+import es.danirod.rectball.android.R;
+import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.model.Ball;
 import es.danirod.rectball.model.BallColor;
 import es.danirod.rectball.model.Bounds;
@@ -163,9 +164,9 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
     public void render(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             ConfirmDialog cancelTutorial = new ConfirmDialog(game.getSkin(),
-                                                                    game.getLocale().get("tutorial.cancel"),
-                                                                    game.getLocale().get("core.yes"),
-                                                                    game.getLocale().get("core.no"));
+                    game.getContext().getString(R.string.tutorial_cancel),
+                    game.getContext().getString(R.string.core_yes),
+                    game.getContext().getString(R.string.core_no));
             cancelTutorial.setCallback(new ConfirmDialog.ConfirmCallback() {
                 @Override
                 public void ok() {
@@ -173,7 +174,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
 
                     watchdogTask.cancel();
                     MessageDialog leaveDialog = new MessageDialog(game.getSkin(),
-                                                                         game.getLocale().get("main.cancelTutorial"));
+                            game.getContext().getString(R.string.main_dismiss_tutorial));
                     leaveDialog.setCallback(new MessageDialog.MessageCallback() {
                         @Override
                         public void dismiss() {
@@ -233,8 +234,10 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
     }
 
     private void addStates() {
+        String buttonContinue = game.getContext().getString(R.string.core_continue);
+        String buttonOk = game.getContext().getString(R.string.core_ok);
         // Welcome to Rectball!
-        states.add(new State(1, Align.center, "core.continue", new Runnable() {
+        states.add(new State(1, Align.center, buttonContinue, new Runnable() {
             @Override
             public void run() {
                 nextState();
@@ -248,7 +251,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         }));
 
         // This is the board.
-        states.add(new State(2, Align.top, "core.continue", new Runnable() {
+        states.add(new State(2, Align.top, buttonContinue, new Runnable() {
             @Override
             public void run() {
                 nextState();
@@ -263,7 +266,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         }));
 
         // This is the timer
-        states.add(new State(3, Align.bottom, "core.continue", new Runnable() {
+        states.add(new State(3, Align.bottom, buttonContinue, new Runnable() {
             @Override
             public void run() {
                 nextState();
@@ -287,7 +290,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         }));
 
         // This is the score.
-        states.add(new State(4, Align.bottom, "core.continue", new Runnable() {
+        states.add(new State(4, Align.bottom, buttonContinue, new Runnable() {
             @Override
             public void run() {
                 // Reset the score.
@@ -332,7 +335,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         }));
 
         // This is the point of the game.
-        states.add(new State(5, Align.center, "core.continue", new Runnable() {
+        states.add(new State(5, Align.center, buttonContinue, new Runnable() {
             @Override
             public void run() {
                 nextState();
@@ -340,7 +343,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         }));
 
         // And this is what you have to do.
-        states.add(new State(6, Align.center, "core.ok", new Runnable() {
+        states.add(new State(6, Align.center, buttonOk, new Runnable() {
             @Override
             public void run() {
                 // Start the game.
@@ -351,7 +354,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         }));
 
         // Yeah, you beat the easy.
-        states.add(new State(7, Align.center, "core.ok", new Runnable() {
+        states.add(new State(7, Align.center, buttonOk, new Runnable() {
             @Override
             public void run() {
                 // Start the game again.
@@ -362,7 +365,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         }));
 
         // Now you beat a harder one.
-        states.add(new State(8, Align.center, "core.ok", new Runnable() {
+        states.add(new State(8, Align.center, buttonOk, new Runnable() {
             @Override
             public void run() {
                 board.addAction(board.showRegion(new Bounds(1, 2, 3, 4)));
@@ -372,7 +375,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         }));
 
         // Ok, you got this.
-        states.add(new State(9, Align.center, "core.ok", new Runnable() {
+        states.add(new State(9, Align.center, buttonOk, new Runnable() {
             @Override
             public void run() {
                 board.addAction(board.showRegion(new Bounds(1, 3, 4, 5)));
@@ -558,7 +561,8 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
             this.alignment = alignment;
             this.messageID = messageID;
 
-            dialog = new MessageDialog(game.getSkin(), game.getLocale().get("tutorial.line" + messageID), game.getLocale().get(button));
+            String[] lines = game.getContext().getResources().getStringArray(R.array.tutorial_lines);
+            dialog = new MessageDialog(game.getSkin(), lines[messageID-1], button);
             dialog.setCallback(new MessageDialog.MessageCallback() {
                 @Override
                 public void dismiss() {

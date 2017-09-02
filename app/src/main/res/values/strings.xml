@@ -1,13 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Rectball</string>
-    <string name="signin_other_error">Unable to login. Please, try again later.</string>
     <string name="provider">es.danirod.rectball.android.provider</string>
-
-    <string name="sign_in_failed">Failed to sign in. Please check your network connection and try again.</string>
-    <string name="app_misconfigured">The application is incorrectly configured. Check that the package name and signing certificate match the client ID created in Developer Console. Also, if the application is not yet published, check that the account you are trying to sign in with is listed as a tester account. See logs for more information.</string>
-    <string name="license_failed">License check failed.</string>
-    <string name="unknown_error">Unknown error.</string>
-
+    <string name="sharing_intent_title">Share result</string>
+    <string name="sharing_intent_text">I made %d points in #Rectball. Can you beat it?</string>
+    <string name="core_continue">Continue</string>
+    <string name="core_ok">OK</string>
+    <string name="core_back">Back</string>
+    <string name="core_yes">Yes</string>
+    <string name="core_no">No</string>
+    <string name="main_ask_tutorial">It\'s the first time you open Rectball. Do you want to see a tutorial?</string>
+    <string name="main_dismiss_tutorial">You can always find a tutorial in the Settings menu.</string>
+    <string name="game_leave_game_title">Leave game?</string>
+    <string name="game_paused_title">Game paused</string>
+    <string name="game_continue">Continue</string>
+    <string name="game_leave_game">Leave game</string>
+    <string name="game_over_title">Game Over</string>
+    <string name="settings_sound">Play sounds</string>
+    <string name="settings_colorblind">Colorblind mode</string>
+    <string name="settings_fullscreen">Fullscreen mode</string>
+    <string name="settings_play_tutorial">Play Tutorial</string>
+    <string name="settings_play_log_in">Log In to Google Play</string>
+    <string name="settings_play_log_out">Log Out from Google Play</string>
+    <string name="settings_play_processing">Please, wait</string>
+    <string name="statistics_best_data">Best data</string>
+    <string name="statistics_best_score">Best score</string>
+    <string name="statistics_best_time">Best time</string>
+    <string name="statistics_total">Total data</string>
+    <string name="statistics_total_score">Total score</string>
+    <string name="statistics_total_combinations">Total combinations</string>
+    <string name="statistics_total_balls">Removed balls</string>
+    <string name="statistics_total_games">Games played</string>
+    <string name="statistics_total_time">Time played</string>
+    <string name="statistics_total_hints">Hints used</string>
+    <string name="statistics_total_perfect">Perfect combos</string>
+    <string name="statistics_color">Color data</string>
+    <string name="statistics_sizes">Sizes data</string>
+    <string name="statistics_no_data">There is no data!</string>
+    <string name="tutorial_cancel">Do you want to leave the tutorial?</string>
+    <string name="about_credits">Credits</string>
+    <string name="about_license">License</string>
 </resources>

@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball
- * Copyright (C) 2015-2016 Dani Rodríguez
+ * Copyright (C) 2015-2017 Dani Rodríguez
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,13 +20,17 @@ package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import es.danirod.rectball.Constants;
+
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
 import es.danirod.rectball.android.BuildConfig;
+import es.danirod.rectball.android.R;
 import es.danirod.rectball.scene2d.listeners.ScreenPopper;
 
 /**
@@ -81,24 +85,24 @@ public class AboutScreen extends AbstractScreen {
             scroll.setFadeScrollBars(false);
         }
         if (backButton == null) {
-            backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());
+            backButton = new TextButton(game.getContext().getString(R.string.core_back), game.getSkin());
             backButton.addListener(new ScreenPopper(game));
         }
         if (licenseButton == null) {
-            licenseButton = new TextButton(game.getLocale().get("about.license"), game.getSkin());
+            licenseButton = new TextButton(game.getContext().getString(R.string.about_license), game.getSkin());
             licenseButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     if (showingCredits) {
                         game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
                         creditsLabel.setText(license);
-                        licenseButton.setText(game.getLocale().get("about.credits"));
+                        licenseButton.setText(game.getContext().getString(R.string.about_credits));
                         event.cancel();
                         showingCredits = false;
                     } else {
                         game.player.playSound(SoundPlayer.SoundCode.FAIL);
                         creditsLabel.setText(credits);
-                        licenseButton.setText(game.getLocale().get("about.license"));
+                        licenseButton.setText(game.getContext().getString(R.string.about_license));
                         event.cancel();
                         showingCredits = true;
                     }

@@ -32,6 +32,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
+import es.danirod.rectball.android.R;
 import es.danirod.rectball.scene2d.listeners.ScreenPopper;
 import es.danirod.rectball.scene2d.ui.StatsTable;
 
@@ -66,7 +67,7 @@ public class StatisticsScreen extends AbstractScreen {
         }
 
         if (backButton == null) {
-            backButton = new TextButton(game.getLocale().get("core.back"), game.getSkin());
+            backButton = new TextButton(game.getContext().getString(R.string.core_back), game.getSkin());
             backButton.addListener(new ScreenPopper(game));
         }
 

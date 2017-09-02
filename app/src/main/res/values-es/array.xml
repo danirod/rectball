@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tutorial_lines">
+        <item>Bienvenido a Rectball. En este tutorial te explicaré cómo jugar.</item>
+        <item>Este es el tablero. Aquí es donde ocurre la diversión durante un juego.</item>
+        <item>Este es el temporizador. Cuando se agote, se acabó la partida.</item>
+        <item>Y este es el marcador. Cuando consigas puntos, se sumarán aquí.</item>
+        <item>Para hacer puntos en Rectball, haz rectángulos con los colores.</item>
+        <item>Pulsa cuatro bolas que sean del mismo color y que formen un cuadrado.</item>
+        <item>¡Excelente! Ese era fácil, probemos con algo un poco más grande.</item>
+        <item>¡Muy bien! Cuanto más grande sea, más puntos obtendrás.</item>
+        <item>¡Estupendo! ¿Ves qué fácil es? ¡Ahora a jugar de verdad!</item>
+    </string-array>
+</resources>
