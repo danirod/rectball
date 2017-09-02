@@ -18,6 +18,8 @@
 
 package es.danirod.rectball.android
 
+import android.content.Intent
+
 /**
  * This contains code for the Android platform. Here code that uses Android
  * SDK or Android API might be used. This code won't run on other platforms
