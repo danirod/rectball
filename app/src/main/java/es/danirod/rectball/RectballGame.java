@@ -23,10 +23,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
-import android.util.SparseArray;
 
 import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
@@ -53,8 +51,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.io.File;
 import java.nio.ByteBuffer;
-import java.util.ArrayDeque;
-import java.util.Deque;
 
 import es.danirod.rectball.android.AndroidLauncher;
 import es.danirod.rectball.android.BuildConfig;
@@ -77,15 +73,12 @@ import es.danirod.rectball.screens.TutorialScreen;
 /**
  * Main class for the game.
  */
-public class RectballGame extends Game {
+public class RectballGame extends StateBasedGame {
 
     private final AndroidLauncher context;
 
-    /** Contains all the screens in use by the game. */
-    private final SparseArray<AbstractScreen> screens = new SparseArray<>();
-
     private final GameState currentGame;
-    private final Deque<AbstractScreen> screenStack = new ArrayDeque<>();
+
     public AssetManager manager;
     public SoundPlayer player;
     private RectballSkin uiSkin;
@@ -133,11 +126,11 @@ public class RectballGame extends Game {
 
         // Load the resources.
         manager = createManager();
-        screens.get(Screens.LOADING).load();
+        getScreen(Screens.LOADING).load();
         if (!restoredState) {
-            setScreen(screens.get(Screens.LOADING));
+            setScreen(getScreen(Screens.LOADING));
         } else {
-            setScreen(screens.get(Screens.LOADING_BACK));
+            setScreen(getScreen(Screens.LOADING_BACK));
         }
     }
 
@@ -151,8 +144,8 @@ public class RectballGame extends Game {
         updateBallAtlas();
 
         // Load the screens.
-        for (int i = 0; i < screens.size(); i++) {
-            screens.valueAt(i).load();
+        for (AbstractScreen screen : getAllScreens()) {
+            screen.load();
         }
 
         // Enter main menu.
@@ -237,55 +230,6 @@ public class RectballGame extends Game {
     @Override
     public void dispose() {
         manager.dispose();
-    }
-
-    /**
-     * Pushes the provided screen into the stack and sets it as the current screen.
-     * The screen that has been previously on screen can be retrieved later using
-     * popScreen.
-     *
-     * @param id the screen that should be visible now.
-     * @since 0.3.0
-     */
-    public void pushScreen(int id) {
-        screenStack.push(screens.get(id));
-        setScreen(screenStack.peek());
-    }
-
-    /**
-     * Pops the current screen from the stack. The screen that was visible before
-     * pushing the current screen is the one that would be visible. If no screens
-     * are in the stack, the main menu screen will be visible.
-     *
-     * @since 0.3.0
-     */
-    public void popScreen() {
-        screenStack.removeFirst();
-        if (screenStack.isEmpty()) {
-            pushScreen(Screens.MAIN_MENU);
-        } else {
-            setScreen(screenStack.peek());
-        }
-    }
-
-    /**
-     * Clears the stack of screens. Every screen in the stack is removed and
-     * the main menu gets as the current screen visible.
-     *
-     * @since 0.3.0
-     */
-    public void clearStack() {
-        screenStack.clear();
-        setScreen(screens.get(Screens.MAIN_MENU));
-    }
-
-    /**
-     * Add a screen to the map of Strings.
-     *
-     * @param screen the screen being added to the map
-     */
-    private void addScreen(AbstractScreen screen) {
-        screens.put(screen.getID(), screen);
     }
 
     /**
@@ -420,11 +364,12 @@ public class RectballGame extends Game {
         return ballAtlas;
     }
 
-    public AbstractScreen getScreen(int id) {
-        return screens.get(id);
-    }
-
     public void setRestoredState(boolean restoredState) {
         this.restoredState = restoredState;
+    }
+
+    @Override
+    public int getEmptyStackScreen() {
+        return Screens.MAIN_MENU;
     }
 }
