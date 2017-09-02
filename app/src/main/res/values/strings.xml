@@ -40,4 +40,5 @@
     <string name="tutorial_cancel">Do you want to leave the tutorial?</string>
     <string name="about_credits">Credits</string>
     <string name="about_license">License</string>
+    <string name="sharing_error">Could not share the screenshot. Sorry!</string>
 </resources>

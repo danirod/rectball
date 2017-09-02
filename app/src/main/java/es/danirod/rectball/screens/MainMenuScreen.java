@@ -107,7 +107,7 @@ public class MainMenuScreen extends AbstractScreen {
                     new ChangeListener() {
                         @Override
                         public void changed(ChangeEvent event, Actor actor) {
-                            game.openInStore();
+                            game.getContext().openInMarketplace();
                             event.cancel();
                         }
                     }

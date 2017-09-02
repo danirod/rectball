@@ -18,18 +18,26 @@
 
 package es.danirod.rectball.screens;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.widget.Toast;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import es.danirod.rectball.Pixmapper;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
 import es.danirod.rectball.android.R;
@@ -100,11 +108,27 @@ public class StatisticsScreen extends AbstractScreen {
                     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
                     stage.act();
                     stage.draw();
-                    Pixmap pmap = game.requestScreenshot(0, 0, width, height);
+                    Pixmap pmap = Pixmapper.INSTANCE.captureScreenshot(0, 0, width, height);
                     fbo.end();
                     fbo.dispose();
 
-                    game.shareScreenshot(pmap);
+                    /* Save the pixmap to a file and generate an intent for sharing it. */
+                    try {
+                        Uri savedImage = Pixmapper.INSTANCE.exportPixmap(game.getContext(), pmap);
+                        Intent sharingIntent = game.getContext().screenshotIntent(savedImage, null);
+                        String title = game.getContext().getString(R.string.sharing_intent_title);
+                        game.getContext().startActivity(Intent.createChooser(sharingIntent, title));
+                    } catch (Exception ex) {
+                        Gdx.app.error("SharingServices", "Couldn't share photo", ex);
+                        game.getContext().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String error = game.getContext().getString(R.string.sharing_error);
+                                Toast.makeText(game.getContext(), error, Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+
                     event.cancel();
                 }
             });

@@ -18,7 +18,9 @@
 package es.danirod.rectball.android
 
 import android.annotation.TargetApi
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -98,6 +100,32 @@ class AndroidLauncher : AndroidApplication() {
         } else {
             disableFullscreen()
         }
+    }
+
+    fun openInMarketplace() {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse("market://details?id=$PACKAGE")
+            startActivity(intent)
+        } catch (_: ActivityNotFoundException) {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse("https://play.google.com/store/apps/details?id=$PACKAGE")
+            startActivity(intent)
+        }
+    }
+
+    /** Generates an Intent for sharing the image file [image], possibly with some [message]. */
+    fun screenshotIntent(image: Uri, message: CharSequence? = null): Intent {
+        val intent = Intent()
+        intent.action = Intent.ACTION_SEND
+        intent.type = "image/png"
+        intent.putExtra(Intent.EXTRA_STREAM, image)
+        if (message != null) {
+            intent.putExtra(Intent.EXTRA_SUBJECT, message)
+            intent.putExtra(Intent.EXTRA_TEXT, message)
+        }
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        return intent
     }
 
     private fun buildGameInstance(state: Bundle) =

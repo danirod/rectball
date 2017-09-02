@@ -40,4 +40,5 @@
     <string name="statistics_total_score">Puntuación total</string>
     <string name="statistics_total_time">Tiempo jugado</string>
     <string name="tutorial_cancel">¿Quieres abandonar el tutorial?</string>
+    <string name="sharing_error">No se pudo compartir la captura de pantalla. ¡Lo siento!</string>
 </resources>

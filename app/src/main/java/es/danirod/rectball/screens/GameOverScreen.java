@@ -18,6 +18,10 @@
 
 package es.danirod.rectball.screens;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.widget.Toast;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -34,6 +38,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 
 import es.danirod.rectball.Constants;
+import es.danirod.rectball.Pixmapper;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
 import es.danirod.rectball.android.R;
@@ -100,8 +105,28 @@ public class GameOverScreen extends AbstractScreen {
                 int width = Gdx.graphics.getWidth();
                 int height = width / 2;
                 int y = (int) (Gdx.graphics.getHeight() * 0.375f);
-                Pixmap screenshot = game.requestScreenshot(0, y, width, height);
-                game.shareGameOverScreenshot(screenshot);
+                Pixmap screenshot = Pixmapper.INSTANCE.captureScreenshot(0, y, width, height);
+
+                /* Share this screenshot. */
+                try {
+                    String message = game.getContext().getString(R.string.sharing_intent_text, game.getState().getScore());
+                    message += " https://play.google.com/store/apps/details?id=es.danirod.rectball.android";
+                    Uri savedScreenshot = Pixmapper.INSTANCE.exportPixmap(game.getContext(), screenshot);
+                    Intent sharingIntent = game.getContext().screenshotIntent(savedScreenshot, message);
+                    String title = game.getContext().getString(R.string.sharing_intent_title);
+                    game.getContext().startActivity(Intent.createChooser(sharingIntent, title));
+                } catch (Exception ex) {
+                    Gdx.app.error("GameOverScreen", "Cannot share screenshot", ex);
+                    game.getContext().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String error = game.getContext().getString(R.string.sharing_error);
+                            Toast.makeText(game.getContext(), error, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+
+
                 event.cancel();
             }
         });

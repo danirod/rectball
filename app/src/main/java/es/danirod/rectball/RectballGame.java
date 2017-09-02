@@ -18,32 +18,18 @@
 
 package es.danirod.rectball;
 
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
-import android.support.v4.content.FileProvider;
-
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.ScreenUtils;
-
-import java.io.File;
-import java.nio.ByteBuffer;
 
 import es.danirod.rectball.android.AndroidLauncher;
 import es.danirod.rectball.android.BuildConfig;
-import es.danirod.rectball.android.R;
 import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.scene2d.RectballSkin;
@@ -64,20 +50,29 @@ import es.danirod.rectball.screens.TutorialScreen;
  */
 public class RectballGame extends StateBasedGame {
 
+    /** The Android activity that is currently displaying this game instance. */
     private final AndroidLauncher context;
 
+    /** The game state is used during a game in order to pause and serialize it. */
     private final GameState currentGame;
 
+    /** The asset manager holds the resources required during the game. */
     public AssetManager manager;
+
+    /** The sound player manages the sound effects during the game. */
     public SoundPlayer player;
+
+    /** Skin used by Scene2D. */
     private RectballSkin uiSkin;
+
+    /** Contains the bubbles textures, depending on the application settings. */
     private TextureAtlas ballAtlas;
 
     /** Whether the game is restoring state from an Android kill or not. */
     private boolean restoredState;
 
     /** Batch instance in use by the game. */
-    Batch batch;
+    private Batch batch;
 
     public RectballGame(AndroidLauncher context) {
         this.context = context;
@@ -97,12 +92,9 @@ public class RectballGame extends StateBasedGame {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
         }
 
+        // Android enables dithering by default on some phones. Disable it for higher quality.
         Gdx.gl.glDisable(GL20.GL_DITHER);
 
-        // Set up SpriteBatch
-        batch = new SpriteBatch();
-
-        // Add the screens.
         addScreen(new GameScreen(this));
         addScreen(new GameOverScreen(this));
         addScreen(new MainMenuScreen(this));
@@ -113,61 +105,34 @@ public class RectballGame extends StateBasedGame {
         addScreen(new AboutScreen(this));
         addScreen(new TutorialScreen(this));
 
-        // Load the resources.
+        batch = new SpriteBatch();
         manager = AssetManagerBuilder.INSTANCE.build();
-        getScreen(Screens.LOADING).load();
+
         if (!restoredState) {
+            getScreen(Screens.LOADING).load();
             setScreen(getScreen(Screens.LOADING));
         } else {
+            getScreen(Screens.LOADING_BACK).load();
             setScreen(getScreen(Screens.LOADING_BACK));
         }
     }
 
-    public Batch getBatch() {
-        return batch;
-    }
-
     public void finishLoading() {
+        // These resources cannot be initialized until the AssetManager finishes loading.
         player = new SoundPlayer(this);
         uiSkin = new RectballSkin(this);
         updateBallAtlas();
 
-        // Load the screens.
         for (AbstractScreen screen : getAllScreens()) {
             screen.load();
         }
 
-        // Enter main menu.
+        // Enter next screen.
         pushScreen(Screens.MAIN_MENU);
-
-        // If we are restoring the game, push also the game screen.
-        // Keep the main menu screen in the stack, we are going to need it
-        // when we finish the game.
         if (restoredState) {
+            // If playing, enter the game screen as well. Keep MAIN_MENU in the stack.
             pushScreen(Screens.GAME);
         }
-    }
-
-    public boolean isRestoredState() {
-        return restoredState;
-    }
-
-    @Override
-    public void dispose() {
-        manager.dispose();
-    }
-
-    /**
-     * Get the skin used by Scene2D UI to display things.
-     *
-     * @return the skin the game should use.
-     */
-    public RectballSkin getSkin() {
-        return uiSkin;
-    }
-
-    public GameState getState() {
-        return currentGame;
     }
 
     public void updateBallAtlas() {
@@ -183,102 +148,25 @@ public class RectballGame extends StateBasedGame {
         ballAtlas.addRegion("ball_gray", regions[1][2]);
     }
 
-    /**
-     * Create a screenshot and return the generated Pixmap. Since the game
-     * goes yUp, the returned screenshot is flipped so that it's correctly
-     * yDown'ed.
-     *
-     * @return game screenshot
-     */
-    public Pixmap requestScreenshot(int x, int y, int width, int height) {
-        Gdx.app.log("Screenshot", "Requested a new screenshot of size " + width + "x" + height);
-        Pixmap screenshot = ScreenUtils.getFrameBufferPixmap(x, y, width, height);
-
-        // Since the game runs using yDown, the screen has to be flipped.
-        ByteBuffer data = screenshot.getPixels();
-        byte[] flippedBuffer = new byte[4 * width * height];
-        int bytesPerLine = 4 * width;
-        for (int j = 0; j < height; j++) {
-            data.position(bytesPerLine * (height - j - 1));
-            data.get(flippedBuffer, j * bytesPerLine, bytesPerLine);
-        }
-        data.clear();
-        data.put(flippedBuffer);
-        data.clear();
-
-        return screenshot;
+    @Override
+    public void dispose() {
+        manager.dispose();
     }
 
-    public void shareScreenshot(Pixmap pixmap) {
-        Gdx.app.debug("SharingServices", "Requested sharing a screenshot");
-        shareScreenshotWithMessage(pixmap, "");
+    public RectballSkin getSkin() {
+        return uiSkin;
     }
 
-    public void shareGameOverScreenshot(Pixmap pixmap) {
-        Gdx.app.debug("SharingServices", "Requested sharing a screenshot");
-        String message = context.getString(R.string.sharing_intent_text);
-        message += " https://play.google.com/store/apps/details?id=es.danirod.rectball.android";
-        shareScreenshotWithMessage(pixmap, message);
+    public GameState getState() {
+        return currentGame;
     }
 
-    public void openInStore() {
-        try {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("market://details?id=" + AndroidLauncher.PACKAGE));
-            context.startActivity(intent);
-        } catch (ActivityNotFoundException e) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=" + AndroidLauncher.PACKAGE));
-            context.startActivity(intent);
-        }
+    public boolean isRestoredState() {
+        return restoredState;
     }
 
-    private void shareScreenshotWithMessage(Pixmap pixmap, String text) {
-        try {
-            Uri screenshot = createScreenshotURI(pixmap);
-            Intent sharingIntent = shareScreenshotURI(screenshot, text);
-            String title = context.getString(R.string.sharing_intent_title);
-            context.startActivity(Intent.createChooser(sharingIntent, title));
-        } catch (Exception ex) {
-            Gdx.app.error("SharingServices", "Couldn't share photo", ex);
-        }
-    }
-
-    private Uri createScreenshotURI(Pixmap pixmap) {
-        /*
-            FIXME: THIS HACK MAKES GOD KILL KITTENS
-            Should investigate on how to use the Android compatibility library.
-            However, even the compatibility library seems to break compatibility
-            since I cannot share anymore using SMS. Oh, well, how beautifully
-            broken Android seems to be anyway.
-         */
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // Use the fucking new Android permission system.
-            File sharingPath = new File(context.getFilesDir(), "rectball-screenshots");
-            File newScreenshot = new File(sharingPath, "screenshot.png");
-            FileHandle screenshotHandle = Gdx.files.absolute(newScreenshot.getAbsolutePath());
-            PixmapIO.writePNG(screenshotHandle, pixmap);
-            return FileProvider.getUriForFile(context, context.getString(R.string.provider), newScreenshot);
-        } else {
-            // Use the fucking old Android permission system.
-            FileHandle sharingPath = Gdx.files.external("rectball");
-            sharingPath.mkdirs();
-            FileHandle newScreenshot = Gdx.files.external("rectball/screenshot.png");
-            PixmapIO.writePNG(newScreenshot, pixmap);
-            return Uri.fromFile(newScreenshot.file());
-        }
-    }
-
-    private Intent shareScreenshotURI(Uri uri, CharSequence message) {
-        Intent sharingIntent = new Intent();
-        sharingIntent.setAction(Intent.ACTION_SEND);
-        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, message);
-        sharingIntent.putExtra(Intent.EXTRA_TEXT, message);
-        sharingIntent.setType("image/png");
-        sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
-        sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        return sharingIntent;
+    public Batch getBatch() {
+        return batch;
     }
 
     public AndroidLauncher getContext() {
