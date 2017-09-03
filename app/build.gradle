@@ -21,8 +21,8 @@ android {
         applicationId "es.danirod.rectball.android"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 422
-        versionName "0.4.11-beta2"
+        versionCode 423
+        versionName "0.4.11"
         signingConfig signingConfigs.config
     }
     lintOptions {

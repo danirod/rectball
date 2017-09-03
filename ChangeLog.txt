@@ -1,6 +1,7 @@
 [0.4.11]
 - Fixes yet another regression with fullscreen mode.
 - Fullscreen mode can now be changed without restarting the game.
+- More code is being rewritten in Kotlin.
 
 [0.4.10]
 - Unified saved data: statistics and high scores are now stored in the Preferences.
