@@ -83,7 +83,7 @@ dependencies {
 
     // Google Play Services are required on the Google Play version.
     gpeCompile "com.google.android.gms:play-services-analytics:11.0.4"
-    gpeCompile "com.google.android.gms:play-services-games:11.0.4"
+    gpeCompile "com.google.android.gms:play-services-games:18.0.1"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 
