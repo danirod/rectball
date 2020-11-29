@@ -1,10 +1,11 @@
 buildscript {
     ext.libgdx_version = '1.9.11'
-    ext.kotlin_version = '1.1.51'
+    ext.kotlin_version = '1.4.20'
     repositories {
         jcenter()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://maven.google.com" }
     }
     dependencies {
         classpath 'com.google.gms:google-services:4.3.4'
@@ -15,6 +16,7 @@ buildscript {
 
 allprojects {
     repositories {
+        jcenter()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
@@ -24,8 +26,4 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.1'
 }

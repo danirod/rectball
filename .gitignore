@@ -21,6 +21,7 @@ com_crashlytics_export_strings.xml
 gradle-app.setting
 build/
 local.properties
+keystore.properties
 
 # OS Specific
 .DS_Store

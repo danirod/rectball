@@ -5,25 +5,35 @@ configurations {
     natives
 }
 
+def keystore = new Properties()
+def keystoreFile = rootProject.file("keystore.properties")
+if(keystoreFile.exists()) {
+    keystore.load(new FileInputStream(keystoreFile))
+}
+
 android {
-    signingConfigs {
-        config {
-            // Declare these variables on gradle.properties. Do not put sensitive data here.
-            keyAlias RELEASE_KEY_ALIAS
-            keyPassword RELEASE_KEY_PASSWORD
-            storeFile file(RELEASE_STORE_FILE)
-            storePassword RELEASE_STORE_PASSWORD
+    if(keystoreFile.exists()) {
+        signingConfigs {
+            release {
+                // Declare these variables on gradle.properties. Do not put sensitive data here.
+                keyAlias keystore['keyAlias']
+                keyPassword keystore['keyPassword']
+                storeFile file(keystore['storeFile'])
+                storePassword keystore['storePassword']
+            }
         }
     }
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion 28
     defaultConfig {
         applicationId "es.danirod.rectball.android"
         minSdkVersion 14
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 423
         versionName "0.4.11"
-        signingConfig signingConfigs.config
+
+        if(keystoreFile.exists()) {
+            signingConfig signingConfigs.release
+        }
     }
     lintOptions {
         abortOnError false
@@ -69,11 +79,12 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.core:core-ktx:1.3.2"
 
     // libGDX
-    compile "com.badlogicgames.gdx:gdx-backend-android:$libgdx_version"
-    compile "com.badlogicgames.gdx:gdx-freetype:$libgdx_version"
+    api "com.badlogicgames.gdx:gdx-backend-android:$libgdx_version"
+    api "com.badlogicgames.gdx:gdx-freetype:$libgdx_version"
     natives "com.badlogicgames.gdx:gdx-platform:$libgdx_version:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-platform:$libgdx_version:natives-armeabi-v7a"
     natives "com.badlogicgames.gdx:gdx-platform:$libgdx_version:natives-x86"
@@ -82,9 +93,9 @@ dependencies {
     natives "com.badlogicgames.gdx:gdx-freetype-platform:$libgdx_version:natives-x86"
 
     // Google Play Services are required on the Google Play version.
-    gpeCompile "com.google.android.gms:play-services-analytics:17.0.0"
-    gpeCompile "com.google.android.gms:play-services-games:19.0.0"
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    gpeImplementation "com.google.android.gms:play-services-analytics:17.0.0"
+    gpeImplementation "com.google.android.gms:play-services-games:17.0.0"
+    gpeApi "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.20"
 }
 
 // Extract the libGDX natives from the JARs.
@@ -93,7 +104,7 @@ task copyAndroidNatives() {
     file("src/main/jniLibs/armeabi-v7a/").mkdirs();
     file("src/main/jniLibs/x86/").mkdirs();
 
-    configurations.natives.files.each { jar ->
+    configurations.natives.copy().files.each { jar ->
         def outputDir = null
         if(jar.name.endsWith("natives-armeabi-v7a.jar")) outputDir = file("src/main/jniLibs/armeabi-v7a")
         if(jar.name.endsWith("natives-armeabi.jar")) outputDir = file("src/main/jniLibs/armeabi")
@@ -112,3 +123,10 @@ repositories {
 }
 
 apply plugin: 'com.google.gms.google-services'
+
+// Required to actually disable GMS in OSP version (ospDebug + ospRelease).
+android.applicationVariants.all { variant ->
+    if (variant.name.contains('osp')) {
+        project.tasks.getByName('process' + variant.name.capitalize() + 'GoogleServices').enabled = false
+    }
+}
