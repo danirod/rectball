@@ -94,7 +94,7 @@ dependencies {
 
     // Google Play Services are required on the Google Play version.
     gpeImplementation "com.google.android.gms:play-services-analytics:17.0.0"
-    gpeImplementation "com.google.android.gms:play-services-games:17.0.0"
+    gpeImplementation "com.google.android.gms:play-services-games:21.0.0"
     gpeApi "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.20"
 }
 
