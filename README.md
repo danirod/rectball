@@ -13,15 +13,24 @@
 
 Rectball is a colorful puzzle game for Android. Make selections, clear rectangles and make points before the time runs out. Rectball is open source and runs on Android 2.3+.
 
-## Flavors
+## Compiling the game
 
-This project has two flavors: OSP (Open Source) and GPE (Google Play).
+### Flavors
 
-GPE is linked against non-free SDKs such as Firebase and Google Play Services SDK. This is the default version that you get from the Play Store and the one that has achievements, leaderboards and such.
+This project uses [Android SDK flavors](https://developer.android.com/studio/build/build-variants#product-flavors) to have different versions of the application:
 
-However, GPE requires API keys for those services so you won't probably be able to build those versions. In fact I don't expect you to be able to, because those files are stripped from the repository and can only be downloaded from the Developer Console using my Google Account credentials.
+* The OSP version is the one that can be built from sources and sideloaded onto phones right away. This is the standard open source version and if you are looking for a version free of Google privative integrations, pick this one. It only depends on the libGDX framework and the Kotlin runtime.
 
-So, yeah. If you want to build the project from sources, you'll have to use the Open Source version. This one is 100% free and only depends on the libGDX framework.
+* The GPE version is linked against non-free SDKs such as Firebase and the Google Play Games SDK. You probably won't be able to build these versions without the proper google-services.json file too. This is the flavor I intended to use to build versions sent to the Google Play Store.
+
+### Signing key
+
+To automatically sign the built APK automatically when compiling using Gradle, define a file called `keystore.properties` in the project root directory with the following filled properties:
+
+    storeFile=# the keystore file
+    storePassword=# the keystore password
+    keyAlias=# the key alias to use
+    keyPassword=# the key password
 
 ## License
 
