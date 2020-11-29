@@ -13,4 +13,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: rectball-osp-debug.apk
-          path: android/build/outputs/apk/osp/debug/android-osp-debug.apk
+          path: app/build/outputs/apk/osp/debug/android-osp-debug.apk
