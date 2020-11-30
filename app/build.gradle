@@ -23,13 +23,13 @@ android {
             }
         }
     }
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "es.danirod.rectball.android"
         minSdkVersion 14
-        targetSdkVersion 28
-        versionCode 423
-        versionName "0.4.11"
+        targetSdkVersion 29
+        versionCode 424
+        versionName "0.4.12"
 
         if(keystoreFile.exists()) {
             signingConfig signingConfigs.release
@@ -80,7 +80,10 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    // AndroidX stuff
     implementation "androidx.core:core-ktx:1.3.2"
+    implementation "androidx.preference:preference:1.1.1"
 
     // libGDX
     api "com.badlogicgames.gdx:gdx-backend-android:$libgdx_version"

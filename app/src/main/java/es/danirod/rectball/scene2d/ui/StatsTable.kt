@@ -121,7 +121,7 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
         val bar = game.skin.newDrawable("pixel", Color.WHITE)
 
         // Highest value is used to calculate the relative percentage of each row.
-        val highestValue = stats.values.max() ?: 0
+        val highestValue = stats.values.maxOrNull() ?: 0
 
         for ((key, value) in stats) {
             val percentage = value.toFloat() / highestValue

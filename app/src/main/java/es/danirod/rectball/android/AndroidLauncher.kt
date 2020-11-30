@@ -129,10 +129,10 @@ class AndroidLauncher : AndroidApplication() {
     }
 
     private fun buildGameInstance(state: Bundle) =
-            if (state.getString("state") != null)
-                RectballGame(this, deserializeState(state.getString("state")))
-            else
-                RectballGame(this)
+        when (val realState = state.getString("state")) {
+            null -> RectballGame(this)
+            else -> RectballGame(this, deserializeState(realState))
+        }
 
     private fun serializeState(state: GameState): String = Json(JsonWriter.OutputType.json).toJson(state, GameState::class.java)
 

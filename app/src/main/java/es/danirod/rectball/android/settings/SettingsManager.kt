@@ -21,7 +21,7 @@ package es.danirod.rectball.android.settings
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import es.danirod.rectball.android.AndroidLauncher
 import es.danirod.rectball.model.GameState
 import org.json.JSONObject
@@ -37,7 +37,7 @@ class SettingsManager(private val context: Context) {
 
     /** Maps combination sizes (2x2, 2x3...) with the amount of times they've been made. */
     val sizeStatistics: Map<String, Long>
-        get() = deserializeSizes(preferences.getString(TAG_STAT_SIZES, "{}"))
+        get() = deserializeSizes(preferences.getString(TAG_STAT_SIZES, "{}")!!)
 
     /**
      * Commit information about a game once finished. This method will extract the scores and other
