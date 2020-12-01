@@ -27,9 +27,6 @@ internal class AndroidPlatform(context: AndroidLauncher) : AbstractPlatform(cont
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) { }
 
-    override val analytics: Analytics
-        get() = NullAnalytics()
-
     override val gameServices: GameServices
         get() = NullGameServices()
 }

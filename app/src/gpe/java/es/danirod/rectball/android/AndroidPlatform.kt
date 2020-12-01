@@ -32,13 +32,8 @@ internal class AndroidPlatform(context: AndroidLauncher) : AbstractPlatform(cont
 
     private val gpg: GooglePlayGamesRuntime = GooglePlayGamesRuntime(context)
 
-    private val ga: GoogleAnalyticsRuntime = GoogleAnalyticsRuntime(context)
-
     override val gameServices: GameServices
         get() = gpg
-
-    override val analytics: Analytics
-        get() = ga
 
     override fun onStart() {
         gpg.gameHelper.onStart(context)

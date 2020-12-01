@@ -44,7 +44,6 @@ import es.danirod.rectball.SoundPlayer;
 import es.danirod.rectball.android.R;
 import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.scene2d.listeners.ScreenPopper;
-import es.danirod.rectball.scene2d.listeners.TrackingListener;
 
 public class GameOverScreen extends AbstractScreen {
 
@@ -87,7 +86,7 @@ public class GameOverScreen extends AbstractScreen {
 
         // Add replay button.
         ImageButton replay = new ImageButton(game.getSkin(), "repeat");
-        replay.addListener(new TrackingListener(game, "UX", "Clicked", "Replay", new ScreenPopper(game)));
+        replay.addListener(new ScreenPopper(game));
         buttonRow.add(replay);
 
         // Add share button
@@ -95,7 +94,6 @@ public class GameOverScreen extends AbstractScreen {
         share.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Share score");
                 game.player.playSound(SoundPlayer.SoundCode.SELECT);
 
                 // Request a screenshot of the score region. The following
@@ -134,7 +132,7 @@ public class GameOverScreen extends AbstractScreen {
 
         // Add menu button.
         ImageButton menu = new ImageButton(game.getSkin(), "house");
-        menu.addListener(new TrackingListener(game, "UX", "Clicked", "Main menu", new ScreenPopper(game, true)));
+        menu.addListener(new ScreenPopper(game, true));
         buttonRow.add(menu);
 
         table.add(scoresTable).fillX().expand().row();

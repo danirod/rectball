@@ -139,11 +139,9 @@ public class SettingsScreen extends AbstractScreen {
                         // TODO: This code will probably need to be made async due to how Google works.
                         if (game.getContext().getGameServices().isSignedIn()) {
                             // Proceed to sign out the user.
-                            game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Sign out from Google Play");
                             game.getContext().getGameServices().signOut();
                         } else {
                             // Send signed out event.
-                            game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Sign in to Google Play");
                             game.getContext().getGameServices().signIn();
                         }
                         game.player.playSound(SoundCode.SELECT);

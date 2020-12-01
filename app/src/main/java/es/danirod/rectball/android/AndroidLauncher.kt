@@ -182,10 +182,6 @@ class AndroidLauncher : AndroidApplication() {
         }
     }
 
-    /** Analytic services sends usage information. */
-    val analytics: Analytics
-        get() = platform.analytics
-
     /** Game services sends scores and achievements. */
     val gameServices: GameServices
         get() = platform.gameServices

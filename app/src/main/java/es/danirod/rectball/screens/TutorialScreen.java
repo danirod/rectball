@@ -199,7 +199,6 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
                             getStage().addAction(Actions.delay(waitingTime, Actions.run(new Runnable() {
                                 @Override
                                 public void run() {
-                                    game.getContext().getAnalytics().sendEvent("Tutorial", "Finished");
                                     SharedPreferences.Editor editor = game.getContext().getSettings().getPreferences().edit();
                                     editor.putBoolean(SettingsManager.TAG_ASKED_TUTORIAL, true);
                                     editor.apply();
@@ -575,7 +574,6 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         }
 
         public void start() {
-            game.getContext().getAnalytics().sendEvent("Tutorial", "Step reached", "Step " + messageID);
             dialog.show(getStage(), Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.1f)));
             float height;
             if ((alignment & Align.top) != 0) {

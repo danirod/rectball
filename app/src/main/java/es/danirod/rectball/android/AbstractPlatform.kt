@@ -37,7 +37,5 @@ internal abstract class AbstractPlatform(val context: AndroidLauncher) {
 
     abstract fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
 
-    abstract val analytics: Analytics
-
     abstract val gameServices: GameServices
 }

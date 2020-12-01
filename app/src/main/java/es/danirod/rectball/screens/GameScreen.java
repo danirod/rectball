@@ -114,7 +114,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             @Override
             public void ok() {
                 // The user wants to leave the game.
-                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Quit game");
                 game.player.playSound(SoundCode.SUCCESS);
                 askingLeave = false;
                 onTimeOut();
@@ -123,7 +122,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             @Override
             public void cancel() {
                 // The user wants to resume the game.
-                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Don't quit game");
                 game.player.playSound(SoundCode.FAIL);
                 askingLeave = false;
                 resumeGame();
@@ -142,7 +140,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
             @Override
             public void ok() {
-                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Continue game");
                 // Continue
                 game.player.playSound(SoundCode.SELECT);
                 askingLeave = false;
@@ -152,7 +149,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             @Override
             public void cancel() {
                 // Leave
-                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Leave game");
                 game.player.playSound(SoundCode.SELECT);
                 showLeaveDialog();
             }
@@ -197,7 +193,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                     dimensions.put(1, game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_SOUND, false) ? "Yes" : "No");
                     dimensions.put(2, game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, false) ? "Yes" : "No");
                     dimensions.put(3, game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false) ? "Yes" : "No");
-                    game.getContext().getAnalytics().sendEventWithDimensions("Game", "Game started", dimensions);
                     game.getState().setCountdownFinished(true);
 
                     // Start the game unless the user is leaving or is paused.
@@ -344,8 +339,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         help.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Help");
-
                 // Don't act if the game hasn't started yet.
                 if (!timer.isRunning() || game.getState().isTimeout()) {
                     event.cancel();
@@ -389,7 +382,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         pause.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Quit");
                 game.player.playSound(SoundCode.FAIL);
                 pauseGame();
                 event.cancel();
@@ -467,7 +459,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // The user should be able to leave during the game.
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.getContext().getAnalytics().sendEvent("UX", "Pressed", "Back");
             if (!paused && !game.getState().isTimeout()) {
                 pauseGame();
             }
@@ -546,8 +537,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         Map<Integer, String> dimensions = new HashMap<>();
         dimensions.put(3, timer.getSeconds() > 0 ? "Yes" : "No");
-
-        game.getContext().getAnalytics().sendEventWithDimensionsAndMetrics("Game", "Game finished", dimensions, metrics);
 
         // Disable any further interactions.
         board.clearSelection();

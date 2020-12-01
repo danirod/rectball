@@ -38,7 +38,6 @@ import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.android.R;
 import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.scene2d.listeners.ScreenJumper;
-import es.danirod.rectball.scene2d.listeners.TrackingListener;
 import es.danirod.rectball.scene2d.ui.ConfirmDialog;
 import es.danirod.rectball.scene2d.ui.MessageDialog;
 
@@ -73,8 +72,7 @@ public class MainMenuScreen extends AbstractScreen {
 
         if (play == null) {
             play = new ImageButton(game.getSkin(), "greenPlay");
-            play.addListener(new TrackingListener(game, "UX", "Clicked", "Play",
-                    new ChangeListener() {
+            play.addListener(new ChangeListener() {
                         @Override
                         public void changed(ChangeEvent event, Actor actor) {
                             game.getScreen(Screens.ABOUT).dispose();
@@ -84,40 +82,35 @@ public class MainMenuScreen extends AbstractScreen {
                             game.pushScreen(Screens.GAME);
                             event.cancel();
                         }
-                    }));
+                    });
         }
         if (settings == null) {
             settings = new ImageButton(game.getSkin(), "settings");
-            settings.addListener(new TrackingListener(game, "UX", "Clicked", "Settings",
-                    new ScreenJumper(game, Screens.SETTINGS)));
+            settings.addListener(new ScreenJumper(game, Screens.SETTINGS));
         }
         if (statistics == null) {
             statistics = new ImageButton(game.getSkin(), "charts");
-            statistics.addListener(new TrackingListener(game, "UX", "Clicked", "Statistics",
-                    new ScreenJumper(game, Screens.STATISTICS)));
+            statistics.addListener(new ScreenJumper(game, Screens.STATISTICS));
         }
         if (about == null) {
             about = new ImageButton(game.getSkin(), "info");
-            about.addListener(new TrackingListener(game, "UX", "Clicked", "About",
-                    new ScreenJumper(game, Screens.ABOUT)));
+            about.addListener(new ScreenJumper(game, Screens.ABOUT));
         }
         if (star == null) {
             star = new ImageButton(game.getSkin(), "star");
-            star.addListener(new TrackingListener(game, "UX", "Clicked", "Star",
-                    new ChangeListener() {
+            star.addListener(new ChangeListener() {
                         @Override
                         public void changed(ChangeEvent event, Actor actor) {
                             game.getContext().openInMarketplace();
                             event.cancel();
                         }
                     }
-            ));
+            );
         }
         if (BuildConfig.FLAVOR.equals("gpe")) {
             if (leaderboard == null) {
                 leaderboard = new ImageButton(game.getSkin(), "leaderboard");
-                leaderboard.addListener(new TrackingListener(game, "UX", "Clicked", "Leaderboard",
-                        new ChangeListener() {
+                leaderboard.addListener(new ChangeListener() {
                             @Override
                             public void changed(ChangeEvent event, Actor actor) {
                                 game.player.playSound(SoundPlayer.SoundCode.SELECT);
@@ -128,13 +121,12 @@ public class MainMenuScreen extends AbstractScreen {
                                 }
                                 event.cancel();
                             }
-                        }));
+                        });
 
             }
             if (achievements == null) {
                 achievements = new ImageButton(game.getSkin(), "achievements");
-                achievements.addListener(new TrackingListener(game, "UX", "Clicked", "Achievements",
-                        new ChangeListener() {
+                achievements.addListener(new ChangeListener() {
                             @Override
                             public void changed(ChangeEvent event, Actor actor) {
                                 game.player.playSound(SoundPlayer.SoundCode.SELECT);
@@ -145,7 +137,7 @@ public class MainMenuScreen extends AbstractScreen {
                                 }
                                 event.cancel();
                             }
-                        }));
+                        });
             }
         }
         if (quit == null) {
@@ -203,7 +195,6 @@ public class MainMenuScreen extends AbstractScreen {
     @Override
     public void render(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
-            game.getContext().getAnalytics().sendEvent("UX", "Key Pressed", "Back");
             Gdx.app.exit();
         }
 
@@ -223,14 +214,12 @@ public class MainMenuScreen extends AbstractScreen {
         dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
             @Override
             public void ok() {
-                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Enter Tutorial");
                 game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
                 game.pushScreen(Screens.TUTORIAL);
             }
 
             @Override
             public void cancel() {
-                game.getContext().getAnalytics().sendEvent("UX", "Clicked", "Dismiss Tutorial");
                 game.player.playSound(SoundPlayer.SoundCode.FAIL);
                 SharedPreferences.Editor editor = game.getContext().getSettings().getPreferences().edit();
                 editor.putBoolean(SettingsManager.TAG_ASKED_TUTORIAL, true);

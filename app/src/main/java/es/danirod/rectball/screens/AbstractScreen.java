@@ -120,9 +120,6 @@ public abstract class AbstractScreen implements Screen {
 
     @Override
     public void show() {
-        // Dispatch an analytic event.
-        game.getContext().getAnalytics().sendScreen(getClass().getCanonicalName());
-
         if (stage == null) {
             stage = new Stage(buildViewport(), game.getBatch());
         }
