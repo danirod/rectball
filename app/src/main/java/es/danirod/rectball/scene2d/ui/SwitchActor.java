@@ -21,6 +21,7 @@ package es.danirod.rectball.scene2d.ui;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
 
 /**
  * Switch actor.
@@ -33,6 +34,7 @@ public class SwitchActor extends CheckBox {
     public SwitchActor(String text, Skin skin) {
         super(text, skin);
         padTop(10).padBottom(10);
+        getImage().setScaling(Scaling.fit);
         getImageCell().width(150).height(50).padRight(20);
         getLabelCell().align(Align.left).expandX();
     }

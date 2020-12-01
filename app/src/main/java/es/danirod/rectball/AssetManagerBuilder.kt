@@ -104,10 +104,9 @@ object AssetManagerBuilder {
     }
 
     private val textureParameters by lazy {
-        val parameters = TextureLoader.TextureParameter()
-        parameters.minFilter = Texture.TextureFilter.Linear
-        parameters.magFilter = Texture.TextureFilter.Linear
-        parameters
+        TextureLoader.TextureParameter().apply {
+            minFilter = Texture.TextureFilter.Linear
+            magFilter = Texture.TextureFilter.Linear
+        }
     }
-
 }
