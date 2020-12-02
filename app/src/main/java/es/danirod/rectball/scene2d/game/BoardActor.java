@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import es.danirod.rectball.model.*;
+import es.danirod.rectball.scene2d.input.ClassicBoardSelectionListener;
 import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
 
 import java.util.*;
@@ -51,6 +52,9 @@ public class BoardActor extends Table {
             }
             row();
         }
+
+        // Add an input handle to select items in the board.
+        addListener(new ClassicBoardSelectionListener(this));
     }
 
     public BallActor getBall(int x, int y) {

@@ -45,14 +45,6 @@ public class BallActor extends Image {
         this.ball = ball;
         this.atlas = atlas;
         setScaling(Scaling.fit);
-        addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                setSelected(!isSelected());
-                return true;
-            }
-        });
-
         grayDrawable = new TextureRegionDrawable(atlas.findRegion("ball_gray"));
         colorDrawables = new HashMap<>();
         for (BallColor color : BallColor.values()) {
@@ -79,11 +71,11 @@ public class BallActor extends Image {
         setOrigin(getWidth() / 2, getHeight() / 2);
     }
 
-    private boolean isSelected() {
+    public boolean isSelected() {
         return selected;
     }
 
-    private void setSelected(boolean selected) {
+    public void setSelected(boolean selected) {
         this.selected = selected;
         if (selected) {
             board.select(ball.getX(), ball.getY());
