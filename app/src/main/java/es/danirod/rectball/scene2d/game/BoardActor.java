@@ -24,7 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import es.danirod.rectball.model.*;
-import es.danirod.rectball.scene2d.input.ClassicBoardSelectionListener;
+import es.danirod.rectball.scene2d.input.DragBoardSelectionListener;
 import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
 
 import java.util.*;
@@ -54,7 +54,7 @@ public class BoardActor extends Table {
         }
 
         // Add an input handle to select items in the board.
-        addListener(new ClassicBoardSelectionListener(this));
+        addListener(new DragBoardSelectionListener(this));
     }
 
     public BallActor getBall(int x, int y) {
@@ -86,6 +86,25 @@ public class BoardActor extends Table {
             } else {
                 selectBall(selectedBall);
             }
+        }
+    }
+
+    public void select(Bounds bounds) {
+        selection.clear();
+        selection.addAll(Arrays.asList(
+                actors[bounds.minX][bounds.minY],
+                actors[bounds.minX][bounds.maxY],
+                actors[bounds.maxX][bounds.minY],
+                actors[bounds.maxX][bounds.maxY]
+        ));
+        if (selection.size() == 4) {
+            finishSelection();
+        } else {
+            for (BallSelectionListener subscriber : subscribers)
+                subscriber.onSelectionFailed(new ArrayList<>(selection));
+            for (BallActor ball: selection)
+                ball.quietlyUnselect();
+            selection.clear();
         }
     }
 

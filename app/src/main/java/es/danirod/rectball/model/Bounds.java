@@ -39,6 +39,13 @@ public class Bounds {
         this.maxY = maxY;
     }
 
+    public Bounds(Coordinate c1, Coordinate c2) {
+        this.minX = Math.min(c1.x, c2.x);
+        this.maxX = Math.max(c1.x, c1.x);
+        this.minY = Math.min(c1.y, c2.y);
+        this.maxY = Math.max(c1.y, c2.y);
+    }
+
     public static Bounds fromBallList(List<Ball> balls) {
         int minX, minY, maxX, maxY;
         minX = minY = Integer.MAX_VALUE;
