@@ -297,42 +297,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         board.addAction(board.showRegion(bounds));
     }
 
-    private void showPartialScore(int score, Bounds bounds, boolean special, boolean usedHelp) {
-        // Calculate the center of the region.
-        BallActor bottomLeftBall = board.getBall(bounds.minX, bounds.minY);
-        BallActor upperRightBall = board.getBall(bounds.maxX, bounds.maxY);
-
-        float minX = bottomLeftBall.getX();
-        float maxX = upperRightBall.getX() + upperRightBall.getWidth();
-        float minY = bottomLeftBall.getY();
-        float maxY = upperRightBall.getY() + upperRightBall.getHeight();
-        float centerX = (minX + maxX) / 2;
-        float centerY = (minY + maxY) / 2;
-
-        Label label = new Label("+" + score, game.getSkin(), "monospace");
-        label.setFontScale(5f);
-        label.setSize(140, 70);
-        label.setAlignment(Align.center);
-        label.setPosition(centerX - label.getWidth() / 2, centerY - label.getHeight() / 2);
-        label.addAction(Actions.sequence(
-                Actions.moveBy(0, 80, 0.5f),
-                Actions.removeActor()
-        ));
-        getStage().addActor(label);
-
-        if (usedHelp) {
-            label.setColor(Color.RED);
-        } else if (special) {
-            label.setColor(Color.CYAN);
-        }
-    }
-
     @Override
     public void setUpInterface(Table table) {
         // Create the actors for this screen.
         timer = new TimerActor(Constants.SECONDS, game.getSkin());
         score = new ScoreActor(game.getSkin());
-        board = new BoardActor(game.getBallAtlas(), game.getState().getBoard());
+        board = new BoardActor(game.getBallAtlas(), game.getSkin(), game.getState().getBoard());
 
         // Add the help button.
         ImageButton help = new ImageButton(game.getSkin(), "blueHelp");
@@ -674,7 +644,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             // Was special?
             boolean special = givenScore != rows * cols;
             // Give score
-            showPartialScore(givenScore, bounds, special, usedCheat);
+            stage.addActor(board.showPartialScore(givenScore, bounds, special, usedCheat));
             game.player.playSound(SoundCode.SUCCESS);
 
             // Give time

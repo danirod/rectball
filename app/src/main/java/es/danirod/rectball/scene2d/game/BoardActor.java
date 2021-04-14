@@ -18,10 +18,14 @@
 
 package es.danirod.rectball.scene2d.game;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 
 import es.danirod.rectball.model.*;
 import es.danirod.rectball.scene2d.input.DragBoardSelectionListener;
@@ -41,8 +45,11 @@ public class BoardActor extends Table {
 
     private boolean coloured = false;
 
-    public BoardActor(TextureAtlas atlas, Board board) {
+    private Skin skin;
+
+    public BoardActor(TextureAtlas atlas, Skin skin, Board board) {
         this.board = board;
+        this.skin = skin;
         this.actors = new BallActor[board.getSize()][board.getSize()];
 
         for (int y = board.getSize() - 1; y >= 0; y--) {
@@ -55,6 +62,41 @@ public class BoardActor extends Table {
 
         // Add an input handle to select items in the board.
         addListener(new DragBoardSelectionListener(this));
+    }
+
+    public Label showPartialScore(int score, Bounds bounds, boolean special, boolean usedHelp) {
+        // Get the graphical center of the region.
+        BallActor bottomLeftBall = getBall(bounds.minX, bounds.minY);
+        BallActor upperRightBall = getBall(bounds.maxX, bounds.maxY);
+        float minX = bottomLeftBall.getX();
+        float maxX = upperRightBall.getX() + upperRightBall.getWidth();
+        float minY = bottomLeftBall.getY();
+        float maxY = upperRightBall.getY() + upperRightBall.getHeight();
+        float centerX = (minX + maxX) / 2;
+        float centerY = (minY + maxY) / 2;
+
+        // Build the label used to present the score.
+        Label label = new Label("+" + score, skin, "monospace");
+        label.setFontScale(7f);
+        label.setSize(140, 70);
+        label.setAlignment(Align.center);
+        label.setPosition(centerX - label.getWidth() / 2, centerY - label.getHeight() / 2);
+        label.addAction(Actions.sequence(
+                Actions.parallel(
+                        Actions.moveBy(0, 80, 0.5f),
+                        Actions.sequence(
+                                Actions.delay(0.25f),
+                                Actions.fadeOut(0.25f))
+                        ),
+                Actions.removeActor()
+        ));
+        if (usedHelp) {
+            label.setColor(Color.RED);
+        } else if (special) {
+            label.setColor(Color.CYAN);
+        }
+
+        return label;
     }
 
     public BallActor getBall(int x, int y) {

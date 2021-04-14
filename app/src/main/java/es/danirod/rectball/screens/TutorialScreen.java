@@ -25,7 +25,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
@@ -120,7 +119,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
         // Create the actors for this screen.
         timer = new TimerActor(1, game.getSkin());
         score = new ScoreActor(game.getSkin());
-        board = new BoardActor(game.getBallAtlas(), game.getState().getBoard());
+        board = new BoardActor(game.getBallAtlas(), game.getSkin(), game.getState().getBoard());
 
         scoreBorder = new BorderedContainer(game.getSkin(), score);
         timerBorder = new BorderedContainer(game.getSkin(), timer);
@@ -479,7 +478,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
                                                     }
                                                 })));
 
-        showPartialScore(rows * cols, bounds);
+        stage.addActor(board.showPartialScore(rows * cols, bounds, false, false));
         game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
     }
 
@@ -501,32 +500,6 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
     @Override
     public void onSelectionCleared(List<BallActor> selection) {
 
-    }
-
-    private void showPartialScore(int score, Bounds bounds) {
-        // Calculate the center of the region.
-        BallActor bottomLeftBall = board.getBall(bounds.minX, bounds.minY);
-        BallActor upperRightBall = board.getBall(bounds.maxX, bounds.maxY);
-
-        float minX = bottomLeftBall.getX();
-        float maxX = upperRightBall.getX() + upperRightBall.getWidth();
-        float minY = bottomLeftBall.getY();
-        float maxY = upperRightBall.getY() + upperRightBall.getHeight();
-        float centerX = (minX + maxX) / 2;
-        float centerY = (minY + maxY) / 2;
-
-        Label label = new Label("+" + score, game.getSkin(), "monospace");
-        label.setFontScale(10f);
-        label.setSize(140, 70);
-        label.setAlignment(Align.center);
-        label.setPosition(centerX - label.getWidth() / 2, centerY - label.getHeight() / 2);
-        label.addAction(Actions.sequence(
-                                                Actions.parallel(
-                                                                        Actions.moveBy(0, 80, 0.5f),
-                                                                        Actions.alpha(0.5f, 0.5f)),
-                                                Actions.removeActor()
-        ));
-        getStage().addActor(label);
     }
 
     /**

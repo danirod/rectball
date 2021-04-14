@@ -43,7 +43,7 @@ public class LoadingBackScreen extends AbstractScreen {
         ballAtlas.addRegion("ball_green", regions[1][1]);
         ballAtlas.addRegion("ball_gray", regions[1][2]);
 
-        boardActor = new BoardActor(ballAtlas, board);
+        boardActor = new BoardActor(ballAtlas, game.getSkin(), board);
         Rectangle bounds = game.getState().getBoardBounds();
         boardActor.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
         getStage().addActor(boardActor);

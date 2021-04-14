@@ -64,7 +64,7 @@ public class LoadingScreen extends AbstractScreen {
         ballAtlas.addRegion("ball_green", regions[1][1]);
         ballAtlas.addRegion("ball_gray", regions[1][2]);
 
-        boardActor = new BoardActor(ballAtlas, board);
+        boardActor = new BoardActor(ballAtlas, game.getSkin(), board);
         boardActor.setColoured(true);
         table.add(boardActor).size(100).align(Align.center);
     }
