@@ -23,11 +23,11 @@ android {
             }
         }
     }
-    compileSdkVersion 29
+    compileSdkVersion 30
     defaultConfig {
         applicationId "es.danirod.rectball.android"
         minSdkVersion 14
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 424
         versionName "0.4.12"
 
