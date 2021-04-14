@@ -2,7 +2,6 @@ buildscript {
     ext.libgdx_version = '1.9.14'
     ext.kotlin_version = '1.4.32'
     repositories {
-        jcenter()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://maven.google.com" }
@@ -16,7 +15,6 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
