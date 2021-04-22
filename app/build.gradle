@@ -88,10 +88,8 @@ dependencies {
     // libGDX
     api "com.badlogicgames.gdx:gdx-backend-android:$libgdx_version"
     api "com.badlogicgames.gdx:gdx-freetype:$libgdx_version"
-    natives "com.badlogicgames.gdx:gdx-platform:$libgdx_version:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-platform:$libgdx_version:natives-armeabi-v7a"
     natives "com.badlogicgames.gdx:gdx-platform:$libgdx_version:natives-x86"
-    natives "com.badlogicgames.gdx:gdx-freetype-platform:$libgdx_version:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-freetype-platform:$libgdx_version:natives-armeabi-v7a"
     natives "com.badlogicgames.gdx:gdx-freetype-platform:$libgdx_version:natives-x86"
 
@@ -102,14 +100,12 @@ dependencies {
 
 // Extract the libGDX natives from the JARs.
 task copyAndroidNatives() {
-    file("src/main/jniLibs/armeabi/").mkdirs();
     file("src/main/jniLibs/armeabi-v7a/").mkdirs();
     file("src/main/jniLibs/x86/").mkdirs();
 
     configurations.natives.copy().files.each { jar ->
         def outputDir = null
         if(jar.name.endsWith("natives-armeabi-v7a.jar")) outputDir = file("src/main/jniLibs/armeabi-v7a")
-        if(jar.name.endsWith("natives-armeabi.jar")) outputDir = file("src/main/jniLibs/armeabi")
         if(jar.name.endsWith("natives-x86.jar")) outputDir = file("src/main/jniLibs/x86")
         if(outputDir != null) {
             copy {
