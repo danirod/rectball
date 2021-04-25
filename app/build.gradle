@@ -88,6 +88,7 @@ dependencies {
     // libGDX
     api "com.badlogicgames.gdx:gdx-backend-android:$libgdx_version"
     api "com.badlogicgames.gdx:gdx-freetype:$libgdx_version"
+    implementation "de.golfgl.gdxgamesvcs:gdx-gamesvcs-core:$gamesvcs_version"
     natives "com.badlogicgames.gdx:gdx-platform:$libgdx_version:natives-armeabi-v7a"
     natives "com.badlogicgames.gdx:gdx-platform:$libgdx_version:natives-x86"
     natives "com.badlogicgames.gdx:gdx-freetype-platform:$libgdx_version:natives-armeabi-v7a"
@@ -95,6 +96,7 @@ dependencies {
 
     // Google Play Services are required on the Google Play version.
     gpeImplementation "com.google.android.gms:play-services-games:21.0.0"
+    gpeImplementation "de.golfgl.gdxgamesvcs:gdx-gamesvcs-android-gpgs:$gamesvcs_version"
     gpeApi "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.32"
 }
 
