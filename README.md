@@ -11,7 +11,7 @@
   <a href='https://play.google.com/store/apps/details?id=es.danirod.rectball.android&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' style='width: 25%; height: 25%;'/></a>
 </p>
 
-Rectball is a colorful puzzle game for Android. Make selections, clear rectangles and make points before the time runs out. Rectball is open source and runs on Android 2.3+.
+Rectball is a colorful puzzle game for Android. Make selections, clear rectangles and make points before the time runs out. Rectball is open source and runs on Android 4.0.3+.
 
 ## Compiling the game
 
