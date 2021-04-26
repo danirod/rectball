@@ -18,6 +18,7 @@
 package es.danirod.rectball.android
 
 import android.content.Intent
+import de.golfgl.gdxgamesvcs.NoGameServiceClient
 
 internal class AndroidPlatform(context: AndroidLauncher) : AbstractPlatform(context) {
 
@@ -28,5 +29,5 @@ internal class AndroidPlatform(context: AndroidLauncher) : AbstractPlatform(cont
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) { }
 
     override val gameServices: GameServices
-        get() = NullGameServices()
+        get() = GsvcsGameServices(NoGameServiceClient(), NoConstants())
 }

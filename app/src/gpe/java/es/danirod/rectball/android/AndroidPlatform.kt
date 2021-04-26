@@ -19,6 +19,7 @@
 package es.danirod.rectball.android
 
 import android.content.Intent
+import de.golfgl.gdxgamesvcs.GpgsClient
 
 /**
  * This contains code for the Android platform. Here code that uses Android
@@ -30,20 +31,22 @@ import android.content.Intent
  */
 internal class AndroidPlatform(context: AndroidLauncher) : AbstractPlatform(context) {
 
-    private val gpg: GooglePlayGamesRuntime = GooglePlayGamesRuntime(context)
+    private val gpg: GpgsClient = GpgsClient().initialize(context, false)
+
+    private val services: GameServices = GsvcsGameServices(gpg, GooglePlayConstants(context))
 
     override val gameServices: GameServices
-        get() = gpg
+        get() = services
 
     override fun onStart() {
-        gpg.gameHelper.onStart(context)
+        gpg.resumeSession()
     }
 
     override fun onStop() {
-        gpg.gameHelper.onStop()
+        gpg.pauseSession()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        gpg.gameHelper.onActivityResult(requestCode, resultCode, data)
+       // gpg.gameHelper.onActivityResult(requestCode, resultCode, data)
     }
 }
