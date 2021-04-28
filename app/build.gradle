@@ -97,7 +97,7 @@ dependencies {
     // Google Play Services are required on the Google Play version.
     gpeImplementation "com.google.android.gms:play-services-games:21.0.0"
     gpeImplementation "de.golfgl.gdxgamesvcs:gdx-gamesvcs-android-gpgs:$gamesvcs_version"
-    gpeApi "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.32"
+    gpeApi "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.0"
 }
 
 // Extract the libGDX natives from the JARs.
