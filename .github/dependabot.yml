@@ -1,0 +1,26 @@
+version: 2
+updates:
+- package-ecosystem: gradle
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "06:00"
+  open-pull-requests-limit: 99
+  reviewers:
+  - danirod
+  assignees:
+  - danirod
+  labels:
+  - dependencies
+  ignore:
+  - dependency-name: com.badlogicgames.gdx:gdx-freetype
+    versions:
+    - 1.9.13
+    - 1.9.14
+  - dependency-name: com.badlogicgames.gdx:gdx-backend-android
+    versions:
+    - 1.9.13
+    - 1.9.14
+  commit-message:
+    prefix: chore
+    include: scope
