@@ -43,8 +43,6 @@ public class BoardActor extends Table {
 
     private final Board board;
 
-    private boolean coloured = false;
-
     private Skin skin;
 
     public BoardActor(TextureAtlas atlas, Skin skin, Board board) {
@@ -54,7 +52,7 @@ public class BoardActor extends Table {
 
         for (int y = board.getSize() - 1; y >= 0; y--) {
             for (int x = 0; x < board.getSize(); x++) {
-                actors[x][y] = new BallActor(this, board.getBall(x, y), atlas);
+                actors[x][y] = new BallActor(board.getBall(x, y), atlas);
                 add(actors[x][y]).pad(4, 2, 4, 2);
             }
             row();
@@ -103,30 +101,10 @@ public class BoardActor extends Table {
         return actors[x][y];
     }
 
-    public boolean isColoured() {
-        return coloured;
-    }
-
     public void setColoured(boolean coloured) {
-        this.coloured = coloured;
-    }
-
-    /**
-     * Notifies the board that this ball has been selected. Because the board can see the entire board, it is the board
-     * the entity that checks whether the selection is complete and whether the selection is successful. This board
-     * can abort the current selection if the constraints for picking a valid combination fail at any point.
-     *
-     * @param x row index for the ball that has been selected.
-     * @param y column index for the ball that has been selected.
-     */
-    public void select(int x, int y) {
-        BallActor selectedBall = actors[x][y];
-        if (selection.add(selectedBall)) {
-            /* We can pick up to 4 balls */
-            if (selection.size() == 4) {
-                finishSelection();
-            } else {
-                selectBall(selectedBall);
+        for (BallActor[] actor : actors) {
+            for (BallActor ballActor : actor) {
+                ballActor.setColoured(coloured);
             }
         }
     }
@@ -144,8 +122,6 @@ public class BoardActor extends Table {
         } else {
             for (BallSelectionListener subscriber : subscribers)
                 subscriber.onSelectionFailed(new ArrayList<>(selection));
-            for (BallActor ball: selection)
-                ball.quietlyUnselect();
             selection.clear();
         }
     }
@@ -167,9 +143,6 @@ public class BoardActor extends Table {
         if (!sameColors(selection)) {
             for (BallSelectionListener subscriber : subscribers)
                 subscriber.onSelectionFailed(new ArrayList<>(selection));
-            for (BallActor selected : selection) {
-                selected.quietlyUnselect();
-            }
             selection.clear();
         } else {
             for (BallSelectionListener subscriber : subscribers) {
@@ -196,10 +169,6 @@ public class BoardActor extends Table {
             }
         }
 
-        /* Clear the selection. */
-        for (BallActor selected : selection) {
-            selected.quietlyUnselect();
-        }
         selection.clear();
     }
 
@@ -224,27 +193,12 @@ public class BoardActor extends Table {
     }
 
     /**
-     * Unselect a ball.
-     */
-    public void unselect(int x, int y) {
-        BallActor unselectedBall = actors[x][y];
-        if (selection.remove(unselectedBall)) {
-            // This ball has been unselected. Notify our subscribers about this.
-            for (BallSelectionListener subscriber : subscribers)
-                subscriber.onBallUnselected(unselectedBall);
-        }
-    }
-
-    /**
      * Clear the selection.
      */
     public void clearSelection() {
         List<BallActor> unselectedBalls = new ArrayList<>(selection);
         for (BallSelectionListener subscriber : subscribers)
             subscriber.onSelectionCleared(unselectedBalls);
-        for (BallActor selected : selection) {
-            selected.quietlyUnselect();
-        }
         selection.clear();
     }
 
