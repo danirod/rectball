@@ -592,6 +592,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                             selectedBall.setColor(Color.WHITE);
                         }
                         generate(bounds);
+                        board.syncColors();
                         // Reset the cheat
                         game.getState().setCheatSeen(false);
                         game.getState().setWiggledBounds(null);

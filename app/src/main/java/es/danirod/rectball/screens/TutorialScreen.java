@@ -475,6 +475,7 @@ public class TutorialScreen extends AbstractScreen implements BallSelectionListe
                                                                                                         new Coordinate(bounds.maxX, bounds.maxY));
                                                             nextState();
                                                         }
+                                                        board.syncColors();
                                                     }
                                                 })));
 

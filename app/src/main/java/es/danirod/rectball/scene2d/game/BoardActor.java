@@ -62,6 +62,14 @@ public class BoardActor extends Table {
         addListener(new DragBoardSelectionListener(this));
     }
 
+    public void syncColors() {
+        for (BallActor[] row : actors) {
+            for (BallActor ball : row) {
+                ball.syncColor();
+            }
+        }
+    }
+
     public Label showPartialScore(int score, Bounds bounds, boolean special, boolean usedHelp) {
         // Get the graphical center of the region.
         BallActor bottomLeftBall = getBall(bounds.minX, bounds.minY);
