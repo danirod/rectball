@@ -152,8 +152,10 @@ public abstract class AbstractScreen implements Screen {
 
     @Override
     public void dispose() {
-        stage.dispose();
-        stage = null;
+        if (stage != null) {
+            stage.dispose();
+            stage = null;
+        }
         table = null;
     }
 
