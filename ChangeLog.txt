@@ -1,3 +1,11 @@
+[0.4.12]
+- Added: new system to select combinations based on dragging.
+- Removed: integration with Google Analytics.
+- Fixed: switches in the settings screen may not render properly on some devices.
+- Dev: updated all system dependencies (libGDX, Gradle, Android...)
+- Dev: replaced custom Google Play Games integration with gdx-gamesvcs.
+- Dev: system components get cleaned up and rewritten in Kotlin.
+
 [0.4.11]
 - Fixes yet another regression with fullscreen mode.
 - Fullscreen mode can now be changed without restarting the game.

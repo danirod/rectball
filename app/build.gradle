@@ -33,7 +33,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 30
         versionCode 424
-        versionName "0.4.12"
+        versionName "0.4.12-beta1"
 
         if(keystoreFile.exists()) {
             signingConfig signingConfigs.release
