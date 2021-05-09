@@ -27,7 +27,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -51,25 +50,13 @@ import es.danirod.rectball.model.Coordinate;
 import es.danirod.rectball.model.ScoreCalculator;
 import es.danirod.rectball.scene2d.game.BallActor;
 import es.danirod.rectball.scene2d.game.BoardActor;
-import es.danirod.rectball.scene2d.game.BorderedContainer;
-import es.danirod.rectball.scene2d.game.ScoreActor;
+import es.danirod.rectball.scene2d.game.Hud;
 import es.danirod.rectball.scene2d.game.ScoreActor.ScoreListener;
-import es.danirod.rectball.scene2d.game.TimerActor;
 import es.danirod.rectball.scene2d.game.TimerActor.TimerCallback;
 import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
 import es.danirod.rectball.scene2d.ui.ConfirmDialog;
 
 public class GameScreen extends AbstractScreen implements TimerCallback, BallSelectionListener, ScoreListener {
-
-    /**
-     * Display the remaining time.
-     */
-    private TimerActor timer;
-
-    /**
-     * Display the current score.
-     */
-    private ScoreActor score;
 
     /**
      * Display the board representation.
@@ -79,7 +66,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     /**
      * The display used to represent information about the user.
      */
-    private Table hud;
+    private Hud hud;
 
     /**
      * Is the game paused?
@@ -179,8 +166,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // The player is playing
         game.getState().setPlaying(true);
-        score.setValue(game.getState().getScore());
-        timer.setSeconds(game.getState().getRemainingTime());
+        hud.getScore().setValue(game.getState().getScore());
+        hud.getTimer().setSeconds(game.getState().getRemainingTime());
 
         paused = running = askingLeave = false;
 
@@ -199,7 +186,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                     if (!paused && !askingLeave) {
                         running = true;
                         board.setColoured(true);
-                        timer.setRunning(true);
+                        hud.getTimer().setRunning(true);
                         board.setTouchable(Touchable.enabled);
                         game.player.playSound(SoundCode.SUCCESS);
                     }
@@ -280,7 +267,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 // Oh, oh, in the same spot! So, they must be of the same color.
                 // Therefore, we need to randomize some balls to avoid enter
                 // an infinite loop.
-                timer.setRunning(false);
+                hud.getTimer().setRunning(false);
                 board.setColoured(false);
                 game.getState().resetBoard();
                 board.addAction(Actions.sequence(
@@ -289,7 +276,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                             @Override
                             public void run() {
                                 board.setColoured(true);
-                                timer.setRunning(true);
+                                hud.getTimer().setRunning(true);
                             }
                         })));
             }
@@ -299,24 +286,21 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
     @Override
     public void setUpInterface(Table table) {
-        // Create the actors for this screen.
-        timer = new TimerActor(Constants.SECONDS, game.getSkin());
-        score = new ScoreActor(game.getSkin());
         board = new BoardActor(game.getBallAtlas(), game.getSkin(), game.getState().getBoard());
 
-        // Add the help button.
-        ImageButton help = new ImageButton(game.getSkin(), "blueHelp");
-        help.addListener(new ChangeListener() {
+        hud = new Hud(game);
+
+        hud.getHelp().addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 // Don't act if the game hasn't started yet.
-                if (!timer.isRunning() || game.getState().isTimeout()) {
+                if (!hud.getTimer().isRunning() || game.getState().isTimeout()) {
                     event.cancel();
                     return;
                 }
 
                 // Don't do anything if there are less than 5 seconds.
-                if (timer.getSeconds() <= 5 && game.getState().getWiggledBounds() == null) {
+                if (hud.getTimer().getSeconds() <= 5 && game.getState().getWiggledBounds() == null) {
                     game.player.playSound(SoundCode.FAIL);
                     event.cancel();
                     return;
@@ -337,7 +321,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                             Actions.run(new Runnable() {
                                 @Override
                                 public void run() {
-                                    timer.setSeconds(timer.getSeconds() - step);
+                                    hud.getTimer().setSeconds(hud.getTimer().getSeconds() - step);
                                 }
                             }))));
                     game.getState().setCheatSeen(true);
@@ -347,9 +331,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             }
         });
 
-        // Add the pause button.
-        ImageButton pause = new ImageButton(game.getSkin(), "blueCross");
-        pause.addListener(new ChangeListener() {
+        hud.getPause().addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.player.playSound(SoundCode.FAIL);
@@ -359,44 +341,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         });
 
         // Disable game until countdown ends.
-        timer.setRunning(false);
         board.setTouchable(Touchable.disabled);
 
         // Add subscribers.
-        timer.addSubscriber(this);
+        hud.getTimer().addSubscriber(this);
+        hud.getScore().setScoreListener(this);
         board.addSubscriber(this);
-        score.setScoreListener(this);
-
-        /*
-         * Fill the HUD, which is the display that appears over the board with
-         * all the information. The HUD is generated differently depending on
-         * the aspect ratio of the device. If the device is 4:3, the HUD is
-         * compressed to avoid making the board small. Otherwise, it's expanded
-         * to the usual size.
-         */
-        boolean landscape = Gdx.graphics.getWidth() > Gdx.graphics.getHeight();
-        float aspectRatio = landscape ?
-                (float) Gdx.graphics.getWidth() / Gdx.graphics.getHeight() :
-                (float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
-        hud = new Table();
-
-        if (aspectRatio < 1.5f) {
-            // Compact layout: buttons and score in the same line.
-            hud.add(new BorderedContainer(game.getSkin(), help)).size(50).padBottom(10);
-            hud.add(new BorderedContainer(game.getSkin(), score)).height(50).width(Constants.VIEWPORT_WIDTH / 2).space(10).expandX().fillX();
-            hud.add(new BorderedContainer(game.getSkin(), pause)).size(50).padBottom(10).row();
-            hud.add(new BorderedContainer(game.getSkin(), timer)).colspan(3).fillX().height(40).padBottom(20).row();
-        } else {
-            // Large layout: buttons above timer, score below timer (classic).
-            hud.add(new BorderedContainer(game.getSkin(), help)).size(50).spaceLeft(10).padBottom(10).align(Align.left);
-            hud.add(new BorderedContainer(game.getSkin(), pause)).size(50).spaceRight(10).padBottom(10).align(Align.right).row();
-            hud.add(new BorderedContainer(game.getSkin(), timer)).colspan(2).fillX().expandX().height(40).padBottom(10).row();
-            hud.add(new BorderedContainer(game.getSkin(), score)).colspan(2).height(60).width(Constants.VIEWPORT_WIDTH / 2).align(Align.center).padBottom(10).row();
-        }
-
-        if (aspectRatio > 1.6) {
-            hud.padBottom(20);
-        }
 
         table.add(hud).fillX().expandY().align(Align.top).row();
         table.add(board).fill().expand().row();
@@ -422,9 +372,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         super.render(delta);
 
         // If the timer is running, keep incrementing the timer.
-        if (timer.isRunning()) {
+        if (hud.getTimer().isRunning()) {
             game.getState().addTime(delta);
-            game.getState().setRemainingTime(timer.getSeconds());
+            game.getState().setRemainingTime(hud.getTimer().getSeconds());
         }
 
         // The user should be able to leave during the game.
@@ -453,7 +403,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         if (running && !game.getState().isTimeout()) {
             board.setColoured(false);
             board.setTouchable(Touchable.disabled);
-            timer.setRunning(false);
+            hud.getTimer().setRunning(false);
         }
     }
 
@@ -479,7 +429,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         if (running && !game.getState().isTimeout()) {
             board.setColoured(true);
             board.setTouchable(Touchable.enabled);
-            timer.setRunning(true);
+            hud.getTimer().setRunning(true);
         }
     }
 
@@ -501,18 +451,11 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
     @Override
     public void onTimeOut() {
-        Map<Integer, Float> metrics = new HashMap<>();
-        metrics.put(1, new Float(game.getState().getScore()));
-        metrics.put(2, new Float(game.getState().getElapsedTime()));
-
-        Map<Integer, String> dimensions = new HashMap<>();
-        dimensions.put(3, timer.getSeconds() > 0 ? "Yes" : "No");
-
         // Disable any further interactions.
         board.clearSelection();
         board.setColoured(true);
         board.setTouchable(Touchable.disabled);
-        timer.setRunning(false);
+        hud.getTimer().setRunning(false);
         game.player.playSound(SoundCode.GAME_OVER);
 
         // Mark a combination that the user could do if he had enough time.
@@ -607,7 +550,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             givenScore *= 0.75f;
         }
         game.getState().addScore(givenScore);
-        score.giveScore(givenScore);
+        hud.getScore().giveScore(givenScore);
 
         // Put information about this combination in the stats.
         int rows = bounds.maxY - bounds.minY + 1;
@@ -639,8 +582,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             game.player.playSound(SoundCode.PERFECT);
 
             // Give time
-            float givenTime = Constants.SECONDS - timer.getSeconds();
-            timer.giveTime(givenTime, 4f);
+            float givenTime = Constants.SECONDS - hud.getTimer().getSeconds();
+            hud.getTimer().giveTime(givenTime, 4f);
         } else {
             // Was special?
             boolean special = givenScore != rows * cols;
@@ -650,7 +593,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
             // Give time
             float givenTime = 4f + (givenScore) / 10f;
-            timer.giveTime(givenTime, 0.5f);
+            hud.getTimer().giveTime(givenTime, 0.5f);
         }
     }
 
