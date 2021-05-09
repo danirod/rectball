@@ -27,7 +27,7 @@ class DragBoardSelectionListener(val board: BoardActor) : InputListener() {
 
     override fun touchDown(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int): Boolean {
         val touched = board.hit(x, y, true)
-        return if (touched is BallActor) {
+        return if (pointer == 0 && button == 0 && touched is BallActor) {
             startX = touched.ball.x
             startY = touched.ball.y
             true
