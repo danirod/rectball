@@ -95,8 +95,12 @@ dependencies {
     implementation "de.golfgl.gdxgamesvcs:gdx-gamesvcs-core:$gamesvcs_version"
     natives "com.badlogicgames.gdx:gdx-platform:$libgdx_version:natives-armeabi-v7a"
     natives "com.badlogicgames.gdx:gdx-platform:$libgdx_version:natives-x86"
+    natives "com.badlogicgames.gdx:gdx-platform:$libgdx_version:natives-x86_64"
+    natives "com.badlogicgames.gdx:gdx-platform:$libgdx_version:natives-arm64-v8a"
     natives "com.badlogicgames.gdx:gdx-freetype-platform:$libgdx_version:natives-armeabi-v7a"
     natives "com.badlogicgames.gdx:gdx-freetype-platform:$libgdx_version:natives-x86"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:$libgdx_version:natives-x86_64"
+    natives "com.badlogicgames.gdx:gdx-freetype-platform:$libgdx_version:natives-arm64-v8a"
 
     // Google Play Services are required on the Google Play version.
     gpeImplementation "com.google.android.gms:play-services-games:21.0.0"
@@ -108,11 +112,15 @@ dependencies {
 task copyAndroidNatives() {
     file("src/main/jniLibs/armeabi-v7a/").mkdirs();
     file("src/main/jniLibs/x86/").mkdirs();
+    file("src/main/jniLibs/x86_64").mkdirs();
+    file("src/main/jniLibs/arm64-v8a").mkdirs();
 
     configurations.natives.copy().files.each { jar ->
         def outputDir = null
         if(jar.name.endsWith("natives-armeabi-v7a.jar")) outputDir = file("src/main/jniLibs/armeabi-v7a")
         if(jar.name.endsWith("natives-x86.jar")) outputDir = file("src/main/jniLibs/x86")
+        if(jar.name.endsWith("natives-x86_64.jar")) outputDir = file("src/main/jniLibs/x86_64")
+        if(jar.name.endsWith("natives-arm64-v8a.jar")) outputDir = file("src/main/jniLibs/arm64-v8a")
         if(outputDir != null) {
             copy {
                 from zipTree(jar)
