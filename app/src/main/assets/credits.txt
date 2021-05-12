@@ -7,3 +7,9 @@ This game is released under the terms of GNU General Public License v3. See the 
 THIRD PARTY LIBRARIES
 This game makes use of the following libraries.
 libGDX.- libGDX is licensed under the Apache license version 2, which can be found here: http://www.apache.org/licenses/
+
+HAND ICON: Active Hand
+By Claudio Guglieri, US
+In the Hand Cursors FTW Collection
+https://thenounproject.com/term/active-hand/101205/
+Provided under a Creative Commons CC-BY License.
