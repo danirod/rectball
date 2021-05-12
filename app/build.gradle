@@ -32,8 +32,8 @@ android {
         applicationId "es.danirod.rectball.android"
         minSdkVersion 15
         targetSdkVersion 30
-        versionCode 424
-        versionName "0.4.12-beta1"
+        versionCode 425
+        versionName "0.4.12-beta2"
 
         if(keystoreFile.exists()) {
             signingConfig signingConfigs.release
