@@ -22,6 +22,42 @@ class Hud(game: RectballGame): Table() {
     private val helpBorder = BorderedContainer(game.skin, help)
     private val pauseBorder = BorderedContainer(game.skin, pause)
 
+    var helpVisible: Boolean
+        get() = help.isVisible
+        set(value) {
+            help.isVisible = value
+            helpBorder.isVisible = value
+            clear()
+            composeLayout()
+        }
+
+    var pauseVisible: Boolean
+        get() = pause.isVisible
+        set(value) {
+            pause.isVisible = value
+            pauseBorder.isVisible = value
+            clear()
+            composeLayout()
+        }
+
+    var scoreVisible: Boolean
+        get() = score.isVisible
+        set(value) {
+            score.isVisible = value
+            scoreBorder.isVisible = value
+            clear()
+            composeLayout()
+        }
+
+    var timerVisible: Boolean
+        get() = timer.isVisible
+        set(value) {
+            timer.isVisible = value
+            timerBorder.isVisible = value
+            clear()
+            composeLayout()
+        }
+
     init {
         timer.isRunning = false
 
@@ -43,20 +79,30 @@ class Hud(game: RectballGame): Table() {
      */
     private fun composeLayout() {
         if (aspectRatio < 1.5f) {
-            add(helpBorder).size(50f).padBottom(10f)
-            add(scoreBorder).height(50f).width(Constants.VIEWPORT_WIDTH.toFloat() / 2).space(10f).expandX().fillX()
-            add(pauseBorder).size(50f).padBottom(10f)
-            row()
-            add(timerBorder).colspan(3).fillX().height(40f).padBottom(20f)
-            row()
+            if (helpVisible || scoreVisible || pauseVisible) {
+                add(helpBorder).size(50f).padBottom(10f)
+                add(scoreBorder).height(50f).width(Constants.VIEWPORT_WIDTH.toFloat() / 2).space(10f).expandX().fillX()
+                add(pauseBorder).size(50f).padBottom(10f)
+                row()
+            }
+            if (timerVisible) {
+                add(timerBorder).colspan(3).fillX().height(40f).padBottom(20f)
+                row()
+            }
         } else {
-            add(helpBorder).size(50f).spaceLeft(10f).padBottom(10f).align(Align.left)
-            add(pauseBorder).size(50f).spaceRight(10f).padBottom(10f).align(Align.right)
-            row()
-            add(timerBorder).colspan(2).fillX().expandX().height(40f).padBottom(10f)
-            row()
-            add(scoreBorder).colspan(2).height(60f).width(Constants.VIEWPORT_WIDTH.toFloat() / 2).align(Align.center).padBottom(10f)
-            row()
+            if (helpVisible || pauseVisible) {
+                add(helpBorder).size(50f).spaceLeft(10f).padBottom(10f).align(Align.left)
+                add(pauseBorder).size(50f).spaceRight(10f).padBottom(10f).align(Align.right)
+                row()
+            }
+            if (timerVisible) {
+                add(timerBorder).colspan(2).fillX().expandX().height(40f).padBottom(10f)
+                row()
+            }
+            if (scoreVisible) {
+                add(scoreBorder).colspan(2).height(60f).width(Constants.VIEWPORT_WIDTH.toFloat() / 2).align(Align.center).padBottom(10f)
+                row()
+            }
         }
 
         if (aspectRatio > 1.6f) {

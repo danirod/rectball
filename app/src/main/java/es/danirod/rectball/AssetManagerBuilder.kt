@@ -54,6 +54,10 @@ object AssetManagerBuilder {
         manager.load("ui/switch.png", Texture::class.java, textureParameters)
         manager.load("ui/yellow_patch.png", Texture::class.java, textureParameters)
 
+        // Hands
+        manager.load("hand-normal.png", Texture::class.java, textureParameters)
+        manager.load("hand-hover.png", Texture::class.java, textureParameters)
+
         // Google Play Games integration.
         if (BuildConfig.FLAVOR == "gpe") {
             manager.load("google/gpg_achievements.png", Texture::class.java, textureParameters)

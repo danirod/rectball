@@ -46,6 +46,14 @@ public class Bounds {
         this.maxY = Math.max(c1.y, c2.y);
     }
 
+    public int rows() {
+        return maxY - minY + 1;
+    }
+
+    public int cols() {
+        return maxX - minX + 1;
+    }
+
     public static Bounds fromBallList(List<Ball> balls) {
         int minX, minY, maxX, maxY;
         minX = minY = Integer.MAX_VALUE;

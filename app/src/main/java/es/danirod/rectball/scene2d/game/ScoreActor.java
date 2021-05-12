@@ -107,6 +107,8 @@ public class ScoreActor extends Group {
 
     @Override
     public void act(float delta) {
+        super.act(delta);
+
         if (remainingValue > 0) {
             int givenValue = Math.min(remainingValue, 2);
             remainingValue -= givenValue;

@@ -143,23 +143,6 @@ public class BoardActor extends Table {
     }
 
     /**
-     * This method is executed when the selection is not complete.
-     * @param ball
-     */
-    private void selectBall(BallActor ball) {
-        /* Every ball must have the same color. */
-        if (!sameColors(selection)) {
-            for (BallSelectionListener subscriber : subscribers)
-                subscriber.onSelectionFailed(new ArrayList<>(selection));
-            selection.clear();
-        } else {
-            for (BallSelectionListener subscriber : subscribers) {
-                subscriber.onBallSelected(ball);
-            }
-        }
-    }
-
-    /**
      * This method is executed when the selection is complete. It asserts the selection is valid and notifies the game
      * so that it can trigger the proper animations depending on whether it has been successful or not.
      */
@@ -181,26 +164,6 @@ public class BoardActor extends Table {
     }
 
     /**
-     * Asserts that all the balls in this selection are of the same color.
-     * @param balls list of balls that should be checked.
-     * @return true if the balls have the same color; otherwise false.
-     */
-    private boolean sameColors(Iterable<BallActor> balls) {
-        BallColor color = null;
-        for (BallActor ball : balls) {
-            BallColor thisColor = ball.getBall().getColor();
-            if (color == null) {
-                color = thisColor;
-            } else {
-                if (color != thisColor) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    /**
      * Clear the selection.
      */
     public void clearSelection() {
@@ -218,6 +181,10 @@ public class BoardActor extends Table {
      */
     public void addSubscriber(BallSelectionListener subscriber) {
         subscribers.add(subscriber);
+    }
+
+    public void clearSubscribers() {
+        subscribers.clear();
     }
 
     /**

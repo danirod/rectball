@@ -40,10 +40,10 @@ import es.danirod.rectball.screens.GameScreen;
 import es.danirod.rectball.screens.LoadingBackScreen;
 import es.danirod.rectball.screens.LoadingScreen;
 import es.danirod.rectball.screens.MainMenuScreen;
+import es.danirod.rectball.screens.TutorialScreen;
 import es.danirod.rectball.screens.Screens;
 import es.danirod.rectball.screens.SettingsScreen;
 import es.danirod.rectball.screens.StatisticsScreen;
-import es.danirod.rectball.screens.TutorialScreen;
 
 /**
  * Main class for the game.
