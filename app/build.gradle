@@ -103,7 +103,7 @@ dependencies {
     natives "com.badlogicgames.gdx:gdx-freetype-platform:$libgdx_version:natives-arm64-v8a"
 
     // Google Play Services are required on the Google Play version.
-    gpeImplementation "com.google.android.gms:play-services-games:22.0.0"
+    gpeImplementation "com.google.android.gms:play-services-games:22.0.1"
     gpeImplementation "de.golfgl.gdxgamesvcs:gdx-gamesvcs-android-gpgs:$gamesvcs_version"
     gpeApi "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.10"
 }
