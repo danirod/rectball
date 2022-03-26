@@ -17,22 +17,7 @@ You can join the beta on your mobile phone or visiting [this link in your comput
 
 ## Compiling the game
 
-### Flavors
-
-This project uses [Android SDK flavors](https://developer.android.com/studio/build/build-variants#product-flavors) to have different versions of the application:
-
-* The OSP version is the one that can be built from sources and sideloaded onto phones right away. This is the standard open source version and if you are looking for a version free of Google privative integrations, pick this one. It only depends on the libGDX framework and the Kotlin runtime.
-
-* The GPE version is linked against non-free SDKs such as Firebase and the Google Play Games SDK. You probably won't be able to build these versions without the proper google-services.json file too. This is the flavor I intended to use to build versions sent to the Google Play Store.
-
-### Signing key
-
-To automatically sign the built APK automatically when compiling using Gradle, define a file called `keystore.properties` in the project root directory with the following filled properties:
-
-    storeFile=# the keystore file
-    storePassword=# the keystore password
-    keyAlias=# the key alias to use
-    keyPassword=# the key password
+Please see [BUILDING.md](BUILDING.md).
 
 ## License
 
