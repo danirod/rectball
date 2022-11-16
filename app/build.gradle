@@ -23,7 +23,7 @@ android {
             }
         }
     }
-    compileSdkVersion 32
+    compileSdkVersion 33
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
@@ -31,17 +31,14 @@ android {
     defaultConfig {
         applicationId "es.danirod.rectball.android"
         minSdkVersion 15
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 425
-        versionName "0.4.12-beta2"
+        versionName "0.4.12"
         multiDexEnabled true
 
         if(keystoreFile.exists()) {
             signingConfig signingConfigs.release
         }
-    }
-    lintOptions {
-        abortOnError false
     }
     buildTypes {
         release {
@@ -81,13 +78,17 @@ android {
             versionNameSuffix "-OSP"
         }
     }
+    lint {
+        abortOnError false
+    }
+    namespace 'es.danirod.rectball.android'
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     // AndroidX stuff
-    implementation "androidx.core:core-ktx:1.7.0"
+    implementation "androidx.core:core-ktx:1.9.0"
     implementation "androidx.preference:preference-ktx:1.2.0"
     implementation "androidx.multidex:multidex:2.0.1"
 
@@ -105,9 +106,9 @@ dependencies {
     natives "com.badlogicgames.gdx:gdx-freetype-platform:$libgdx_version:natives-arm64-v8a"
 
     // Google Play Services are required on the Google Play version.
-    gpeImplementation "com.google.android.gms:play-services-games:22.0.1"
+    gpeImplementation "com.google.android.gms:play-services-games:23.1.0"
     gpeImplementation "de.golfgl.gdxgamesvcs:gdx-gamesvcs-android-gpgs:$gamesvcs_version"
-    gpeApi "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.21"
+    gpeApi "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.20"
 }
 
 // Extract the libGDX natives from the JARs.
