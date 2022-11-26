@@ -34,7 +34,7 @@ public class SoundPlayer {
         if (canPlaySound()) {
             Sound sound = game.manager.get(code.internalPath);
             float pitch = MathUtils.random(0.7f, 1.3f);
-            sound.play(0.7f, pitch, 0);
+            sound.play(1f, pitch, 0);
         }
     }
 
