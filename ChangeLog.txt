@@ -1,5 +1,6 @@
 [0.4.12]
 - Added: new system to select combinations based on dragging.
+- Added: better sounds.
 - Removed: integration with Google Analytics.
 - Fixed: switches in the settings screen may not render properly on some devices.
 - Dev: updated all system dependencies (libGDX, Gradle, Android...)
