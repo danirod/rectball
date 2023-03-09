@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Rectball</string>
-    <string name="provider">es.danirod.rectball.android.provider</string>
+    <string name="provider" translatable="false">es.danirod.rectball.android.provider</string>
     <string name="sharing_intent_title">Share result</string>
     <string name="sharing_intent_text">I made %d points in #Rectball. Can you beat it?</string>
     <string name="core_continue">Continue</string>
@@ -10,10 +10,7 @@
     <string name="core_yes">Yes</string>
     <string name="core_no">No</string>
     <string name="main_ask_tutorial">It\'s the first time you open Rectball. Do you want to see a tutorial?</string>
-    <string name="main_ask_new_selection_method"><![CDATA[
-        In this version of Rectball, the way to interact with the board has changed. You are
-        encouraged to view the tutorial again to see how it works now. Do you want to do that now?
-    ]]></string>
+    <string name="main_ask_new_selection_method">" In this version of Rectball, the way to interact with the board has changed. You are encouraged to view the tutorial again to see how it works now. Do you want to do that now?"</string>
     <string name="main_dismiss_tutorial">You can always find a tutorial in the Settings menu.</string>
     <string name="game_leave_game_title">Leave game?</string>
     <string name="game_paused_title">Game paused</string>
@@ -45,4 +42,5 @@
     <string name="about_credits">Credits</string>
     <string name="about_license">License</string>
     <string name="sharing_error">Could not share the screenshot. Sorry!</string>
+    <string name="sign_in_failed">Errors found while trying to log in. Please verify the network connection and try again later.</string>
 </resources>

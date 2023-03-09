@@ -14,6 +14,7 @@
     <string name="game_over_title">Fin del juego</string>
     <string name="game_paused_title">Juego en pausa</string>
     <string name="main_ask_tutorial">Es la primera vez que abres Rectball. ¿Quieres ver un tutorial?</string>
+    <string name="main_ask_new_selection_method">En esta actualización de Rectball se ha cambiado la forma de interactuar con el tablero. Se recomienda volver a hacer el tutorial para ver cómo funciona ahora. ¿Quieres hacerlo?</string>
     <string name="main_dismiss_tutorial">Siempre encontrarás el tutorial en la pantalla Opciones.</string>
     <string name="settings_sound">Activar sonido</string>
     <string name="settings_colorblind">Distinguir sin color</string>
@@ -41,4 +42,5 @@
     <string name="statistics_total_time">Tiempo jugado</string>
     <string name="tutorial_cancel">¿Quieres abandonar el tutorial?</string>
     <string name="sharing_error">No se pudo compartir la captura de pantalla. ¡Lo siento!</string>
+    <string name="gamehelper_sign_in_failed">Error al iniciar sesión. Comprueba tu conexión a internet e inténtalo de nuevo.</string>
 </resources>
