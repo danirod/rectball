@@ -188,7 +188,9 @@ public class MainMenuScreen extends AbstractScreen {
 
         // On first run, show the tutorial.
         if (!game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ASKED_TUTORIAL, false)) {
-            askTutorial().show(getStage());
+            askTutorial(R.string.main_ask_tutorial).show(getStage());
+        } else if (!game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_NEW_SELECTION_MODE_NOTIFIED, false)) {
+            askTutorial(R.string.main_ask_new_selection_method).show(getStage());
         }
     }
 
@@ -206,8 +208,8 @@ public class MainMenuScreen extends AbstractScreen {
         return Screens.MAIN_MENU;
     }
 
-    private ConfirmDialog askTutorial() {
-        String message = game.getContext().getString(R.string.main_ask_tutorial);
+    private ConfirmDialog askTutorial(int resId) {
+        String message = game.getContext().getString(resId);
         String yes = game.getContext().getString(R.string.core_yes);
         String no = game.getContext().getString(R.string.core_no);
         ConfirmDialog dialog = new ConfirmDialog(game.getSkin(), message, yes, no);
@@ -223,6 +225,7 @@ public class MainMenuScreen extends AbstractScreen {
                 game.player.playSound(SoundPlayer.SoundCode.FAIL);
                 SharedPreferences.Editor editor = game.getContext().getSettings().getPreferences().edit();
                 editor.putBoolean(SettingsManager.TAG_ASKED_TUTORIAL, true);
+                editor.putBoolean(SettingsManager.TAG_NEW_SELECTION_MODE_NOTIFIED, true);
                 editor.apply();
                 tutorialCancel().show(getStage());
             }

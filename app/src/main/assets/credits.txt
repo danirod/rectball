@@ -1,14 +1,24 @@
 https://rectball.danirod.es
 
-Copyright (C) 2015-2022 danirod
-This game is released under the terms of GNU General Public License v3. See the repository for details.
+Copyright (C) 2015-2023 danirod
+This game is released under the terms of GNU General Public License v3. Check the license for the full terms.
 
-THIRD PARTY LIBRARIES
-This game makes use of the following libraries.
-libGDX.- libGDX is licensed under the Apache license version 2, which can be found here: http://www.apache.org/licenses/
 
-HAND ICON: Active Hand
-By Claudio Guglieri, US
+THIRD PARTY ASSETS AND SOFTWARE KITS
+
+HAND ICON
+Active Hand By Claudio Guglieri, US
 In the Hand Cursors FTW Collection
 https://thenounproject.com/term/active-hand/101205/
 Provided under a Creative Commons CC-BY License.
+
+USER INTERFACE SOUNDS
+This game contains sounds from the Kenney Interface Sounds Asset Pack
+https://kenney.nl/assets/interface-sounds
+Provided under a Creative Commons CC-0 Universal License.
+
+
+This game is powered by the following third party software libraries:
+- libGDX
+- gdx-gamesvcs
+- FreeType

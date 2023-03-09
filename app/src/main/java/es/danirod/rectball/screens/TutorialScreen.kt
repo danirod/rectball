@@ -282,6 +282,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game, false) {
         stage.addAction(Actions.delay(1.5f, Actions.run {
             val editor = game.context.settings.preferences.edit()
             editor.putBoolean(SettingsManager.TAG_ASKED_TUTORIAL, true)
+            editor.putBoolean(SettingsManager.TAG_NEW_SELECTION_MODE_NOTIFIED, true)
             editor.apply()
             game.popScreen()
         }))

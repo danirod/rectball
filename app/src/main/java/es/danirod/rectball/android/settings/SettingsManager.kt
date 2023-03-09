@@ -124,6 +124,9 @@ class SettingsManager(private val context: Context) {
         /** Whether the user has been already prompted about the tutorial. */
         const val TAG_ASKED_TUTORIAL = "${AndroidLauncher.PACKAGE}.ASKED_TUTORIAL"
 
+        /** Whether the user was notified that we changed the selection mode. */
+        const val TAG_NEW_SELECTION_MODE_NOTIFIED = "${AndroidLauncher.PACKAGE}.NEW_SELECTION_MODE_NOTIFIED"
+
         /** Current highest score reached in the game. */
         const val TAG_HIGH_SCORE = "${AndroidLauncher.PACKAGE}.HIGH_SCORE"
 

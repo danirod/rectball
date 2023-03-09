@@ -10,6 +10,10 @@
     <string name="core_yes">Yes</string>
     <string name="core_no">No</string>
     <string name="main_ask_tutorial">It\'s the first time you open Rectball. Do you want to see a tutorial?</string>
+    <string name="main_ask_new_selection_method"><![CDATA[
+        In this version of Rectball, the way to interact with the board has changed. You are
+        encouraged to view the tutorial again to see how it works now. Do you want to do that now?
+    ]]></string>
     <string name="main_dismiss_tutorial">You can always find a tutorial in the Settings menu.</string>
     <string name="game_leave_game_title">Leave game?</string>
     <string name="game_paused_title">Game paused</string>
