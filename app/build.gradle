@@ -12,6 +12,9 @@ if(keystoreFile.exists()) {
 }
 
 android {
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
     if(keystoreFile.exists()) {
         signingConfigs {
             release {
@@ -23,17 +26,17 @@ android {
             }
         }
     }
-    compileSdkVersion 33
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
     }
     defaultConfig {
+        compileSdk 34
         applicationId "es.danirod.rectball.android"
         minSdkVersion 15
-        targetSdkVersion 33
-        versionCode 425
-        versionName "0.4.12"
+        targetSdkVersion 34
+        versionCode 428
+        versionName "0.4.13"
         multiDexEnabled true
 
         if(keystoreFile.exists()) {
@@ -88,8 +91,8 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     // AndroidX stuff
-    implementation "androidx.core:core-ktx:1.9.0"
-    implementation "androidx.preference:preference-ktx:1.2.0"
+    implementation "androidx.core:core-ktx:1.12.0"
+    implementation "androidx.preference:preference-ktx:1.2.1"
     implementation "androidx.multidex:multidex:2.0.1"
 
     // libGDX
@@ -108,11 +111,11 @@ dependencies {
     // Google Play Services are required on the Google Play version.
     gpeImplementation "com.google.android.gms:play-services-games:23.1.0"
     gpeImplementation "de.golfgl.gdxgamesvcs:gdx-gamesvcs-android-gpgs:$gamesvcs_version"
-    gpeApi "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.10"
+    gpeApi "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.0"
 }
 
 // Extract the libGDX natives from the JARs.
-task copyAndroidNatives() {
+tasks.register('copyAndroidNatives') {
     file("src/main/jniLibs/armeabi-v7a/").mkdirs();
     file("src/main/jniLibs/x86/").mkdirs();
     file("src/main/jniLibs/x86_64").mkdirs();
@@ -120,11 +123,11 @@ task copyAndroidNatives() {
 
     configurations.natives.copy().files.each { jar ->
         def outputDir = null
-        if(jar.name.endsWith("natives-armeabi-v7a.jar")) outputDir = file("src/main/jniLibs/armeabi-v7a")
-        if(jar.name.endsWith("natives-x86.jar")) outputDir = file("src/main/jniLibs/x86")
-        if(jar.name.endsWith("natives-x86_64.jar")) outputDir = file("src/main/jniLibs/x86_64")
-        if(jar.name.endsWith("natives-arm64-v8a.jar")) outputDir = file("src/main/jniLibs/arm64-v8a")
-        if(outputDir != null) {
+        if (jar.name.endsWith("natives-armeabi-v7a.jar")) outputDir = file("src/main/jniLibs/armeabi-v7a")
+        if (jar.name.endsWith("natives-x86.jar")) outputDir = file("src/main/jniLibs/x86")
+        if (jar.name.endsWith("natives-x86_64.jar")) outputDir = file("src/main/jniLibs/x86_64")
+        if (jar.name.endsWith("natives-arm64-v8a.jar")) outputDir = file("src/main/jniLibs/arm64-v8a")
+        if (outputDir != null) {
             copy {
                 from zipTree(jar)
                 into outputDir
@@ -140,8 +143,10 @@ repositories {
 apply plugin: 'com.google.gms.google-services'
 
 // Required to actually disable GMS in OSP version (ospDebug + ospRelease).
-android.applicationVariants.all { variant ->
+android.applicationVariants.configureEach { variant ->
     if (variant.name.contains('osp')) {
-        project.tasks.getByName('process' + variant.name.capitalize() + 'GoogleServices').enabled = false
+        project.tasks.named('process' + variant.name.capitalize() + 'GoogleServices').configure {
+            it.enabled = false
+        }
     }
 }
