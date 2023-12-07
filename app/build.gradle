@@ -47,8 +47,8 @@ android {
         release {
             buildConfigField "boolean", "FINE_DEBUG", "false"
             buildConfigField "boolean", "ANALYTICS_DRY_RUN", "false"
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // minifyEnabled true
+            // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
             buildConfigField "boolean", "FINE_DEBUG", "true"
