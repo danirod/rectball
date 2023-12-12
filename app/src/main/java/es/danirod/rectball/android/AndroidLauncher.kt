@@ -55,6 +55,7 @@ class AndroidLauncher : AndroidApplication() {
 
         // Set up layout.
         val config = AndroidApplicationConfiguration()
+        config.useImmersiveMode = false
         val rectballView = initializeForView(game, config)
         val layout = RelativeLayout(this)
         layout.addView(rectballView)
