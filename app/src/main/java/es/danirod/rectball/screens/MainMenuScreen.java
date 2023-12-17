@@ -23,20 +23,24 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
 import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.android.R;
 import es.danirod.rectball.android.settings.SettingsManager;
+import es.danirod.rectball.scene2d.game.BackgroundActor;
 import es.danirod.rectball.scene2d.listeners.ScreenJumper;
 import es.danirod.rectball.scene2d.ui.ConfirmDialog;
 import es.danirod.rectball.scene2d.ui.MessageDialog;
@@ -177,9 +181,19 @@ public class MainMenuScreen extends AbstractScreen {
         table.add(extraButtons).fillX().row();
     }
 
+    private Stage backgroundLayer;
+    private BackgroundActor backgroundActor;
+
     @Override
     public void show() {
         super.show();
+
+        backgroundActor = new BackgroundActor(game.getBallAtlas());
+        backgroundActor.setColor(1f, 1f, 1f, 0.15f);
+        backgroundActor.setRotation(30f);
+        backgroundActor.setOrigin(Align.center);
+        backgroundLayer = new Stage(new ScreenViewport(stage.getCamera()));
+        backgroundLayer.addActor(backgroundActor);
 
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(getStage());
@@ -195,12 +209,28 @@ public class MainMenuScreen extends AbstractScreen {
     }
 
     @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        backgroundLayer.getViewport().update(width, height);
+        float larger = Math.max(width, height);
+        backgroundActor.setSize(larger * 2f, larger * 2f);
+        backgroundActor.setY(-larger / 2f);
+    }
+
+    @Override
     public void render(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
             Gdx.app.exit();
         }
 
-        super.render(delta);
+        Gdx.gl.glClearColor(0.3f, 0.4f, 0.4f, 1f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        backgroundLayer.act();
+        backgroundLayer.draw();
+
+        stage.act();
+        stage.draw();
     }
 
     @Override
