@@ -92,14 +92,11 @@ class AndroidLauncher : AndroidApplication() {
     }
 
     fun toggleFullscreen() {
+        val fullscreen = Fullscreen(this)
         if (shouldEnableFullscreenMode()) {
-            if (Build.VERSION.SDK_INT >= 19) {
-                enableImmersiveMode()
-            } else {
-                legacyFullscreenMode()
-            }
+            fullscreen.onEnterFullscreen()
         } else {
-            disableFullscreen()
+            fullscreen.onLeaveFullscreen()
         }
     }
 
@@ -140,48 +137,6 @@ class AndroidLauncher : AndroidApplication() {
     private fun deserializeState(payload: String): GameState = Json().fromJson(GameState::class.java, payload)
 
     private fun shouldEnableFullscreenMode(): Boolean = settings.preferences.getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false)
-
-    /**
-     * Enables immersive mode on Android 4.4+. When in fullscreen mode, both status and navigation
-     * bar are hidden but the user is still able to temporally access the controls by using a swipe
-     * gesture.
-     */
-    @TargetApi(19)
-    private fun enableImmersiveMode() {
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                View.SYSTEM_UI_FLAG_FULLSCREEN or
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-    }
-
-    /**
-     * Legacy fullscreen mode on Android 4.0, 4.1, 4.2 and 4.3. Because these platforms do not have
-     * immersive mode, I cannot use the flag. Plus, I cannot hide the navigation and the status
-     * bar at the same time so I'm only hiding the status (top) bar. On devices that have hardware
-     * buttons, it will actually be real fullscreen.
-     */
-    @TargetApi(14)
-    private fun legacyFullscreenMode() {
-        if (Build.VERSION.SDK_INT < 16) {
-            // Android ICS doesn't have FULLSCREEN flag.
-            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-        } else {
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN or
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                    View.SYSTEM_UI_FLAG_LOW_PROFILE
-        }
-    }
-
-    private fun disableFullscreen() {
-        if (Build.VERSION.SDK_INT < 16) {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        } else {
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
-        }
-    }
 
     /** Game services sends scores and achievements. */
     val gameServices: GameServices
