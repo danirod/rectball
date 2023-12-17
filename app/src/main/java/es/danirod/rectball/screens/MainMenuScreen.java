@@ -192,7 +192,7 @@ public class MainMenuScreen extends AbstractScreen {
         backgroundActor.setColor(1f, 1f, 1f, 0.15f);
         backgroundActor.setRotation(30f);
         backgroundActor.setOrigin(Align.center);
-        backgroundLayer = new Stage(new ScreenViewport(stage.getCamera()));
+        backgroundLayer = new Stage(buildViewport());
         backgroundLayer.addActor(backgroundActor);
 
         InputMultiplexer multiplexer = new InputMultiplexer();

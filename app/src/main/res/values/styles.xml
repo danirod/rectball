@@ -1,5 +1,7 @@
-<resources>
-    <style name="GdxTheme" parent="android:Theme.Holo.Light.NoActionBar">
-        <item name="android:windowBackground">@color/rectballColor</item>
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="GdxTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
     </style>
 </resources>

@@ -17,15 +17,15 @@
  */
 package es.danirod.rectball.android
 
-import android.annotation.TargetApi
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.Rect
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.view.View
 import android.view.WindowManager
 import android.widget.RelativeLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
 import com.badlogic.gdx.utils.Json
@@ -57,6 +57,19 @@ class AndroidLauncher : AndroidApplication() {
         val config = AndroidApplicationConfiguration()
         config.useImmersiveMode = false
         val rectballView = initializeForView(game, config)
+
+        ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { view, windowInsets ->
+            val status = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
+            val navigation = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            val gesture = windowInsets.getInsets(WindowInsetsCompat.Type.mandatorySystemGestures())
+            game.updateMargin(status.top, navigation.bottom, gesture.left, gesture.right)
+            windowInsets
+        }
+
+        val rect = Rect()
+        window.decorView.getWindowVisibleDisplayFrame(rect)
+        game.updateMargin(rect.top, rect.bottom, rect.left, rect.right)
+
         val layout = RelativeLayout(this)
         layout.addView(rectballView)
         setContentView(layout)

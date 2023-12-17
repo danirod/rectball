@@ -50,6 +50,8 @@ import es.danirod.rectball.screens.StatisticsScreen;
  */
 public class RectballGame extends StateBasedGame {
 
+    private int marginTop = 0, marginLeft = 0, marginRight = 0, marginBottom = 0;
+
     /** The Android activity that is currently displaying this game instance. */
     private final AndroidLauncher context;
 
@@ -84,6 +86,30 @@ public class RectballGame extends StateBasedGame {
         this.context = context;
         this.currentGame = state;
         this.restoredState = true;
+    }
+
+    public void updateMargin(int top, int bottom, int left, int right) {
+        marginTop = top;
+        marginBottom = bottom;
+        marginLeft = left;
+        marginRight = right;
+        Gdx.app.log("RectballGame", "Insets have been set to: top=" + top + " bottom=" + bottom + " left=" + left + " right=" + right);
+    }
+
+    public float getMarginBottom() {
+        return marginBottom;
+    }
+
+    public float getMarginLeft() {
+        return marginLeft;
+    }
+
+    public float getMarginRight() {
+        return marginRight;
+    }
+
+    public float getMarginTop() {
+        return marginTop;
     }
 
     @Override

@@ -118,6 +118,15 @@ public abstract class AbstractScreen implements Screen {
         return new FitViewport(width, height);
     }
 
+    public void updateTablePadding() {
+        float pixelsPerViewport = (float) Gdx.graphics.getWidth() / VIEWPORT_WIDTH;
+        float paddingTop = STAGE_PADDING + game.getMarginTop() / pixelsPerViewport;
+        float paddingBottom = STAGE_PADDING + game.getMarginBottom() / pixelsPerViewport;
+        float paddingLeft = STAGE_PADDING + game.getMarginLeft() / pixelsPerViewport;
+        float paddingRight = STAGE_PADDING + game.getMarginRight() / pixelsPerViewport;
+        table.pad(paddingTop, paddingLeft, paddingBottom, paddingRight);
+    }
+
     @Override
     public void show() {
         if (stage == null) {
@@ -127,7 +136,7 @@ public abstract class AbstractScreen implements Screen {
         if (table == null) {
             table = new Table();
             table.setFillParent(true);
-            table.pad(STAGE_PADDING);
+            updateTablePadding();
             stage.addActor(table);
         } else {
             table.clear();
