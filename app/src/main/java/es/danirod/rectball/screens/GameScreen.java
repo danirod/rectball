@@ -153,6 +153,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     @Override
     public void show() {
         super.show();
+        game.updateWakelock(true);
 
         // Reset data
         if (!game.isRestoredState()) {
@@ -354,6 +355,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
     @Override
     public void hide() {
+        game.updateWakelock(false);
+
         // The player is not playing anymore.
         game.getState().setPlaying(false);
 
@@ -393,6 +396,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
      */
     private void pauseGame() {
         paused = true;
+        game.updateWakelock(false);
 
         // Show the pause dialog unless you have already stop the game.
         if (!game.getState().isTimeout()) {
@@ -414,6 +418,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
      */
     private void resumeGame() {
         paused = false;
+        game.updateWakelock(true);
 
         // If the countdown has finished but the game is not running is a
         // condition that might be triggered in one of the following cases.

@@ -50,9 +50,6 @@ class AndroidLauncher : AndroidApplication() {
         settings = SettingsManager(this)
         game = if (savedState != null) buildGameInstance(savedState) else RectballGame(this)
 
-        // Request wakelock
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-
         // Set up layout.
         val config = AndroidApplicationConfiguration()
         config.useImmersiveMode = false
@@ -150,6 +147,13 @@ class AndroidLauncher : AndroidApplication() {
     private fun deserializeState(payload: String): GameState = Json().fromJson(GameState::class.java, payload)
 
     private fun shouldEnableFullscreenMode(): Boolean = settings.preferences.getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false)
+    fun requestWakelock() {
+        runOnUiThread { window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) }
+    }
+
+    fun clearWakelock() {
+        runOnUiThread { window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) }
+    }
 
     /** Game services sends scores and achievements. */
     val gameServices: GameServices

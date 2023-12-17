@@ -199,6 +199,14 @@ public class RectballGame extends StateBasedGame {
         return context;
     }
 
+    public void updateWakelock(boolean wakelock) {
+        if (wakelock) {
+            context.requestWakelock();
+        } else {
+            context.clearWakelock();
+        }
+    }
+
     public TextureAtlas getBallAtlas() {
         return ballAtlas;
     }
