@@ -63,10 +63,6 @@ class AndroidLauncher : AndroidApplication() {
             windowInsets
         }
 
-        val rect = Rect()
-        window.decorView.getWindowVisibleDisplayFrame(rect)
-        game.updateMargin(rect.top, rect.bottom, rect.left, rect.right)
-
         val layout = RelativeLayout(this)
         layout.addView(rectballView)
         setContentView(layout)
