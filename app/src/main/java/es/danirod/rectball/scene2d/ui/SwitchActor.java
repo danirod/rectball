@@ -1,6 +1,6 @@
 /*
- * This file is part of Rectball
- * Copyright (C) 2015 Dani Rodríguez
+ * This file is part of Rectball.
+ * Copyright (C) 2015-2023 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package es.danirod.rectball.scene2d.ui;
 
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
@@ -33,9 +32,8 @@ public class SwitchActor extends CheckBox {
 
     public SwitchActor(String text, Skin skin) {
         super(text, skin);
-        padTop(10).padBottom(10);
         getImage().setScaling(Scaling.fit);
-        getImageCell().width(150).height(50).padRight(20);
+        getImageCell().width(120).height(40).padRight(10);
         getLabelCell().align(Align.left).expandX();
     }
 }
