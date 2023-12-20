@@ -101,7 +101,7 @@ class StatisticsScreen(game: RectballGame) : AbstractScreen(game) {
 
         /* Then virtually render the stage. */
         fbo.begin()
-        Gdx.gl.glClearColor(0.3f, 0.4f, 0.4f, 1f)
+        Gdx.gl.glClearColor(RectballGame.BG_COLOR.r, RectballGame.BG_COLOR.g, RectballGame.BG_COLOR.b, RectballGame.BG_COLOR.a)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         stage.act()
         stage.draw()
