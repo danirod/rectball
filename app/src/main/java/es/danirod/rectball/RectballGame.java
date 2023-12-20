@@ -21,6 +21,7 @@ package es.danirod.rectball;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -49,6 +50,8 @@ import es.danirod.rectball.screens.StatisticsScreen;
  * Main class for the game.
  */
 public class RectballGame extends StateBasedGame {
+
+    public static final Color BG_COLOR = new Color(0x252b3dff);
 
     private int marginTop = 0, marginLeft = 0, marginRight = 0, marginBottom = 0;
 

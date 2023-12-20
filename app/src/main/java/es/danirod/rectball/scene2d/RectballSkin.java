@@ -136,11 +136,15 @@ public class RectballSkin extends Skin {
     }
 
     private NinePatchDrawable generateButton(Color color, Color down) {
+        return generateButton(color, down, 0);
+    }
+
+    private NinePatchDrawable generateButton(Color color, Color down, int offset) {
         Pixmap pixmap = new Pixmap(9, 9, Pixmap.Format.RGBA8888);
         pixmap.setColor(down);
-        pixmap.fill();
+        pixmap.fillRectangle(0, offset, 9, 9 - offset);
         pixmap.setColor(color);
-        pixmap.fillRectangle(0, 0, 9, 5);
+        pixmap.fillRectangle(0, offset, 9, 5 - offset);
 
         Texture texture = new Texture(pixmap);
         NinePatch ninePatch = new NinePatch(texture, 4, 4, 4, 4);
@@ -149,10 +153,18 @@ public class RectballSkin extends Skin {
 
     private void addTextButtonStyles() {
         {
-            NinePatchDrawable upButton = generateButton(Color.GRAY, Color.DARK_GRAY);
-            NinePatchDrawable downButton = generateButton(Color.DARK_GRAY, Color.GRAY);
+            NinePatchDrawable upButton = generateButton(new Color(0x3e7583ff), new Color(0x2e5963ff));
+            NinePatchDrawable downButton = generateButton(new Color(0x386c78ff), new Color(0x386c78ff), 2);
+            NinePatchDrawable disabledButton = generateButton(new Color(0x6e8d96ff), new Color(0x4e5f62ff));
             BitmapFont font = get("normal", BitmapFont.class);
-            TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
+            TextButtonStyle buttonStyle = new TextButtonStyle();
+            buttonStyle.up = upButton;
+            buttonStyle.down = downButton;
+            buttonStyle.font = font;
+            buttonStyle.pressedOffsetY = -4;
+            buttonStyle.disabled = disabledButton;
+            buttonStyle.disabledFontColor = new Color(0xffffffd5);
+
             this.add("default", buttonStyle);
         }
 

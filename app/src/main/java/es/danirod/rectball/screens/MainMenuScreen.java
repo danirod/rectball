@@ -223,7 +223,7 @@ public class MainMenuScreen extends AbstractScreen {
             Gdx.app.exit();
         }
 
-        Gdx.gl.glClearColor(0.3f, 0.4f, 0.4f, 1f);
+        Gdx.gl.glClearColor(RectballGame.BG_COLOR.r, RectballGame.BG_COLOR.g, RectballGame.BG_COLOR.b, RectballGame.BG_COLOR.a);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         backgroundLayer.act();
