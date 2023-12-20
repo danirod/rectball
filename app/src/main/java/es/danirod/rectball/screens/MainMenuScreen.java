@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015-2017 Dani Rodríguez.
+ * Copyright (C) 2015-2023 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,27 +33,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
-import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.android.R;
 import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.scene2d.game.BackgroundActor;
-import es.danirod.rectball.scene2d.listeners.ScreenJumper;
 import es.danirod.rectball.scene2d.ui.ConfirmDialog;
+import es.danirod.rectball.scene2d.ui.MainMenuGrid;
 import es.danirod.rectball.scene2d.ui.MessageDialog;
 
 public class MainMenuScreen extends AbstractScreen {
 
     private Image title = null;
 
-    private ImageButton play = null, settings = null, statistics = null, about = null, quit = null;
+    private MainMenuGrid grid = null;
 
-    private ImageButton leaderboard = null, achievements = null, star = null;
-
-    private Table extraButtons = null;
+    private ImageButton quit = null;
 
     public MainMenuScreen(RectballGame game) {
         super(game, false);
@@ -62,8 +58,8 @@ public class MainMenuScreen extends AbstractScreen {
     @Override
     public void dispose() {
         title = null;
-        play = settings = statistics = about = quit = null;
-        extraButtons = null;
+        grid = null;
+        quit = null;
     }
 
     @Override
@@ -74,75 +70,8 @@ public class MainMenuScreen extends AbstractScreen {
             title.setScaling(Scaling.fit);
         }
 
-        if (play == null) {
-            play = new ImageButton(game.getSkin(), "greenPlay");
-            play.addListener(new ChangeListener() {
-                        @Override
-                        public void changed(ChangeEvent event, Actor actor) {
-                            game.getScreen(Screens.ABOUT).dispose();
-                            game.getScreen(Screens.SETTINGS).dispose();
-                            game.getScreen(Screens.STATISTICS).dispose();
-                            game.player.playSound(SoundPlayer.SoundCode.SELECT);
-                            game.pushScreen(Screens.GAME);
-                            event.cancel();
-                        }
-                    });
-        }
-        if (settings == null) {
-            settings = new ImageButton(game.getSkin(), "settings");
-            settings.addListener(new ScreenJumper(game, Screens.SETTINGS));
-        }
-        if (statistics == null) {
-            statistics = new ImageButton(game.getSkin(), "charts");
-            statistics.addListener(new ScreenJumper(game, Screens.STATISTICS));
-        }
-        if (about == null) {
-            about = new ImageButton(game.getSkin(), "info");
-            about.addListener(new ScreenJumper(game, Screens.ABOUT));
-        }
-        if (star == null) {
-            star = new ImageButton(game.getSkin(), "star");
-            star.addListener(new ChangeListener() {
-                        @Override
-                        public void changed(ChangeEvent event, Actor actor) {
-                            game.getContext().openInMarketplace();
-                            event.cancel();
-                        }
-                    }
-            );
-        }
-        if (BuildConfig.FLAVOR.equals("gpe")) {
-            if (leaderboard == null) {
-                leaderboard = new ImageButton(game.getSkin(), "leaderboard");
-                leaderboard.addListener(new ChangeListener() {
-                            @Override
-                            public void changed(ChangeEvent event, Actor actor) {
-                                game.player.playSound(SoundPlayer.SoundCode.SELECT);
-                                if (!game.getContext().getGameServices().isSignedIn()) {
-                                    game.getContext().getGameServices().signIn();
-                                } else {
-                                    game.getContext().getGameServices().showLeaderboards();
-                                }
-                                event.cancel();
-                            }
-                        });
-
-            }
-            if (achievements == null) {
-                achievements = new ImageButton(game.getSkin(), "achievements");
-                achievements.addListener(new ChangeListener() {
-                            @Override
-                            public void changed(ChangeEvent event, Actor actor) {
-                                game.player.playSound(SoundPlayer.SoundCode.SELECT);
-                                if (!game.getContext().getGameServices().isSignedIn()) {
-                                    game.getContext().getGameServices().signIn();
-                                } else {
-                                    game.getContext().getGameServices().showAchievements();
-                                }
-                                event.cancel();
-                            }
-                        });
-            }
+        if (grid == null) {
+            grid = new MainMenuGrid(game);
         }
         if (quit == null) {
             quit = new ImageButton(game.getSkin(), "quit");
@@ -154,31 +83,11 @@ public class MainMenuScreen extends AbstractScreen {
                     Gdx.app.exit();
                 }
             });
-            if (game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false)) {
-                getStage().addActor(quit);
-            }
         }
 
-        if (extraButtons == null) {
-            extraButtons = new Table();
-            extraButtons.defaults().expandX().fillX().pad(20).height(100).uniformX();
-            extraButtons.add(settings);
-            extraButtons.add(statistics);
-            if (BuildConfig.FLAVOR.equals("gpe")) {
-                extraButtons.add(leaderboard);
-            }
-            extraButtons.row();
-            extraButtons.add(star);
-            extraButtons.add(about);
-            if (BuildConfig.FLAVOR.equals("gpe")) {
-                extraButtons.add(achievements);
-            }
-            extraButtons.row();
-        }
-
-        table.add(title).padLeft(40).padRight(40).align(Align.top).row();
-        table.add(play).fillX().pad(70, 20, 20, 20).height(150).row();
-        table.add(extraButtons).fillX().row();
+        table.defaults().padLeft(40f).padRight(40f).space(60f);
+        table.add(title).align(Align.top).row();
+        table.add(grid).align(Align.bottom).fillX().row();
     }
 
     private Stage backgroundLayer;
@@ -187,6 +96,13 @@ public class MainMenuScreen extends AbstractScreen {
     @Override
     public void show() {
         super.show();
+
+        if (game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false)) {
+            getStage().addActor(quit);
+        } else {
+            quit.remove();
+        }
+
 
         backgroundActor = new BackgroundActor(game.getBallAtlas());
         backgroundActor.setColor(1f, 1f, 1f, 0.15f);

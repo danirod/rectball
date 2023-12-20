@@ -66,9 +66,24 @@ class SettingsMenu(private val game: RectballGame) : ScrollPane(null, ScrollPane
                 override fun changed(event: ChangeEvent, actor: Actor) {
                     val button = actor as TextButton
                     gameServicesButtonCallback(false, button, label)
-                    event.cancel()
                 }
             })
+        }
+    }
+
+    private val doOpenInMarketplace = game.context.getString(R.string.settings_view_in_google_play).let { label ->
+        TextButton(label, game.skin).apply {
+            addListener(object : ChangeListener() {
+                override fun changed(event: ChangeEvent?, actor: Actor?) {
+                    game.context.openInMarketplace()
+                }
+            })
+        }
+    }
+
+    private val doShowInfoAndLicenses = game.context.getString(R.string.settings_info_and_licenses).let { label ->
+        TextButton(label, game.skin).apply {
+            addListener(ScreenJumper(game, Screens.ABOUT))
         }
     }
 
@@ -90,6 +105,8 @@ class SettingsMenu(private val game: RectballGame) : ScrollPane(null, ScrollPane
         if (BuildConfig.FLAVOR == "gpe") {
             addActor(gameServicesButton())
         }
+        addActor(doOpenInMarketplace)
+        addActor(doShowInfoAndLicenses)
     }
 
     private val settingsScrollPane = ScrollPane(settingsGroup, ScrollPaneStyle()).apply {

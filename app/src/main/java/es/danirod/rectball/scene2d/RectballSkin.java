@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -60,6 +61,7 @@ public class RectballSkin extends Skin {
         addBitmapFonts();
         addPixmapStyles();
         addLabelStyles();
+        addButtonStyles();
         addTextButtonStyles();
         addTextureRegionStyles();
         addImageButtonStyles();
@@ -72,6 +74,7 @@ public class RectballSkin extends Skin {
     private void addBitmapFonts() {
         add("normal", game.manager.get("fonts/normal.ttf", BitmapFont.class));
         add("small", game.manager.get("fonts/small.ttf", BitmapFont.class));
+        add("large", game.manager.get("fonts/large.ttf", BitmapFont.class));
     }
 
     private void addScrollPaneStyles() {
@@ -121,7 +124,7 @@ public class RectballSkin extends Skin {
         LabelStyle smallStyle = new LabelStyle(smallFont, Color.WHITE);
         this.add("small", smallStyle);
 
-        BitmapFont bigFont = get("normal", BitmapFont.class);
+        BitmapFont bigFont = get("large", BitmapFont.class);
         LabelStyle bigStyle = new LabelStyle(bigFont, Color.WHITE);
         this.add("big", bigStyle);
 
@@ -188,7 +191,10 @@ public class RectballSkin extends Skin {
             NinePatchDrawable upButton = generateButton(Color.valueOf("8BC34A"), Color.valueOf("8BC34A").lerp(Color.BLACK, 0.25f));
             NinePatchDrawable downButton = generateButton(Color.valueOf("8BC34A").lerp(Color.BLACK, 0.25f), Color.valueOf("8BC34A"));
             BitmapFont font = get("normal", BitmapFont.class);
-            TextButtonStyle buttonStyle = new TextButtonStyle(upButton, downButton, downButton, font);
+            TextButtonStyle buttonStyle = new TextButtonStyle();
+            buttonStyle.up = upButton;
+            buttonStyle.down = downButton;
+            buttonStyle.font = font;
             this.add("google", buttonStyle);
         }
     }
@@ -197,6 +203,17 @@ public class RectballSkin extends Skin {
         ImageButtonStyle style = new ImageButtonStyle(source);
         style.imageUp = new TextureRegionDrawable(getRegion(region));
         return style;
+    }
+
+    private void addButtonStyles() {
+        {
+            NinePatchDrawable upButton = generateButton(Color.valueOf("37c837"), Color.valueOf("37c837").lerp(Color.BLACK, 0.25f));
+            NinePatchDrawable downButton = generateButton(Color.valueOf("37c837").lerp(Color.BLACK, 0.25f), Color.valueOf("37c837"));
+            Button.ButtonStyle buttonStyle = new Button.ButtonStyle();
+            buttonStyle.up = upButton;
+            buttonStyle.down = downButton;
+            this.add("green", buttonStyle);
+        }
     }
 
     private void addImageButtonStyles() {

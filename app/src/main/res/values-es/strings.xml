@@ -19,13 +19,14 @@
     <string name="settings_sound">Activar sonido</string>
     <string name="settings_colorblind">Distinguir sin color</string>
     <string name="settings_fullscreen">Pantalla completa</string>
-    <string name="settings_play_log_in">Entrar en Google Play</string>
-    <string name="settings_play_log_out">Salir de Google Play</string>
-    <string name="settings_play_processing">Actualizando estado</string>
+    <string name="settings_play_log_in">Entrar en Google Play Games</string>
+    <string name="settings_play_log_out">Salir de Google Play Games</string>
+    <string name="settings_play_processing">Actualizando estado...</string>
     <string name="settings_play_tutorial">Jugar Tutorial</string>
     <string name="sharing_intent_text">He hecho %d puntos en #Rectball. ¿Puedes superarlo?</string>
     <string name="sharing_intent_title">Compartir resultado</string>
     <string name="sign_in_failed">Problemas para iniciar sesión. Verifica la red e inténtalo de nuevo más tarde.</string>
+    <string name="settings_view_in_google_play">Valorar en Google Play</string>
     <string name="statistics_best_data">Mejores resultados</string>
     <string name="statistics_best_score">Mejor puntuación</string>
     <string name="statistics_best_time">Mejor tiempo</string>
@@ -43,4 +44,6 @@
     <string name="tutorial_cancel">¿Quieres abandonar el tutorial?</string>
     <string name="sharing_error">No se pudo compartir la captura de pantalla. ¡Lo siento!</string>
     <string name="gamehelper_sign_in_failed">Error al iniciar sesión. Comprueba tu conexión a internet e inténtalo de nuevo.</string>
+    <string name="settings_info_and_licenses">Acerca de…</string>
+    <string name="main_play">Jugar</string>
 </resources>

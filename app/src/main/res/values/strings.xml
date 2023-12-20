@@ -9,6 +9,7 @@
     <string name="core_back">Back</string>
     <string name="core_yes">Yes</string>
     <string name="core_no">No</string>
+    <string name="main_play">Play</string>
     <string name="main_ask_tutorial">It\'s the first time you open Rectball. Do you want to see a tutorial?</string>
     <string name="main_ask_new_selection_method">" In this version of Rectball, the way to interact with the board has changed. You are encouraged to view the tutorial again to see how it works now. Do you want to do that now?"</string>
     <string name="main_dismiss_tutorial">You can always find a tutorial in the Settings menu.</string>
@@ -21,9 +22,11 @@
     <string name="settings_colorblind">Colorblind mode</string>
     <string name="settings_fullscreen">Fullscreen mode</string>
     <string name="settings_play_tutorial">Play Tutorial</string>
-    <string name="settings_play_log_in">Log In to Google Play</string>
-    <string name="settings_play_log_out">Log Out from Google Play</string>
-    <string name="settings_play_processing">Please, wait</string>
+    <string name="settings_play_log_in">Log In to Google Play Games</string>
+    <string name="settings_play_log_out">Log Out from Google Play Games</string>
+    <string name="settings_play_processing">Updating status…</string>
+    <string name="settings_view_in_google_play">Review in Google Play</string>
+    <string name="settings_info_and_licenses">About…</string>
     <string name="statistics_best_data">Best data</string>
     <string name="statistics_best_score">Best score</string>
     <string name="statistics_best_time">Best time</string>

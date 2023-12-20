@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015-2017 Dani Rodríguez.
+ * Copyright (C) 2015-2023 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -75,6 +75,8 @@ object AssetManagerBuilder {
                 fontParameters("fonts/Coda-Regular.ttf", Texture.TextureFilter.Linear, 28))
         manager.load("fonts/small.ttf", BitmapFont::class.java,
                 fontParameters("fonts/Coda-Regular.ttf", Texture.TextureFilter.Linear, 23))
+        manager.load("fonts/large.ttf", BitmapFont::class.java,
+                fontParameters("fonts/Coda-Regular.ttf", Texture.TextureFilter.Linear, 28 * 2))
     }
 
     private fun loadSounds(manager: AssetManager) {
