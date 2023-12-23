@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015-2017 Dani Rodríguez.
+ * Copyright (C) 2015-2023 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,13 +19,10 @@ package es.danirod.rectball.android
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.view.WindowManager
 import android.widget.RelativeLayout
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
 import com.badlogic.gdx.utils.Json
@@ -55,13 +52,9 @@ class AndroidLauncher : AndroidApplication() {
         config.useImmersiveMode = false
         val rectballView = initializeForView(game, config)
 
-        ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { view, windowInsets ->
-            val status = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
-            val navigation = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
-            val gesture = windowInsets.getInsets(WindowInsetsCompat.Type.mandatorySystemGestures())
-            game.updateMargin(status.top, navigation.bottom, gesture.left, gesture.right)
-            windowInsets
-        }
+        // Configure insets.
+        val insets = InsetConfiguration(this, game)
+        insets.apply()
 
         val layout = RelativeLayout(this)
         layout.addView(rectballView)
