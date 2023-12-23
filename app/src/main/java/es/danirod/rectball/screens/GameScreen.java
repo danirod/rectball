@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015-2017 Dani Rodríguez.
+ * Copyright (C) 2015-2023 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,9 +33,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
@@ -176,11 +174,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             countdown(2, new Runnable() {
                 @Override
                 public void run() {
-                    // Report that a game is starting.
-                    Map<Integer, String> dimensions = new HashMap<>();
-                    dimensions.put(1, game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_SOUND, false) ? "Yes" : "No");
-                    dimensions.put(2, game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, false) ? "Yes" : "No");
-                    dimensions.put(3, game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false) ? "Yes" : "No");
                     game.getState().setCountdownFinished(true);
 
                     // Start the game unless the user is leaving or is paused.
