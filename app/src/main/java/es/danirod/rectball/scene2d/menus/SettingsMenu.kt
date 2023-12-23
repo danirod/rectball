@@ -41,10 +41,6 @@ class SettingsMenu(private val game: RectballGame) : ScrollPane(null, ScrollPane
         game.updateBallAtlas()
     }
 
-    private val fullscreenSwitch = createSettingToggle(game.context.getString(R.string.settings_fullscreen), SettingsManager.TAG_ENABLE_FULLSCREEN, false) {
-        game.context.runOnUiThread { game.context.toggleFullscreen() }
-    }
-
     private val doTutorialButton = TextButton(game.context.getString(R.string.settings_play_tutorial), game.skin).apply {
         addListener(ScreenJumper(game, Screens.TUTORIAL))
     }
@@ -100,7 +96,6 @@ class SettingsMenu(private val game: RectballGame) : ScrollPane(null, ScrollPane
         space(25f)
         addActor(soundSwitch)
         addActor(colorSwitch)
-        addActor(fullscreenSwitch)
         addActor(doTutorialButton)
         if (BuildConfig.FLAVOR == "gpe") {
             addActor(gameServicesButton())

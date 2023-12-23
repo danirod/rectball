@@ -49,8 +49,6 @@ public class MainMenuScreen extends AbstractScreen {
 
     private MainMenuGrid grid = null;
 
-    private ImageButton quit = null;
-
     public MainMenuScreen(RectballGame game) {
         super(game, false);
     }
@@ -59,7 +57,6 @@ public class MainMenuScreen extends AbstractScreen {
     public void dispose() {
         title = null;
         grid = null;
-        quit = null;
     }
 
     @Override
@@ -73,17 +70,6 @@ public class MainMenuScreen extends AbstractScreen {
         if (grid == null) {
             grid = new MainMenuGrid(game);
         }
-        if (quit == null) {
-            quit = new ImageButton(game.getSkin(), "quit");
-            quit.setSize(50, 50);
-            quit.setPosition(getStage().getViewport().getWorldWidth() - 60, getStage().getViewport().getWorldHeight() - 60);
-            quit.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    Gdx.app.exit();
-                }
-            });
-        }
 
         table.defaults().padLeft(40f).padRight(40f).space(60f);
         table.add(title).align(Align.top).row();
@@ -96,13 +82,6 @@ public class MainMenuScreen extends AbstractScreen {
     @Override
     public void show() {
         super.show();
-
-        if (game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false)) {
-            getStage().addActor(quit);
-        } else {
-            quit.remove();
-        }
-
 
         backgroundActor = new BackgroundActor(game.getBallAtlas());
         backgroundActor.setColor(1f, 1f, 1f, 0.15f);

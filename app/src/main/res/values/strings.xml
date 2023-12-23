@@ -20,7 +20,6 @@
     <string name="game_over_title">Game Over</string>
     <string name="settings_sound">Play sounds</string>
     <string name="settings_colorblind">Colorblind mode</string>
-    <string name="settings_fullscreen">Fullscreen mode</string>
     <string name="settings_play_tutorial">Play Tutorial</string>
     <string name="settings_play_log_in">Log In to Google Play Games</string>
     <string name="settings_play_log_out">Log Out from Google Play Games</string>

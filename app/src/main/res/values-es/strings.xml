@@ -18,7 +18,6 @@
     <string name="main_dismiss_tutorial">Siempre encontrarás el tutorial en la pantalla Opciones.</string>
     <string name="settings_sound">Activar sonido</string>
     <string name="settings_colorblind">Distinguir sin color</string>
-    <string name="settings_fullscreen">Pantalla completa</string>
     <string name="settings_play_log_in">Entrar en Google Play Games</string>
     <string name="settings_play_log_out">Salir de Google Play Games</string>
     <string name="settings_play_processing">Actualizando estado...</string>

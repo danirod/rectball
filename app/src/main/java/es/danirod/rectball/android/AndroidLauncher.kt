@@ -85,18 +85,6 @@ class AndroidLauncher : AndroidApplication() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) {
-            toggleFullscreen()
-        }
-    }
-
-    fun toggleFullscreen() {
-        val fullscreen = Fullscreen(this)
-        if (shouldEnableFullscreenMode()) {
-            fullscreen.onEnterFullscreen()
-        } else {
-            fullscreen.onLeaveFullscreen()
-        }
     }
 
     fun openInMarketplace() {
@@ -135,7 +123,6 @@ class AndroidLauncher : AndroidApplication() {
 
     private fun deserializeState(payload: String): GameState = Json().fromJson(GameState::class.java, payload)
 
-    private fun shouldEnableFullscreenMode(): Boolean = settings.preferences.getBoolean(SettingsManager.TAG_ENABLE_FULLSCREEN, false)
     fun requestWakelock() {
         runOnUiThread { window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) }
     }
