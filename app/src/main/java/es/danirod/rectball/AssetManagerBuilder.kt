@@ -23,12 +23,15 @@ import com.badlogic.gdx.assets.loaders.TextureLoader
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.files.FileHandle
+import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.graphics.g2d.PixmapPacker
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader
 import es.danirod.rectball.android.BuildConfig
+import kotlin.math.ceil
 
 object AssetManagerBuilder {
 
@@ -88,13 +91,14 @@ object AssetManagerBuilder {
         manager.load("sound/unselect.ogg", Sound::class.java)
     }
 
-    private fun fontParameters(name: String, filter: Texture.TextureFilter, size: Int): FreetypeFontLoader.FreeTypeFontLoaderParameter {
-        val parameters = FreetypeFontLoader.FreeTypeFontLoaderParameter()
-        parameters.fontFileName = name
-        parameters.fontParameters.minFilter = filter
-        parameters.fontParameters.magFilter = filter
-        parameters.fontParameters.size = Math.ceil(size.toDouble() * Gdx.graphics.density).toInt()
-        return parameters
+    private val freeTypePacker = PixmapPacker(1024, 1024, Pixmap.Format.RGBA8888, 0, false)
+
+    private fun fontParameters(name: String, filter: Texture.TextureFilter, size: Int) = FreetypeFontLoader.FreeTypeFontLoaderParameter().apply {
+        fontFileName = name
+        fontParameters.minFilter = filter
+        fontParameters.magFilter = filter
+        fontParameters.size = ceil(size.toDouble() * Gdx.graphics.density).toInt()
+        fontParameters.packer = freeTypePacker
     }
 
     private fun registerFreetypeLoaders(manager: AssetManager) {
