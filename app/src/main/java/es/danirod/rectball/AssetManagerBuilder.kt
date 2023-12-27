@@ -91,7 +91,7 @@ object AssetManagerBuilder {
         manager.load("sound/unselect.ogg", Sound::class.java)
     }
 
-    private val freeTypePacker = PixmapPacker(1024, 1024, Pixmap.Format.RGBA8888, 0, false)
+    private val freeTypePacker = PixmapPacker(1024, 1024, Pixmap.Format.RGBA8888, 2, false)
 
     private fun fontParameters(name: String, filter: Texture.TextureFilter, size: Int) = FreetypeFontLoader.FreeTypeFontLoaderParameter().apply {
         fontFileName = name

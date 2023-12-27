@@ -72,9 +72,21 @@ public class RectballSkin extends Skin {
     }
 
     private void addBitmapFonts() {
-        add("normal", game.manager.get("fonts/normal.ttf", BitmapFont.class));
-        add("small", game.manager.get("fonts/small.ttf", BitmapFont.class));
-        add("large", game.manager.get("fonts/large.ttf", BitmapFont.class));
+        {
+            BitmapFont font = game.manager.get("fonts/normal.ttf", BitmapFont.class);
+            font.setUseIntegerPositions(false);
+            add("normal", font);
+        }
+        {
+            BitmapFont font = game.manager.get("fonts/small.ttf", BitmapFont.class);
+            font.setUseIntegerPositions(false);
+            add("small", font);
+        }
+        {
+            BitmapFont font = game.manager.get("fonts/large.ttf", BitmapFont.class);
+            font.setUseIntegerPositions(false);
+            add("large", font);
+        }
     }
 
     private void addScrollPaneStyles() {
