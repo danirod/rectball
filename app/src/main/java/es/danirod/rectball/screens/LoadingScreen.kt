@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015 Dani Rodríguez.
+ * Copyright (C) 2015-2023 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +17,6 @@
  */
 package es.danirod.rectball.screens
 
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
@@ -30,22 +27,8 @@ class LoadingScreen(game: RectballGame?) : AbstractScreen(game, false) {
 
     private var canUpdate = false
 
-    private lateinit var ballsTexture: Texture
-
-    private lateinit var ballAtlas: TextureAtlas
-
     public override fun setUpInterface(table: Table) {
-        ballsTexture = Texture("board/normal.png")
-        ballAtlas = TextureAtlas().apply {
-            val regions = TextureRegion.split(ballsTexture, 256, 256)
-            addRegion("ball_red", regions[0][0])
-            addRegion("ball_yellow", regions[0][1])
-            addRegion("ball_blue", regions[1][0])
-            addRegion("ball_green", regions[1][1])
-            addRegion("ball_gray", regions[1][2])
-        }
-
-        val load = LoadingAnimation(ballAtlas)
+        val load = LoadingAnimation(game.ballAtlas)
         table.add(load).size(100f).align(Align.center)
         load.syncColors()
         load.animate()
@@ -72,8 +55,6 @@ class LoadingScreen(game: RectballGame?) : AbstractScreen(game, false) {
             getStage().addAction(Actions.sequence(
                     Actions.alpha(0f, FADE_SPEED),
                     Actions.delay(0.1f, Actions.run {
-                        ballAtlas.dispose()
-                        ballsTexture.dispose()
                         game.finishLoading()
                     })
             ))

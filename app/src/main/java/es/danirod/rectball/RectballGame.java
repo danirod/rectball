@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015-2017 Dani Rodríguez.
+ * Copyright (C) 2015-2023 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,11 +23,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import es.danirod.rectball.android.AndroidLauncher;
 import es.danirod.rectball.android.BuildConfig;
@@ -41,10 +40,10 @@ import es.danirod.rectball.screens.GameScreen;
 import es.danirod.rectball.screens.LoadingBackScreen;
 import es.danirod.rectball.screens.LoadingScreen;
 import es.danirod.rectball.screens.MainMenuScreen;
-import es.danirod.rectball.screens.TutorialScreen;
 import es.danirod.rectball.screens.Screens;
 import es.danirod.rectball.screens.SettingsScreen;
 import es.danirod.rectball.screens.StatisticsScreen;
+import es.danirod.rectball.screens.TutorialScreen;
 
 /**
  * Main class for the game.
@@ -124,6 +123,11 @@ public class RectballGame extends StateBasedGame {
         // Android enables dithering by default on some phones. Disable it for higher quality.
         Gdx.gl.glDisable(GL20.GL_DITHER);
 
+        /* Prepare the manager, and force loading the skin, as it is used for setting up the user interface. */
+        manager = AssetManagerBuilder.INSTANCE.build();
+        manager.finishLoadingAsset("skin/rectball.json");
+        updateBallAtlas();
+
         addScreen(new GameScreen(this));
         addScreen(new GameOverScreen(this));
         addScreen(new MainMenuScreen(this));
@@ -135,7 +139,6 @@ public class RectballGame extends StateBasedGame {
         addScreen(new TutorialScreen(this));
 
         batch = new SpriteBatch();
-        manager = AssetManagerBuilder.INSTANCE.build();
 
         if (!restoredState) {
             getScreen(Screens.LOADING).load();
@@ -166,15 +169,15 @@ public class RectballGame extends StateBasedGame {
 
     public void updateBallAtlas() {
         boolean isColorblind = context.getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, false);
-        String ballsTexture = isColorblind ? "board/colorblind.png" : "board/normal.png";
-        Texture balls = manager.get(ballsTexture);
-        TextureRegion[][] regions = TextureRegion.split(balls, 256, 256);
+        Skin gameSkin = manager.get("skin/rectball.json", Skin.class);
+        String[] gems = new String[]{ "blue", "red", "green", "yellow"};
         ballAtlas = new TextureAtlas();
-        ballAtlas.addRegion("ball_red", regions[0][0]);
-        ballAtlas.addRegion("ball_yellow", regions[0][1]);
-        ballAtlas.addRegion("ball_blue", regions[1][0]);
-        ballAtlas.addRegion("ball_green", regions[1][1]);
-        ballAtlas.addRegion("ball_gray", regions[1][2]);
+        for (String gem : gems) {
+            String source = "gem_" + gem + (isColorblind ? "_alt" : "");
+            String target = "ball_" + gem;
+            ballAtlas.addRegion(target, gameSkin.getRegion(source));
+        }
+        ballAtlas.addRegion("ball_gray", gameSkin.getRegion("gem_gray"));
     }
 
     @Override

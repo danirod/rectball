@@ -1,19 +1,30 @@
+/*
+ * This file is part of Rectball.
+ * Copyright (C) 2015-2023 Dani Rodríguez.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Align;
+
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.model.Board;
 import es.danirod.rectball.scene2d.game.BoardActor;
 
-/**
- * Created by danirod on 13/11/15.
- */
 public class LoadingBackScreen extends AbstractScreen {
 
     private static final float FADE_SPEED = 0.15f;
@@ -21,10 +32,6 @@ public class LoadingBackScreen extends AbstractScreen {
 
     private BoardActor boardActor;
 
-    private Texture ballsTexture;
-
-    private TextureAtlas ballAtlas;
-    
     private boolean canUpdate;
 
     public LoadingBackScreen(RectballGame game) {
@@ -34,16 +41,7 @@ public class LoadingBackScreen extends AbstractScreen {
 
     @Override
     void setUpInterface(Table table) {
-        ballsTexture = new Texture("board/normal.png");
-        TextureRegion[][] regions = TextureRegion.split(ballsTexture, 256, 256);
-        ballAtlas = new TextureAtlas();
-        ballAtlas.addRegion("ball_red", regions[0][0]);
-        ballAtlas.addRegion("ball_yellow", regions[0][1]);
-        ballAtlas.addRegion("ball_blue", regions[1][0]);
-        ballAtlas.addRegion("ball_green", regions[1][1]);
-        ballAtlas.addRegion("ball_gray", regions[1][2]);
-
-        boardActor = new BoardActor(ballAtlas, game.getSkin(), board);
+        boardActor = new BoardActor(game.getBallAtlas(), game.getSkin(), board);
         Rectangle bounds = game.getState().getBoardBounds();
         boardActor.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
         getStage().addActor(boardActor);
@@ -77,8 +75,6 @@ public class LoadingBackScreen extends AbstractScreen {
         if (canUpdate && game.manager.update(1000 / 120)) {
             canUpdate = false;
             boardActor.remove();
-            ballAtlas.dispose();
-            ballsTexture.dispose();
             game.finishLoading();
         } else {
             float progress = game.manager.getProgress();

@@ -19,6 +19,7 @@ package es.danirod.rectball
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetManager
+import com.badlogic.gdx.assets.loaders.SkinLoader.SkinParameter
 import com.badlogic.gdx.assets.loaders.TextureLoader
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver
 import com.badlogic.gdx.audio.Sound
@@ -26,10 +27,12 @@ import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.graphics.g2d.NinePatch
 import com.badlogic.gdx.graphics.g2d.PixmapPacker
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import es.danirod.rectball.android.BuildConfig
 import kotlin.math.ceil
 
@@ -46,10 +49,11 @@ object AssetManagerBuilder {
 
     @Suppress("ConstantConditionIf")
     private fun loadTextures(manager: AssetManager) {
+        // SkinComposer
+        manager.load("skin/rectball.json", Skin::class.java, SkinParameter("skin/rectball.atlas"))
+
         // Graphic assets.
         manager.load("logo.png", Texture::class.java, textureParameters)
-        manager.load("board/normal.png", Texture::class.java, textureParameters)
-        manager.load("board/colorblind.png", Texture::class.java, textureParameters)
 
         // User interface.
         manager.load("ui/icons.png", Texture::class.java, textureParameters)

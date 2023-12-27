@@ -1,0 +1,69 @@
+
+rectball.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+gem_blue
+  rotate: false
+  xy: 1, 1029
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gem_blue_alt
+  rotate: false
+  xy: 1, 515
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gem_gray
+  rotate: false
+  xy: 515, 1029
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gem_green
+  rotate: false
+  xy: 1, 1
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gem_green_alt
+  rotate: false
+  xy: 515, 515
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gem_red
+  rotate: false
+  xy: 1029, 1029
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gem_red_alt
+  rotate: false
+  xy: 515, 1
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gem_yellow
+  rotate: false
+  xy: 1029, 515
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+gem_yellow_alt
+  rotate: false
+  xy: 1029, 1
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
