@@ -27,17 +27,59 @@ import es.danirod.rectball.RectballGame
 import es.danirod.rectball.SoundPlayer.SoundCode
 import es.danirod.rectball.android.BuildConfig
 import es.danirod.rectball.android.R
-import es.danirod.rectball.android.settings.SettingsManager
 import es.danirod.rectball.scene2d.listeners.ScreenJumper
 import es.danirod.rectball.scene2d.ui.SwitchActor
 import es.danirod.rectball.screens.Screens
 
 class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
 
-    private val soundSwitch = createSettingToggle(game.context.getString(R.string.settings_sound), SettingsManager.TAG_ENABLE_SOUND, true)
+    private val soundSwitch = game.context.getString(R.string.settings_sound).let { label ->
+        SwitchActor(label, game.appSkin).apply {
+            isChecked = game.settings.soundEnabled
+            addListener(object : ChangeListener() {
+                override fun changed(event: ChangeEvent?, actor: Actor?) {
+                    game.settings.soundEnabled = isChecked
+                    game.player.playSound(SoundCode.SELECT)
+                }
+            })
+        }
+    }
 
-    private val colorSwitch = createSettingToggle(game.context.getString(R.string.settings_colorblind), SettingsManager.TAG_ENABLE_COLORBLIND, false) {
-        game.updateBallAtlas()
+    private val vibrationSwitch = game.context.getString(R.string.settings_vibration).let { label ->
+        SwitchActor(label, game.appSkin).apply {
+            isChecked = game.settings.vibrationEnabled
+            addListener(object : ChangeListener() {
+                override fun changed(event: ChangeEvent?, actor: Actor?) {
+                    game.settings.vibrationEnabled = isChecked
+                    game.player.playSound(SoundCode.SELECT)
+                }
+            })
+        }
+    }
+
+    private val keepScreenOn = game.context.getString(R.string.settings_keep_screen_on).let { label ->
+        SwitchActor(label, game.appSkin).apply {
+            isChecked = game.settings.keepScreenOn
+            addListener(object : ChangeListener() {
+                override fun changed(event: ChangeEvent?, actor: Actor?) {
+                    game.settings.keepScreenOn = isChecked
+                    game.player.playSound(SoundCode.SELECT)
+                }
+            })
+        }
+    }
+
+    private val colorSwitch = game.context.getString(R.string.settings_colorblind).let { label ->
+        SwitchActor(label, game.appSkin).apply {
+            isChecked = game.settings.colorblindMode
+            addListener(object : ChangeListener() {
+                override fun changed(event: ChangeEvent?, actor: Actor?) {
+                    game.settings.colorblindMode = isChecked
+                    game.updateBallAtlas()
+                    game.player.playSound(SoundCode.SELECT)
+                }
+            })
+        }
     }
 
     private val doTutorialButton = game.context.getString(R.string.settings_play_tutorial).let { label ->
@@ -105,6 +147,8 @@ class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
         grow()
         space(25f)
         addActor(soundSwitch)
+        addActor(vibrationSwitch)
+        addActor(keepScreenOn)
         addActor(colorSwitch)
         addActor(doTutorialButton)
         @Suppress("KotlinConstantConditions")
@@ -147,19 +191,4 @@ class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
             }
         }, 0f, 1f)
     }
-
-    private fun createSettingToggle(label: String, key: String, defaultValue: Boolean, callback: () -> Unit = {}) =
-        SwitchActor(label, game.appSkin).apply {
-            isChecked = game.context.settings.preferences.getBoolean(key, defaultValue)
-            addListener(object : ChangeListener() {
-                override fun changed(event: ChangeEvent?, actor: Actor?) {
-                    val editor = game.context.settings.preferences.edit()
-                    editor.putBoolean(key, isChecked)
-                    editor.apply()
-                    callback()
-                    game.player.playSound(SoundCode.SELECT)
-                }
-            })
-        }
-
 }

@@ -18,7 +18,9 @@
     <string name="main_ask_new_selection_method">En esta actualización de Rectball se ha cambiado la forma de interactuar con el tablero. Se recomienda volver a hacer el tutorial para ver cómo funciona ahora. ¿Quieres hacerlo?</string>
     <string name="main_dismiss_tutorial">Siempre encontrarás el tutorial en la pantalla Opciones.</string>
     <string name="settings_sound">Activar sonido</string>
-    <string name="settings_colorblind">Distinguir sin color</string>
+    <string name="settings_vibration">Activar vibración</string>
+    <string name="settings_keep_screen_on">No apagar pantalla</string>
+    <string name="settings_colorblind">Diferenciar sin color</string>
     <string name="settings_play_log_in">Entrar en Google Play Games</string>
     <string name="settings_play_log_out">Salir de Google Play Games</string>
     <string name="settings_play_processing">Actualizando estado…</string>

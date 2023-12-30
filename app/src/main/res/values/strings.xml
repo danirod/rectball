@@ -22,6 +22,8 @@
     <string name="game_over_play_again">Play Again</string>
     <string name="game_over_menu_screen">Menu Screen</string>
     <string name="settings_sound">Play sounds</string>
+    <string name="settings_vibration">Vibration</string>
+    <string name="settings_keep_screen_on">Keep screen on</string>
     <string name="settings_colorblind">Colorblind mode</string>
     <string name="settings_play_tutorial">Play Tutorial</string>
     <string name="settings_play_log_in">Log In to Google Play Games</string>

@@ -364,6 +364,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game, false) {
 
         /* Add sound. */
         game.player.playSound(SoundPlayer.SoundCode.SUCCESS)
+        game.haptics.vibrateMilliseconds(60)
     }
 
     private fun setBoardColors(values: List<String>) {

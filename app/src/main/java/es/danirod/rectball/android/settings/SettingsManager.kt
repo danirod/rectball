@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015-2017 Dani Rodríguez.
+ * Copyright (C) 2015-2023 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -114,6 +114,12 @@ class SettingsManager(private val context: Context) {
 
         /** Whether to enable sound or not. */
         const val TAG_ENABLE_SOUND = "${AndroidLauncher.PACKAGE}.ENABLE_SOUND"
+
+        /** Whether to enable vibration or not. */
+        const val TAG_ENABLE_VIBRATION = "${AndroidLauncher.PACKAGE}.ENABLE_VIBRATION"
+
+        /** Request a wakelock or not. */
+        const val TAG_KEEP_SCREEN_ON = "${AndroidLauncher.PACKAGE}.KEEP_SCREEN_ON"
 
         /** Whether to enable colorblind mode or not. */
         const val TAG_ENABLE_COLORBLIND = "${AndroidLauncher.PACKAGE}.ENABLE_COLORBLIND"

@@ -455,6 +455,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         board.setTouchable(Touchable.disabled);
         hud.getTimer().setRunning(false);
         game.player.playSound(SoundCode.GAME_OVER);
+        game.getHaptics().vibrateMilliseconds(200);
 
         // Mark a combination that the user could do if he had enough time.
         if (game.getState().getWiggledBounds() == null) {
@@ -587,7 +588,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             boolean special = givenScore != rows * cols;
             // Give score
             stage.addActor(board.showPartialScore(givenScore, bounds, special, usedCheat));
+
             game.player.playSound(SoundCode.SUCCESS);
+            game.getHaptics().vibrateMilliseconds(60);
 
             // Give time
             float givenTime = 4f + (givenScore) / 10f;

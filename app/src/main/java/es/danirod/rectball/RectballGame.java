@@ -45,6 +45,7 @@ import es.danirod.rectball.screens.Screens;
 import es.danirod.rectball.screens.SettingsScreen;
 import es.danirod.rectball.screens.StatisticsScreen;
 import es.danirod.rectball.screens.TutorialScreen;
+import es.danirod.rectball.settings.AppSettings;
 
 /**
  * Main class for the game.
@@ -75,6 +76,10 @@ public class RectballGame extends StateBasedGame {
 
     /** Batch instance in use by the game. */
     private Batch batch;
+
+    private AppSettings settings;
+
+    private Haptics haptics;
 
     public RectballGame(AndroidLauncher context) {
         this.context = context;
@@ -112,6 +117,14 @@ public class RectballGame extends StateBasedGame {
         return marginTop;
     }
 
+    public AppSettings getSettings() {
+        return this.settings;
+    }
+
+    public Haptics getHaptics() {
+        return this.haptics;
+    }
+
     @Override
     public void create() {
         if (BuildConfig.FINE_DEBUG) {
@@ -120,6 +133,10 @@ public class RectballGame extends StateBasedGame {
 
         // Android enables dithering by default on some phones. Disable it for higher quality.
         Gdx.gl.glDisable(GL20.GL_DITHER);
+
+        /* Prepare the settings instance. */
+        settings = new AppSettings(this);
+        haptics = new Haptics(this);
 
         /* Prepare the manager, and force loading the skin, as it is used for setting up the user interface. */
         manager = AssetManagerBuilder.INSTANCE.build();
@@ -205,7 +222,7 @@ public class RectballGame extends StateBasedGame {
     }
 
     public void updateWakelock(boolean wakelock) {
-        if (wakelock) {
+        if (wakelock && settings.getKeepScreenOn()) {
             context.requestWakelock();
         } else {
             context.clearWakelock();
