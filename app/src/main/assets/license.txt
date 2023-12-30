@@ -1,6 +1,10 @@
 RECTBALL SOFTWARE LICENSE:
 
-This program is free software and is distributed under the GNU General Puhblic License, version 3 or later.
+This program is free software and is distributed under the GNU General Public License, version 3 or later. Here is a summary of your rights:
+- You are free to download and use the software freely.
+- You are free to share copies of this software for any purpose, commercial or non-commercial, without any restrictions.
+- You are free to make changes to this program and to modify the software as you wish.
+- You are free to share your modified version of this software, as long as you provide access to its source code.
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY, to the extent permitted by law. For more details about the license, please open the following link in your browser of choice:
 

@@ -52,6 +52,9 @@ public class RectballSkin {
      */
     public RectballSkin(RectballGame game) {
         this.game = game;
+        game.getAppSkin().getFont("normal").setUseIntegerPositions(false);
+        game.getAppSkin().getFont("small").setUseIntegerPositions(false);
+        game.getAppSkin().getFont("large").setUseIntegerPositions(false);
         addLabelStyles();
         addExtraImageButtonStyles();
         addTextureRegionStyles();

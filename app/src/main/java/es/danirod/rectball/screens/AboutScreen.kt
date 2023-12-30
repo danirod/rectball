@@ -38,7 +38,7 @@ class AboutScreen(game: RectballGame) : MenuScreen(game) {
 
     override fun getRoot() = Label(credits, game.appSkin, "small", "white").apply {
         wrap = true
-        setFontScale(0.8f)
+        setFontScale(0.85f)
     }
 
     override fun getID() = Screens.ABOUT

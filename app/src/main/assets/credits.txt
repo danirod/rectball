@@ -1,13 +1,9 @@
 https://rectball.danirod.es
 
 Copyright (C) 2015-2023 danirod
-This game is released under the terms of GNU General Public License v3. The source code for this application is available at https://github.com/danirod/rectball
+This game is released under the terms of GNU General Public License v3. Go to the licenses information to see your rights.
+The source code for this application is available at https://github.com/danirod/rectball
 
-Here is a summary of your rights:
-- You are free to download and use the software freely.
-- You are free to share copies of this software for any purpose, commercial or non-commercial, without any restrictions.
-- You are free to make changes to this program and to modify the software as you wish.
-- You are free to share your modified version of this software, as long as you provide access to its source code.
 
 
 THIRD PARTY ASSETS AND SOFTWARE COMPONENTS
