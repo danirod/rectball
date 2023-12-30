@@ -41,7 +41,7 @@ public class LoadingBackScreen extends AbstractScreen {
 
     @Override
     void setUpInterface(Table table) {
-        boardActor = new BoardActor(game.getBallAtlas(), game.getSkin(), board);
+        boardActor = new BoardActor(game.getBallAtlas(), game.getAppSkin(), board);
         Rectangle bounds = game.getState().getBoardBounds();
         boardActor.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
         getStage().addActor(boardActor);

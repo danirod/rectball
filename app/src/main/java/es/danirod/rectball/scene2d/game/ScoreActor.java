@@ -1,6 +1,6 @@
 /*
- * This file is part of Rectball
- * Copyright (C) 2015 Dani Rodríguez
+ * This file is part of Rectball.
+ * Copyright (C) 2015-2023 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package es.danirod.rectball.scene2d.game;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 
 /**
@@ -32,10 +28,6 @@ import com.badlogic.gdx.utils.Align;
  */
 public class ScoreActor extends Group {
 
-    /**
-     * The background.
-     */
-    private final Drawable background;
     /**
      * The actual value that is rendered.
      */
@@ -57,7 +49,6 @@ public class ScoreActor extends Group {
     private ScoreListener listener = null;
 
     public ScoreActor(Skin skin) {
-        background = skin.newDrawable("pixel", Color.BLACK);
         label = new Label(getScore(), skin, "monospace2");
         label.setAlignment(Align.center);
         label.setFillParent(true);
@@ -67,18 +58,6 @@ public class ScoreActor extends Group {
 
     public void setScoreListener(ScoreListener listener) {
         this.listener = listener;
-    }
-
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        Color color = getColor();
-        batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
-
-        // Draw the black background.
-        background.draw(batch, getX(), getY(), getWidth(), getHeight());
-        super.draw(batch, parentAlpha);
-
-        batch.setColor(color.r, color.g, color.b, color.a);
     }
 
     /**

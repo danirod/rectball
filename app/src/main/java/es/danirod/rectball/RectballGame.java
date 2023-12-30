@@ -37,6 +37,7 @@ import es.danirod.rectball.screens.AboutScreen;
 import es.danirod.rectball.screens.AbstractScreen;
 import es.danirod.rectball.screens.GameOverScreen;
 import es.danirod.rectball.screens.GameScreen;
+import es.danirod.rectball.screens.LicenseScreen;
 import es.danirod.rectball.screens.LoadingBackScreen;
 import es.danirod.rectball.screens.LoadingScreen;
 import es.danirod.rectball.screens.MainMenuScreen;
@@ -65,9 +66,6 @@ public class RectballGame extends StateBasedGame {
 
     /** The sound player manages the sound effects during the game. */
     public SoundPlayer player;
-
-    /** Skin used by Scene2D. */
-    private RectballSkin uiSkin;
 
     /** Contains the bubbles textures, depending on the application settings. */
     private TextureAtlas ballAtlas;
@@ -137,6 +135,7 @@ public class RectballGame extends StateBasedGame {
         addScreen(new StatisticsScreen(this));
         addScreen(new AboutScreen(this));
         addScreen(new TutorialScreen(this));
+        addScreen(new LicenseScreen(this));
 
         batch = new SpriteBatch();
 
@@ -152,7 +151,7 @@ public class RectballGame extends StateBasedGame {
     public void finishLoading() {
         // These resources cannot be initialized until the AssetManager finishes loading.
         player = new SoundPlayer(this);
-        uiSkin = new RectballSkin(this);
+        new RectballSkin(this);
         updateBallAtlas();
 
         for (AbstractScreen screen : getAllScreens()) {
@@ -167,9 +166,13 @@ public class RectballGame extends StateBasedGame {
         }
     }
 
+    public Skin getAppSkin() {
+        return manager.get("skin/rectball.json", Skin.class);
+    }
+
     public void updateBallAtlas() {
         boolean isColorblind = context.getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, false);
-        Skin gameSkin = manager.get("skin/rectball.json", Skin.class);
+        Skin gameSkin = getAppSkin();
         String[] gems = new String[]{ "blue", "red", "green", "yellow"};
         ballAtlas = new TextureAtlas();
         for (String gem : gems) {
@@ -183,10 +186,6 @@ public class RectballGame extends StateBasedGame {
     @Override
     public void dispose() {
         manager.dispose();
-    }
-
-    public RectballSkin getSkin() {
-        return uiSkin;
     }
 
     public GameState getState() {

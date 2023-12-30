@@ -1,6 +1,6 @@
 /*
- * This file is part of Rectball
- * Copyright (C) 2015 Dani Rodríguez
+ * This file is part of Rectball.
+ * Copyright (C) 2015-2023 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,11 +27,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 
-import es.danirod.rectball.model.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import es.danirod.rectball.model.Ball;
+import es.danirod.rectball.model.Board;
+import es.danirod.rectball.model.Bounds;
 import es.danirod.rectball.scene2d.input.DragBoardSelectionListener;
 import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
-
-import java.util.*;
 
 public class BoardActor extends Table {
 

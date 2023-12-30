@@ -1,1 +1,299 @@
-{}
+{
+"com.badlogic.gdx.graphics.g2d.BitmapFont": {
+	"large": {
+		"file": "large.fnt",
+		"scaledSize": 36,
+		"markupEnabled": false,
+		"flip": false
+	},
+	"normal": {
+		"file": "sans.fnt",
+		"scaledSize": 18,
+		"markupEnabled": false,
+		"flip": false
+	},
+	"small": {
+		"file": "small.fnt",
+		"scaledSize": 14,
+		"markupEnabled": false,
+		"flip": false
+	}
+},
+"com.badlogic.gdx.graphics.Color": {
+	"black": {
+		"r": 0,
+		"g": 0,
+		"b": 0,
+		"a": 1
+	},
+	"disabled_button": {
+		"r": 0.9411765,
+		"g": 0.9411765,
+		"b": 0.9411765,
+		"a": 0.752809
+	},
+	"white": {
+		"r": 1,
+		"g": 1,
+		"b": 1,
+		"a": 1
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable": {
+	"gem_blue": {
+		"region": "gem_blue",
+		"minWidth": 64,
+		"minHeight": 64
+	},
+	"gem_blue_alt": {
+		"region": "gem_blue_alt",
+		"minWidth": 64,
+		"minHeight": 64
+	},
+	"gem_gray": {
+		"region": "gem_gray",
+		"minWidth": 64,
+		"minHeight": 64
+	},
+	"gem_green": {
+		"region": "gem_green",
+		"minWidth": 64,
+		"minHeight": 64
+	},
+	"gem_green_alt": {
+		"region": "gem_green_alt",
+		"minWidth": 64,
+		"minHeight": 64
+	},
+	"gem_red": {
+		"region": "gem_red",
+		"minWidth": 64,
+		"minHeight": 64
+	},
+	"gem_red_alt": {
+		"region": "gem_red_alt",
+		"minWidth": 64,
+		"minHeight": 64
+	},
+	"gem_yellow": {
+		"region": "gem_yellow",
+		"minWidth": 64,
+		"minHeight": 64
+	},
+	"gem_yellow_alt": {
+		"region": "gem_yellow_alt",
+		"minWidth": 64,
+		"minHeight": 64
+	},
+	"logo": {
+		"region": "logo",
+		"minWidth": 1000,
+		"minHeight": 239
+	},
+	"icon_chart": {
+		"region": "icon_chart",
+		"minWidth": 48,
+		"minHeight": 48
+	},
+	"icon_close": {
+		"region": "icon_close",
+		"minWidth": 48,
+		"minHeight": 48
+	},
+	"icon_cog": {
+		"region": "icon_cog",
+		"minWidth": 48,
+		"minHeight": 42
+	},
+	"icon_crown": {
+		"region": "icon_crown",
+		"minWidth": 48,
+		"minHeight": 35
+	},
+	"icon_help": {
+		"region": "icon_help",
+		"minWidth": 48,
+		"minHeight": 48
+	},
+	"icon_house": {
+		"region": "icon_house",
+		"minWidth": 48,
+		"minHeight": 38
+	},
+	"icon_info": {
+		"region": "icon_info",
+		"minWidth": 48,
+		"minHeight": 48
+	},
+	"icon_play": {
+		"region": "icon_play",
+		"minWidth": 41,
+		"minHeight": 48
+	},
+	"icon_podium": {
+		"region": "icon_podium",
+		"minWidth": 48,
+		"minHeight": 26
+	},
+	"icon_replay": {
+		"region": "icon_replay",
+		"minWidth": 48,
+		"minHeight": 48
+	},
+	"icon_share": {
+		"region": "icon_share",
+		"minWidth": 48,
+		"minHeight": 48
+	},
+	"icon_star": {
+		"region": "icon_star",
+		"minWidth": 48,
+		"minHeight": 48
+	},
+	"icon_time": {
+		"region": "icon_time",
+		"minWidth": 48,
+		"minHeight": 48
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable": {
+	"pixel": {
+		"name": "white-pixel",
+		"color": "white"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle": {
+	"default": {
+		"up": "button_default",
+		"down": "button_default_down",
+		"over": "button_default_over",
+		"disabled": "button_default_disabled"
+	},
+	"green": {
+		"parent": "default",
+		"up": "button_green",
+		"down": "button_green_down",
+		"over": "button_green_over",
+		"disabled": "button_green_disabled"
+	},
+	"lime": {
+		"parent": "default",
+		"up": "button_lime",
+		"down": "button_lime_down",
+		"over": "button_lime_over",
+		"disabled": "button_lime_disabled"
+	},
+	"blue": {
+		"parent": "default",
+		"up": "button_blue",
+		"down": "button_blue_down",
+		"over": "button_blue_over",
+		"disabled": "button_blue_disabled"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle": {
+	"default": {
+		"parent": "default"
+	},
+	"settings": {
+		"parent": "default",
+		"imageUp": "icon_cog"
+	},
+	"statistics": {
+		"parent": "default",
+		"imageUp": "icon_chart"
+	},
+	"share": {
+		"parent": "default",
+		"imageUp": "icon_share"
+	},
+	"repeat": {
+		"parent": "default",
+		"imageUp": "icon_replay"
+	},
+	"house": {
+		"parent": "default",
+		"imageUp": "icon_house"
+	},
+	"close": {
+		"parent": "blue",
+		"imageUp": "icon_close"
+	},
+	"help": {
+		"parent": "blue",
+		"imageUp": "icon_help"
+	},
+	"back": {
+		"imageUp": "back_arrow",
+		"pressedOffsetY": -2
+	},
+	"leave": {
+		"parent": "default",
+		"imageUp": "icon_close"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle": {
+	"default": {
+		"parent": "default",
+		"font": "normal"
+	},
+	"play": {
+		"parent": "green",
+		"imageUp": "icon_play",
+		"font": "large",
+		"pressedOffsetY": -1
+	},
+	"repeat": {
+		"parent": "default",
+		"imageUp": "icon_replay"
+	},
+	"leave": {
+		"parent": "default",
+		"imageUp": "icon_close"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
+	"default": {
+		"font": "normal",
+		"fontColor": "white"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
+	"default": {
+		"parent": "default",
+		"font": "normal",
+		"fontColor": "white",
+		"disabledFontColor": "disabled_button",
+		"pressedOffsetY": -1
+	},
+	"green": {
+		"parent": "green",
+		"font": "normal",
+		"fontColor": "white",
+		"disabledFontColor": "disabled_button"
+	},
+	"lime": {
+		"parent": "lime",
+		"font": "normal",
+		"fontColor": "white",
+		"disabledFontColor": "disabled_button"
+	},
+	"blue": {
+		"parent": "blue",
+		"font": "normal",
+		"disabledFontColor": "disabled_button"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle": {
+	"default": {
+		"label": "default"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle": {
+	"default": {
+		"background": "light_window",
+		"titleFont": "normal",
+		"titleFontColor": "black"
+	}
+}
+}

@@ -18,13 +18,13 @@
 package es.danirod.rectball.scene2d.ui
 
 import com.badlogic.gdx.scenes.scene2d.Actor
-import com.badlogic.gdx.scenes.scene2d.ui.Button
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
-import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton
 import com.badlogic.gdx.scenes.scene2d.ui.Table
+import com.badlogic.gdx.scenes.scene2d.ui.Value
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
-import com.badlogic.gdx.utils.Align
+import com.badlogic.gdx.utils.Scaling
 import es.danirod.rectball.RectballGame
 import es.danirod.rectball.SoundPlayer
 import es.danirod.rectball.android.BuildConfig
@@ -34,17 +34,13 @@ import es.danirod.rectball.screens.Screens
 
 class MainMenuGrid(private val game: RectballGame) : Table() {
 
-    private val play = Button(game.skin, "green").apply {
-        defaults().space(15f).padTop(15f).padBottom(15f)
+    private val logo = Image(game.appSkin, "logo").apply {
+        setScaling(Scaling.contain)
+    }
 
-        val drawable = game.skin.getDrawable("iconPlay")
-        val playButton = Image(drawable)
-        add(playButton)
-
-        val text = game.context.getString(R.string.main_play)
-        val label = Label(text, game.skin, "big")
-        add(label)
-
+    private val play = ImageTextButton(game.context.getString(R.string.main_play), game.appSkin, "play").apply {
+        pad(30f)
+        imageCell.spaceRight(20f)
         addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
                 game.getScreen(Screens.ABOUT)?.dispose()
@@ -56,19 +52,23 @@ class MainMenuGrid(private val game: RectballGame) : Table() {
         })
     }
 
-    private val settings = ImageButton(game.skin, "settings").apply {
-        pad(5f)
+    private val settings = ImageButton(game.appSkin, "settings").apply {
+        pad(0f)
         addListener(ScreenJumper(game, Screens.SETTINGS))
     }
 
-    private val statistics = ImageButton(game.skin, "charts").apply {
-        pad(5f)
+    private val statistics = ImageButton(game.appSkin, "statistics").apply {
+        pad(0f)
         addListener(ScreenJumper(game, Screens.STATISTICS))
     }
 
-    private val leaderboard by lazy {
-        ImageButton(game.skin, "leaderboard").apply {
-            pad(15f)
+    /* This is lazy so that it doesn't break if game services are not enabled. */
+    private val leaderboards by lazy {
+        ImageButton(game.appSkin, "leaderboard").apply {
+            pad(0f)
+            image.color.set(game.appSkin.getColor("black"))
+            image.color.a = 0.8f
+            imageCell.size(Value.percentWidth(0.7f, this)).center()
             addListener(object : ChangeListener() {
                 override fun changed(event: ChangeEvent?, actor: Actor?) {
                     game.player.playSound(SoundPlayer.SoundCode.SELECT)
@@ -82,9 +82,13 @@ class MainMenuGrid(private val game: RectballGame) : Table() {
         }
     }
 
+    /* This is lazy so that it doesn't break if game services are not enabled. */
     private val achievements by lazy {
-        ImageButton(game.skin, "achievements").apply {
-            pad(15f)
+        ImageButton(game.appSkin, "achievements").apply {
+            pad(0f)
+            image.color.set(game.appSkin.getColor("black"))
+            image.color.a = 0.8f
+            imageCell.size(Value.percentWidth(0.6f, this)).center()
             addListener(object : ChangeListener() {
                 override fun changed(event: ChangeEvent?, actor: Actor?) {
                     game.player.playSound(SoundPlayer.SoundCode.SELECT)
@@ -99,16 +103,18 @@ class MainMenuGrid(private val game: RectballGame) : Table() {
     }
 
     init {
-        defaults().space(30f)
-        add(play).colspan(2).expandX().fillX().padBottom(20f).row()
-        add(settings).expandX().fillX().align(Align.left)
-        add(statistics).expandX().fillX().align(Align.right)
-        if (BuildConfig.FLAVOR.equals("gpe")) {
-            row()
-            add(leaderboard).expandX().align(Align.left)
-            add(achievements).expandX().align(Align.right)
-        }
+        defaults().space(25f).growX()
+        add(logo).prefHeight(100f).minHeight(100f).spaceBottom(40f).colspan(2).expand().top().row()
+        add(play).colspan(2).minHeight(Value.percentHeight(0.5f)).row()
+        add(settings).height(80f)
+        add(statistics).height(80f)
         row()
+
+        if (BuildConfig.FLAVOR.equals("gpe")) {
+            add(leaderboards).expandX().fill(false).left().size(80f)
+            add(achievements).expandX().fill(false).right().size(80f)
+            row()
+        }
     }
 
 }

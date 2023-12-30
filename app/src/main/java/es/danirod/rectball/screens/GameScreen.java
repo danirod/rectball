@@ -91,7 +91,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
      * the game will end.
      */
     private void showLeaveDialog() {
-        ConfirmDialog dialog = new ConfirmDialog(game.getSkin(),
+        ConfirmDialog dialog = new ConfirmDialog(game.getAppSkin(),
                 game.getContext().getString(R.string.game_leave_game_title),
                 game.getContext().getString(R.string.core_yes),
                 game.getContext().getString(R.string.core_no));
@@ -118,7 +118,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     }
 
     private void showPauseDialog() {
-        ConfirmDialog dialog = new ConfirmDialog(game.getSkin(),
+        ConfirmDialog dialog = new ConfirmDialog(game.getAppSkin(),
                 game.getContext().getString(R.string.game_paused_title),
                 game.getContext().getString(R.string.game_continue),
                 game.getContext().getString(R.string.game_leave_game));
@@ -207,7 +207,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // Create the label that will contain this number
         String number = Integer.toString(seconds);
-        final Label label = new Label(number, game.getSkin(), "monospace");
+        final Label label = new Label(number, game.getAppSkin(), "monospace");
         label.setFontScale(5f);
         label.setSize(150, 150);
         label.setAlignment(Align.center);
@@ -280,7 +280,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
     @Override
     public void setUpInterface(Table table) {
-        board = new BoardActor(game.getBallAtlas(), game.getSkin(), game.getState().getBoard());
+        board = new BoardActor(game.getBallAtlas(), game.getAppSkin(), game.getState().getBoard());
 
         hud = new Hud(game);
 
@@ -567,7 +567,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             game.getState().incrementLocalStatistic(SettingsManager.TAG_TOTAL_PERFECTS, 1);
 
             // Give score
-            Label label = new Label("PERFECT", game.getSkin(), "monospace");
+            Label label = new Label("PERFECT", game.getAppSkin(), "monospace");
             label.setX((getStage().getViewport().getWorldWidth() - label.getWidth()) / 2);
             label.setY((getStage().getViewport().getWorldHeight() - label.getHeight()) / 2);
             label.setFontScale(3);

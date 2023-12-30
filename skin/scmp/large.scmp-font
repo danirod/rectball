@@ -1,0 +1,15 @@
+{
+"characters": "",
+"size": 72,
+"hinting": "Full",
+"color": "white",
+"colorValue": -1,
+"gamma": 1.3,
+"renderCount": 3,
+"borderStraight": true,
+"borderGamma": 1.2,
+"kerning": true,
+"genMipMaps": true,
+"minFilter": "MipMap",
+"magFilter": "MipMap"
+}

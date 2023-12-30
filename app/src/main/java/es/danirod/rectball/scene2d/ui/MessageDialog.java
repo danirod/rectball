@@ -1,6 +1,6 @@
 /*
- * This file is part of Rectball
- * Copyright (C) 2015 Dani Rodríguez
+ * This file is part of Rectball.
+ * Copyright (C) 2015-2023 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 package es.danirod.rectball.scene2d.ui;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 /**
  * A generic message dialog that displays some text and that has a button for
@@ -36,7 +37,8 @@ public class MessageDialog extends CommonDialog {
 
     public MessageDialog(Skin skin, String text, String dismissText) {
         super(skin, text);
-        button(dismissText, "dismiss");
+        TextButton dismiss = new TextButton(dismissText, skin, "blue");
+        button(dismiss, "dismiss");
     }
 
     public void setCallback(MessageCallback callback) {

@@ -19,7 +19,6 @@ package es.danirod.rectball.scene2d.menus
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.Actor
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
@@ -33,7 +32,7 @@ import es.danirod.rectball.scene2d.listeners.ScreenJumper
 import es.danirod.rectball.scene2d.ui.SwitchActor
 import es.danirod.rectball.screens.Screens
 
-class SettingsMenu(private val game: RectballGame) : ScrollPane(null, ScrollPaneStyle()) {
+class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
 
     private val soundSwitch = createSettingToggle(game.context.getString(R.string.settings_sound), SettingsManager.TAG_ENABLE_SOUND, true)
 
@@ -41,12 +40,16 @@ class SettingsMenu(private val game: RectballGame) : ScrollPane(null, ScrollPane
         game.updateBallAtlas()
     }
 
-    private val doTutorialButton = TextButton(game.context.getString(R.string.settings_play_tutorial), game.skin).apply {
-        addListener(ScreenJumper(game, Screens.TUTORIAL))
+    private val doTutorialButton = game.context.getString(R.string.settings_play_tutorial).let { label ->
+        TextButton(label, game.appSkin).apply {
+            pad(10f)
+            addListener(ScreenJumper(game, Screens.TUTORIAL))
+        }
     }
 
     private val doGameServicesLogin = game.context.getString(R.string.settings_play_log_in).let { label ->
-        TextButton(label, game.skin).apply {
+        TextButton(label, game.appSkin).apply {
+            pad(10f)
             addListener(object : ChangeListener() {
                 override fun changed(event: ChangeEvent, actor: Actor) {
                     val button = actor as TextButton
@@ -57,7 +60,8 @@ class SettingsMenu(private val game: RectballGame) : ScrollPane(null, ScrollPane
     }
 
     private val doGameServicesLogout = game.context.getString(R.string.settings_play_log_out).let { label ->
-        TextButton(label, game.skin).apply {
+        TextButton(label, game.appSkin).apply {
+            pad(10f)
             addListener(object : ChangeListener() {
                 override fun changed(event: ChangeEvent, actor: Actor) {
                     val button = actor as TextButton
@@ -68,7 +72,8 @@ class SettingsMenu(private val game: RectballGame) : ScrollPane(null, ScrollPane
     }
 
     private val doOpenInMarketplace = game.context.getString(R.string.settings_view_in_google_play).let { label ->
-        TextButton(label, game.skin).apply {
+        TextButton(label, game.appSkin).apply {
+            pad(10f)
             addListener(object : ChangeListener() {
                 override fun changed(event: ChangeEvent?, actor: Actor?) {
                     game.context.openInMarketplace()
@@ -77,9 +82,17 @@ class SettingsMenu(private val game: RectballGame) : ScrollPane(null, ScrollPane
         }
     }
 
-    private val doShowInfoAndLicenses = game.context.getString(R.string.settings_info_and_licenses).let { label ->
-        TextButton(label, game.skin).apply {
+    private val doShowInfo = game.context.getString(R.string.settings_info_and_credits).let { label ->
+        TextButton(label, game.appSkin).apply {
+            pad(10f)
             addListener(ScreenJumper(game, Screens.ABOUT))
+        }
+    }
+
+    private val doShowLicense = game.context.getString(R.string.settings_view_licenses).let { label ->
+        TextButton(label, game.appSkin).apply {
+            pad(10f)
+            addListener(ScreenJumper(game, Screens.LICENSE))
         }
     }
 
@@ -88,28 +101,19 @@ class SettingsMenu(private val game: RectballGame) : ScrollPane(null, ScrollPane
     else
         doGameServicesLogin
 
-    @Suppress("KotlinConstantConditions")
-    private val settingsGroup = VerticalGroup().apply {
-        setFillParent(true)
-        expand()
-        fill()
+    init {
+        grow()
         space(25f)
         addActor(soundSwitch)
         addActor(colorSwitch)
         addActor(doTutorialButton)
+        @Suppress("KotlinConstantConditions")
         if (BuildConfig.FLAVOR == "gpe") {
             addActor(gameServicesButton())
         }
         addActor(doOpenInMarketplace)
-        addActor(doShowInfoAndLicenses)
-    }
-
-    private val settingsScrollPane = ScrollPane(settingsGroup, ScrollPaneStyle()).apply {
-        setFillParent(true)
-    }
-
-    init {
-        actor = settingsScrollPane
+        addActor(doShowInfo)
+        addActor(doShowLicense)
     }
 
     private fun gameServicesButtonCallback(requestedStatus: Boolean, button: TextButton, text: String) {
@@ -135,9 +139,9 @@ class SettingsMenu(private val game: RectballGame) : ScrollPane(null, ScrollPane
                 if (!game.context.gameServices.isLoggingIn) {
                     button.setText(text)
                     button.isDisabled = false
-                    val target = settingsGroup.children.indexOf(button)
-                    settingsGroup.removeActor(button)
-                    settingsGroup.addActorAt(target, gameServicesButton())
+                    val target = children.indexOf(button)
+                    removeActor(button)
+                    addActorAt(target, gameServicesButton())
                     recheckTask.cancel()
                 }
             }
@@ -145,7 +149,7 @@ class SettingsMenu(private val game: RectballGame) : ScrollPane(null, ScrollPane
     }
 
     private fun createSettingToggle(label: String, key: String, defaultValue: Boolean, callback: () -> Unit = {}) =
-        SwitchActor(label, game.skin).apply {
+        SwitchActor(label, game.appSkin).apply {
             isChecked = game.context.settings.preferences.getBoolean(key, defaultValue)
             addListener(object : ChangeListener() {
                 override fun changed(event: ChangeEvent?, actor: Actor?) {

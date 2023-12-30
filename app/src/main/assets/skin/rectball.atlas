@@ -67,3 +67,278 @@ gem_yellow_alt
   orig: 512, 512
   offset: 0, 0
   index: -1
+logo
+  rotate: false
+  xy: 1, 1543
+  size: 2000, 478
+  orig: 2000, 478
+  offset: 0, 0
+  index: -1
+
+rectball2.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+white-pixel
+  rotate: false
+  xy: 480, 1281
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+back_arrow
+  rotate: false
+  xy: 509, 1315
+  size: 56, 96
+  orig: 56, 96
+  offset: 0, 0
+  index: -1
+button_blue
+  rotate: false
+  xy: 767, 1457
+  size: 48, 48
+  split: 22, 22, 24, 23
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+button_blue_disabled
+  rotate: false
+  xy: 1025, 1589
+  size: 48, 48
+  split: 22, 22, 24, 23
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+button_blue_down
+  rotate: false
+  xy: 1799, 1847
+  size: 48, 48
+  split: 22, 22, 24, 23
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+button_blue_over
+  rotate: false
+  xy: 1, 63
+  size: 48, 48
+  split: 22, 22, 24, 23
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+button_default
+  rotate: false
+  xy: 259, 976
+  size: 48, 48
+  split: 22, 22, 24, 23
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+button_default_disabled
+  rotate: false
+  xy: 567, 1363
+  size: 48, 48
+  split: 22, 22, 24, 23
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+button_default_down
+  rotate: false
+  xy: 817, 1457
+  size: 48, 48
+  split: 22, 22, 24, 23
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+button_default_over
+  rotate: false
+  xy: 1025, 1539
+  size: 48, 48
+  split: 22, 22, 24, 23
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+button_green
+  rotate: false
+  xy: 1075, 1589
+  size: 48, 48
+  split: 22, 22, 24, 23
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+button_green_disabled
+  rotate: false
+  xy: 1799, 1797
+  size: 48, 48
+  split: 22, 22, 24, 23
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+button_green_down
+  rotate: false
+  xy: 1849, 1847
+  size: 48, 48
+  split: 22, 22, 24, 23
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+button_green_over
+  rotate: false
+  xy: 1, 13
+  size: 48, 48
+  split: 22, 22, 24, 23
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+button_lime
+  rotate: false
+  xy: 51, 63
+  size: 48, 48
+  split: 22, 22, 24, 23
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+button_lime_disabled
+  rotate: false
+  xy: 259, 926
+  size: 48, 48
+  split: 22, 22, 24, 23
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+button_lime_down
+  rotate: false
+  xy: 309, 976
+  size: 48, 48
+  split: 22, 22, 24, 23
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+button_lime_over
+  rotate: false
+  xy: 617, 1363
+  size: 48, 48
+  split: 22, 22, 24, 23
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+icon_chart
+  rotate: false
+  xy: 509, 1639
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+icon_close
+  rotate: false
+  xy: 1, 1026
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+icon_cog
+  rotate: false
+  xy: 509, 1413
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+icon_crown
+  rotate: false
+  xy: 767, 1710
+  size: 256, 185
+  orig: 256, 185
+  offset: 0, 0
+  index: -1
+icon_help
+  rotate: false
+  xy: 1, 768
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+icon_house
+  rotate: false
+  xy: 767, 1507
+  size: 256, 201
+  orig: 256, 201
+  offset: 0, 0
+  index: -1
+icon_info
+  rotate: false
+  xy: 1025, 1639
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+icon_play
+  rotate: false
+  xy: 259, 1026
+  size: 219, 256
+  orig: 219, 256
+  offset: 0, 0
+  index: -1
+icon_podium
+  rotate: false
+  xy: 1, 629
+  size: 256, 137
+  orig: 256, 137
+  offset: 0, 0
+  index: -1
+icon_replay
+  rotate: false
+  xy: 1283, 1639
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+icon_share
+  rotate: false
+  xy: 1, 371
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+icon_star
+  rotate: false
+  xy: 1541, 1639
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+icon_time
+  rotate: false
+  xy: 1, 113
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+large
+  rotate: false
+  xy: 1, 1284
+  size: 506, 355
+  orig: 506, 355
+  offset: 0, 0
+  index: -1
+light_window
+  rotate: false
+  xy: 767, 1413
+  size: 42, 42
+  split: 18, 18, 18, 18
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
+sans
+  rotate: false
+  xy: 1, 1748
+  size: 506, 147
+  orig: 506, 147
+  offset: 0, 0
+  index: -1
+small
+  rotate: false
+  xy: 1, 1641
+  size: 506, 105
+  orig: 506, 105
+  offset: 0, 0
+  index: -1

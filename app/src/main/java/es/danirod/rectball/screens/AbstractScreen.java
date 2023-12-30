@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015-2017 Dani Rodríguez.
+ * Copyright (C) 2015-2023 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -133,14 +133,14 @@ public abstract class AbstractScreen implements Screen {
             stage = new Stage(buildViewport(), game.getBatch());
         }
 
-        if (table == null) {
-            table = new Table();
-            table.setFillParent(true);
-            updateTablePadding();
-            stage.addActor(table);
-        } else {
-            table.clear();
+        if (table != null) {
+            table.remove();
         }
+
+        table = new Table();
+        table.setFillParent(true);
+        updateTablePadding();
+        stage.addActor(table);
         setUpInterface(table);
 
         Gdx.input.setCatchBackKey(true);

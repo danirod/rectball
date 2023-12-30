@@ -1,6 +1,6 @@
 /*
- * This file is part of Rectball
- * Copyright (C) 2015 Dani Rodríguez
+ * This file is part of Rectball.
+ * Copyright (C) 2015-2023 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,4 +40,6 @@ public class Screens {
     public static final int TUTORIAL = 8;
 
     public static final int LOADING_BACK = 9;
+
+    public static final int LICENSE = 10;
 }

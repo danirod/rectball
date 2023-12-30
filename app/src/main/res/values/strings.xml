@@ -17,7 +17,10 @@
     <string name="game_paused_title">Game paused</string>
     <string name="game_continue">Continue</string>
     <string name="game_leave_game">Leave game</string>
-    <string name="game_over_title">Game Over</string>
+    <string name="game_over_title">Time is up!</string>
+    <string name="game_over_you_made_high_score">You made a new high score. Congratulations!</string>
+    <string name="game_over_play_again">Play Again</string>
+    <string name="game_over_menu_screen">Menu Screen</string>
     <string name="settings_sound">Play sounds</string>
     <string name="settings_colorblind">Colorblind mode</string>
     <string name="settings_play_tutorial">Play Tutorial</string>
@@ -25,7 +28,8 @@
     <string name="settings_play_log_out">Log Out from Google Play Games</string>
     <string name="settings_play_processing">Updating status…</string>
     <string name="settings_view_in_google_play">Review in Google Play</string>
-    <string name="settings_info_and_licenses">About…</string>
+    <string name="settings_info_and_credits">Game info and credits…</string>
+    <string name="settings_view_licenses">View licenses</string>
     <string name="statistics_best_data">Best data</string>
     <string name="statistics_best_score">Best score</string>
     <string name="statistics_best_time">Best time</string>
@@ -41,8 +45,8 @@
     <string name="statistics_sizes">Sizes data</string>
     <string name="statistics_no_data">There is no data!</string>
     <string name="tutorial_cancel">Do you want to leave the tutorial?</string>
-    <string name="about_credits">Credits</string>
-    <string name="about_license">License</string>
+    <string name="about_title">Info and credits</string>
+    <string name="licenses_title">Licenses</string>
     <string name="sharing_error">Could not share the screenshot. Sorry!</string>
     <string name="sign_in_failed">Errors found while trying to log in. Please verify the network connection and try again later.</string>
 </resources>

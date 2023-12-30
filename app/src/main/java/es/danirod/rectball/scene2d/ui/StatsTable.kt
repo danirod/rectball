@@ -1,6 +1,6 @@
 /*
- * This file is part of Rectball
- * Copyright (C) 2015-2017 Dani Rodríguez
+ * This file is part of Rectball.
+ * Copyright (C) 2015-2023 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,14 +27,14 @@ import com.badlogic.gdx.utils.Align
 import es.danirod.rectball.RectballGame
 import es.danirod.rectball.android.R
 import es.danirod.rectball.android.settings.SettingsManager
-import java.util.*
+import java.util.Locale
 
 class StatsTable(private val game: RectballGame, private val title: LabelStyle, private val data: LabelStyle) : Table() {
 
     private val context = game.context
 
     init {
-        defaults().padBottom(30f).padRight(10f)
+        defaults().padBottom(30f)
         add(addBestScores()).fillX().expandX().row()
         add(addTotalData()).fillX().expandX().row()
         add(addColorData()).fillX().expandX().row()
@@ -48,7 +48,7 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
 
         if (game.context.settings.preferences.getLong(SettingsManager.TAG_HIGH_SCORE, 0L) == 0L &&
                 game.context.settings.preferences.getLong(SettingsManager.TAG_HIGH_TIME, 0L) == 0L) {
-            val noData = Label(context.getString(R.string.statistics_no_data), game.skin)
+            val noData = Label(context.getString(R.string.statistics_no_data), game.appSkin)
             noData.setAlignment(Align.center)
             best.add(noData).colspan(2).fillX().expandX().padTop(10f).padBottom(10f).row()
             return best
@@ -68,7 +68,7 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
         total.add(Label(context.getString(R.string.statistics_total), title)).colspan(2).row()
         val data = totalStatistics
         if (data.isEmpty()) {
-            val noData = Label(context.getString(R.string.statistics_no_data), game.skin)
+            val noData = Label(context.getString(R.string.statistics_no_data), game.appSkin)
             noData.setAlignment(Align.center)
             total.add(noData).colspan(2).fillX().expandX().padTop(10f).padBottom(10f).row()
         } else {
@@ -84,7 +84,7 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
 
         if (stats.isEmpty()) {
             color.add(Label(context.getString(R.string.statistics_color), title)).row()
-            val noData = Label(context.getString(R.string.statistics_no_data), game.skin)
+            val noData = Label(context.getString(R.string.statistics_no_data), game.appSkin)
             noData.setAlignment(Align.center)
             color.add(noData).fillX().expandX().padTop(10f).padBottom(10f).row()
         } else {
@@ -112,13 +112,13 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
 
         /* No data. */
         if (stats.isEmpty()) {
-            val noData = Label(context.getString(R.string.statistics_no_data), game.skin)
+            val noData = Label(context.getString(R.string.statistics_no_data), game.appSkin)
             noData.setAlignment(Align.center)
             sizes.add(noData).colspan(3).fillX().expandX().padTop(10f).padBottom(10f).row()
             return sizes
         }
 
-        val bar = game.skin.newDrawable("pixel", Color.WHITE)
+        val bar = game.appSkin.newDrawable("pixel", Color.WHITE)
 
         // Highest value is used to calculate the relative percentage of each row.
         val highestValue = stats.values.maxOrNull() ?: 0

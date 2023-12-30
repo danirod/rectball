@@ -1,6 +1,6 @@
 /*
- * This file is part of Rectball
- * Copyright (C) 2015 Dani Rodríguez
+ * This file is part of Rectball.
+ * Copyright (C) 2015-2023 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 package es.danirod.rectball.scene2d.ui;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 /**
  * A generic confirmation dialog based on Scene2D.UI's Dialog class.
@@ -29,8 +30,9 @@ public class ConfirmDialog extends CommonDialog {
 
     public ConfirmDialog(Skin skin, String text, String okText, String cancelText) {
         super(skin, text);
-        button(okText, "ok").button(cancelText, "cancel");
-
+        TextButton okButton = new TextButton(okText, skin, "blue");
+        TextButton cancelButton = new TextButton(cancelText, skin, "blue");
+        button(okButton, "ok").button(cancelButton, "cancel");
     }
 
     public void setCallback(ConfirmCallback callback) {

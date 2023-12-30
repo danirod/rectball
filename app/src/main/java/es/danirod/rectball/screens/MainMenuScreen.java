@@ -24,18 +24,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Scaling;
 
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
+import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.android.R;
 import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.scene2d.game.BackgroundActor;
@@ -45,9 +41,9 @@ import es.danirod.rectball.scene2d.ui.MessageDialog;
 
 public class MainMenuScreen extends AbstractScreen {
 
-    private Image title = null;
-
     private MainMenuGrid grid = null;
+
+    private Label versionInformation = null;
 
     public MainMenuScreen(RectballGame game) {
         super(game, false);
@@ -55,25 +51,24 @@ public class MainMenuScreen extends AbstractScreen {
 
     @Override
     public void dispose() {
-        title = null;
         grid = null;
     }
 
     @Override
     public void setUpInterface(Table table) {
-        // Build the actors.
-        if (title == null) {
-            title = new Image(game.manager.get("logo.png", Texture.class));
-            title.setScaling(Scaling.fit);
-        }
-
         if (grid == null) {
             grid = new MainMenuGrid(game);
         }
-
-        table.defaults().padLeft(40f).padRight(40f).space(60f);
-        table.add(title).align(Align.top).row();
-        table.add(grid).align(Align.bottom).fillX().row();
+        if (versionInformation == null) {
+            String text = BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_CODE;
+            if (Character.isDigit(text.charAt(0))) {
+                text = "v" + text;
+            }
+            versionInformation = new Label(text, game.getAppSkin(), "small", "white");
+            versionInformation.setFontScale(0.75f);
+        }
+        table.add(grid).pad(30f).expand().fillX().row();
+        table.add(versionInformation).left().row();
     }
 
     private Stage backgroundLayer;
@@ -137,7 +132,7 @@ public class MainMenuScreen extends AbstractScreen {
         String message = game.getContext().getString(resId);
         String yes = game.getContext().getString(R.string.core_yes);
         String no = game.getContext().getString(R.string.core_no);
-        ConfirmDialog dialog = new ConfirmDialog(game.getSkin(), message, yes, no);
+        ConfirmDialog dialog = new ConfirmDialog(game.getAppSkin(), message, yes, no);
         dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
             @Override
             public void ok() {
@@ -160,7 +155,7 @@ public class MainMenuScreen extends AbstractScreen {
 
     private MessageDialog tutorialCancel() {
         String message = game.getContext().getString(R.string.main_dismiss_tutorial);
-        MessageDialog dialog = new MessageDialog(game.getSkin(), message);
+        MessageDialog dialog = new MessageDialog(game.getAppSkin(), message);
         dialog.setCallback(new MessageDialog.MessageCallback() {
             @Override
             public void dismiss() {

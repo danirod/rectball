@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball
- * Copyright (C) 2015 Dani Rodríguez
+ * Copyright (C) 2015-2023 Dani Rodríguez
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 
 package es.danirod.rectball.scene2d.ui;
 
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -41,24 +42,26 @@ class CommonDialog extends Dialog {
         pad(20);
 
         // Make the table use the full width.
-        getCell(getContentTable()).fillX().expandX();
-        getCell(getButtonTable()).fillX().expandX().padTop(20);
+        getCell(getContentTable()).growX();
+        getCell(getButtonTable()).growX().padTop(20);
 
         // Make the child items use the max width.
-        getContentTable().defaults().expandX().fillX();
-        getButtonTable().defaults().expandX().fillX();
+        getContentTable().defaults().growX();
+        getButtonTable().defaults().growX().uniformX().height(60f);
 
         // Add text to the center.
-        Label textLabel = new Label(text, skin);
+        Label textLabel = new Label(text, skin, "normal", "black");
         textLabel.setWrap(true);
         textLabel.setAlignment(Align.center);
-        getContentTable().add(textLabel).width(Constants.VIEWPORT_WIDTH - 80);
+        getContentTable().add(textLabel).minWidth(Constants.VIEWPORT_WIDTH * 0.75f).prefWidth(Constants.VIEWPORT_WIDTH * 0.75f);
     }
 
     @Override
     public Dialog show(Stage stage) {
-        show(stage, Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.1f)));
+        setTransform(true);
+        show(stage, Actions.sequence(Actions.scaleTo(0.8f, 0.8f), Actions.scaleTo(1f, 1f, 0.25f, Interpolation.sineOut)));
         setPosition(Math.round((stage.getWidth() - getWidth()) / 2), Math.round((stage.getHeight() - getHeight()) / 2));
+        setOrigin(Align.center);
         return this;
     }
 }

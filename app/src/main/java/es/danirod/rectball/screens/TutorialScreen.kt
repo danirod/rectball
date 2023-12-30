@@ -1,3 +1,20 @@
+/*
+ * This file is part of Rectball.
+ * Copyright (C) 2015-2023 Dani Rodríguez.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package es.danirod.rectball.screens
 
 import com.badlogic.gdx.Gdx
@@ -63,13 +80,13 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game, false) {
         table.setFillParent(true)
 
         hud = Hud(game).apply {
-            helpVisible = false
-            pauseVisible = false
-            timerVisible = false
-            scoreVisible = false
+            help.isVisible = false
+            pause.isVisible = false
+            timer.isVisible = false
+            score.isVisible = false
         }
 
-        board = BoardActor(game.ballAtlas, game.skin, game.state.board).apply {
+        board = BoardActor(game.ballAtlas, game.appSkin, game.state.board).apply {
             touchable = Touchable.disabled
             isVisible = false
         }
@@ -289,7 +306,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game, false) {
     }
 
     private fun showLeaveConfirmationDialog(stage: Stage) {
-        ConfirmDialog(game.skin, game.context.getString(R.string.tutorial_cancel), game.context.getString(R.string.core_yes), game.context.getString(R.string.core_no)).apply {
+        ConfirmDialog(game.appSkin, game.context.getString(R.string.tutorial_cancel), game.context.getString(R.string.core_yes), game.context.getString(R.string.core_no)).apply {
             setCallback(object : ConfirmDialog.ConfirmCallback {
                 override fun ok() {
                     game.player.playSound(SoundPlayer.SoundCode.SUCCESS)
@@ -369,7 +386,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game, false) {
             game.context.resources.getStringArray(R.array.tutorial_lines)[index]
 
     private fun makeModal(text: String, buttonText: String, onDismiss: () -> Unit): MessageDialog =
-            MessageDialog(game.skin, text, buttonText).apply {
+            MessageDialog(game.appSkin, text, buttonText).apply {
                 setCallback {
                     game.player.playSound(SoundPlayer.SoundCode.SUCCESS)
                     onDismiss()
@@ -378,8 +395,8 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game, false) {
 
     private fun setVisibility(board: Boolean, score: Boolean, timer: Boolean) {
         this.board.isVisible = board
-        this.hud.scoreVisible = score
-        this.hud.timerVisible = timer
+        this.hud.score.isVisible = score
+        this.hud.timer.isVisible = timer
     }
 
     override fun getID() = Screens.TUTORIAL
