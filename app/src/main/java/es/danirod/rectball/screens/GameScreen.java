@@ -82,7 +82,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     private boolean askingLeave;
 
     public GameScreen(RectballGame game) {
-        super(game, false);
+        super(game);
     }
 
     /**
@@ -359,8 +359,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 ((Dialog) actor).hide(null);
             }
         }
-        // Restore original back button functionality.
-        Gdx.input.setCatchBackKey(false);
     }
 
     @Override
@@ -372,12 +370,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             game.getState().addTime(delta);
             game.getState().setRemainingTime(hud.getTimer().getSeconds());
         }
+    }
 
-        // The user should be able to leave during the game.
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            if (!paused && !game.getState().isTimeout()) {
-                pauseGame();
-            }
+    @Override
+    protected void escape() {
+        if (!paused && !game.getState().isTimeout()) {
+            pauseGame();
         }
     }
 

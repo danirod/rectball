@@ -44,7 +44,7 @@ import es.danirod.rectball.scene2d.listeners.DefaultBallSelectionListener
 import es.danirod.rectball.scene2d.ui.ConfirmDialog
 import es.danirod.rectball.scene2d.ui.MessageDialog
 
-class TutorialScreen(game: RectballGame) : AbstractScreen(game, false) {
+class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
 
     private lateinit var hud: Hud
 

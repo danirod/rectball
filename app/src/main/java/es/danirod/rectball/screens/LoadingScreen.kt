@@ -23,7 +23,7 @@ import com.badlogic.gdx.utils.Align
 import es.danirod.rectball.RectballGame
 import es.danirod.rectball.scene2d.ui.LoadingAnimation
 
-class LoadingScreen(game: RectballGame?) : AbstractScreen(game, false) {
+class LoadingScreen(game: RectballGame?) : AbstractScreen(game) {
 
     private var canUpdate = false
 
@@ -63,5 +63,9 @@ class LoadingScreen(game: RectballGame?) : AbstractScreen(game, false) {
 
     companion object {
         private const val FADE_SPEED = 0.05f
+    }
+
+    override fun escape() {
+        /* Don't do anything here */
     }
 }

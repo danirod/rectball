@@ -17,10 +17,6 @@
  */
 package es.danirod.rectball.screens
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
-import com.badlogic.gdx.InputAdapter
-import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
@@ -33,7 +29,7 @@ import es.danirod.rectball.android.settings.SettingsManager
 import es.danirod.rectball.scene2d.listeners.ScreenPopper
 import es.danirod.rectball.scene2d.ui.GameSummary
 
-class GameOverScreen(game: RectballGame) : AbstractScreen(game, true) {
+class GameOverScreen(game: RectballGame) : AbstractScreen(game) {
 
     private fun getHighScore() = game.context.settings.preferences.getLong(SettingsManager.TAG_HIGH_SCORE, 0L)
 
@@ -66,26 +62,10 @@ class GameOverScreen(game: RectballGame) : AbstractScreen(game, true) {
         }
     }
 
-    override fun show() {
-        super.show()
-        val multiplexer = InputMultiplexer()
-        multiplexer.addProcessor(getStage())
-        multiplexer.addProcessor(GameOverInputProcessor())
-        Gdx.input.inputProcessor = multiplexer
-    }
-
     override fun getID() = Screens.GAME_OVER
 
-    private inner class GameOverInputProcessor : InputAdapter() {
-        override fun keyDown(keycode: Int) = keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE
-
-        override fun keyUp(keycode: Int) = when (keycode) {
-            Input.Keys.BACK, Input.Keys.ESCAPE -> {
-                game.player.playSound(SoundPlayer.SoundCode.FAIL)
-                game.clearStack()
-                true
-            }
-            else -> false
-        }
+    override fun escape() {
+        game.player.playSound(SoundPlayer.SoundCode.FAIL)
+        game.clearStack()
     }
 }

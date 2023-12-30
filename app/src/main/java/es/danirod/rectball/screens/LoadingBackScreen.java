@@ -35,7 +35,7 @@ public class LoadingBackScreen extends AbstractScreen {
     private boolean canUpdate;
 
     public LoadingBackScreen(RectballGame game) {
-        super(game, false);
+        super(game);
         board = new Board(6);
     }
 
@@ -96,4 +96,8 @@ public class LoadingBackScreen extends AbstractScreen {
         return Screens.LOADING_BACK;
     }
 
+    @Override
+    protected void escape() {
+        /* Don't do anything here */
+    }
 }

@@ -46,7 +46,7 @@ public class MainMenuScreen extends AbstractScreen {
     private Label versionInformation = null;
 
     public MainMenuScreen(RectballGame game) {
-        super(game, false);
+        super(game);
     }
 
     @Override

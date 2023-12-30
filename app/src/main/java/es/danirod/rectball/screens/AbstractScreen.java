@@ -46,13 +46,6 @@ public abstract class AbstractScreen implements Screen {
     final RectballGame game;
 
     /**
-     * Whether the default BACK/ESCAPE button handler should be used or not.
-     *
-     * @since 0.3.0
-     */
-    final boolean handleBack;
-
-    /**
      * Common stage.
      */
     protected Stage stage = null;
@@ -62,13 +55,8 @@ public abstract class AbstractScreen implements Screen {
      */
     protected Table table = null;
 
-    AbstractScreen(RectballGame game) {
-        this(game, true);
-    }
-
-    AbstractScreen(RectballGame game, boolean handleBack) {
+    public AbstractScreen(RectballGame game) {
         this.game = game;
-        this.handleBack = handleBack;
     }
 
     @Override
@@ -143,15 +131,12 @@ public abstract class AbstractScreen implements Screen {
         stage.addActor(table);
         setUpInterface(table);
 
-        Gdx.input.setCatchBackKey(true);
-        if (handleBack) {
-            InputMultiplexer multiplexer = new InputMultiplexer();
-            multiplexer.addProcessor(new BackButtonInputProcessor(game));
-            multiplexer.addProcessor(stage);
-            Gdx.input.setInputProcessor(multiplexer);
-        } else {
-            Gdx.input.setInputProcessor(stage);
-        }
+        Gdx.input.setCatchKey(Input.Keys.BACK, true);
+        Gdx.input.setCatchKey(Input.Keys.ESCAPE, true);
+        InputMultiplexer multi = new InputMultiplexer();
+        multi.addProcessor(new BackButtonInputProcessor());
+        multi.addProcessor(stage);
+        Gdx.input.setInputProcessor(multi);
     }
 
     @Override
@@ -170,17 +155,16 @@ public abstract class AbstractScreen implements Screen {
 
     public abstract int getID();
 
+    protected void escape() {
+        game.player.playSound(SoundPlayer.SoundCode.FAIL);
+        game.popScreen();
+    }
+
     Stage getStage() {
         return stage;
     }
 
-    static class BackButtonInputProcessor extends InputAdapter {
-
-        private final RectballGame game;
-
-        public BackButtonInputProcessor(RectballGame game) {
-            this.game = game;
-        }
+    private class BackButtonInputProcessor extends InputAdapter {
 
         @Override
         public boolean keyDown(int keycode) {
@@ -190,8 +174,7 @@ public abstract class AbstractScreen implements Screen {
         @Override
         public boolean keyUp(int keycode) {
             if (keycode == Input.Keys.ESCAPE || keycode == Input.Keys.BACK) {
-                game.player.playSound(SoundPlayer.SoundCode.FAIL);
-                game.popScreen();
+                escape();
                 return true;
             }
             return false;
