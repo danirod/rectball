@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="tutorial_lines">
-        <item>Bienvenido a Rectball. En este tutorial te explicaré cómo jugar.</item>
+        <item>¡Hola! Esto es Rectball. En este tutorial te explicaré cómo jugar.</item>
         <item>Este es el tablero. Aquí es donde ocurre la diversión durante un juego.</item>
         <item>Este es el temporizador. Cuando se agote, se acabó la partida.</item>
         <item>Y este es el marcador. Cuando consigas puntos, se sumarán aquí.</item>

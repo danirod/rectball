@@ -21,7 +21,7 @@
     <string name="settings_colorblind">Distinguir sin color</string>
     <string name="settings_play_log_in">Entrar en Google Play Games</string>
     <string name="settings_play_log_out">Salir de Google Play Games</string>
-    <string name="settings_play_processing">Actualizando estado...</string>
+    <string name="settings_play_processing">Actualizando estado…</string>
     <string name="settings_play_tutorial">Jugar Tutorial</string>
     <string name="sharing_intent_text">He hecho %d puntos en #Rectball. ¿Puedes superarlo?</string>
     <string name="sharing_intent_title">Compartir resultado</string>
