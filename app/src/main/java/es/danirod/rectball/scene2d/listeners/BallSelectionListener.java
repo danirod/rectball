@@ -29,21 +29,6 @@ import java.util.List;
  * check if a combination is valid...
  */
 public interface BallSelectionListener {
-
-    /**
-     * This event is triggered when a ball has been selected on a board.
-     *
-     * @param ball ball that has been selected.
-     */
-    void onBallSelected(BallActor ball);
-
-    /**
-     * This event is triggered when a ball has been unselected from a board.
-     *
-     * @param ball ball that has been unselected.
-     */
-    void onBallUnselected(BallActor ball);
-
     /**
      * This event is triggered when a selection is made and the selection has
      * already be checked to be valid. All the selected balls form a rectangle

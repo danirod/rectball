@@ -490,20 +490,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     }
 
     @Override
-    public void onBallSelected(BallActor ball) {
-        ball.addAction(Actions.scaleTo(0.8f, 0.8f, 0.15f));
-        ball.addAction(Actions.color(Color.GRAY, 0.15f));
-        game.player.playSound(SoundCode.SELECT);
-    }
-
-    @Override
-    public void onBallUnselected(BallActor ball) {
-        ball.addAction(Actions.scaleTo(1f, 1f, 0.15f));
-        ball.addAction(Actions.color(Color.WHITE, 0.15f));
-        game.player.playSound(SoundCode.UNSELECT);
-    }
-
-    @Override
     public void onSelectionSucceeded(final List<BallActor> selection) {
         // Extract the data from the selection.
         List<Ball> balls = new ArrayList<>();

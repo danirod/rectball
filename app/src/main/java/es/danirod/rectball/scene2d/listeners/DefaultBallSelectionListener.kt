@@ -4,13 +4,6 @@ import es.danirod.rectball.scene2d.game.BallActor
 
 open class DefaultBallSelectionListener() : BallSelectionListener {
 
-    override fun onBallSelected(ball: BallActor?) {
-
-    }
-
-    override fun onBallUnselected(ball: BallActor?) {
-
-    }
 
     override fun onSelectionSucceeded(selection: MutableList<BallActor>?) {
 
