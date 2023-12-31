@@ -24,6 +24,4 @@ class SettingsScreen(game: RectballGame) : MenuScreen(game) {
     override fun getTitle() = "Settings"
 
     override fun getRoot() = SettingsMenu(game)
-
-    override fun getID() = Screens.SETTINGS
 }

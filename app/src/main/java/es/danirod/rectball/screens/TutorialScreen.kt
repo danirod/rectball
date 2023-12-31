@@ -399,6 +399,4 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
         this.hud.score.isVisible = score
         this.hud.timer.isVisible = timer
     }
-
-    override fun getID() = Screens.TUTORIAL
 }

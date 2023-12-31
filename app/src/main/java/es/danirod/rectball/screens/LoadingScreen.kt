@@ -34,10 +34,6 @@ class LoadingScreen(game: RectballGame?) : AbstractScreen(game) {
         load.animate()
     }
 
-    override fun getID(): Int {
-        return Screens.LOADING
-    }
-
     override fun show() {
         super.show()
         canUpdate = false

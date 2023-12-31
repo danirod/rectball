@@ -18,8 +18,6 @@
 
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -144,11 +142,6 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     }
 
     @Override
-    public int getID() {
-        return Screens.GAME;
-    }
-
-    @Override
     public void show() {
         super.show();
         game.updateWakelock(true);
@@ -159,7 +152,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         } else {
             game.setRestoredState(false);
             if (game.getState().isTimeout()) {
-                game.pushScreen(Screens.GAME_OVER);
+                game.pushScreen(new GameOverScreen(game));
             }
         }
 
@@ -488,7 +481,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             @Override
             public void run() {
                 getStage().getRoot().clearActions();
-                game.pushScreen(Screens.GAME_OVER);
+                game.pushScreen(new GameOverScreen(game));
             }
         })));
 

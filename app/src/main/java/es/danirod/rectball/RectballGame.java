@@ -18,6 +18,8 @@
 
 package es.danirod.rectball;
 
+import androidx.annotation.NonNull;
+
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -33,18 +35,11 @@ import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.scene2d.RectballSkin;
-import es.danirod.rectball.screens.AboutScreen;
 import es.danirod.rectball.screens.AbstractScreen;
-import es.danirod.rectball.screens.GameOverScreen;
 import es.danirod.rectball.screens.GameScreen;
-import es.danirod.rectball.screens.LicenseScreen;
 import es.danirod.rectball.screens.LoadingBackScreen;
 import es.danirod.rectball.screens.LoadingScreen;
 import es.danirod.rectball.screens.MainMenuScreen;
-import es.danirod.rectball.screens.Screens;
-import es.danirod.rectball.screens.SettingsScreen;
-import es.danirod.rectball.screens.StatisticsScreen;
-import es.danirod.rectball.screens.TutorialScreen;
 import es.danirod.rectball.settings.AppSettings;
 
 /**
@@ -143,25 +138,12 @@ public class RectballGame extends StateBasedGame {
         manager.finishLoadingAsset("skin/rectball.json");
         updateBallAtlas();
 
-        addScreen(new GameScreen(this));
-        addScreen(new GameOverScreen(this));
-        addScreen(new MainMenuScreen(this));
-        addScreen(new SettingsScreen(this));
-        addScreen(new LoadingScreen(this));
-        addScreen(new LoadingBackScreen(this));
-        addScreen(new StatisticsScreen(this));
-        addScreen(new AboutScreen(this));
-        addScreen(new TutorialScreen(this));
-        addScreen(new LicenseScreen(this));
-
         batch = new SpriteBatch();
 
         if (!restoredState) {
-            getScreen(Screens.LOADING).load();
-            setScreen(getScreen(Screens.LOADING));
+            setScreen(new LoadingScreen(this));
         } else {
-            getScreen(Screens.LOADING_BACK).load();
-            setScreen(getScreen(Screens.LOADING_BACK));
+            setScreen(new LoadingBackScreen(this));
         }
     }
 
@@ -171,15 +153,11 @@ public class RectballGame extends StateBasedGame {
         new RectballSkin(this);
         updateBallAtlas();
 
-        for (AbstractScreen screen : getAllScreens()) {
-            screen.load();
-        }
-
         // Enter next screen.
-        pushScreen(Screens.MAIN_MENU);
+        clearScreenStack();
         if (restoredState) {
             // If playing, enter the game screen as well. Keep MAIN_MENU in the stack.
-            pushScreen(Screens.GAME);
+            pushScreen(new GameScreen(this));
         }
     }
 
@@ -237,8 +215,9 @@ public class RectballGame extends StateBasedGame {
         this.restoredState = restoredState;
     }
 
+    @NonNull
     @Override
-    public int getEmptyStackScreen() {
-        return Screens.MAIN_MENU;
+    public AbstractScreen getFallbackScreen() {
+        return new MainMenuScreen(this);
     }
 }

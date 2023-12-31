@@ -30,6 +30,4 @@ class StatisticsScreen(game: RectballGame) : MenuScreen(game) {
     }
 
     override fun getTitle() = "Statistics"
-
-    override fun getID(): Int = Screens.STATISTICS
 }

@@ -27,9 +27,10 @@ import es.danirod.rectball.RectballGame
 import es.danirod.rectball.SoundPlayer.SoundCode
 import es.danirod.rectball.android.BuildConfig
 import es.danirod.rectball.android.R
-import es.danirod.rectball.scene2d.listeners.ScreenJumper
 import es.danirod.rectball.scene2d.ui.SwitchActor
-import es.danirod.rectball.screens.Screens
+import es.danirod.rectball.screens.AboutScreen
+import es.danirod.rectball.screens.LicenseScreen
+import es.danirod.rectball.screens.TutorialScreen
 
 class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
 
@@ -85,7 +86,12 @@ class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
     private val doTutorialButton = game.context.getString(R.string.settings_play_tutorial).let { label ->
         TextButton(label, game.appSkin).apply {
             pad(10f)
-            addListener(ScreenJumper(game, Screens.TUTORIAL))
+            addListener(object : ChangeListener() {
+                override fun changed(event: ChangeEvent, actor: Actor) {
+                    game.player.playSound(SoundCode.SUCCESS)
+                    game.pushScreen(TutorialScreen(game));
+                }
+            })
         }
     }
 
@@ -127,14 +133,24 @@ class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
     private val doShowInfo = game.context.getString(R.string.settings_info_and_credits).let { label ->
         TextButton(label, game.appSkin).apply {
             pad(10f)
-            addListener(ScreenJumper(game, Screens.ABOUT))
+            addListener(object : ChangeListener() {
+                override fun changed(event: ChangeEvent, actor: Actor) {
+                    game.player.playSound(SoundCode.SUCCESS)
+                    game.pushScreen(AboutScreen(game));
+                }
+            })
         }
     }
 
     private val doShowLicense = game.context.getString(R.string.settings_view_licenses).let { label ->
         TextButton(label, game.appSkin).apply {
             pad(10f)
-            addListener(ScreenJumper(game, Screens.LICENSE))
+            addListener(object : ChangeListener() {
+                override fun changed(event: ChangeEvent?, actor: Actor?) {
+                    game.player.playSound(SoundCode.SUCCESS)
+                    game.pushScreen(LicenseScreen(game));
+                }
+            })
         }
     }
 

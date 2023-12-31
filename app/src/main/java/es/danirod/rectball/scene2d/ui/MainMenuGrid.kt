@@ -29,8 +29,9 @@ import es.danirod.rectball.RectballGame
 import es.danirod.rectball.SoundPlayer
 import es.danirod.rectball.android.BuildConfig
 import es.danirod.rectball.android.R
-import es.danirod.rectball.scene2d.listeners.ScreenJumper
-import es.danirod.rectball.screens.Screens
+import es.danirod.rectball.screens.GameScreen
+import es.danirod.rectball.screens.SettingsScreen
+import es.danirod.rectball.screens.StatisticsScreen
 
 class MainMenuGrid(private val game: RectballGame) : Table() {
 
@@ -43,23 +44,30 @@ class MainMenuGrid(private val game: RectballGame) : Table() {
         imageCell.spaceRight(20f)
         addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
-                game.getScreen(Screens.ABOUT)?.dispose()
-                game.getScreen(Screens.SETTINGS)?.dispose()
-                game.getScreen(Screens.STATISTICS)?.dispose()
                 game.player.playSound(SoundPlayer.SoundCode.SELECT)
-                game.pushScreen(Screens.GAME)
+                game.pushScreen(GameScreen(game));
             }
         })
     }
 
     private val settings = ImageButton(game.appSkin, "settings").apply {
         pad(0f)
-        addListener(ScreenJumper(game, Screens.SETTINGS))
+        addListener(object : ChangeListener() {
+            override fun changed(event: ChangeEvent?, actor: Actor?) {
+                game.player.playSound(SoundPlayer.SoundCode.SUCCESS)
+                game.pushScreen(SettingsScreen(game));
+            }
+        })
     }
 
     private val statistics = ImageButton(game.appSkin, "statistics").apply {
         pad(0f)
-        addListener(ScreenJumper(game, Screens.STATISTICS))
+        addListener(object : ChangeListener() {
+            override fun changed(event: ChangeEvent?, actor: Actor?) {
+                game.player.playSound(SoundPlayer.SoundCode.SUCCESS)
+                game.pushScreen(StatisticsScreen(game));
+            }
+        })
     }
 
     /* This is lazy so that it doesn't break if game services are not enabled. */

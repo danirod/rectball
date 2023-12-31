@@ -62,10 +62,8 @@ class GameOverScreen(game: RectballGame) : AbstractScreen(game) {
         }
     }
 
-    override fun getID() = Screens.GAME_OVER
-
     override fun escape() {
         game.player.playSound(SoundPlayer.SoundCode.FAIL)
-        game.clearStack()
+        game.clearScreenStack()
     }
 }

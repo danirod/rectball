@@ -123,11 +123,6 @@ public class MainMenuScreen extends AbstractScreen {
         stage.draw();
     }
 
-    @Override
-    public int getID() {
-        return Screens.MAIN_MENU;
-    }
-
     private ConfirmDialog askTutorial(int resId) {
         String message = game.getContext().getString(resId);
         String yes = game.getContext().getString(R.string.core_yes);
@@ -137,7 +132,7 @@ public class MainMenuScreen extends AbstractScreen {
             @Override
             public void ok() {
                 game.player.playSound(SoundPlayer.SoundCode.SUCCESS);
-                game.pushScreen(Screens.TUTORIAL);
+                game.pushScreen(new TutorialScreen(game));
             }
 
             @Override

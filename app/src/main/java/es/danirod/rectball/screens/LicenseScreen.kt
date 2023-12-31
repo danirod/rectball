@@ -37,6 +37,4 @@ class LicenseScreen(game: RectballGame) : MenuScreen(game) {
         wrap = true
         setFontScale(0.85f)
     }
-
-    override fun getID() = Screens.LICENSE
 }

@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015-2017 Dani Rodríguez.
+ * Copyright (C) 2015-2023 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,55 +18,37 @@
 package es.danirod.rectball
 
 import com.badlogic.gdx.Game
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Screen
 import es.danirod.rectball.screens.AbstractScreen
-import java.util.*
 
 abstract class StateBasedGame: Game() {
+    private val stack = ArrayDeque<Screen>()
 
-    /** A map of the screens in use for this game. */
-    protected val screens = mutableMapOf<Int, AbstractScreen>()
+    abstract fun getFallbackScreen(): AbstractScreen
 
-    /** Screen stack allows managing a FIFO list of visible screens. */
-    private val stack = ArrayDeque<AbstractScreen>()
-
-    /** The default screen to use when an empty stack is popped or cleared. */
-    abstract val emptyStackScreen: Int
-
-    /** Returns the registered screen whose identifier is [id]. */
-    fun getScreen(id: Int): AbstractScreen? = screens[id]
-
-    /** Returns a list containing all the registered screens. */
-    fun getAllScreens() = screens.values.toList()
-
-    /** Add a [screen] to the screen map. */
-    fun addScreen(screen: AbstractScreen) {
-        screens[screen.id] = screen
+    fun pushScreen(screen: Screen) {
+        val oldScreen = getScreen()
+        Gdx.app.debug("StateBasedGame", "push: ${oldScreen.javaClass.canonicalName} => ${screen.javaClass.canonicalName}")
+        setScreen(screen)
+        oldScreen?.let { stack.add(it) }
     }
 
-    /** Pushes the screen identified by [id] onto the screen stack and enables it. */
-    fun pushScreen(id: Int) {
-        stack.push(screens[id])
-        setScreen(stack.peek())
-    }
-
-    /** Removes the current screen from the stack and access the next one. */
     fun popScreen() {
-        stack.removeFirst()
-        if (stack.isEmpty()) {
-            pushScreen(emptyStackScreen)
-        } else {
-            setScreen(stack.peek())
-        }
+        val nextScreen = stack.removeLastOrNull() ?: getFallbackScreen()
+        Gdx.app.debug("StateBasedGame", "pop: ${nextScreen.javaClass.canonicalName}")
+        setScreen(nextScreen)
     }
 
     /** Clears the stack screen and sets the default one. */
-    fun clearStack() {
+    fun clearScreenStack() {
+        Gdx.app.debug("StateBasedGame", "clear")
         stack.clear()
-        setScreen(screens[emptyStackScreen])
+        setScreen(getFallbackScreen())
     }
 
-    override fun create() {
-
+    override fun setScreen(screen: Screen?) {
+        screen?.let { Gdx.app.debug("StateBasedGame", "setScreen: ${screen.javaClass.canonicalName}") }
+        super.setScreen(screen)
     }
-
 }

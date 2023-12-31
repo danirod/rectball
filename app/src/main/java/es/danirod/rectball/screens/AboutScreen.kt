@@ -40,6 +40,4 @@ class AboutScreen(game: RectballGame) : MenuScreen(game) {
         wrap = true
         setFontScale(0.85f)
     }
-
-    override fun getID() = Screens.ABOUT
 }

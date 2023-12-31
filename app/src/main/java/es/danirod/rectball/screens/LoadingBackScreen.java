@@ -92,11 +92,6 @@ public class LoadingBackScreen extends AbstractScreen {
     }
 
     @Override
-    public int getID() {
-        return Screens.LOADING_BACK;
-    }
-
-    @Override
     protected void escape() {
         /* Don't do anything here */
     }

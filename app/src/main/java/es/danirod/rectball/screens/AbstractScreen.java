@@ -18,6 +18,9 @@
 
 package es.danirod.rectball.screens;
 
+import static es.danirod.rectball.Constants.STAGE_PADDING;
+import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -31,9 +34,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
-
-import static es.danirod.rectball.Constants.STAGE_PADDING;
-import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
 
 /**
  * This is the base screen every screen has to inherit. It contains common
@@ -63,10 +63,6 @@ public abstract class AbstractScreen implements Screen {
     public void resize(int width, int height) {
         stage.setViewport(buildViewport());
         stage.getViewport().update(width, height, true);
-    }
-
-    public void load() {
-
     }
 
     /**
@@ -152,8 +148,6 @@ public abstract class AbstractScreen implements Screen {
         }
         table = null;
     }
-
-    public abstract int getID();
 
     protected void escape() {
         game.player.playSound(SoundPlayer.SoundCode.FAIL);
