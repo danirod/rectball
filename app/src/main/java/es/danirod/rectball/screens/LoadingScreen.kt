@@ -37,7 +37,7 @@ class LoadingScreen(game: RectballGame?) : AbstractScreen(game) {
     override fun show() {
         super.show()
         canUpdate = false
-        getStage().addAction(Actions.sequence(
+        stage.addAction(Actions.sequence(
                 Actions.alpha(0f),
                 Actions.alpha(1f, FADE_SPEED),
                 Actions.run { canUpdate = true }
@@ -48,7 +48,7 @@ class LoadingScreen(game: RectballGame?) : AbstractScreen(game) {
         super.render(delta)
         if (canUpdate && game.manager.update(1000 / 120)) {
             canUpdate = false
-            getStage().addAction(Actions.sequence(
+            stage.addAction(Actions.sequence(
                     Actions.alpha(0f, FADE_SPEED),
                     Actions.delay(0.1f, Actions.run {
                         game.finishLoading()

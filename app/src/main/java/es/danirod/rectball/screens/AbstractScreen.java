@@ -154,10 +154,6 @@ public abstract class AbstractScreen implements Screen {
         game.popScreen();
     }
 
-    Stage getStage() {
-        return stage;
-    }
-
     private class BackButtonInputProcessor extends InputAdapter {
 
         @Override

@@ -44,7 +44,7 @@ public class LoadingBackScreen extends AbstractScreen {
         boardActor = new BoardActor(game.getBallAtlas(), game.getAppSkin(), board);
         Rectangle bounds = game.getState().getBoardBounds();
         boardActor.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
-        getStage().addActor(boardActor);
+        stage.addActor(boardActor);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class LoadingBackScreen extends AbstractScreen {
                 boardActor.getBall(i, j).setVisible(false);
 
         canUpdate = false;
-        getStage().addAction(Actions.sequence(
+        stage.addAction(Actions.sequence(
                 Actions.alpha(0),
                 Actions.alpha(1, FADE_SPEED),
                 Actions.run(new Runnable() {

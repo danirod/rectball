@@ -111,7 +111,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             }
         });
 
-        dialog.show(getStage());
+        dialog.show(stage);
         askingLeave = true;
     }
 
@@ -137,7 +137,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             }
         });
 
-        dialog.show(getStage());
+        dialog.show(stage);
         askingLeave = true;
     }
 
@@ -205,11 +205,11 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         label.setSize(150, 150);
         label.setAlignment(Align.center);
         label.setPosition(
-                (getStage().getWidth() - label.getWidth()) / 2,
-                (getStage().getHeight() - label.getHeight()) / 2);
+                (stage.getWidth() - label.getWidth()) / 2,
+                (stage.getHeight() - label.getHeight()) / 2);
 
         // Add the label to the stage and play a sound to notify the user.
-        getStage().addActor(label);
+        stage.addActor(label);
         game.player.playSound(SoundCode.SELECT);
 
         label.addAction(Actions.sequence(
@@ -304,7 +304,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                     // Subtract some time.
                     float subtractedTime = 5f;
                     final float step = subtractedTime / 10;
-                    getStage().addAction(Actions.repeat(10, Actions.delay(0.01f,
+                    stage.addAction(Actions.repeat(10, Actions.delay(0.01f,
                             Actions.run(new Runnable() {
                                 @Override
                                 public void run() {
@@ -347,7 +347,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         game.getState().setPlaying(false);
 
         // Just in case, remove any dialogs that might be forgotten.
-        for (Actor actor : getStage().getActors()) {
+        for (Actor actor : stage.getActors()) {
             if (actor instanceof Dialog) {
                 ((Dialog) actor).hide(null);
             }
@@ -477,10 +477,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         hud.addAction(Actions.delay(2f, Actions.fadeOut(0.25f)));
 
         // Head to the game over after all these animations have finished.
-        getStage().addAction(Actions.delay(2.5f, Actions.run(new Runnable() {
+        stage.addAction(Actions.delay(2.5f, Actions.run(new Runnable() {
             @Override
             public void run() {
-                getStage().getRoot().clearActions();
+                stage.getRoot().clearActions();
                 game.pushScreen(new GameOverScreen(game));
             }
         })));
@@ -546,15 +546,15 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
             // Give score
             Label label = new Label("PERFECT", game.getAppSkin(), "monospace");
-            label.setX((getStage().getViewport().getWorldWidth() - label.getWidth()) / 2);
-            label.setY((getStage().getViewport().getWorldHeight() - label.getHeight()) / 2);
+            label.setX((stage.getViewport().getWorldWidth() - label.getWidth()) / 2);
+            label.setY((stage.getViewport().getWorldHeight() - label.getHeight()) / 2);
             label.setFontScale(3);
             label.setAlignment(Align.center);
             label.addAction(Actions.sequence(
                             Actions.moveBy(0, 80, 0.5f),
                     Actions.removeActor()
             ));
-            getStage().addActor(label);
+            stage.addActor(label);
             game.player.playSound(SoundCode.PERFECT);
 
             // Give time

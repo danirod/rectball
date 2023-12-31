@@ -86,15 +86,15 @@ public class MainMenuScreen extends AbstractScreen {
         backgroundLayer.addActor(backgroundActor);
 
         InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(getStage());
+        multiplexer.addProcessor(stage);
         multiplexer.addProcessor(new MainMenuInputProcessor());
         Gdx.input.setInputProcessor(multiplexer);
 
         // On first run, show the tutorial.
         if (!game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ASKED_TUTORIAL, false)) {
-            askTutorial(R.string.main_ask_tutorial).show(getStage());
+            askTutorial(R.string.main_ask_tutorial).show(stage);
         } else if (!game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_NEW_SELECTION_MODE_NOTIFIED, false)) {
-            askTutorial(R.string.main_ask_new_selection_method).show(getStage());
+            askTutorial(R.string.main_ask_new_selection_method).show(stage);
         }
     }
 
@@ -142,7 +142,7 @@ public class MainMenuScreen extends AbstractScreen {
                 editor.putBoolean(SettingsManager.TAG_ASKED_TUTORIAL, true);
                 editor.putBoolean(SettingsManager.TAG_NEW_SELECTION_MODE_NOTIFIED, true);
                 editor.apply();
-                tutorialCancel().show(getStage());
+                tutorialCancel().show(stage);
             }
         });
         return dialog;
