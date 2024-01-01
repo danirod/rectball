@@ -18,6 +18,9 @@ app/gen/
 out/
 com_crashlytics_export_strings.xml
 
+# Google
+app/google-services.json
+
 # Gradle
 .gradle
 gradle-app.setting

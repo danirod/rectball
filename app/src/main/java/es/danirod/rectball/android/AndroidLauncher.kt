@@ -44,7 +44,7 @@ class AndroidLauncher : AndroidApplication() {
         // Setup game state
         platform = AndroidPlatform(this)
         settings = SettingsManager(this)
-        game = if (savedState != null) buildGameInstance(savedState) else RectballGame(this)
+        game = buildGameInstance(savedState)
 
         // Set up layout.
         val config = AndroidApplicationConfiguration()
@@ -82,10 +82,6 @@ class AndroidLauncher : AndroidApplication() {
         platform.onActivityResult(requestCode, resultCode, data)
     }
 
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-    }
-
     fun openInMarketplace() {
         try {
             val intent = Intent(Intent.ACTION_VIEW)
@@ -98,22 +94,8 @@ class AndroidLauncher : AndroidApplication() {
         }
     }
 
-    /** Generates an Intent for sharing the image file [image], possibly with some [message]. */
-    fun screenshotIntent(image: Uri, message: CharSequence? = null): Intent {
-        val intent = Intent()
-        intent.action = Intent.ACTION_SEND
-        intent.type = "image/png"
-        intent.putExtra(Intent.EXTRA_STREAM, image)
-        if (message != null) {
-            intent.putExtra(Intent.EXTRA_SUBJECT, message)
-            intent.putExtra(Intent.EXTRA_TEXT, message)
-        }
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        return intent
-    }
-
-    private fun buildGameInstance(state: Bundle) =
-        when (val realState = state.getString("state")) {
+    private fun buildGameInstance(state: Bundle?) =
+        when (val realState = state?.getString("state")) {
             null -> RectballGame(this)
             else -> RectballGame(this, deserializeState(realState))
         }
