@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball
- * Copyright (C) 2015-2023 Dani Rodríguez
+ * Copyright (C) 2015-2024 Dani Rodríguez
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import es.danirod.rectball.RectballGame
 import es.danirod.rectball.android.BuildConfig
-import es.danirod.rectball.android.R
 
 /**
  * About screen.
@@ -34,7 +33,7 @@ class AboutScreen(game: RectballGame) : MenuScreen(game) {
         "$version\n$credits"
     }
 
-    override fun getTitle() = game.context.getString(R.string.about_title)
+    override fun getTitle() = game.locale["about.title"]
 
     override fun getRoot() = Label(credits, game.appSkin, "small", "white").apply {
         wrap = true

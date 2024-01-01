@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015-2023 Dani Rodríguez.
+ * Copyright (C) 2015-2024 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,6 @@ import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
 import es.danirod.rectball.android.BuildConfig;
-import es.danirod.rectball.android.R;
 import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.scene2d.game.BackgroundActor;
 import es.danirod.rectball.scene2d.ui.ConfirmDialog;
@@ -92,9 +91,9 @@ public class MainMenuScreen extends AbstractScreen {
 
         // On first run, show the tutorial.
         if (!game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ASKED_TUTORIAL, false)) {
-            askTutorial(R.string.main_ask_tutorial).show(stage);
+            askTutorial("main.ask_tutorial").show(stage);
         } else if (!game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_NEW_SELECTION_MODE_NOTIFIED, false)) {
-            askTutorial(R.string.main_ask_new_selection_method).show(stage);
+            askTutorial("main.ask_input_method").show(stage);
         }
     }
 
@@ -123,10 +122,10 @@ public class MainMenuScreen extends AbstractScreen {
         stage.draw();
     }
 
-    private ConfirmDialog askTutorial(int resId) {
-        String message = game.getContext().getString(resId);
-        String yes = game.getContext().getString(R.string.core_yes);
-        String no = game.getContext().getString(R.string.core_no);
+    private ConfirmDialog askTutorial(String resId) {
+        String message = game.getLocale().get(resId);
+        String yes = game.getLocale().get("core.yes");
+        String no = game.getLocale().get("core.no");
         ConfirmDialog dialog = new ConfirmDialog(game.getAppSkin(), message, yes, no);
         dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
             @Override
@@ -149,7 +148,7 @@ public class MainMenuScreen extends AbstractScreen {
     }
 
     private MessageDialog tutorialCancel() {
-        String message = game.getContext().getString(R.string.main_dismiss_tutorial);
+        String message = game.getLocale().get("main.dismiss_tutorial");
         MessageDialog dialog = new MessageDialog(game.getAppSkin(), message);
         dialog.setCallback(new MessageDialog.MessageCallback() {
             @Override

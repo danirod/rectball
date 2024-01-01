@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015-2023 Dani Rodríguez.
+ * Copyright (C) 2015-2024 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
+import com.badlogic.gdx.utils.I18NBundle
 import es.danirod.rectball.android.BuildConfig
 
 object AssetManagerBuilder {
@@ -48,11 +49,16 @@ object AssetManagerBuilder {
         manager.load("hand-normal.png", Texture::class.java, textureParameters)
         manager.load("hand-hover.png", Texture::class.java, textureParameters)
 
+        // Bundles
+        manager.load("bundles/strings", I18NBundle::class.java)
+
         // Google Play Games integration.
         @Suppress("KotlinConstantConditions")
         if (BuildConfig.FLAVOR == "gpe") {
             manager.load("google/gpg_achievements.png", Texture::class.java, textureParameters)
             manager.load("google/gpg_leaderboard.png", Texture::class.java, textureParameters)
+
+            manager.load("bundles/google_play", I18NBundle::class.java)
         }
     }
 

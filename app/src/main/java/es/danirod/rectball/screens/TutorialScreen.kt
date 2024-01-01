@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015-2023 Dani Rodríguez.
+ * Copyright (C) 2015-2024 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,8 +52,8 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
 
     private var currentModal: MessageDialog? = null
 
-    private val continueText = game.context.getString(R.string.core_continue)
-    private val okText = game.context.getString(R.string.core_ok)
+    private val continueText = game.locale["core.continue"]
+    private val okText = game.locale["core.ok"]
 
     /* The different modals in use in this tutorial. */
     private lateinit var modalWelcome: MessageDialog
@@ -94,12 +94,12 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
         table.add(hud).grow().align(Align.top).row()
         table.add(board).height(Constants.VIEWPORT_WIDTH.toFloat()).padBottom(50f).align(Align.bottom)
 
-        modalWelcome = makeModal(getModalString(0), continueText) {
+        modalWelcome = makeModal(tutorialStrings[0], continueText) {
             setVisibility(board = true, score = false, timer = false)
             showModal(modalThisIsBoard, Align.top)
         }
 
-        modalThisIsBoard = makeModal(getModalString(1), continueText) {
+        modalThisIsBoard = makeModal(tutorialStrings[1], continueText) {
             setVisibility(board = true, score = false, timer = true)
             showModal(modalThisIsTimer, Align.bottom)
 
@@ -107,7 +107,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
             hud.timer.isRunning = true
         }
 
-        modalThisIsTimer = makeModal(getModalString(2), continueText) {
+        modalThisIsTimer = makeModal(tutorialStrings[2], continueText) {
             /* Stop the timer. */
             hud.timer.isRunning = false
             hud.timer.seconds = Constants.SECONDS.toFloat()
@@ -123,7 +123,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
             showModal(modalThisIsScore, Align.bottom)
         }
 
-        modalThisIsScore = makeModal(getModalString(3), continueText) {
+        modalThisIsScore = makeModal(tutorialStrings[3], continueText) {
             /* Stop the score. */
             hud.score.clearActions()
             hud.score.value = 0
@@ -139,7 +139,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
             showModal(modalThePointOfGame, Align.center)
         }
 
-        modalThePointOfGame = makeModal(getModalString(4), continueText) {
+        modalThePointOfGame = makeModal(tutorialStrings[4], continueText) {
             showModal(modalWhatToDo, Align.top)
 
             hand.apply {
@@ -163,7 +163,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
             stage.addActor(hand)
         }
 
-        modalWhatToDo = makeModal(getModalString(5), okText) {
+        modalWhatToDo = makeModal(tutorialStrings[5], okText) {
             /* Remove the hand. */
             hand.clearActions()
             hand.addAction(Actions.sequence(
@@ -196,7 +196,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
             startCombinationHelpAnimation()
         }
 
-        modalThatWasEasy = makeModal(getModalString(6), okText) {
+        modalThatWasEasy = makeModal(tutorialStrings[6], okText) {
             board.addSubscriber(object : DefaultBallSelectionListener() {
                 override fun onSelectionSucceeded(selection: MutableList<BallActor>?) {
                     stopCombinationHelpAnimation()
@@ -220,7 +220,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
             startCombinationHelpAnimation()
         }
 
-        modalBeatAHarderOne = makeModal(getModalString(7), okText) {
+        modalBeatAHarderOne = makeModal(tutorialStrings[7], okText) {
             board.addSubscriber(object : DefaultBallSelectionListener() {
                 override fun onSelectionSucceeded(selection: MutableList<BallActor>?) {
                     stopCombinationHelpAnimation()
@@ -236,7 +236,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
             startCombinationHelpAnimation()
         }
 
-        modalYouGotThis = makeModal(getModalString(8), okText) {
+        modalYouGotThis = makeModal(tutorialStrings[8], okText) {
             exitTutorial()
         }
     }
@@ -306,7 +306,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
     }
 
     private fun showLeaveConfirmationDialog(stage: Stage) {
-        ConfirmDialog(game.appSkin, game.context.getString(R.string.tutorial_cancel), game.context.getString(R.string.core_yes), game.context.getString(R.string.core_no)).apply {
+        ConfirmDialog(game.appSkin, game.locale["tutorial.cancel"], game.locale["core.yes"], game.locale["core.no"]).apply {
             setCallback(object : ConfirmDialog.ConfirmCallback {
                 override fun ok() {
                     game.player.playSound(SoundPlayer.SoundCode.SUCCESS)
@@ -321,7 +321,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
                             modalWhatToDo, modalThatWasEasy, modalBeatAHarderOne, modalYouGotThis
                     ).forEach { it.hide(null) }
 
-                    val modal = makeModal(game.context.getString(R.string.main_dismiss_tutorial), game.context.getString(R.string.core_ok)) {
+                    val modal = makeModal(game.locale["main.dismiss_tutorial"], game.locale["core.ok"]) {
                         game.player.playSound(SoundPlayer.SoundCode.SUCCESS)
 
                         exitTutorial()
@@ -383,8 +383,18 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
         board.setColoured(true)
     }
 
-    private fun getModalString(index: Int) =
-            game.context.resources.getStringArray(R.array.tutorial_lines)[index]
+    /* Dirty, but this is just so that Android Studio doesn't see these strings as unused. */
+    private val tutorialStrings = listOf(
+        game.locale["tutorial.guide.0"],
+        game.locale["tutorial.guide.1"],
+        game.locale["tutorial.guide.2"],
+        game.locale["tutorial.guide.3"],
+        game.locale["tutorial.guide.4"],
+        game.locale["tutorial.guide.5"],
+        game.locale["tutorial.guide.6"],
+        game.locale["tutorial.guide.7"],
+        game.locale["tutorial.guide.8"],
+    )
 
     private fun makeModal(text: String, buttonText: String, onDismiss: () -> Unit): MessageDialog =
             MessageDialog(game.appSkin, text, buttonText).apply {

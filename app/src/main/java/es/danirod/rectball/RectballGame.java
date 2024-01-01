@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015-2023 Dani Rodríguez.
+ * Copyright (C) 2015-2024 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.I18NBundle;
 
 import es.danirod.rectball.android.AndroidLauncher;
 import es.danirod.rectball.android.BuildConfig;
@@ -75,6 +76,12 @@ public class RectballGame extends StateBasedGame {
     private AppSettings settings;
 
     private Haptics haptics;
+
+    private Locale locale;
+
+    public Locale getLocale() {
+        return this.locale;
+    }
 
     public RectballGame(AndroidLauncher context) {
         this.context = context;
@@ -126,6 +133,9 @@ public class RectballGame extends StateBasedGame {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
         }
 
+        // Compatibility with web platforms.
+        I18NBundle.setSimpleFormatter(true);
+
         // Android enables dithering by default on some phones. Disable it for higher quality.
         Gdx.gl.glDisable(GL20.GL_DITHER);
 
@@ -136,6 +146,13 @@ public class RectballGame extends StateBasedGame {
         /* Prepare the manager, and force loading the skin, as it is used for setting up the user interface. */
         manager = AssetManagerBuilder.INSTANCE.build();
         manager.finishLoadingAsset("skin/rectball.json");
+        manager.finishLoadingAsset("bundles/strings");
+        if (BuildConfig.FLAVOR.equals("gpe")) {
+            manager.finishLoadingAsset("bundles/google_play");
+            locale = new Locale(manager.get("bundles/strings"), manager.get("bundles/google_play"));
+        } else {
+            locale = new Locale(manager.get("bundles/strings"));
+        }
         updateBallAtlas();
 
         batch = new SpriteBatch();

@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball
- * Copyright (C) 2015-2023 Dani Rodríguez
+ * Copyright (C) 2015-2024 Dani Rodríguez
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,5 +29,5 @@ class StatisticsScreen(game: RectballGame) : MenuScreen(game) {
         return StatsTable(game, bold, normal)
     }
 
-    override fun getTitle() = "Statistics"
+    override fun getTitle() = game.locale["statistics.title"]
 }

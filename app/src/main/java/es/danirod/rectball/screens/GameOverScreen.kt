@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015-2023 Dani Rodríguez.
+ * Copyright (C) 2015-2024 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Value
 import com.badlogic.gdx.utils.Align
 import es.danirod.rectball.RectballGame
 import es.danirod.rectball.SoundPlayer
-import es.danirod.rectball.android.R
 import es.danirod.rectball.android.settings.SettingsManager
 import es.danirod.rectball.scene2d.listeners.ScreenPopper
 import es.danirod.rectball.scene2d.ui.GameSummary
@@ -36,7 +35,7 @@ class GameOverScreen(game: RectballGame) : AbstractScreen(game) {
     private fun isHighScore() = game.state.score >= getHighScore()
 
     public override fun setUpInterface(table: Table) {
-        val gameOver = Label(game.context.getString(R.string.game_over_title), game.appSkin, "large", "white").apply {
+        val gameOver = Label(game.locale["game_over.time_up"], game.appSkin, "large", "white").apply {
             setAlignment(Align.center)
             setFontScale(0.8f)
         }
@@ -48,14 +47,14 @@ class GameOverScreen(game: RectballGame) : AbstractScreen(game) {
     }
 
     private val replayButton by lazy {
-        ImageTextButton(game.context.getString(R.string.game_over_play_again), game.appSkin, "repeat").apply {
+        ImageTextButton(game.locale["game_over.play_again"], game.appSkin, "repeat").apply {
             addListener(ScreenPopper(game))
             label.setFontScale(0.9f)
         }
     }
 
     private val quitButton by lazy {
-        ImageTextButton(game.context.getString(R.string.game_over_menu_screen), game.appSkin, "leave").apply {
+        ImageTextButton(game.locale["game_over.menu_screen"], game.appSkin, "leave").apply {
             imageCell.height(Value.percentHeight(0.75f, label))
             label.setFontScale(0.9f)
             addListener(ScreenPopper(game, true))

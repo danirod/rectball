@@ -15,13 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.danirod.rectball.screens
+package es.danirod.rectball
 
-import es.danirod.rectball.RectballGame
-import es.danirod.rectball.scene2d.menus.SettingsMenu
+import com.badlogic.gdx.utils.I18NBundle
 
-class SettingsScreen(game: RectballGame) : MenuScreen(game) {
-    override fun getTitle() = game.locale["settings.title"]
+class Locale(private val bundle: I18NBundle, private val extra: I18NBundle) {
 
-    override fun getRoot() = SettingsMenu(game)
+    constructor(bundle: I18NBundle) : this(bundle, I18NBundle())
+
+    operator fun get(key: String): String = bundle[key]
+
+    fun extra(key: String): String = extra[key]
+
 }

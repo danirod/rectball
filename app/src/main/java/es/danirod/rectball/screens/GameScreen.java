@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015-2023 Dani Rodríguez.
+ * Copyright (C) 2015-2024 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,6 @@ import java.util.List;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer.SoundCode;
-import es.danirod.rectball.android.R;
 import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.model.Ball;
 import es.danirod.rectball.model.BallColor;
@@ -90,10 +89,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
      */
     private void showLeaveDialog() {
         ConfirmDialog dialog = new ConfirmDialog(game.getAppSkin(),
-                game.getContext().getString(R.string.game_leave_game_title),
-                game.getContext().getString(R.string.core_yes),
-                game.getContext().getString(R.string.core_no));
-        dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
+                game.getLocale().get("game.leave_game"),
+                game.getLocale().get("core.yes"),
+                game.getLocale().get("core.no"));
+            dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
             @Override
             public void ok() {
                 // The user wants to leave the game.
@@ -117,9 +116,9 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
     private void showPauseDialog() {
         ConfirmDialog dialog = new ConfirmDialog(game.getAppSkin(),
-                game.getContext().getString(R.string.game_paused_title),
-                game.getContext().getString(R.string.game_continue),
-                game.getContext().getString(R.string.game_leave_game));
+            game.getLocale().get("game.paused"),
+            game.getLocale().get("core.continue"),
+            game.getLocale().get("core.exit"));
         dialog.setCallback(new ConfirmDialog.ConfirmCallback() {
             @Override
             public void ok() {

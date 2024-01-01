@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015-2023 Dani Rodríguez.
+ * Copyright (C) 2015-2024 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@ import com.badlogic.gdx.utils.Scaling
 import es.danirod.rectball.RectballGame
 import es.danirod.rectball.SoundPlayer
 import es.danirod.rectball.android.BuildConfig
-import es.danirod.rectball.android.R
 import es.danirod.rectball.screens.GameScreen
 import es.danirod.rectball.screens.SettingsScreen
 import es.danirod.rectball.screens.StatisticsScreen
@@ -39,7 +38,7 @@ class MainMenuGrid(private val game: RectballGame) : Table() {
         setScaling(Scaling.contain)
     }
 
-    private val play = ImageTextButton(game.context.getString(R.string.main_play), game.appSkin, "play").apply {
+    private val play = ImageTextButton(game.locale["main.play"], game.appSkin, "play").apply {
         pad(30f)
         imageCell.spaceRight(20f)
         addListener(object : ChangeListener() {

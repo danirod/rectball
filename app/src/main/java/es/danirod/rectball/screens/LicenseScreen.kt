@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball
- * Copyright (C) 2015-2023 Dani Rodríguez
+ * Copyright (C) 2015-2024 Dani Rodríguez
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@ package es.danirod.rectball.screens
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import es.danirod.rectball.RectballGame
-import es.danirod.rectball.android.R
 
 /**
  * About screen.
@@ -31,7 +30,7 @@ class LicenseScreen(game: RectballGame) : MenuScreen(game) {
         Gdx.files.internal("license.txt").readString("UTF-8")
     }
 
-    override fun getTitle() = game.context.getString(R.string.licenses_title)
+    override fun getTitle() = game.locale["licenses.title"]
 
     override fun getRoot() = Label(license, game.appSkin, "small", "white").apply {
         wrap = true

@@ -1,6 +1,6 @@
 /*
  * This file is part of Rectball.
- * Copyright (C) 2015-2023 Dani Rodríguez.
+ * Copyright (C) 2015-2024 Dani Rodríguez.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ import com.badlogic.gdx.utils.Timer
 import es.danirod.rectball.RectballGame
 import es.danirod.rectball.SoundPlayer.SoundCode
 import es.danirod.rectball.android.BuildConfig
-import es.danirod.rectball.android.R
 import es.danirod.rectball.scene2d.ui.SwitchActor
 import es.danirod.rectball.screens.AboutScreen
 import es.danirod.rectball.screens.LicenseScreen
@@ -34,7 +33,7 @@ import es.danirod.rectball.screens.TutorialScreen
 
 class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
 
-    private val soundSwitch = game.context.getString(R.string.settings_sound).let { label ->
+    private val soundSwitch = game.locale["settings.sound"].let { label ->
         SwitchActor(label, game.appSkin).apply {
             isChecked = game.settings.soundEnabled
             addListener(object : ChangeListener() {
@@ -46,7 +45,7 @@ class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
         }
     }
 
-    private val vibrationSwitch = game.context.getString(R.string.settings_vibration).let { label ->
+    private val vibrationSwitch = game.locale["settings.vibration"].let { label ->
         SwitchActor(label, game.appSkin).apply {
             isChecked = game.settings.vibrationEnabled
             addListener(object : ChangeListener() {
@@ -58,7 +57,7 @@ class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
         }
     }
 
-    private val keepScreenOn = game.context.getString(R.string.settings_keep_screen_on).let { label ->
+    private val keepScreenOn = game.locale["settings.keep_screen_on"].let { label ->
         SwitchActor(label, game.appSkin).apply {
             isChecked = game.settings.keepScreenOn
             addListener(object : ChangeListener() {
@@ -70,7 +69,7 @@ class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
         }
     }
 
-    private val colorSwitch = game.context.getString(R.string.settings_colorblind).let { label ->
+    private val colorSwitch = game.locale["settings.colorblind"].let { label ->
         SwitchActor(label, game.appSkin).apply {
             isChecked = game.settings.colorblindMode
             addListener(object : ChangeListener() {
@@ -83,7 +82,7 @@ class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
         }
     }
 
-    private val doTutorialButton = game.context.getString(R.string.settings_play_tutorial).let { label ->
+    private val doTutorialButton = game.locale["settings.play_tutorial"].let { label ->
         TextButton(label, game.appSkin).apply {
             pad(10f)
             addListener(object : ChangeListener() {
@@ -95,42 +94,48 @@ class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
         }
     }
 
-    private val doGameServicesLogin = game.context.getString(R.string.settings_play_log_in).let { label ->
-        TextButton(label, game.appSkin).apply {
-            pad(10f)
-            addListener(object : ChangeListener() {
-                override fun changed(event: ChangeEvent, actor: Actor) {
-                    val button = actor as TextButton
-                    gameServicesButtonCallback(true, button, label)
-                }
-            })
+    private val doGameServicesLogin by lazy {
+        game.locale.extra("google_play.log_in").let { label ->
+            TextButton(label, game.appSkin).apply {
+                pad(10f)
+                addListener(object : ChangeListener() {
+                    override fun changed(event: ChangeEvent, actor: Actor) {
+                        val button = actor as TextButton
+                        gameServicesButtonCallback(true, button, label)
+                    }
+                })
+            }
         }
     }
 
-    private val doGameServicesLogout = game.context.getString(R.string.settings_play_log_out).let { label ->
-        TextButton(label, game.appSkin).apply {
-            pad(10f)
-            addListener(object : ChangeListener() {
-                override fun changed(event: ChangeEvent, actor: Actor) {
-                    val button = actor as TextButton
-                    gameServicesButtonCallback(false, button, label)
-                }
-            })
+    private val doGameServicesLogout by lazy {
+        game.locale.extra("google_play.log_out").let { label ->
+            TextButton(label, game.appSkin).apply {
+                pad(10f)
+                addListener(object : ChangeListener() {
+                    override fun changed(event: ChangeEvent, actor: Actor) {
+                        val button = actor as TextButton
+                        gameServicesButtonCallback(false, button, label)
+                    }
+                })
+            }
         }
     }
 
-    private val doOpenInMarketplace = game.context.getString(R.string.settings_view_in_google_play).let { label ->
-        TextButton(label, game.appSkin).apply {
-            pad(10f)
-            addListener(object : ChangeListener() {
-                override fun changed(event: ChangeEvent?, actor: Actor?) {
-                    game.context.openInMarketplace()
-                }
-            })
+    private val doOpenInMarketplace by lazy {
+        game.locale.extra("google_play.view_in_google_play").let { label ->
+            TextButton(label, game.appSkin).apply {
+                pad(10f)
+                addListener(object : ChangeListener() {
+                    override fun changed(event: ChangeEvent?, actor: Actor?) {
+                        game.context.openInMarketplace()
+                    }
+                })
+            }
         }
     }
 
-    private val doShowInfo = game.context.getString(R.string.settings_info_and_credits).let { label ->
+    private val doShowInfo = game.locale["settings.info_and_credits"].let { label ->
         TextButton(label, game.appSkin).apply {
             pad(10f)
             addListener(object : ChangeListener() {
@@ -142,7 +147,7 @@ class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
         }
     }
 
-    private val doShowLicense = game.context.getString(R.string.settings_view_licenses).let { label ->
+    private val doShowLicense = game.locale["settings.view_licenses"].let { label ->
         TextButton(label, game.appSkin).apply {
             pad(10f)
             addListener(object : ChangeListener() {
@@ -170,14 +175,14 @@ class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
         @Suppress("KotlinConstantConditions")
         if (BuildConfig.FLAVOR == "gpe") {
             addActor(gameServicesButton())
+            addActor(doOpenInMarketplace)
         }
-        addActor(doOpenInMarketplace)
         addActor(doShowInfo)
         addActor(doShowLicense)
     }
 
     private fun gameServicesButtonCallback(requestedStatus: Boolean, button: TextButton, text: String) {
-        button.setText(game.context.getString(R.string.settings_play_processing))
+        button.setText(game.locale.extra("google_play.logging_in"))
         button.isDisabled = true
         game.player.playSound(SoundCode.SELECT)
 
