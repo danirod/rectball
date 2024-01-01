@@ -1,6 +1,5 @@
-/*
- * This file is part of Rectball
- * Copyright (C) 2015-2024 Dani Rodríguez
+/* This file is part of Rectball
+ * Copyright (C) 2015-2024  Dani Rodríguez
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,7 +12,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 package es.danirod.rectball.screens
 
@@ -30,7 +29,8 @@ class AboutScreen(game: RectballGame) : MenuScreen(game) {
     private val credits: String by lazy {
         val version = "Rectball ${BuildConfig.VERSION_NAME}"
         val credits = Gdx.files.internal("credits.txt").readString("UTF-8")
-        "$version\n$credits"
+        "$version
+$credits"
     }
 
     override fun getTitle() = game.locale["about.title"]
