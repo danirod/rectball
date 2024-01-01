@@ -2,8 +2,6 @@
 <resources>
     <string name="app_name">Rectball</string>
     <string name="provider" translatable="false">es.danirod.rectball.android.provider</string>
-    <string name="sharing_intent_title">Share result</string>
-    <string name="sharing_intent_text">I made %d points in #Rectball. Can you beat it?</string>
     <string name="core_continue">Continue</string>
     <string name="core_ok">OK</string>
     <string name="core_back">Back</string>
@@ -49,6 +47,5 @@
     <string name="tutorial_cancel">Do you want to leave the tutorial?</string>
     <string name="about_title">Info and credits</string>
     <string name="licenses_title">Licenses</string>
-    <string name="sharing_error">Could not share the screenshot. Sorry!</string>
     <string name="sign_in_failed">Errors found while trying to log in. Please verify the network connection and try again later.</string>
 </resources>
