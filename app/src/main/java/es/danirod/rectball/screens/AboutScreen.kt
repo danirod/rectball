@@ -29,8 +29,7 @@ class AboutScreen(game: RectballGame) : MenuScreen(game) {
     private val credits: String by lazy {
         val version = "Rectball ${BuildConfig.VERSION_NAME}"
         val credits = Gdx.files.internal("credits.txt").readString("UTF-8")
-        "$version
-$credits"
+        "$version\n$credits"
     }
 
     override fun getTitle() = game.locale["about.title"]

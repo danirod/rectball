@@ -17,10 +17,10 @@ header=$(cat scripts/header_template.txt)
 header=$(echo "$header" | sed "s/\$YEAR/$(date +%Y)/")
 
 for file in `file_list`; do
-    package_no=$(grep -n 'package' $file | head -n1 | cut -d: -f1)
-    contents=$(tail -n+$package_no $file)
+    line_pkg=$(grep -n 'package' $file | head -n1 | cut -d: -f1)
     
     echo "Updating $file..."
-    echo "$header" > $file
-    echo "$contents" >> $file
+    echo "$header" > $file.tmp
+    tail -n+$line_pkg $file >> $file.tmp
+    mv $file.tmp $file
 done
