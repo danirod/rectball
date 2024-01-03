@@ -152,17 +152,18 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
                 layout()
                 setPosition(Constants.VIEWPORT_WIDTH.toFloat(), 0f)
                 setScale(0.75f)
+                setOrigin(38f, 171f)
             }
 
             val oneCorner = board.getBall(2, 2)
                 .let { b -> Vector2(b.getX(Align.center), b.getY(Align.center))
                 .apply { board.localToStageCoordinates(this) }
-                    .apply { sub(38f * 0.75f, 171f * 0.75f) }
+                    .apply { sub(38f, 171f) }
             }
             val otherCorner = board.getBall(3, 3)
                 .let { b -> Vector2(b.getX(Align.center), b.getY(Align.center))
                 .apply { board.localToStageCoordinates(this) }
-                .apply { sub(38f * 0.75f, 171f * 0.75f) }
+                .apply { sub(38f, 171f) }
             }
 
             hand.addAction(Actions.forever(
