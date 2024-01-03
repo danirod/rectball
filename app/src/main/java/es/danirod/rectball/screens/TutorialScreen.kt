@@ -20,6 +20,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
@@ -87,6 +88,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
 
         board = BoardActor(game.ballAtlas, game.appSkin, game.state.board).apply {
             touchable = Touchable.disabled
+            isTransform = true
             isVisible = false
         }
 
@@ -147,17 +149,29 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
 
             hand.apply {
                 drawable = handNormalDrawable
+                layout()
                 setPosition(Constants.VIEWPORT_WIDTH.toFloat(), 0f)
-                setOrigin(60f, -60f)
                 setScale(0.75f)
             }
+
+            val oneCorner = board.getBall(2, 2)
+                .let { b -> Vector2(b.getX(Align.center), b.getY(Align.center))
+                .apply { board.localToStageCoordinates(this) }
+                    .apply { sub(38f * 0.75f, 171f * 0.75f) }
+            }
+            val otherCorner = board.getBall(3, 3)
+                .let { b -> Vector2(b.getX(Align.center), b.getY(Align.center))
+                .apply { board.localToStageCoordinates(this) }
+                .apply { sub(38f * 0.75f, 171f * 0.75f) }
+            }
+
             hand.addAction(Actions.forever(
                     Actions.sequence(
-                            Actions.moveTo(board.getBall(2, 3).x, board.getBall(2, 3).y, 0.5f),
+                            Actions.moveTo(oneCorner.x, oneCorner.y, 0.5f),
                             Actions.delay(0.25f),
                             Actions.run { hand.drawable = handHoverDrawable },
                             Actions.delay(0.25f),
-                            Actions.moveTo(board.getBall(3, 2).x, board.getBall(3, 2).y, 1f),
+                            Actions.moveTo(otherCorner.x, otherCorner.y, 1f),
                             Actions.delay(0.25f),
                             Actions.run { hand.drawable = handNormalDrawable },
                             Actions.delay(0.25f),
