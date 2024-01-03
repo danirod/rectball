@@ -25,13 +25,13 @@ import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Table
+import com.badlogic.gdx.scenes.scene2d.ui.Value
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Timer
 import es.danirod.rectball.Constants
 import es.danirod.rectball.RectballGame
 import es.danirod.rectball.SoundPlayer
-import es.danirod.rectball.android.R
 import es.danirod.rectball.android.settings.SettingsManager
 import es.danirod.rectball.model.BallColor
 import es.danirod.rectball.model.Bounds
@@ -90,8 +90,12 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
             isVisible = false
         }
 
-        table.add(hud).grow().align(Align.top).row()
-        table.add(board).height(Constants.VIEWPORT_WIDTH.toFloat()).padBottom(50f).align(Align.bottom)
+        table.add(hud).growX().align(Align.top).row()
+        table.add(board).growX().expand().height(Value.percentWidth(1f)).align(
+            Align.center
+        ).row()
+        board.pack()
+        table.pack()
 
         modalWelcome = makeModal(tutorialStrings[0], continueText) {
             setVisibility(board = true, score = false, timer = false)

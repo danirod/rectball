@@ -57,7 +57,7 @@ public class BoardActor extends Table {
         for (int y = board.getSize() - 1; y >= 0; y--) {
             for (int x = 0; x < board.getSize(); x++) {
                 actors[x][y] = new BallActor(board.getBall(x, y), atlas);
-                add(actors[x][y]).pad(4, 2, 4, 2);
+                add(actors[x][y]).grow().space(10f);
             }
             row();
         }

@@ -22,13 +22,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Scaling
 import es.danirod.rectball.model.Ball
 import es.danirod.rectball.model.BallColor
-import java.util.*
+import java.util.Locale
 
 class BallActor(val ball: Ball, atlas: TextureAtlas) : Image() {
     private val grayDrawable = TextureRegionDrawable(atlas.findRegion("ball_gray"))
 
     private val colorDrawables = BallColor.values().associateWith {
-        val region = "ball_${it.toString().toLowerCase(Locale.ROOT)}"
+        val region = "ball_${it.toString().lowercase(Locale.ROOT)}"
         TextureRegionDrawable(atlas.findRegion(region))
     }
 
@@ -50,6 +50,7 @@ class BallActor(val ball: Ball, atlas: TextureAtlas) : Image() {
     }
 
     override fun sizeChanged() {
+        super.sizeChanged()
         setOrigin(width / 2, height / 2)
     }
 }
