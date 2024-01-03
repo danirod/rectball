@@ -19,6 +19,7 @@ package es.danirod.rectball.screens;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -564,7 +565,11 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             // Was special?
             boolean special = givenScore != rows * cols;
             // Give score
-            stage.addActor(board.showPartialScore(givenScore, bounds, special, usedCheat));
+            Label scoreLabel = board.showPartialScore(givenScore, bounds, special, usedCheat);
+            Vector2 pos = new Vector2(scoreLabel.getX(), scoreLabel.getY());
+            board.localToStageCoordinates(pos);
+            scoreLabel.setPosition(pos.x, pos.y);
+            stage.addActor(scoreLabel);
 
             game.player.playSound(SoundCode.SUCCESS);
             game.getHaptics().vibrateMilliseconds(60);
