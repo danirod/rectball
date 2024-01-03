@@ -6,6 +6,12 @@
 		"markupEnabled": false,
 		"flip": false
 	},
+	"mono": {
+		"file": "mono.fnt",
+		"scaledSize": -1,
+		"markupEnabled": false,
+		"flip": false
+	},
 	"normal": {
 		"file": "sans.fnt",
 		"scaledSize": 18,
@@ -256,6 +262,9 @@
 	"default": {
 		"font": "normal",
 		"fontColor": "white"
+	},
+	"mono": {
+		"font": "mono"
 	}
 },
 "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {

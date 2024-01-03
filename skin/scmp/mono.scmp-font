@@ -1,0 +1,20 @@
+{
+"characters": "",
+"size": 48,
+"mono": true,
+"hinting": "None",
+"color": "white",
+"colorValue": -1,
+"gamma": 1.6,
+"renderCount": 2,
+"borderWidth": 4,
+"borderColor": "black",
+"borderColorValue": 255,
+"borderStraight": true,
+"borderGamma": 4.6,
+"spaceX": -6,
+"kerning": true,
+"genMipMaps": true,
+"minFilter": "MipMapLinearLinear",
+"magFilter": "MipMapLinearLinear"
+}

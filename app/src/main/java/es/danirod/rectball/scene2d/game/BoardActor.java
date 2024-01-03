@@ -86,8 +86,8 @@ public class BoardActor extends Table {
         float centerY = (minY + maxY) / 2;
 
         // Build the label used to present the score.
-        Label label = new Label("+" + score, skin, "monospace");
-        label.setFontScale(7f);
+        Label label = new Label("+" + score, skin, "mono");
+        label.setFontScale(1.5f);
         label.setSize(140, 70);
         label.setAlignment(Align.center);
         label.setPosition(centerX - label.getWidth() / 2, centerY - label.getHeight() / 2);

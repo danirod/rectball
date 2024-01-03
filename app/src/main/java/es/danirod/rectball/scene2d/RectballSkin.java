@@ -92,11 +92,6 @@ public class RectballSkin {
      * the label style that will be used for every label using this skin.
      */
     private void addLabelStyles() {
-        // Build the monospace style
-        BitmapFont monospaceFont = game.manager.get("fonts/monospaceOutline.fnt");
-        LabelStyle monospaceStyle = new LabelStyle(monospaceFont, Color.WHITE);
-        game.getAppSkin().add("monospace", monospaceStyle);
-
         BitmapFont monospaceFont2 = game.manager.get("fonts/monospace.fnt");
         LabelStyle monospaceStyle2 = new LabelStyle(monospaceFont2, Color.WHITE);
         game.getAppSkin().add("monospace2", monospaceStyle2);

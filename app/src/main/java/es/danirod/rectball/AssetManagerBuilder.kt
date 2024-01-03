@@ -63,7 +63,6 @@ object AssetManagerBuilder {
 
     private fun loadFonts(manager: AssetManager) {
         manager.load("fonts/monospace.fnt", BitmapFont::class.java)
-        manager.load("fonts/monospaceOutline.fnt", BitmapFont::class.java)
     }
 
     private fun loadSounds(manager: AssetManager) {

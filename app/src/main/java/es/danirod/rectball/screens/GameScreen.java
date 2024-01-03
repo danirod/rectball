@@ -199,8 +199,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // Create the label that will contain this number
         String number = Integer.toString(seconds);
-        final Label label = new Label(number, game.getAppSkin(), "monospace");
-        label.setFontScale(5f);
+        final Label label = new Label(number, game.getAppSkin(), "mono");
+        label.setFontScale(1.5f);
         label.setSize(150, 150);
         label.setAlignment(Align.center);
         label.setPosition(
@@ -546,10 +546,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             game.getState().incrementLocalStatistic(SettingsManager.TAG_TOTAL_PERFECTS, 1);
 
             // Give score
-            Label label = new Label("PERFECT", game.getAppSkin(), "monospace");
+            Label label = new Label("PERFECT", game.getAppSkin(), "mono");
             label.setX((stage.getViewport().getWorldWidth() - label.getWidth()) / 2);
             label.setY((stage.getViewport().getWorldHeight() - label.getHeight()) / 2);
-            label.setFontScale(3);
+            label.setFontScale(1f);
             label.setAlignment(Align.center);
             label.addAction(Actions.sequence(
                             Actions.moveBy(0, 80, 0.5f),

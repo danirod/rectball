@@ -904,6 +904,46 @@ atlasData: {
 			type: FONT
 			hidden: false
 		}
+		{
+			file: C:/Users/danirod/Documents/rectball/skin/scmp/rectball_data/mono_0.png
+			bgColor: {
+				r: 1
+				g: 1
+				b: 1
+				a: 1
+			}
+			tint: null
+			tintName: null
+			name: mono_0
+			tiled: false
+			minWidth: -1
+			minHeight: -1
+			customized: false
+			tenPatchData: null
+			tvgData: null
+			type: FONT
+			hidden: false
+		}
+		{
+			file: C:/Users/danirod/Documents/rectball/skin/scmp/rectball_data/mono_1.png
+			bgColor: {
+				r: 1
+				g: 1
+				b: 1
+				a: 1
+			}
+			tint: null
+			tintName: null
+			name: mono_1
+			tiled: false
+			minWidth: -1
+			minHeight: -1
+			customized: false
+			tenPatchData: null
+			tvgData: null
+			type: FONT
+			hidden: false
+		}
 	]
 }
 jsonData: {
@@ -947,6 +987,14 @@ jsonData: {
 			markupEnabled: false
 			scaling: 36
 			file: C:/Users/danirod/Documents/rectball/skin/scmp/rectball_data/large.fnt
+		}
+		{
+			class: com.ray3k.skincomposer.data.FontData
+			name: mono
+			flip: false
+			markupEnabled: false
+			scaling: -1
+			file: C:/Users/danirod/Documents/rectball/skin/scmp/rectball_data/mono.fnt
 		}
 		{
 			class: com.ray3k.skincomposer.data.FontData
@@ -2632,6 +2680,33 @@ jsonData: {
 						name: font
 						optional: false
 						value: null
+					}
+					fontColor: {
+						type: com.badlogic.gdx.graphics.Color
+						name: fontColor
+						optional: true
+						value: null
+					}
+					background: {
+						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
+						name: background
+						optional: true
+						value: null
+					}
+				}
+				deletable: true
+				parent: null
+			}
+			{
+				class: com.ray3k.skincomposer.data.StyleData
+				name: mono
+				clazz: com.badlogic.gdx.scenes.scene2d.ui.Label
+				properties: {
+					font: {
+						type: com.badlogic.gdx.graphics.g2d.BitmapFont
+						name: font
+						optional: false
+						value: mono
 					}
 					fontColor: {
 						type: com.badlogic.gdx.graphics.Color

@@ -378,11 +378,6 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
         /* Add score. */
         val score = bounds.rows() * bounds.cols()
         hud.score.value += score
-        stage.addActor(board.showPartialScore(score, bounds, false, false).apply {
-            val pos = Vector2(x, y)
-            board.localToStageCoordinates(pos)
-            setPosition(pos.x, pos.y)
-        })
 
         /* Add sound. */
         game.player.playSound(SoundPlayer.SoundCode.SUCCESS)
