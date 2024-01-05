@@ -16,8 +16,13 @@
  */
 package es.danirod.rectball.android
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import de.golfgl.gdxgamesvcs.GpgsClient
+import es.danirod.rectball.Platform
+import es.danirod.rectball.gameservices.GameServices
+import es.danirod.rectball.gameservices.GsvcsGameServices
 
 /**
  * This contains code for the Android platform. Here code that uses Android
@@ -32,6 +37,24 @@ internal class AndroidPlatform(context: AndroidLauncher) : AbstractPlatform(cont
     private val gpg: GpgsClient = GpgsClient().initialize(context, false)
 
     private val services: GameServices = GsvcsGameServices(gpg, GooglePlayConstants(context))
+
+    override val marketplace = object : Platform.Marketplace {
+
+        override val supported = true
+
+        override fun open() {
+            try {
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.data = Uri.parse("market://details?id=${AndroidLauncher.PACKAGE}")
+                context.startActivity(intent)
+            } catch (_: ActivityNotFoundException) {
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.data = Uri.parse("https://play.google.com/store/apps/details?id=${AndroidLauncher.PACKAGE}")
+                context.startActivity(intent)
+            }
+        }
+
+    }
 
     override val gameServices: GameServices
         get() = services

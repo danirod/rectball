@@ -14,12 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package es.danirod.rectball.android
+package es.danirod.rectball.gameservices
 
 import de.golfgl.gdxgamesvcs.IGameServiceClient
+import de.golfgl.gdxgamesvcs.NoGameServiceClient
 
-class GsvcsGameServices(private val client: IGameServiceClient,
-                        private val constants: GameServicesConstants) : GameServices {
+class GsvcsGameServices(
+    private val client: IGameServiceClient,
+    private val constants: GameServicesConstants
+) : GameServices {
+
+    // If the gameServiceId is set to GS_NOOP, then there are no integrations at all.
+    override val supported = client.gameServiceId != NoGameServiceClient.GAMESERVICE_ID
 
     override fun signIn() {
         client.logIn()
@@ -40,8 +46,16 @@ class GsvcsGameServices(private val client: IGameServiceClient,
             return
         }
 
-        client.submitToLeaderboard(constants.leaderboardHighestScore, score.toLong(), client.gameServiceId)
-        client.submitToLeaderboard(constants.leaderboardHighestLength, time.toLong(), client.gameServiceId)
+        client.submitToLeaderboard(
+            constants.leaderboardHighestScore,
+            score.toLong(),
+            client.gameServiceId
+        )
+        client.submitToLeaderboard(
+            constants.leaderboardHighestLength,
+            time.toLong(),
+            client.gameServiceId
+        )
 
         if (score > 250) {
             client.unlockAchievement(constants.achievementStarter)

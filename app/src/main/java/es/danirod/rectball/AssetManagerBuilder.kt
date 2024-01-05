@@ -24,7 +24,6 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.utils.I18NBundle
-import es.danirod.rectball.android.BuildConfig
 
 object AssetManagerBuilder {
 
@@ -34,6 +33,12 @@ object AssetManagerBuilder {
         loadFonts(manager)
         loadSounds(manager)
         return manager
+    }
+
+    fun addGameServices(manager: AssetManager) {
+        manager.load("google/gpg_achievements.png", Texture::class.java, textureParameters)
+        manager.load("google/gpg_leaderboard.png", Texture::class.java, textureParameters)
+        manager.load("bundles/google_play", I18NBundle::class.java)
     }
 
     private fun loadTextures(manager: AssetManager) {
@@ -50,15 +55,6 @@ object AssetManagerBuilder {
 
         // Bundles
         manager.load("bundles/strings", I18NBundle::class.java)
-
-        // Google Play Games integration.
-        @Suppress("KotlinConstantConditions")
-        if (BuildConfig.FLAVOR == "gpe") {
-            manager.load("google/gpg_achievements.png", Texture::class.java, textureParameters)
-            manager.load("google/gpg_leaderboard.png", Texture::class.java, textureParameters)
-
-            manager.load("bundles/google_play", I18NBundle::class.java)
-        }
     }
 
     private fun loadFonts(manager: AssetManager) {

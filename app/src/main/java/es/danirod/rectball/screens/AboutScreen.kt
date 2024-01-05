@@ -19,7 +19,6 @@ package es.danirod.rectball.screens
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import es.danirod.rectball.RectballGame
-import es.danirod.rectball.android.BuildConfig
 
 /**
  * About screen.
@@ -27,7 +26,7 @@ import es.danirod.rectball.android.BuildConfig
 class AboutScreen(game: RectballGame) : MenuScreen(game) {
 
     private val credits: String by lazy {
-        val version = "Rectball ${BuildConfig.VERSION_NAME}"
+        val version = "Rectball ${game.context.version}"
         val credits = Gdx.files.internal("credits.txt").readString("UTF-8")
         "$version\n$credits"
     }

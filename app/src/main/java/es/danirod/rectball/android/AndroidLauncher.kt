@@ -16,9 +16,7 @@
  */
 package es.danirod.rectball.android
 
-import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.WindowManager
 import android.widget.RelativeLayout
@@ -26,11 +24,13 @@ import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
 import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.JsonWriter
+import es.danirod.rectball.Platform
 import es.danirod.rectball.RectballGame
 import es.danirod.rectball.android.settings.SettingsManager
+import es.danirod.rectball.gameservices.GameServices
 import es.danirod.rectball.model.GameState
 
-class AndroidLauncher : AndroidApplication() {
+class AndroidLauncher : AndroidApplication(), Platform {
 
     private lateinit var platform: AndroidPlatform
 
@@ -82,18 +82,6 @@ class AndroidLauncher : AndroidApplication() {
         platform.onActivityResult(requestCode, resultCode, data)
     }
 
-    fun openInMarketplace() {
-        try {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse("market://details?id=$PACKAGE")
-            startActivity(intent)
-        } catch (_: ActivityNotFoundException) {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse("https://play.google.com/store/apps/details?id=$PACKAGE")
-            startActivity(intent)
-        }
-    }
-
     private fun buildGameInstance(state: Bundle?) =
         when (val realState = state?.getString("state")) {
             null -> RectballGame(this)
@@ -113,8 +101,15 @@ class AndroidLauncher : AndroidApplication() {
     }
 
     /** Game services sends scores and achievements. */
-    val gameServices: GameServices
+    override val gameServices: GameServices
         get() = platform.gameServices
+
+    override val marketplace: Platform.Marketplace
+        get() = platform.marketplace
+    override val version: String
+        get() = BuildConfig.VERSION_NAME
+    override val buildNumber: Int
+        get() = BuildConfig.VERSION_CODE
 
     companion object {
         const val PACKAGE: String = "es.danirod.rectball.android"

@@ -30,7 +30,6 @@ import com.badlogic.gdx.utils.Align;
 
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
-import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.scene2d.game.BackgroundActor;
 import es.danirod.rectball.scene2d.ui.ConfirmDialog;
@@ -58,7 +57,7 @@ public class MainMenuScreen extends AbstractScreen {
             grid = new MainMenuGrid(game);
         }
         if (versionInformation == null) {
-            String text = BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_CODE;
+            String text = game.getContext().getVersion() + "." + game.getContext().getBuildNumber();
             if (Character.isDigit(text.charAt(0))) {
                 text = "v" + text;
             }

@@ -26,7 +26,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.utils.Scaling
 import es.danirod.rectball.RectballGame
 import es.danirod.rectball.SoundPlayer
-import es.danirod.rectball.android.BuildConfig
 import es.danirod.rectball.screens.GameScreen
 import es.danirod.rectball.screens.SettingsScreen
 import es.danirod.rectball.screens.StatisticsScreen
@@ -116,7 +115,7 @@ class MainMenuGrid(private val game: RectballGame) : Table() {
         add(statistics).height(80f)
         row()
 
-        if (BuildConfig.FLAVOR.equals("gpe")) {
+        if (game.context.gameServices.supported) {
             add(leaderboards).expandX().fill(false).left().size(80f)
             add(achievements).expandX().fill(false).right().size(80f)
             row()

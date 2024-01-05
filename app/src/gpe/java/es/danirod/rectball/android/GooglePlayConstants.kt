@@ -17,6 +17,7 @@
 package es.danirod.rectball.android
 
 import android.content.Context
+import es.danirod.rectball.gameservices.GameServicesConstants
 
 class GooglePlayConstants(val context: Context): GameServicesConstants {
     override val leaderboardHighestScore: String

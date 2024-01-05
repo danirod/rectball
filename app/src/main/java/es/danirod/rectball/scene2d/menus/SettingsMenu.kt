@@ -24,7 +24,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.utils.Timer
 import es.danirod.rectball.RectballGame
 import es.danirod.rectball.SoundPlayer.SoundCode
-import es.danirod.rectball.android.BuildConfig
 import es.danirod.rectball.scene2d.ui.SwitchActor
 import es.danirod.rectball.screens.AboutScreen
 import es.danirod.rectball.screens.LicenseScreen
@@ -127,7 +126,7 @@ class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
                 pad(10f)
                 addListener(object : ChangeListener() {
                     override fun changed(event: ChangeEvent?, actor: Actor?) {
-                        game.context.openInMarketplace()
+                        game.context.marketplace.open()
                     }
                 })
             }
@@ -171,9 +170,10 @@ class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
         addActor(keepScreenOn)
         addActor(colorSwitch)
         addActor(doTutorialButton)
-        @Suppress("KotlinConstantConditions")
-        if (BuildConfig.FLAVOR == "gpe") {
+        if (game.context.gameServices.supported) {
             addActor(gameServicesButton())
+        }
+        if (game.context.marketplace.supported) {
             addActor(doOpenInMarketplace)
         }
         addActor(doShowInfo)

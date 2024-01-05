@@ -17,6 +17,8 @@
 package es.danirod.rectball.android
 
 import android.content.Intent
+import es.danirod.rectball.Platform
+import es.danirod.rectball.gameservices.GameServices
 
 /**
  * This is the interface for platform code. Platform code is code that depends
@@ -29,6 +31,8 @@ import android.content.Intent
  * @since 0.4.0
  */
 internal abstract class AbstractPlatform(val context: AndroidLauncher) {
+
+    abstract val marketplace: Platform.Marketplace
 
     abstract fun onStart()
 

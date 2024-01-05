@@ -16,6 +16,8 @@
  */
 package es.danirod.rectball.android
 
+import es.danirod.rectball.gameservices.GameServicesConstants
+
 class NoConstants: GameServicesConstants {
     override val leaderboardHighestScore: String
         get() = "null"

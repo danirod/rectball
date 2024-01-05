@@ -30,7 +30,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.I18NBundle;
 
 import es.danirod.rectball.android.AndroidLauncher;
-import es.danirod.rectball.android.BuildConfig;
 import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.scene2d.RectballSkin;
@@ -127,10 +126,6 @@ public class RectballGame extends StateBasedGame {
 
     @Override
     public void create() {
-        if (BuildConfig.FINE_DEBUG) {
-            Gdx.app.setLogLevel(Application.LOG_DEBUG);
-        }
-
         // Compatibility with web platforms.
         I18NBundle.setSimpleFormatter(true);
 
@@ -145,7 +140,8 @@ public class RectballGame extends StateBasedGame {
         manager = AssetManagerBuilder.INSTANCE.build();
         manager.finishLoadingAsset("skin/rectball.json");
         manager.finishLoadingAsset("bundles/strings");
-        if (BuildConfig.FLAVOR.equals("gpe")) {
+        if (context.getGameServices().getSupported()) {
+            AssetManagerBuilder.INSTANCE.addGameServices(manager);
             manager.finishLoadingAsset("bundles/google_play");
             locale = new Locale(manager.get("bundles/strings"), manager.get("bundles/google_play"));
         } else {

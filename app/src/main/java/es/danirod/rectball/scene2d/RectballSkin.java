@@ -29,7 +29,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import es.danirod.rectball.RectballGame;
-import es.danirod.rectball.android.BuildConfig;
 
 /**
  * Skin used in Rectball. Once this portion of code is more stable, this code
@@ -98,7 +97,7 @@ public class RectballSkin {
     }
 
     private void addExtraImageButtonStyles() {
-        if (BuildConfig.FLAVOR.equals("gpe")) {
+        if (game.getContext().getGameServices().getSupported()) {
             ImageButtonStyle buttonLeaderboard = new ImageButtonStyle(game.getAppSkin().get("lime", Button.ButtonStyle.class));
             Texture texture = game.manager.get("google/gpg_leaderboard.png");
             TextureRegion region = new TextureRegion(texture);
@@ -107,7 +106,7 @@ public class RectballSkin {
             game.getAppSkin().add("leaderboard", buttonLeaderboard);
         }
 
-        if (BuildConfig.FLAVOR.equals("gpe")) {
+        if (game.getContext().getGameServices().getSupported()) {
             ImageButtonStyle buttonAchievements = new ImageButtonStyle(game.getAppSkin().get("lime", Button.ButtonStyle.class));
             Texture texture = game.manager.get("google/gpg_achievements.png");
             TextureRegion region = new TextureRegion(texture);

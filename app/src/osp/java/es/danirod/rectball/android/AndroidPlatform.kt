@@ -17,9 +17,21 @@
 package es.danirod.rectball.android
 
 import android.content.Intent
+import com.badlogic.gdx.Gdx
 import de.golfgl.gdxgamesvcs.NoGameServiceClient
+import es.danirod.rectball.Platform
+import es.danirod.rectball.gameservices.GameServices
+import es.danirod.rectball.gameservices.GsvcsGameServices
 
 internal class AndroidPlatform(context: AndroidLauncher) : AbstractPlatform(context) {
+
+    override val marketplace = object : Platform.Marketplace {
+        override val supported = false
+
+        override fun open() {
+            Gdx.app.log("AndroidPlatform", "marketplace.open() was called but this platform does not support it")
+        }
+    }
 
     override fun onStart() { }
 
