@@ -18,7 +18,6 @@ package es.danirod.rectball;
 
 import androidx.annotation.NonNull;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
@@ -30,7 +29,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.I18NBundle;
 
 import es.danirod.rectball.android.AndroidLauncher;
-import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.scene2d.RectballSkin;
 import es.danirod.rectball.screens.AbstractScreen;
@@ -39,6 +37,7 @@ import es.danirod.rectball.screens.LoadingBackScreen;
 import es.danirod.rectball.screens.LoadingScreen;
 import es.danirod.rectball.screens.MainMenuScreen;
 import es.danirod.rectball.settings.AppSettings;
+import es.danirod.rectball.settings.AppStatistics;
 
 /**
  * Main class for the game.
@@ -71,6 +70,8 @@ public class RectballGame extends StateBasedGame {
     private Batch batch;
 
     private AppSettings settings;
+
+    private AppStatistics statistics;
 
     private Haptics haptics;
 
@@ -120,6 +121,10 @@ public class RectballGame extends StateBasedGame {
         return this.settings;
     }
 
+    public AppStatistics getStatistics() {
+        return this.statistics;
+    }
+
     public Haptics getHaptics() {
         return this.haptics;
     }
@@ -134,6 +139,7 @@ public class RectballGame extends StateBasedGame {
 
         /* Prepare the settings instance. */
         settings = new AppSettings(this);
+        statistics = new AppStatistics(context.settings.getPreferences());
         haptics = new Haptics(this);
 
         /* Prepare the manager, and force loading the skin, as it is used for setting up the user interface. */
@@ -177,7 +183,7 @@ public class RectballGame extends StateBasedGame {
     }
 
     public void updateBallAtlas() {
-        boolean isColorblind = context.getSettings().getPreferences().getBoolean(SettingsManager.TAG_ENABLE_COLORBLIND, false);
+        boolean isColorblind = settings.getColorblindMode();
         Skin gameSkin = getAppSkin();
         String[] gems = new String[]{ "blue", "red", "green", "yellow"};
         ballAtlas = new TextureAtlas();

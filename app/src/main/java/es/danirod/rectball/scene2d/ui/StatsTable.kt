@@ -23,7 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
 import es.danirod.rectball.RectballGame
-import es.danirod.rectball.android.settings.SettingsManager
 import java.util.Locale
 
 class StatsTable(private val game: RectballGame, private val title: LabelStyle, private val data: LabelStyle) : Table() {
@@ -43,18 +42,17 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
 
         best.add(Label(game.locale["statistics.best_data"], this.title)).colspan(2).row()
 
-        if (game.context.settings.preferences.getLong(SettingsManager.TAG_HIGH_SCORE, 0L) == 0L &&
-                game.context.settings.preferences.getLong(SettingsManager.TAG_HIGH_TIME, 0L) == 0L) {
+        if (game.statistics.highScore == 0L && game.statistics.highTime == 0L) {
             val noData = Label(game.locale["statistics.no_data"], game.appSkin)
             noData.setAlignment(Align.center)
             best.add(noData).colspan(2).fillX().expandX().padTop(10f).padBottom(10f).row()
             return best
         }
 
-        val highScore = game.context.settings.preferences.getLong(SettingsManager.TAG_HIGH_SCORE, 0L)
+        val highScore = game.statistics.highScore
         if (highScore > 0) append(best, game.locale["statistics.best_score"], highScore.toString())
 
-        val highTime = game.context.settings.preferences.getLong(SettingsManager.TAG_HIGH_TIME, 0L)
+        val highTime = game.statistics.highTime
         if (highTime > 0) append(best, game.locale["statistics.best_time"], secondsToTime(highTime))
 
         return best
@@ -77,7 +75,7 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
     private fun addColorData(): Table {
         val color = Table()
 
-        val stats = sortStatsMap(colorStatistics)
+        val stats = sortStatsMap(game.statistics.colorStatistics)
 
         if (stats.isEmpty()) {
             color.add(Label(game.locale["statistics.color_data"], title)).row()
@@ -103,7 +101,7 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
 
     private fun addSizesData(): Table {
         val sizes = Table()
-        val stats = sortStatsMap(sizesStatistics)
+        val stats = sortStatsMap(game.statistics.sizeStatistics)
 
         sizes.add(Label(game.locale["statistics.size_data"], this.title)).colspan(3).row()
 
@@ -118,7 +116,7 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
         val bar = game.appSkin.newDrawable("pixel", Color.WHITE)
 
         // Highest value is used to calculate the relative percentage of each row.
-        val highestValue = stats.values.maxOrNull() ?: 0
+        val highestValue = stats.first().second
 
         for ((key, value) in stats) {
             val percentage = value.toFloat() / highestValue
@@ -133,27 +131,14 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
     /** A map that pairs an statistic label into the value for that statistic label. */
     private val totalStatistics: Map<String, Long>
         get() = mapOf(
-            game.locale["statistics.total_score"] to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_SCORE, 0L),
-            game.locale["statistics.total_combinations"] to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COMBINATIONS, 0L),
-            game.locale["statistics.total_gems"] to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_BALLS, 0L),
-            game.locale["statistics.total_games"] to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_GAMES, 0L),
-            game.locale["statistics.total_time"] to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_TIME, 0L),
-            game.locale["statistics.total_perfect"] to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_PERFECTS, 0L),
-            game.locale["statistics.total_hints"] to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_HINTS, 0L)
+            game.locale["statistics.total_score"] to game.statistics.totalScore,
+            game.locale["statistics.total_combinations"] to game.statistics.totalCombinations,
+            game.locale["statistics.total_gems"] to game.statistics.totalGems,
+            game.locale["statistics.total_games"] to game.statistics.totalGames,
+            game.locale["statistics.total_time"] to game.statistics.totalTime,
+            game.locale["statistics.total_perfect"] to game.statistics.totalPerfects,
+            game.locale["statistics.total_hints"] to game.statistics.totalHints,
         ).filterValues { it > 0 }
-
-    /** A map that pairs a color to the number of times a combination of that color was made. */
-    private val colorStatistics: Map<String, Long>
-        get() = mapOf(
-                "red" to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COLOR_RED, 0L),
-                "green" to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COLOR_GREEN, 0L),
-                "blue" to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COLOR_BLUE, 0L),
-                "yellow" to game.context.settings.preferences.getLong(SettingsManager.TAG_TOTAL_COLOR_YELLOW, 0L)
-        ).filterValues { it > 0 }
-
-    /** A map that pairs a combination size ("2x3", "3x4"...) to the number of times that combination was made. */
-    private val sizesStatistics: Map<String, Long>
-        get() = game.context.settings.sizeStatistics
 
     /** Converts the decimal [seconds] number of seconds to a sexagesimal value. */
     private fun secondsToTime(seconds: Long): String {
@@ -168,8 +153,8 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
     }
 
     /** Sorts a [statistics] map by score, highest scores come first. */
-    private fun sortStatsMap(statistics: Map<String, Long>): Map<String, Long> =
-            statistics.toList().sortedBy { it.second }.reversed().toMap()
+    private fun sortStatsMap(statistics: Map<String, Long>) =
+            statistics.toList().sortedBy { it.second }.reversed()
 
     /** Appends a statistic composed by the label [name] and the value [value] to a [table]. */
     private fun append(table: Table, name: String, value: String) {

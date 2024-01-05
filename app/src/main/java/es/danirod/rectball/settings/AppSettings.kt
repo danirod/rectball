@@ -44,6 +44,15 @@ class AppSettings(private val game: RectballGame) {
         get() = getSetting(SettingsManager.TAG_ENABLE_COLORBLIND, false)
         set(value) = setSetting(SettingsManager.TAG_ENABLE_COLORBLIND, value)
 
+    var tutorialAsked: Boolean
+        get() = getSetting(SettingsManager.TAG_ASKED_TUTORIAL, false)
+        set(value) = setSetting(SettingsManager.TAG_ASKED_TUTORIAL, value)
+
+    var newInputMethodAsked: Boolean
+        get() = getSetting(SettingsManager.TAG_NEW_SELECTION_MODE_NOTIFIED, false)
+        set(value) = setSetting(SettingsManager.TAG_NEW_SELECTION_MODE_NOTIFIED, value)
+
+    // TODO: remove access to the inner preferences object.
     private fun getSetting(key: String, defValue: Boolean) = game.context.settings.preferences.getBoolean(key, defValue)
 
     private fun setSetting(key: String, value: Boolean) {

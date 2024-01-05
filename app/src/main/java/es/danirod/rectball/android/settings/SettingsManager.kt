@@ -18,11 +18,8 @@ package es.danirod.rectball.android.settings
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Bundle
 import androidx.preference.PreferenceManager
 import es.danirod.rectball.android.AndroidLauncher
-import es.danirod.rectball.model.GameState
-import org.json.JSONObject
 
 class SettingsManager(private val context: Context) {
 
@@ -31,76 +28,6 @@ class SettingsManager(private val context: Context) {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         if (prefs.getInt(TAG_SCHEMA_VERSION, 0) < SCHEMA_VERSION) MigrationV1(context, prefs).migrate()
         prefs
-    }
-
-    /** Maps combination sizes (2x2, 2x3...) with the amount of times they've been made. */
-    val sizeStatistics: Map<String, Long>
-        get() = deserializeSizes(preferences.getString(TAG_STAT_SIZES, "{}")!!)
-
-    /**
-     * Commit information about a game once finished. This method will extract the scores and other
-     * statistics about the game [state] and insert the data into the global statistics structure,
-     * as well as update the high scores if they are actually higher.
-     */
-    fun commitState(state: GameState) {
-        val editor = preferences.edit()
-        commitHighScore(state.score.toLong(), state.elapsedTime.toLong(), editor)
-        commitScore(state.score.toLong(), state.elapsedTime.toLong(), editor)
-        commitTotalStatistics(state.totalStatistics, editor)
-        commitColorStatistics(state.colorStatistics, editor)
-        commitSizesStatistics(state.sizesStatistics, editor)
-        editor.apply()
-    }
-
-    private fun commitHighScore(score: Long, time: Long, editor: SharedPreferences.Editor) {
-        editor.putLong(TAG_HIGH_SCORE, maxOf(preferences.getLong(TAG_HIGH_SCORE, 0L), score))
-        editor.putLong(TAG_HIGH_TIME, maxOf(preferences.getLong(TAG_HIGH_TIME, 0L), time))
-    }
-
-    private fun commitScore(score: Long, time: Long, editor: SharedPreferences.Editor) {
-        increment(editor, TAG_TOTAL_SCORE, score)
-        increment(editor, TAG_TOTAL_TIME, time)
-    }
-
-    private fun commitTotalStatistics(local: Bundle, editor: SharedPreferences.Editor) {
-        increment(editor, TAG_TOTAL_COMBINATIONS, local.getLong(TAG_TOTAL_COMBINATIONS, 0L))
-        increment(editor, TAG_TOTAL_BALLS, local.getLong(TAG_TOTAL_BALLS, 0L))
-        increment(editor, TAG_TOTAL_GAMES, 1L)
-        increment(editor, TAG_TOTAL_PERFECTS, local.getLong(TAG_TOTAL_PERFECTS, 0L))
-        increment(editor, TAG_TOTAL_HINTS, local.getLong(TAG_TOTAL_HINTS, 0L))
-    }
-
-    private fun commitColorStatistics(local: Bundle, editor: SharedPreferences.Editor) {
-        increment(editor, TAG_TOTAL_COLOR_RED, local.getLong("red", 0L))
-        increment(editor, TAG_TOTAL_COLOR_GREEN, local.getLong("green", 0L))
-        increment(editor, TAG_TOTAL_COLOR_BLUE, local.getLong("blue", 0L))
-        increment(editor, TAG_TOTAL_COLOR_YELLOW, local.getLong("yellow", 0L))
-    }
-
-    private fun commitSizesStatistics(local: Bundle, editor: SharedPreferences.Editor) {
-        val combinedSizes = mergeSizesMaps(sizeStatistics, bundleToMap(local))
-        editor.putString(TAG_STAT_SIZES, serializeSizes(combinedSizes))
-    }
-
-    /**
-     * Increments the value of the preference [key] by the amount [value].
-     * @param [editor] the editor instance is currently modifying the preferences.
-     */
-    private fun increment(editor: SharedPreferences.Editor, key: String, value: Long) {
-        editor.putLong(key, preferences.getLong(key, 0L) + value)
-    }
-
-    private fun mergeSizesMaps(map1: Map<String, Long>, map2: Map<String, Long>): Map<String, Long> =
-            (map1.keys union map2.keys).associate { it to (map1[it] ?: 0L) + (map2[it] ?: 0L) }
-
-    private fun bundleToMap(bundle: Bundle) = bundle.keySet().associate { it to bundle.getLong(it) }
-
-    /** Converts a sizes [map] into a serialized JSON string that can be saved in the settings. */
-    private fun serializeSizes(map: Map<String, Long>): String = JSONObject(map).toString()
-
-    /** Converts a serialized [payload] JSON string into a sizes map structure. */
-    private fun deserializeSizes(payload: String): Map<String, Long> = JSONObject(payload).let {
-        it.keys().iterator().asSequence().associate { k -> k to it.getLong(k) }.toMap()
     }
 
     companion object {

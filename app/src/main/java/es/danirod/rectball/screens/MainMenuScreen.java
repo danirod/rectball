@@ -30,7 +30,6 @@ import com.badlogic.gdx.utils.Align;
 
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
-import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.scene2d.game.BackgroundActor;
 import es.danirod.rectball.scene2d.ui.ConfirmDialog;
 import es.danirod.rectball.scene2d.ui.MainMenuGrid;
@@ -88,9 +87,9 @@ public class MainMenuScreen extends AbstractScreen {
         Gdx.input.setInputProcessor(multiplexer);
 
         // On first run, show the tutorial.
-        if (!game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_ASKED_TUTORIAL, false)) {
+        if (!game.getSettings().getTutorialAsked()) {
             askTutorial("main.ask_tutorial").show(stage);
-        } else if (!game.getContext().getSettings().getPreferences().getBoolean(SettingsManager.TAG_NEW_SELECTION_MODE_NOTIFIED, false)) {
+        } else if (!game.getSettings().getNewInputMethodAsked()) {
             askTutorial("main.ask_input_method").show(stage);
         }
     }
@@ -135,10 +134,8 @@ public class MainMenuScreen extends AbstractScreen {
             @Override
             public void cancel() {
                 game.player.playSound(SoundPlayer.SoundCode.FAIL);
-                SharedPreferences.Editor editor = game.getContext().getSettings().getPreferences().edit();
-                editor.putBoolean(SettingsManager.TAG_ASKED_TUTORIAL, true);
-                editor.putBoolean(SettingsManager.TAG_NEW_SELECTION_MODE_NOTIFIED, true);
-                editor.apply();
+                game.getSettings().setTutorialAsked(true);
+                game.getSettings().setNewInputMethodAsked(true);
                 tutorialCancel().show(stage);
             }
         });

@@ -23,13 +23,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Value
 import com.badlogic.gdx.utils.Align
 import es.danirod.rectball.RectballGame
 import es.danirod.rectball.SoundPlayer
-import es.danirod.rectball.android.settings.SettingsManager
 import es.danirod.rectball.scene2d.listeners.ScreenPopper
 import es.danirod.rectball.scene2d.ui.GameSummary
 
 class GameOverScreen(game: RectballGame) : AbstractScreen(game) {
 
-    private fun getHighScore() = game.context.settings.preferences.getLong(SettingsManager.TAG_HIGH_SCORE, 0L)
+    private fun getHighScore() = game.statistics.highScore
 
     private fun isHighScore() = game.state.score >= getHighScore()
 

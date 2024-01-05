@@ -36,7 +36,6 @@ import java.util.List;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer.SoundCode;
-import es.danirod.rectball.android.settings.SettingsManager;
 import es.danirod.rectball.model.Ball;
 import es.danirod.rectball.model.BallColor;
 import es.danirod.rectball.model.Bounds;
@@ -50,6 +49,7 @@ import es.danirod.rectball.scene2d.game.ScoreActor.ScoreListener;
 import es.danirod.rectball.scene2d.game.TimerActor.TimerCallback;
 import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
 import es.danirod.rectball.scene2d.ui.ConfirmDialog;
+import es.danirod.rectball.settings.StatSerializer;
 
 public class GameScreen extends AbstractScreen implements TimerCallback, BallSelectionListener, ScoreListener {
 
@@ -454,7 +454,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             CombinationFinder combo = CombinationFinder.create(game.getState().getBoard());
             game.getState().setWiggledBounds(combo.getCombination());
         } else {
-            game.getState().incrementLocalStatistic(SettingsManager.TAG_TOTAL_HINTS, 1);
+            game.getState().incrementHints();
         }
         for (int y = 0; y < game.getState().getBoard().getSize(); y++) {
             for (int x = 0; x < game.getState().getBoard().getSize(); x++) {
@@ -467,7 +467,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // Update scores and statistics.
         int score = game.getState().getScore();
         int time = Math.round(game.getState().getElapsedTime());
-        game.getContext().getSettings().commitState(game.getState());
+
+        StatSerializer.Companion.combine(game.getState(), game.getStatistics());
 
         if (game.getContext().getGameServices().isSignedIn()) {
             game.getContext().getGameServices().uploadScore(score, time * 1000);
@@ -500,7 +501,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         boolean usedCheat = game.getState().getWiggledBounds() != null;
 
         if (usedCheat)
-            game.getState().incrementLocalStatistic(SettingsManager.TAG_TOTAL_HINTS, 1);
+            game.getState().incrementHints();
 
         // Change the colors of the selected region.
         board.addAction(Actions.sequence(
@@ -532,20 +533,16 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // Put information about this combination in the stats.
         int rows = bounds.maxY - bounds.minY + 1;
         int cols = bounds.maxX - bounds.minX + 1;
-        game.getState().incrementSizeStatistic(Math.max(rows, cols) + "x" + Math.min(rows, cols), 1);
-
         BallColor color = board.getBall(bounds.minX, bounds.minY).getBall().getColor();
-        game.getState().incrementColorStatistic(color.toString().toLowerCase(), 1);
-        game.getState().incrementLocalStatistic(SettingsManager.TAG_TOTAL_BALLS, rows * cols);
-        game.getState().incrementLocalStatistic(SettingsManager.TAG_TOTAL_COMBINATIONS, 1);
 
-        // Now, display the score to the user. If the combination is a
-        // PERFECT combination, just display PERFECT.
+        // When the user selects the entire board, it is a perfect.
         int boardSize = game.getState().getBoard().getSize() - 1;
-        if (bounds.equals(new Bounds(0, 0, boardSize, boardSize))) {
-            game.getState().incrementLocalStatistic(SettingsManager.TAG_TOTAL_PERFECTS, 1);
+        boolean isPerfect = bounds.equals(new Bounds(0, 0, boardSize, boardSize));
 
-            // Give score
+        game.getState().incrementCombinations(cols, rows, color, isPerfect);
+
+        if (isPerfect) {
+            // Just display PERFECT on the screen.
             Label label = new Label("PERFECT", game.getAppSkin(), "mono");
             label.setX((stage.getViewport().getWorldWidth() - label.getWidth()) / 2);
             label.setY((stage.getViewport().getWorldHeight() - label.getHeight()) / 2);

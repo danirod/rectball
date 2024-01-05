@@ -33,7 +33,6 @@ import com.badlogic.gdx.utils.Timer
 import es.danirod.rectball.Constants
 import es.danirod.rectball.RectballGame
 import es.danirod.rectball.SoundPlayer
-import es.danirod.rectball.android.settings.SettingsManager
 import es.danirod.rectball.model.BallColor
 import es.danirod.rectball.model.Bounds
 import es.danirod.rectball.model.CombinationFinder
@@ -315,10 +314,8 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
 
         /* Store in the settings the fact that we made the tutorial and leave. */
         stage.addAction(Actions.delay(1.5f, Actions.run {
-            val editor = game.context.settings.preferences.edit()
-            editor.putBoolean(SettingsManager.TAG_ASKED_TUTORIAL, true)
-            editor.putBoolean(SettingsManager.TAG_NEW_SELECTION_MODE_NOTIFIED, true)
-            editor.apply()
+            game.settings.tutorialAsked = true
+            game.settings.newInputMethodAsked = true
             game.popScreen()
         }))
     }
