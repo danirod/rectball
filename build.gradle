@@ -1,28 +1,79 @@
 buildscript {
-    ext.libgdx_version = '1.12.1'
-    ext.kotlin_version = '1.9.0'
-    ext.gamesvcs_version = '1.1.0'
-    repositories {
-        mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "https://maven.google.com" }
-    }
-    dependencies {
-        classpath 'com.google.gms:google-services:4.4.0'
-        classpath 'com.android.tools.build:gradle:8.1.3'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
+  repositories {
+    mavenCentral()
+    maven { url 'https://s01.oss.sonatype.org' }
+    gradlePluginPortal()
+    mavenLocal()
+    google()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
+  }
+  dependencies {
+    classpath "com.android.tools.build:gradle:8.1.4"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+
+  }
 }
 
 allprojects {
-    repositories {
-        mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
-        maven { url "https://maven.google.com" }
+  apply plugin: 'eclipse'
+  apply plugin: 'idea'
+
+  // This allows you to "Build and run using IntelliJ IDEA", an option in IDEA's Settings.
+  idea {
+    module {
+      outputDir file('build/classes/java/main')
+      testOutputDir file('build/classes/java/test')
     }
+  }
 }
 
-tasks.register('clean', Delete) {
-    delete rootProject.buildDir
+configure(subprojects - project(':android-osp') - project(':android-gpe')) {
+  apply plugin: 'java-library'
+  apply plugin: 'kotlin'
+  sourceCompatibility = 11
+  compileJava {
+    options.incremental = true
+  }
+  // From https://lyze.dev/2021/04/29/libGDX-Internal-Assets-List/
+  // The article can be helpful when using assets.txt in your project.
+  compileJava.doLast {
+    // projectFolder/assets
+    def assetsFolder = new File("${project.rootDir}/assets/")
+    // projectFolder/assets/assets.txt
+    def assetsFile = new File(assetsFolder, "assets.txt")
+    // delete that file in case we've already created it
+    assetsFile.delete()
+
+    // iterate through all files inside that folder
+    // convert it to a relative path
+    // and append it to the file assets.txt
+    fileTree(assetsFolder).collect { assetsFolder.relativePath(it) }.each {
+      assetsFile.append(it + "\n")
+    }
+  }
+  compileKotlin {
+    compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+  }
+
+  kotlin {
+    jvmToolchain(11)
+  }
 }
+
+subprojects {
+  version = '0.5.1'
+  ext.appName = 'rectball'
+  repositories {
+    mavenCentral()
+    maven { url 'https://s01.oss.sonatype.org' }
+    // You may want to remove the following line if you have errors downloading dependencies.
+    mavenLocal()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://teavm.org/maven/repository/' }
+  }
+}
+
+eclipse.project.name = 'rectball'

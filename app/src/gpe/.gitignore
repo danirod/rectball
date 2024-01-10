@@ -1,5 +1,0 @@
-# This is the thing you use to connect with the Google API / Firebase API.
-google-services.json
-
-# Game achievements and leaderboads keys. Download from the Play Console.
-res/values/games-ids.xml

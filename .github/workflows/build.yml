@@ -12,9 +12,4 @@ jobs:
           java-version: 17
           cache: gradle
       - name: Build an entire ospDebug flavor
-        run: ./gradlew assembleOspDebug --no-daemon
-      - name: Publish APK as an artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: rectball-osp-debug.apk
-          path: app/build/outputs/apk/osp/debug/app-osp-debug.apk
+        run: ./gradlew android-osp:assembleDebug --no-daemon
