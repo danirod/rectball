@@ -42,19 +42,6 @@ android {
     targetCompatibility 1.8
     coreLibraryDesugaringEnabled true
   }
-  buildTypes {
-    release {
-      buildConfigField "boolean", "FINE_DEBUG", "false"
-      buildConfigField "boolean", "ANALYTICS_DRY_RUN", "false"
-      // minifyEnabled true
-      // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-    }
-    debug {
-      buildConfigField "boolean", "FINE_DEBUG", "true"
-      buildConfigField "boolean", "ANALYTICS_DRY_RUN", "true"
-      versionNameSuffix "-dev"
-    }
-  }
   if(keystoreFile.exists()) {
     signingConfigs {
       release {
@@ -64,6 +51,16 @@ android {
         storeFile file(keystore['storeFile'])
         storePassword keystore['storePassword']
       }
+    }
+  }
+  buildTypes {
+    release {
+      signingConfig signingConfigs.release
+      // minifyEnabled true
+      // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+    debug {
+      versionNameSuffix "-dev"
     }
   }
 
@@ -84,7 +81,6 @@ dependencies {
   implementation "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
 
   // Google Play Games
-  implementation "com.google.android.gms:play-services-games:23.1.0"
   implementation "de.golfgl.gdxgamesvcs:gdx-gamesvcs-android-gpgs:$gamesvcsVersion"
 
   implementation project(':core')

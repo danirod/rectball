@@ -34,26 +34,13 @@ android {
     minSdkVersion 15
     targetSdkVersion 34
     versionCode 437
-    versionName "0.5"
+    versionName "0.5-OSP"
     multiDexEnabled true
   }
   compileOptions {
     sourceCompatibility 1.8
     targetCompatibility 1.8
     coreLibraryDesugaringEnabled true
-  }
-  buildTypes {
-    release {
-      buildConfigField "boolean", "FINE_DEBUG", "false"
-      buildConfigField "boolean", "ANALYTICS_DRY_RUN", "false"
-      // minifyEnabled true
-      // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-    }
-    debug {
-      buildConfigField "boolean", "FINE_DEBUG", "true"
-      buildConfigField "boolean", "ANALYTICS_DRY_RUN", "true"
-      versionNameSuffix "-dev"
-    }
   }
   if(keystoreFile.exists()) {
     signingConfigs {
@@ -64,6 +51,16 @@ android {
         storeFile file(keystore['storeFile'])
         storePassword keystore['storePassword']
       }
+    }
+  }
+  buildTypes {
+    release {
+      signingConfig signingConfigs.release
+      // minifyEnabled true
+      // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+    debug {
+      versionNameSuffix "-dev"
     }
   }
 

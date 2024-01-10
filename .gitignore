@@ -23,6 +23,7 @@ hs_err_pid*
 /android-*/libs/x86_64/
 /android-*/gen/
 /android-*/out/
+/android-*/release/
 /android-*/google-services.json
 local.properties
 com_crashlytics_export_strings.xml
