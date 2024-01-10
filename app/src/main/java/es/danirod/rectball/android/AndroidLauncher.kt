@@ -20,15 +20,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import android.widget.RelativeLayout
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
 import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.JsonWriter
 import es.danirod.rectball.Platform
 import es.danirod.rectball.RectballGame
-import es.danirod.rectball.android.settings.SettingsManager
 import es.danirod.rectball.gameservices.GameServices
 import es.danirod.rectball.model.GameState
+import es.danirod.rectball.settings.AppSettings
+import es.danirod.rectball.settings.AppStatistics
 
 class AndroidLauncher : AndroidApplication(), Platform {
 
@@ -36,20 +38,20 @@ class AndroidLauncher : AndroidApplication(), Platform {
 
     private lateinit var game: RectballGame
 
-    lateinit var settings: SettingsManager
-
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
         // Setup game state
         platform = AndroidPlatform(this)
-        settings = SettingsManager(this)
         game = buildGameInstance(savedState)
 
         // Set up layout.
         val config = AndroidApplicationConfiguration()
         config.useImmersiveMode = false
         val rectballView = initializeForView(game, config)
+
+        // Migration
+        checkMigrate()
 
         // Configure insets.
         val insets = InsetConfiguration(this, game)
@@ -58,6 +60,19 @@ class AndroidLauncher : AndroidApplication(), Platform {
         val layout = RelativeLayout(this)
         layout.addView(rectballView)
         setContentView(layout)
+    }
+
+    private fun checkMigrate() {
+        val settings = AppSettings(Gdx.app.getPreferences("es.danirod.rectball"))
+        val statistics = AppStatistics(Gdx.app.getPreferences("es.danirod.rectball"))
+        if (settings.schema < 3) {
+            Gdx.app.log("DataMigrator", "schema is not 3, migration required")
+            val migration = DataMigrator(this)
+            migration.migrate(settings, statistics)
+            settings.schema = 3
+        } else {
+            Gdx.app.log("DataMigrator", "schema is already v3, nothing to migrate")
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
