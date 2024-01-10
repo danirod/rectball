@@ -16,8 +16,9 @@
  */
 package es.danirod.rectball.settings
 
-import es.danirod.rectball.RectballGame
-import es.danirod.rectball.android.settings.SettingsManager
+import es.danirod.rectball.settings.PreferenceContainer.BoolPreference
+import es.danirod.rectball.settings.PreferenceContainer.LongPreference
+import com.badlogic.gdx.Preferences as GdxPreferences
 
 /**
  * Wrapper so that the game doesn't have to access the settings all the time.
@@ -26,38 +27,12 @@ import es.danirod.rectball.android.settings.SettingsManager
  *
  * @since 0.5
  */
-class AppSettings(private val game: RectballGame) {
-
-    var soundEnabled: Boolean
-        get() = getSetting(SettingsManager.TAG_ENABLE_SOUND, true)
-        set(value) = setSetting(SettingsManager.TAG_ENABLE_SOUND, value)
-
-    var vibrationEnabled: Boolean
-        get() = getSetting(SettingsManager.TAG_ENABLE_VIBRATION, true)
-        set(value) = setSetting(SettingsManager.TAG_ENABLE_VIBRATION, value)
-
-    var keepScreenOn: Boolean
-        get() = getSetting(SettingsManager.TAG_KEEP_SCREEN_ON, true)
-        set(value) = setSetting(SettingsManager.TAG_KEEP_SCREEN_ON, value)
-
-    var colorblindMode: Boolean
-        get() = getSetting(SettingsManager.TAG_ENABLE_COLORBLIND, false)
-        set(value) = setSetting(SettingsManager.TAG_ENABLE_COLORBLIND, value)
-
-    var tutorialAsked: Boolean
-        get() = getSetting(SettingsManager.TAG_ASKED_TUTORIAL, false)
-        set(value) = setSetting(SettingsManager.TAG_ASKED_TUTORIAL, value)
-
-    var newInputMethodAsked: Boolean
-        get() = getSetting(SettingsManager.TAG_NEW_SELECTION_MODE_NOTIFIED, false)
-        set(value) = setSetting(SettingsManager.TAG_NEW_SELECTION_MODE_NOTIFIED, value)
-
-    // TODO: remove access to the inner preferences object.
-    private fun getSetting(key: String, defValue: Boolean) = game.context.settings.preferences.getBoolean(key, defValue)
-
-    private fun setSetting(key: String, value: Boolean) {
-        val editor = game.context.settings.preferences.edit()
-        editor.putBoolean(key, value)
-        editor.apply()
-    }
+class AppSettings(override val preferences: GdxPreferences) : PreferenceContainer {
+    var schema by LongPreference("pragma.schema")
+    var soundEnabled by BoolPreference("settings.sound", true)
+    var vibrationEnabled by BoolPreference("settings.vibration", true)
+    var keepScreenOn by BoolPreference("settings.screen_on", true)
+    var colorblindMode by BoolPreference("settings.colorblind", false)
+    var tutorialAsked by BoolPreference("main_menu.tutorial_asked", false)
+    var newInputMethodAsked by BoolPreference("main_menu.new_input_method", false)
 }

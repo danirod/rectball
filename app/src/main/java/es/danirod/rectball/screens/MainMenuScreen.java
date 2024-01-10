@@ -16,8 +16,6 @@
  */
 package es.danirod.rectball.screens;
 
-import android.content.SharedPreferences;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;

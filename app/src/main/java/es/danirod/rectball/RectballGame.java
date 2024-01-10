@@ -16,9 +16,8 @@
  */
 package es.danirod.rectball;
 
-import androidx.annotation.NonNull;
-
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -138,8 +137,9 @@ public class RectballGame extends StateBasedGame {
         Gdx.gl.glDisable(GL20.GL_DITHER);
 
         /* Prepare the settings instance. */
-        settings = new AppSettings(this);
-        statistics = new AppStatistics(context.settings.getPreferences());
+        Preferences prefs = Gdx.app.getPreferences("es.danirod.rectball");
+        settings = new AppSettings(prefs);
+        statistics = new AppStatistics(prefs);
         haptics = new Haptics(this);
 
         /* Prepare the manager, and force loading the skin, as it is used for setting up the user interface. */
@@ -232,7 +232,7 @@ public class RectballGame extends StateBasedGame {
         this.restoredState = restoredState;
     }
 
-    @NonNull
+    /** @noinspection NullableProblems*/
     @Override
     public AbstractScreen getFallbackScreen() {
         return new MainMenuScreen(this);
