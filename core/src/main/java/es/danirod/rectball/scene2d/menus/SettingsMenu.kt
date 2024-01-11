@@ -93,7 +93,7 @@ class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
     }
 
     private val doGameServicesLogin by lazy {
-        game.locale.extra("google_play.log_in").let { label ->
+        game.locale.format("settings.game_services_log_in", game.context.gameServices.name).let { label ->
             TextButton(label, game.appSkin).apply {
                 pad(10f)
                 addListener(object : ChangeListener() {
@@ -107,7 +107,7 @@ class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
     }
 
     private val doGameServicesLogout by lazy {
-        game.locale.extra("google_play.log_out").let { label ->
+        game.locale.format("settings.game_services_log_out", game.context.gameServices.name).let { label ->
             TextButton(label, game.appSkin).apply {
                 pad(10f)
                 addListener(object : ChangeListener() {
@@ -121,7 +121,7 @@ class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
     }
 
     private val doOpenInMarketplace by lazy {
-        game.locale.extra("google_play.view_in_google_play").let { label ->
+        game.locale.format("settings.view_in_marketplace", game.context.marketplace.name).let { label ->
             TextButton(label, game.appSkin).apply {
                 pad(10f)
                 addListener(object : ChangeListener() {
@@ -157,7 +157,7 @@ class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
         }
     }
 
-    private fun gameServicesButton() = if (game.context.gameServices.isSignedIn)
+    private fun gameServicesButton() = if (game.context.gameServices.signedIn())
         doGameServicesLogout
     else
         doGameServicesLogin
@@ -181,17 +181,17 @@ class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
     }
 
     private fun gameServicesButtonCallback(requestedStatus: Boolean, button: TextButton, text: String) {
-        button.setText(game.locale.extra("google_play.logging_in"))
+        button.setText(game.locale["settings.game_services_logging_in"])
         button.isDisabled = true
         game.player.playSound(SoundCode.SELECT)
 
         Gdx.app.postRunnable {
             if (requestedStatus) {
-                if (!game.context.gameServices.isSignedIn) {
+                if (!game.context.gameServices.signedIn()) {
                     game.context.gameServices.signIn()
                 }
             } else {
-                if (game.context.gameServices.isSignedIn) {
+                if (game.context.gameServices.signedIn()) {
                     game.context.gameServices.signOut()
                 }
             }
@@ -200,7 +200,7 @@ class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
         lateinit var recheckTask: Timer.Task
         recheckTask = Timer.schedule(object : Timer.Task() {
             override fun run() {
-                if (!game.context.gameServices.isLoggingIn) {
+                if (!game.context.gameServices.loggingIn()) {
                     button.setText(text)
                     button.isDisabled = false
                     val target = children.indexOf(button)

@@ -1,0 +1,3 @@
+# Not exactly secret, because the APK can be decompiled, but better to force
+# myself to get always the fresh game-ids.xml file from Google Play Console.
+res/values/game-ids.xml

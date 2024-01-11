@@ -77,7 +77,7 @@ class MainMenuGrid(private val game: RectballGame) : Table() {
             addListener(object : ChangeListener() {
                 override fun changed(event: ChangeEvent?, actor: Actor?) {
                     game.player.playSound(SoundPlayer.SoundCode.SELECT)
-                    if (!game.context.gameServices.isSignedIn) {
+                    if (!game.context.gameServices.signedIn()) {
                         game.context.gameServices.signIn()
                     } else {
                         game.context.gameServices.showLeaderboards()
@@ -97,7 +97,7 @@ class MainMenuGrid(private val game: RectballGame) : Table() {
             addListener(object : ChangeListener() {
                 override fun changed(event: ChangeEvent?, actor: Actor?) {
                     game.player.playSound(SoundPlayer.SoundCode.SELECT)
-                    if (!game.context.gameServices.isSignedIn) {
+                    if (!game.context.gameServices.signedIn()) {
                         game.context.gameServices.signIn()
                     } else {
                         game.context.gameServices.showAchievements()

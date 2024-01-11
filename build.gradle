@@ -9,7 +9,7 @@ buildscript {
     maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
   }
   dependencies {
-    classpath "com.android.tools.build:gradle:8.1.4"
+    classpath 'com.android.tools.build:gradle:8.2.1'
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
   }
@@ -28,42 +28,49 @@ allprojects {
   }
 }
 
-configure(subprojects - project(':android-osp') - project(':android-gpe')) {
+configure(subprojects.findAll { it.group != "rectball.android" }) {
   apply plugin: 'java-library'
   apply plugin: 'kotlin'
-  sourceCompatibility = 11
+  sourceCompatibility = 17
   compileJava {
     options.incremental = true
   }
-  // From https://lyze.dev/2021/04/29/libGDX-Internal-Assets-List/
-  // The article can be helpful when using assets.txt in your project.
+  // Generated files in assets (https://lyze.dev/2021/04/29/libGDX-Internal-Assets-List/)
+  // Piggybacking this solution to also generate version information from Gradle and pack
+  // it into the game.
   compileJava.doLast {
-    // projectFolder/assets
     def assetsFolder = new File("${project.rootDir}/assets/")
-    // projectFolder/assets/assets.txt
     def assetsFile = new File(assetsFolder, "assets.txt")
+    def versionFile = new File(assetsFolder, "version.properties")
+
     // delete that file in case we've already created it
     assetsFile.delete()
+    versionFile.delete()
 
-    // iterate through all files inside that folder
-    // convert it to a relative path
-    // and append it to the file assets.txt
+    // Generate version file information
+    def versionProperties = new Properties()
+    versionProperties['appVersion'] = rectballVersion
+    versionProperties['appFullVersion'] = rectballVersionFull
+    versionProperties['appBuildNumber'] = rectballBuildNumber
+    versionFile.withWriter { w -> versionProperties.store(w, null) }
+
+    // Iterate through all files inside that folder and pack it into assets.txt
     fileTree(assetsFolder).collect { assetsFolder.relativePath(it) }.each {
       assetsFile.append(it + "\n")
     }
   }
   compileKotlin {
-    compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+    compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
   }
 
   kotlin {
-    jvmToolchain(11)
+    jvmToolchain(17)
   }
 }
 
 subprojects {
-  version = '0.5.1'
-  ext.appName = 'rectball'
+  version = rectballVersionFull
+  ext.appName = 'Rectball'
   repositories {
     mavenCentral()
     maven { url 'https://s01.oss.sonatype.org' }

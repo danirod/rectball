@@ -38,7 +38,6 @@ object AssetManagerBuilder {
     fun addGameServices(manager: AssetManager) {
         manager.load("google/gpg_achievements.png", Texture::class.java, textureParameters)
         manager.load("google/gpg_leaderboard.png", Texture::class.java, textureParameters)
-        manager.load("bundles/google_play", I18NBundle::class.java)
     }
 
     private fun loadTextures(manager: AssetManager) {

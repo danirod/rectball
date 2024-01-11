@@ -1,0 +1,106 @@
+configure(subprojects - project(':android:core')) {
+    apply plugin: 'com.android.application'
+    apply plugin: 'kotlin-android'
+
+    android {
+        namespace "es.danirod.rectball.android"
+        compileSdk 34
+        sourceSets {
+            main {
+                manifest.srcFile 'AndroidManifest.xml'
+                java.setSrcDirs(['src/main/java', 'src/main/kotlin'])
+                aidl.setSrcDirs(['src/main/java', 'src/main/kotlin'])
+                renderscript.setSrcDirs(['src/main/java', 'src/main/kotlin'])
+                res.setSrcDirs(['res'])
+                assets.setSrcDirs(['../../assets'])
+                jniLibs.setSrcDirs(['libs'])
+            }
+        }
+        packagingOptions {
+            resources {
+                excludes += ['META-INF/robovm/ios/robovm.xml', 'META-INF/DEPENDENCIES.txt', 'META-INF/DEPENDENCIES',
+                             'META-INF/dependencies.txt', '**/*.gwt.xml']
+                pickFirsts += ['META-INF/LICENSE.txt', 'META-INF/LICENSE', 'META-INF/license.txt', 'META-INF/LGPL2.1',
+                               'META-INF/NOTICE.txt', 'META-INF/NOTICE', 'META-INF/notice.txt']
+            }
+        }
+        defaultConfig {
+            applicationId 'es.danirod.rectball.android'
+            minSdkVersion 15
+            targetSdkVersion 34
+            versionCode rectballBuildNumber.toInteger()
+            versionName rectballVersion
+            multiDexEnabled true
+        }
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+            coreLibraryDesugaringEnabled true
+        }
+
+        buildTypes {
+            release {
+                minifyEnabled true
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            }
+            debug {
+                versionNameSuffix "-dev"
+            }
+        }
+
+        kotlin {
+            jvmToolchain(8)
+        }
+    }
+
+    repositories {
+        // needed for AAPT2, may be needed for other tools
+        google()
+    }
+
+    configurations { natives }
+
+    dependencies {
+        coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+        implementation project(':core')
+        implementation project(':android:core')
+
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
+
+        // AndroidX stuff -- TODO: which of these can be removed?
+        implementation "androidx.core:core-ktx:1.12.0"
+        implementation "androidx.preference:preference-ktx:1.2.1"
+        implementation "androidx.multidex:multidex:2.0.1"
+    }
+
+    // Automatically configure the signing key if the keystore.properties file exists
+    rootProject.file('keystore.properties').with { keystoreFile ->
+        if (keystoreFile.exists()) {
+            def keystoreConfig = new Properties()
+            keystoreFile.withInputStream { instr -> keystoreConfig.load(instr) }
+
+            android {
+                signingConfigs {
+                    keystore {
+                        storeFile file(keystoreConfig['storeFile'])
+                        storePassword keystoreConfig['storePassword']
+                        keyAlias keystoreConfig['keyAlias']
+                        keyPassword keystoreConfig['keyPassword']
+                    }
+                }
+
+                buildTypes {
+                    release {
+                        signingConfig signingConfigs.keystore
+                    }
+                    debug {
+                        signingConfig signingConfigs.keystore
+                    }
+                }
+            }
+        }
+    }
+}

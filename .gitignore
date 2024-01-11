@@ -4,7 +4,7 @@ gradle-app.setting
 local.properties
 keystore.properties
 /build/
-/android-*/build/
+/android/*/build/
 /core/build/
 /lwjgl3/build/
 /teavm/build/
@@ -17,14 +17,13 @@ hs_err_pid*
 .attach_pid*
 
 ## Android:
-/android-*/libs/armeabi-v7a/
-/android-*/libs/arm64-v8a/
-/android-*/libs/x86/
-/android-*/libs/x86_64/
-/android-*/gen/
-/android-*/out/
-/android-*/release/
-/android-*/google-services.json
+/android/*/libs/armeabi-v7a/
+/android/*/libs/arm64-v8a/
+/android/*/libs/x86/
+/android/*/libs/x86_64/
+/android/*/gen/
+/android/*/out/
+/android/*/release/
 local.properties
 com_crashlytics_export_strings.xml
 
@@ -41,7 +40,7 @@ com_crashlytics_export_strings.xml
 .classpath
 .project
 .metadata/
-/android-*/bin/
+/android/*/bin/
 /core/bin/
 /lwjgl3/bin/
 /teavm/bin/
@@ -58,25 +57,25 @@ com_crashlytics_export_strings.xml
 ## NetBeans:
 
 /nbproject/private/
-/android-*/nbproject/private/
+/android/*/nbproject/private/
 /core/nbproject/private/
 /lwjgl3/nbproject/private/
 /teavm/nbproject/private/
 
 /nbbuild/
-/android-*/nbbuild/
+/android/*/nbbuild/
 /core/nbbuild/
 /lwjgl3/nbbuild/
 /teavm/nbbuild/
 
 /dist/
-/android-*/dist/
+/android/*/dist/
 /core/dist/
 /lwjgl3/dist/
 /teavm/dist/
 
 /nbdist/
-/android-*/nbdist/
+/android/*/nbdist/
 /core/nbdist/
 /lwjgl3/nbdist/
 /teavm/nbdist/
@@ -93,6 +92,7 @@ Thumbs.db
 *.*#
 *#*#
 /assets/assets.txt
+/assets/version.properties
 
 ## Special cases:
 

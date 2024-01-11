@@ -18,12 +18,10 @@ package es.danirod.rectball
 
 import com.badlogic.gdx.utils.I18NBundle
 
-class Locale(private val bundle: I18NBundle, private val extra: I18NBundle) {
+class Locale(private val bundle: I18NBundle) {
 
-    constructor(bundle: I18NBundle) : this(bundle, I18NBundle())
+    operator fun get(key: String): String = bundle.get(key)
 
-    operator fun get(key: String): String = bundle[key]
-
-    fun extra(key: String): String = extra[key]
+    fun format(key: String, vararg args: Any) = bundle.format(key, *args)
 
 }

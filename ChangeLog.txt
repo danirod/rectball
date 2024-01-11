@@ -1,3 +1,24 @@
+[Unreleased]
+- Updated project structure to a regular libGDX project again.
+- Added desktop as a platform again, based on the newer LWJGL 3 backend.
+- Added support for packaging the game as a self-contained executable (jpackage).
+- Added HTML 5 as a platform, powered by the TeaVM backend.
+- Migrates persistent data from Android's SharedPreferences backend into GdxPreferences.
+
+[0.5.436]
+- Drops semantic versioning, adopts build numbers.
+- Added support for phone screens with notches and custom insets.
+- Added vibration during gameplay.
+- Fixed wakelocks being requested all the time instead of just during gameplay.
+- Added checkbox to toggle wakelock on or off.
+- Added reusable scrollable view for settings pages, statistics and about screens.
+- Removed fullscreen mode.
+- Removed "share screenshot" button and remove the pixmapper code.
+- Removed more dead code not previously yanked.
+- Migrated translation strings to Gdx's I18NBundles.
+- Migrated game look and feel into a Skin Composer project.
+- First iteration of the new game skin, includes new assets, textures and ninepatches.
+
 [0.4.12]
 - Added: new system to select combinations based on dragging.
 - Added: better sounds.

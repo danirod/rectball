@@ -36,12 +36,15 @@ import java.util.List;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer.SoundCode;
+import es.danirod.rectball.gameservices.GameUploader;
+import es.danirod.rectball.gameservices.Leaderboard;
 import es.danirod.rectball.model.Ball;
 import es.danirod.rectball.model.BallColor;
 import es.danirod.rectball.model.Bounds;
 import es.danirod.rectball.model.CombinationFinder;
 import es.danirod.rectball.model.Coordinate;
 import es.danirod.rectball.model.ScoreCalculator;
+import es.danirod.rectball.platform.GameServices;
 import es.danirod.rectball.scene2d.game.BallActor;
 import es.danirod.rectball.scene2d.game.BoardActor;
 import es.danirod.rectball.scene2d.game.Hud;
@@ -464,14 +467,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             }
         }
 
-        // Update scores and statistics.
-        int score = game.getState().getScore();
-        int time = Math.round(game.getState().getElapsedTime());
 
         StatSerializer.Companion.combine(game.getState(), game.getStatistics());
 
-        if (game.getContext().getGameServices().isSignedIn()) {
-            game.getContext().getGameServices().uploadScore(score, time * 1000);
+        if (game.getContext().getGameServices().signedIn()) {
+            GameUploader uploader = new GameUploader(game.getState(), game.getContext().getGameServices());
+            uploader.submit();
         }
 
         // Animate the transition to game over.

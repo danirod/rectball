@@ -16,24 +16,23 @@
  */
 package es.danirod.rectball
 
-import es.danirod.rectball.gameservices.GameServices
+import es.danirod.rectball.platform.GameServices
+import es.danirod.rectball.platform.Marketplace
+import es.danirod.rectball.platform.Wakelock
 
 interface Platform {
 
     val gameServices: GameServices
 
+    /** Provides services to visit the game page in an app store or game marketplace. */
     val marketplace: Marketplace
 
+    /** Provides functions to inhibit the device going in sleep mode. */
+    val wakelock: Wakelock
+
+    /** Provides the short version number for the game (0.5, 0.9, 1.2...) */
     val version: String
 
+    /** Provides the build number (long number, such as 436, 1312, 9255...) */
     val buildNumber: Int
-
-    interface Marketplace {
-
-        val supported: Boolean
-
-        fun open(): Unit
-
-    }
-
 }

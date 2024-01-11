@@ -143,15 +143,14 @@ public class RectballGame extends StateBasedGame {
 
         /* Prepare the manager, and force loading the skin, as it is used for setting up the user interface. */
         manager = AssetManagerBuilder.INSTANCE.build();
-        manager.finishLoadingAsset("skin/rectball.json");
-        manager.finishLoadingAsset("bundles/strings");
         if (context.getGameServices().getSupported()) {
             AssetManagerBuilder.INSTANCE.addGameServices(manager);
-            manager.finishLoadingAsset("bundles/google_play");
-            locale = new Locale(manager.get("bundles/strings"), manager.get("bundles/google_play"));
-        } else {
-            locale = new Locale(manager.get("bundles/strings"));
         }
+
+        manager.finishLoadingAsset("skin/rectball.json");
+        manager.finishLoadingAsset("bundles/strings");
+        locale = new Locale(manager.get("bundles/strings"));
+
         updateBallAtlas();
 
         batch = new SpriteBatch();
