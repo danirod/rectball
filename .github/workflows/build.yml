@@ -1,15 +1,161 @@
-name: Android
-on: [push]
+name: Build
+on:
+  push:
+    branches:
+      - master
 
 jobs:
-  build:
+  assembly-information:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.assembly.outputs.version }}
+      build: ${{ steps.assembly.outputs.build }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v4
+      - name: assembly
+        id: assembly
+          # Build number: the last build number manually set was 436. First GitHub Actions run that automates
+          # setting build numbers is 244. Therefore, add 193 to GitHub run number to let GitHub Actions
+          # provide the game build number for the artifacts (244 + 193 = 437)
+        run: |
+          echo "version=nightly-${GITHUB_SHA::8}" >> $GITHUB_OUTPUT
+          echo "build=$(expr 193 + ${{ github.run_number }})" >> $GITHUB_OUTPUT
+      - name: print
+        run: |
+          echo "Version: ${{ steps.assembly.outputs.version }}"
+          echo "Build: ${{ steps.assembly.outputs.build }}"
+  lwjgl3-jar:
+    runs-on: ubuntu-latest
+    needs: assembly-information
+    steps:
+      - name: Clone project
+        uses: actions/checkout@v4
+      - name: Configure JDK 17
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
           cache: gradle
-      - name: Build an entire ospDebug flavor
-        run: ./gradlew android-osp:assembleDebug --no-daemon
+      - name: Compile and package the application
+        run: |
+          ./gradlew clean
+          ./gradlew -PrectballVersion=${{ needs.assembly-information.outputs.version }} -PrectballBuildNumber=${{ needs.assembly-information.outputs.build }} lwjgl3:build
+          ./gradlew lwjgl3:jar
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: rectball-nightly-lwjgl3
+          path: lwjgl3/build/lib/*.jar
+  lwjgl3-darwin:
+    runs-on: macOS-latest
+    needs: assembly-information
+    steps:
+      - name: Clone project
+        uses: actions/checkout@v4
+      - name: Configure JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+        # Note: I am hardcoding rectballVersionFull=1.0.0 because macOS does
+        # not allow versions starting with zero on its applications.
+      - name: Compile and package the application for macOS
+        run: |
+          ./gradlew clean
+          ./gradlew -PrectballVersion=${{ needs.assembly-information.outputs.version }} -PrectballBuildNumber=${{ needs.assembly-information.outputs.build }} lwjgl3:build
+          ./gradlew -PrectballVersionFull=1.0.0 lwjgl3:jpackageImage
+          hdiutil create -volname Rectball -srcfolder lwjgl3/build/jpackage -ov -format UDZO lwjgl3/build/jpackage/rectball.dmg
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: rectball-nightly-darwin
+          path: lwjgl3/build/jpackage/rectball.dmg
+  lwjgl3-linux-gnu:
+    runs-on: ubuntu-latest
+    needs: assembly-information
+    steps:
+      - name: Clone project
+        uses: actions/checkout@v4
+      - name: Configure AppImage dependencies
+        run: sudo apt-get update && sudo apt-get install -y fuse
+      - name: Configure JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+      - name: Compile and package the application for GNU/Linux
+        run: |
+          ./gradlew clean
+          ./gradlew -PrectballVersion=${{ needs.assembly-information.outputs.version }} -PrectballBuildNumber=${{ needs.assembly-information.outputs.build }} lwjgl3:build
+          scripts/gen-appimage.sh
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: rectball-nightly-linux-gnu
+          path: lwjgl3/build/rectball*.AppImage
+  lwjgl3-winnt:
+    runs-on: windows-latest
+    needs: assembly-information
+    steps:
+      - name: Clone project
+        uses: actions/checkout@v4
+      - name: Configure JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+      - name: Compile and package the application for Microsoft Windows NT
+        run: |
+          $VERSION_ID=$env:GITHUB_SHA.SubString(0, 8)
+          .\gradlew.bat clean
+          .\gradlew.bat "-PrectballVersion=${{ needs.assembly-information.outputs.version }}" "-PrectballBuildNumber=${{ needs.assembly-information.outputs.build }}" lwjgl3:build
+          .\gradlew.bat lwjgl3:jpackageImage
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: rectball-nightly-winnt
+          path: lwjgl3/build/jpackage
+  android:
+    runs-on: ubuntu-latest
+    needs: assembly-information
+    steps:
+      - name: Clone project
+        uses: actions/checkout@v4
+      - name: Configure JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+      - name: Compile Android APK
+        run: |
+          ./gradlew clean
+          ./gradlew -PrectballVersion=${{ needs.assembly-information.outputs.version }} -PrectballBuildNumber=${{ needs.assembly-information.outputs.build }} android:osp:assembleRelease
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: rectball-nightly-android
+          path: android/osp/build/outputs/apk/release/*.apk
+  teavm:
+    runs-on: ubuntu-latest
+    needs: assembly-information
+    steps:
+      - name: Clone project
+        uses: actions/checkout@v4
+      - name: Configure JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+      - name: Compile TeaVM
+        run: |
+          ./gradlew clean
+          ./gradlew -PrectballVersion=${{ needs.assembly-information.outputs.version }} -PrectballBuildNumber=${{ needs.assembly-information.outputs.build }} teavm:build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: rectball-nightly-teavm
+          path: teavm/build/dist/webapp

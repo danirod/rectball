@@ -86,7 +86,7 @@ if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_14)) {
     distDir.set(file(project.layout.buildDirectory))
     jpackage {
       imageName = appName
-      skipInstaller = true
+      skipInstaller = !project.hasProperty('genInstaller')
       jpackageHome = javaHome.getOrElse("")
       mainJar = jarName
       if (os.contains('win')) {

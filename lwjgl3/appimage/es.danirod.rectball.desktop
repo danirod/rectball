@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Rectball
+Comment=Match gems and collect points in this puzzle game
+Categories=Game
+Exec=Rectball
+Icon=es.danirod.rectball

@@ -26,11 +26,16 @@ Or carry it to the [discussions](https://github.com/danirod/rectball/discussions
 
 # Development requirements
 
-The pipeline requires currently JDK 17.
-Older or newer versions of the JDK may or may not work.
-Check the [Gradle compatibility matrix](https://docs.gradle.org/current/userguide/compatibility.html).
+Currently, **JDK 17 is required**.
+Older versions will not work, newer versions will not work.
+The plugins will look for any JDK 17 in the system.
+It is suggested that you use the Temurin JDK, but the decision on the vendor is yours.
 
-To build Android versions, the Android SDK is required to be configured.
+_(In the future, I'd like to change this behaviour and test the Java versions I accept in my build.gradle files because I honestly still don't know)_
+
+To build Android versions, the Android SDK is required and it should be configured.
+**You should not need to install the Android SDK to build the desktop or HTML 5 version; if it fails, it is a bug**.
+The build process should work on most host operating systems.
 
 # Gradle projects
 
@@ -68,8 +73,8 @@ Replace `X` with `osp` for the open source version or `gpe` for the Google Play 
 
 ## JPackage cannot pack Rectball ("The first number in an app-version cannot be zero or negative")
 
-Sometimes JPackage may refuse to create a self-contained application because the application is still not v1.0, and the first number must be a zero.
-If this happens, it is possible to override the version by packing the application the following way:
+JPackage refuses to create an .app for macOS because macOS doesn't let apps have a zero as first version number.
+Until I release Rectball 1.0, the workaround is to hardcode version 1.0.0 when building the application:
 
     ./gradlew -PrectballVersionFull=1.0.0 lwjgl3:jpackage
 

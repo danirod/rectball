@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="33.866669mm"
+   height="33.866673mm"
+   viewBox="0 0 33.866669 33.866673"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
+   sodipodi:docname="rectball.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="4.7574603"
+     inkscape:cx="29.21727"
+     inkscape:cy="58.644735"
+     inkscape:window-width="2560"
+     inkscape:window-height="1311"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-88.066671,-68.523729)">
+    <g
+       transform="matrix(0.42333333,0,0,0.42333333,62.248438,-159.91232)"
+       id="g4530"
+       inkscape:export-filename="/Users/danirod/Desarrollo/rectball/android/res/drawable-hdpi/ic_launcher.png"
+       inkscape:export-xdpi="50.625"
+       inkscape:export-ydpi="50.625"
+       inkscape:label="gem_blue"
+       style="display:inline">
+      <circle
+         cy="599.61273"
+         cx="80.987953"
+         id="circle4532"
+         style="opacity:1;fill:#2a7fff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         r="20"
+         inkscape:label="blue" />
+      <circle
+         cy="590.88202"
+         cx="72.747986"
+         id="circle4534"
+         style="opacity:0.507;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         r="6.3395782"
+         inkscape:label="ref" />
+    </g>
+    <g
+       id="g4542"
+       transform="matrix(0.42333333,0,0,0.42333333,84.175228,-177.14502)"
+       inkscape:export-filename="../posters/icon.png"
+       inkscape:export-xdpi="768"
+       inkscape:export-ydpi="768"
+       inkscape:label="gem_red"
+       style="display:inline">
+      <circle
+         r="20"
+         cy="600.31989"
+         cx="29.192389"
+         id="circle4544"
+         style="opacity:1;fill:#d40000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         inkscape:label="red" />
+      <circle
+         r="6.3395782"
+         cy="591.58917"
+         cx="20.952415"
+         id="circle4546"
+         style="opacity:0.507;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         inkscape:label="ref" />
+    </g>
+    <g
+       id="g4560"
+       transform="matrix(0.41288536,0,0,0.41288536,52.959198,-153.43862)"
+       inkscape:export-filename="/Users/danirod/Desarrollo/rectball/android/res/drawable-hdpi/ic_launcher.png"
+       inkscape:export-xdpi="50.625"
+       inkscape:export-ydpi="50.625"
+       inkscape:label="gem_green"
+       style="display:inline">
+      <circle
+         r="20.506096"
+         cy="599.10663"
+         cx="146.54787"
+         id="circle4562"
+         style="opacity:1;fill:#44aa00;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         inkscape:label="green" />
+      <circle
+         r="6.5"
+         cy="590.15497"
+         cx="138.09941"
+         id="circle4564"
+         style="opacity:0.507;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         inkscape:label="ref" />
+    </g>
+    <g
+       transform="matrix(0.41288536,0,0,0.41288536,30.770698,-170.95585)"
+       id="g4566"
+       inkscape:export-filename="/Users/danirod/Desarrollo/rectball/android/res/drawable-hdpi/ic_launcher.png"
+       inkscape:export-xdpi="50.625"
+       inkscape:export-ydpi="50.625"
+       inkscape:label="gem_yellow"
+       style="display:inline">
+      <circle
+         r="20.506096"
+         cy="600.52081"
+         cx="200.28798"
+         id="circle4568"
+         style="opacity:1;fill:#ffcc00;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         inkscape:label="yellow" />
+      <circle
+         r="6.5"
+         cy="591.56915"
+         cx="191.83952"
+         id="circle4570"
+         style="opacity:0.507;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         inkscape:label="ref" />
+    </g>
+  </g>
+</svg>
