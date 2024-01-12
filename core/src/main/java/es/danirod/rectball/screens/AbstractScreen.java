@@ -16,22 +16,17 @@
  */
 package es.danirod.rectball.screens;
 
-import static es.danirod.rectball.Constants.STAGE_PADDING;
-import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
+
+import static es.danirod.rectball.Constants.STAGE_PADDING;
+import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
 
 /**
  * This is the base screen every screen has to inherit. It contains common
@@ -61,6 +56,7 @@ public abstract class AbstractScreen implements Screen {
     public void resize(int width, int height) {
         stage.setViewport(buildViewport());
         stage.getViewport().update(width, height, true);
+        updateTablePadding();
     }
 
     /**
@@ -97,7 +93,6 @@ public abstract class AbstractScreen implements Screen {
                 (float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
         float width = (float) VIEWPORT_WIDTH;
         float height = landscape ? width : width * ar;
-        Gdx.app.log("AbstractScreen", "Setting FitViewport to " + width + "x" + height);
         return new FitViewport(width, height);
     }
 

@@ -18,12 +18,7 @@ package es.danirod.rectball.screens
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.Actor
-import com.badlogic.gdx.scenes.scene2d.ui.Container
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
-import com.badlogic.gdx.scenes.scene2d.ui.Label
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
-import com.badlogic.gdx.scenes.scene2d.ui.Table
-import com.badlogic.gdx.scenes.scene2d.ui.Value
+import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Scaling
 import es.danirod.rectball.Constants
@@ -80,7 +75,8 @@ abstract class MenuScreen(game: RectballGame) : AbstractScreen(game) {
 
     override fun updateTablePadding() {
         // Use the insets for the menu table, but don't pad more than necessary.
-        val pixelsPerViewport = Gdx.graphics.width / Constants.VIEWPORT_WIDTH
+        val pixelsPerViewport =
+            Gdx.graphics.width.toFloat() / Constants.VIEWPORT_WIDTH
         val outerPadTop = max(game.marginTop / pixelsPerViewport, 5f)
         val outerPadBottom = game.marginBottom / pixelsPerViewport
         val outerPadLeft = game.marginLeft / pixelsPerViewport

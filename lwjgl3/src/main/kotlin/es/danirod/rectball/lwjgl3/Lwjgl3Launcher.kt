@@ -28,7 +28,7 @@ fun main() {
         return
     Lwjgl3Application(RectballGame(Lwjgl3Platform()), Lwjgl3ApplicationConfiguration().apply {
         setTitle("Rectball")
-        setResizable(false)
+        setResizable(true)
         setWindowedMode(480, 720)
         setWindowIcon(*(arrayOf(128, 64, 32, 16).map { "libgdx$it.png" }.toTypedArray()))
     })
