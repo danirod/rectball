@@ -21,7 +21,8 @@ import com.badlogic.gdx.Gdx
 
 class Haptics(private val game: RectballGame) {
 
-    val supported = Gdx.app.type != Application.ApplicationType.Desktop
+    val supported = Gdx.app.type == Application.ApplicationType.Android
+
     fun vibrateMilliseconds(milliseconds: Int) {
         if (game.settings.vibrationEnabled) {
             Gdx.input.vibrate(milliseconds, true)
