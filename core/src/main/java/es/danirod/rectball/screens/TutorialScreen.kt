@@ -190,6 +190,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
             ))
 
             board.touchable = Touchable.enabled
+            board.clearSubscribers()
             board.addSubscriber(object : DefaultBallSelectionListener() {
                 override fun onSelectionSucceeded(selection: MutableList<BallActor>?) {
                     stopCombinationHelpAnimation()
@@ -198,7 +199,6 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
 
                     /* Next step */
                     showModal(modalThatWasEasy, Align.center)
-                    board.clearSubscribers()
                     setBoardColors(listOf(
                             "YBRYBY",
                             "RGYGYR",
@@ -214,6 +214,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
         }
 
         modalThatWasEasy = makeModal(tutorialStrings[6], okText) {
+            board.clearSubscribers()
             board.addSubscriber(object : DefaultBallSelectionListener() {
                 override fun onSelectionSucceeded(selection: MutableList<BallActor>?) {
                     stopCombinationHelpAnimation()
@@ -222,7 +223,6 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
 
                     /* Next step */
                     showModal(modalBeatAHarderOne, Align.center)
-                    board.clearSubscribers()
                     setBoardColors(listOf(
                             "YBRYBY",
                             "RBYGYR",
@@ -238,6 +238,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
         }
 
         modalBeatAHarderOne = makeModal(tutorialStrings[7], okText) {
+            board.clearSubscribers()
             board.addSubscriber(object : DefaultBallSelectionListener() {
                 override fun onSelectionSucceeded(selection: MutableList<BallActor>?) {
                     stopCombinationHelpAnimation()
@@ -246,7 +247,6 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
 
                     /* Next step. */
                     showModal(modalYouGotThis, Align.center)
-                    board.clearSubscribers()
                 }
             })
 
