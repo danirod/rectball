@@ -40,7 +40,7 @@ data class LocalStatistics(
 
     private fun mergeColorMap(color: BallColor): Map<String, Long> {
         val key = color.name.lowercase()
-        val oldValue: Long = bySize[key] ?: 0
+        val oldValue: Long = byColor[key] ?: 0
         return byColor.toMutableMap().apply { this[key] = oldValue + 1L }
     }
 
