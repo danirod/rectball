@@ -16,9 +16,12 @@
  */
 package es.danirod.rectball
 
+import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 
 class Haptics(private val game: RectballGame) {
+
+    val supported = Gdx.app.type != Application.ApplicationType.Desktop
     fun vibrateMilliseconds(milliseconds: Int) {
         if (game.settings.vibrationEnabled) {
             Gdx.input.vibrate(milliseconds, true)

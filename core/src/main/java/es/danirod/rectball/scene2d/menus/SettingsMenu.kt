@@ -166,8 +166,12 @@ class SettingsMenu(private val game: RectballGame) : VerticalGroup() {
         grow()
         space(25f)
         addActor(soundSwitch)
-        addActor(vibrationSwitch)
-        addActor(keepScreenOn)
+        if (game.haptics.supported) {
+            addActor(vibrationSwitch)
+        }
+        if (game.context.wakelock.supported) {
+            addActor(keepScreenOn)
+        }
         addActor(colorSwitch)
         addActor(doTutorialButton)
         if (game.context.gameServices.supported) {
