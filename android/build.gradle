@@ -76,31 +76,5 @@ configure(subprojects - project(':android:core')) {
         implementation "androidx.multidex:multidex:2.0.1"
     }
 
-    // Automatically configure the signing key if the keystore.properties file exists
-    rootProject.file('keystore.properties').with { keystoreFile ->
-        if (keystoreFile.exists()) {
-            def keystoreConfig = new Properties()
-            keystoreFile.withInputStream { instr -> keystoreConfig.load(instr) }
-
-            android {
-                signingConfigs {
-                    keystore {
-                        storeFile file(keystoreConfig['storeFile'])
-                        storePassword keystoreConfig['storePassword']
-                        keyAlias keystoreConfig['keyAlias']
-                        keyPassword keystoreConfig['keyPassword']
-                    }
-                }
-
-                buildTypes {
-                    release {
-                        signingConfig signingConfigs.keystore
-                    }
-                    debug {
-                        signingConfig signingConfigs.keystore
-                    }
-                }
-            }
-        }
-    }
+    apply from: project(':android').file('signing.gradle')
 }

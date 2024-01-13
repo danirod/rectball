@@ -89,15 +89,16 @@ When using Gradle, the applications are not signed by default, and must be signe
 
     apksigner sign --ks [keychain] [path to the APK to sign]
 
-Alternatively, the Gradle files are configured to detect the presence of a file called `keystore.properties`, with the following format:
+Alternatively, the following four Gradle properties can be injected to sign automatically the generated applications:
 
-    storeFile=
-    storePassword=
-    keyAlias=
-    keyPassword=
+* `keysign.storeFile` for the path to the keystore file
+* `keysign.storePassword` for the main password of the keystore file
+* `keysign.keyAlias` for the key alias in the keystore to use
+* `keysign.keyPassword` for the password of the key alias
 
-If this file exists and is filled, the signing keys will be automatically configured, and both debug and release APKs will be signed with these.
-Again, check the output of the `signatureReport` task to confirm.
+For instance, in your $GRADLE_HOME/gradle.properties.
+If these four settings are set, the signing keys will be automatically configured, and both debug and release APKs will be signed with these.
+Again, always check the output of the `signatureReport` task to confirm.
 
 ## Google Play Games IDs
 

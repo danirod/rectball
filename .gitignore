@@ -2,7 +2,6 @@
 .gradle/
 gradle-app.setting
 local.properties
-keystore.properties
 /build/
 /android/*/build/
 /core/build/

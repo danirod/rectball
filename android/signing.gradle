@@ -1,0 +1,41 @@
+/*
+ * Autosign configuration
+ *
+ * This script will automatically create a signing config called keystore and configure both
+ * debug and release versions of the Android application to use that keystore, provided the
+ * credentials for the signing config are provided via the following four Gradle properties:
+ *
+ * - keysign.storeFile for the path to the keystore file
+ * - keysign.storePassword for the main password of the keystore file
+ * - keysign.keyAlias for the key alias in the keystore to use
+ * - keysign.keyPassword for the password of the key alias
+ */
+def signaturePropKeys = ['storeFile', 'storePassword', 'keyAlias', 'keyPassword']
+def signatureProperties = new Properties()
+signaturePropKeys.forEach { key ->
+    if (providers.gradleProperty("keysign.$key").present)
+        signatureProperties[key] = providers.gradleProperty("keysign.$key").get()
+}
+def fullyFormed = signaturePropKeys.every { key -> signatureProperties.containsKey(key) }
+
+if (fullyFormed) {
+    android {
+        signingConfigs {
+            keystore {
+                storeFile file(signatureProperties['storeFile'])
+                storePassword signatureProperties['storePassword']
+                keyAlias signatureProperties['keyAlias']
+                keyPassword signatureProperties['keyPassword']
+            }
+        }
+
+        buildTypes {
+            release {
+                signingConfig signingConfigs.keystore
+            }
+            debug {
+                signingConfig signingConfigs.keystore
+            }
+        }
+    }
+}
