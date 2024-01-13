@@ -128,7 +128,7 @@ class DataMigrator(private val context: Context) {
         }
     }
 
-    private inner class DataSchemaV1(preferences: SharedPreferences, scores: FileHandle, stats: FileHandle) {
+    private inner class DataSchemaV1(preferences: SharedPreferences, private val scores: FileHandle, private val stats: FileHandle) {
         private val soundEnabled = preferences.getBoolean("sound", true)
         private val colorblindMode = preferences.getBoolean("colorblind", false)
         private val askedTutorial = preferences.getBoolean("tutorialAsked", false)
@@ -138,20 +138,20 @@ class DataMigrator(private val context: Context) {
         private val highTime = scoresFile.getLong("highestTime", 0L)
 
         private val statsFile = decode(stats)
-        private val totalStats = statsFile["total"]["values"]
-        private val colorStats = statsFile["colors"]["values"]
-        private val sizeStats = statsFile["sizes"]["values"]
+        private val totalStats = statsFile["total"]?.get("values")
+        private val colorStats = statsFile["colors"]?.get("values")
+        private val sizeStats = statsFile["sizes"]?.get("values")
 
-        private val totalScore = totalStats.getLong("score", 0L)
-        private val totalCombinations = totalStats.getLong("combinations", 0L)
-        private val totalBalls = totalStats.getLong("balls", 0L)
-        private val totalTime = totalStats.getLong("time", 0L)
-        private val totalGames = totalStats.getLong("games", 0L)
-        private val totalPerfects = totalStats.getLong("perfect", 0L)
-        private val totalHints = totalStats.getLong("cheats", 0L)
+        private val totalScore = totalStats?.getLong("score", 0L)
+        private val totalCombinations = totalStats?.getLong("combinations", 0L)
+        private val totalBalls = totalStats?.getLong("balls", 0L)
+        private val totalTime = totalStats?.getLong("time", 0L)
+        private val totalGames = totalStats?.getLong("games", 0L)
+        private val totalPerfects = totalStats?.getLong("perfect", 0L)
+        private val totalHints = totalStats?.getLong("cheats", 0L)
 
-        private val byColor = listOf("red", "green", "yellow", "blue").associateWith { c -> colorStats.getLong(c, 0L) }
-        private val bySizes: Map<String, Long> = sizeStats.let { json ->
+        private val byColor = listOf("red", "green", "yellow", "blue").associateWith { c -> colorStats?.getLong(c, 0L) ?: 0 }
+        private val bySizes: Map<String, Long> = sizeStats?.let { json ->
             val map = mutableMapOf<String, Long>()
             if (json.isObject) {
                 var child = json.child()
@@ -163,29 +163,40 @@ class DataMigrator(private val context: Context) {
                 }
             }
             map
-        }
+        } ?: mapOf()
 
-        private fun decode(file: FileHandle) = file.readString()
-                .let { data -> Base64Coder.decodeString(data) }
-                .let { json -> JsonReader().parse(json) }
+        private fun decode(file: FileHandle): JsonValue {
+            val contents = if (file.exists()) {
+                val encodedString = file.readString()
+                Base64Coder.decodeString(encodedString)
+            } else {
+                "{}"
+            }
+            return JsonReader().parse(contents)
+        }
 
         fun migrate(settings: AppSettings, statistics: AppStatistics) {
             settings.tutorialAsked = askedTutorial
             settings.colorblindMode = colorblindMode
             settings.soundEnabled = soundEnabled
 
-            statistics.highTime = highTime
-            statistics.highScore = highScore
-            statistics.totalTime = totalTime
-            statistics.totalGames = totalGames
-            statistics.totalCombinations = totalCombinations
-            statistics.totalPerfects = totalPerfects
-            statistics.totalHints = totalHints
-            statistics.totalGems = totalBalls
-            statistics.totalScore = totalScore
+            if (scores.exists()) {
+                statistics.highTime = highTime
+                statistics.highScore = highScore
+            }
 
-            statistics.colorStatistics = byColor
-            statistics.sizeStatistics = bySizes
+            if (stats.exists()) {
+                statistics.totalTime = totalTime!!
+                statistics.totalGames = totalGames!!
+                statistics.totalCombinations = totalCombinations!!
+                statistics.totalPerfects = totalPerfects!!
+                statistics.totalHints = totalHints!!
+                statistics.totalGems = totalBalls!!
+                statistics.totalScore = totalScore!!
+
+                statistics.colorStatistics = byColor
+                statistics.sizeStatistics = bySizes
+            }
         }
 
         fun debug() {
@@ -197,18 +208,21 @@ class DataMigrator(private val context: Context) {
             jsonObject.addChild("tutorial_asked", JsonValue(askedTutorial))
 
             // Statistics
-            jsonObject.addChild("high_score", JsonValue(highScore))
-            jsonObject.addChild("high_time", JsonValue(highTime))
-            jsonObject.addChild("total_score", JsonValue(totalScore))
-            jsonObject.addChild("total_combinations", JsonValue(totalCombinations))
-            jsonObject.addChild("total_balls", JsonValue(totalBalls))
-            jsonObject.addChild("total_games", JsonValue(totalGames))
-            jsonObject.addChild("total_time", JsonValue(totalTime))
-            jsonObject.addChild("total_perfects", JsonValue(totalPerfects))
-            jsonObject.addChild("total_hints", JsonValue(totalHints))
-
-            jsonObject.addChild("by_color", mapToJsonValue(byColor))
-            jsonObject.addChild("by_size", mapToJsonValue(bySizes))
+            if (scores.exists()) {
+                jsonObject.addChild("high_score", JsonValue(highScore))
+                jsonObject.addChild("high_time", JsonValue(highTime))
+            }
+            if (stats.exists()) {
+                jsonObject.addChild("total_score", JsonValue(totalScore!!))
+                jsonObject.addChild("total_combinations", JsonValue(totalCombinations!!))
+                jsonObject.addChild("total_balls", JsonValue(totalBalls!!))
+                jsonObject.addChild("total_games", JsonValue(totalGames!!))
+                jsonObject.addChild("total_time", JsonValue(totalTime!!))
+                jsonObject.addChild("total_perfects", JsonValue(totalPerfects!!))
+                jsonObject.addChild("total_hints", JsonValue(totalHints!!))
+                jsonObject.addChild("by_color", mapToJsonValue(byColor))
+                jsonObject.addChild("by_size", mapToJsonValue(bySizes))
+            }
 
             val content = jsonObject.prettyPrint(JsonWriter.OutputType.json, 50)
             log("Full schema")
