@@ -28,8 +28,8 @@ configure(subprojects - project(':android:core')) {
             applicationId 'es.danirod.rectball.android'
             minSdkVersion 15
             targetSdkVersion 34
-            versionCode rectballBuildNumber.toInteger()
-            versionName rectballVersion
+            versionCode project.ext.buildNumber
+            versionName project.ext.appVersion
             multiDexEnabled true
         }
         compileOptions {

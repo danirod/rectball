@@ -1,9 +1,3 @@
 apply from: '../android.gradle'
 
-android {
-    defaultConfig {
-        versionName "$rectballVersion-OSP"
-    }
-}
-
 eclipse.project.name = appName + "-android-osp"

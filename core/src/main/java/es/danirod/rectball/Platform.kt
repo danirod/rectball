@@ -30,9 +30,4 @@ interface Platform {
     /** Provides functions to inhibit the device going in sleep mode. */
     val wakelock: Wakelock
 
-    /** Provides the short version number for the game (0.5, 0.9, 1.2...) */
-    val version: String
-
-    /** Provides the build number (long number, such as 436, 1312, 9255...) */
-    val buildNumber: Int
 }

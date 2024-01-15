@@ -15,9 +15,15 @@ buildscript {
   }
 }
 
+plugins {
+  id 'org.barfuin.gradle.taskinfo' version '2.1.0'
+}
+
 allprojects {
   apply plugin: 'eclipse'
   apply plugin: 'idea'
+  apply from: rootProject.file('gradle/assets.gradle')
+  apply from: rootProject.file('gradle/version.gradle')
 
   // This allows you to "Build and run using IntelliJ IDEA", an option in IDEA's Settings.
   idea {
@@ -35,41 +41,22 @@ configure(subprojects.findAll { it.group != "rectball.android" }) {
   compileJava {
     options.incremental = true
   }
-  // Generated files in assets (https://lyze.dev/2021/04/29/libGDX-Internal-Assets-List/)
-  // Piggybacking this solution to also generate version information from Gradle and pack
-  // it into the game.
-  compileJava.doLast {
-    def assetsFolder = new File("${project.rootDir}/assets/")
-    def assetsFile = new File(assetsFolder, "assets.txt")
-    def versionFile = new File(assetsFolder, "version.properties")
-
-    // delete that file in case we've already created it
-    assetsFile.delete()
-    versionFile.delete()
-
-    // Generate version file information
-    def versionProperties = new Properties()
-    versionProperties['appVersion'] = rectballVersion
-    versionProperties['appFullVersion'] = rectballVersionFull
-    versionProperties['appBuildNumber'] = rectballBuildNumber
-    versionFile.withWriter { w -> versionProperties.store(w, null) }
-
-    // Iterate through all files inside that folder and pack it into assets.txt
-    fileTree(assetsFolder).collect { assetsFolder.relativePath(it) }.each {
-      assetsFile.append(it + "\n")
-    }
-  }
   compileKotlin {
     compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
   }
-
   kotlin {
     jvmToolchain(17)
   }
 }
 
+configure(project(':core')) {
+  compileJava.finalizedBy assetsList
+  compileJava.finalizedBy assetsVersion
+  assetsList.dependsOn assetsVersion
+}
+
 subprojects {
-  version = rectballVersionFull
+  version = project.ext.appVersion
   ext.appName = 'Rectball'
   repositories {
     mavenCentral()

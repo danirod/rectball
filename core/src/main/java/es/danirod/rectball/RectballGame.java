@@ -91,6 +91,14 @@ public class RectballGame extends StateBasedGame {
         this.restoredState = true;
     }
 
+    public String getVersion() {
+        String version = Gdx.files.internal("version.txt").readString().trim();
+        if (!version.isEmpty() && Character.isDigit(version.charAt(0))) {
+            version = "v" + version;
+        }
+        return version;
+    }
+
     public void updateMargin(int top, int bottom, int left, int right) {
         marginTop = top;
         marginBottom = bottom;

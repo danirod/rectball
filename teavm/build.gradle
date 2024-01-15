@@ -42,20 +42,3 @@ tasks.register("run") {
   description = "Run the JavaScript application hosted via a local Jetty server at http://localhost:8080/"
   dependsOn(buildJavaScript, tasks.named("jettyRun"))
 }
-
-tasks.register('createProperties') {
-  dependsOn processResources
-  doLast {
-    new File("$buildDir/resources/main/version.properties").withWriter { w ->
-      Properties p = new Properties()
-      p['appVersion'] = rectballVersion
-      p['appFullVersion'] = rectballVersionFull
-      p['appBuildNumber'] = rectballBuildNumber
-      p.store(w, null)
-    }
-  }
-}
-
-classes {
-  dependsOn createProperties
-}

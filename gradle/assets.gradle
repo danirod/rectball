@@ -1,0 +1,38 @@
+/*
+ * Tasks that write dynamic assets into the assets/ directory.
+ * They should probably be run before compiling the code so that the
+ * files in assets/ are updated.
+ */
+
+// https://lyze.dev/2021/04/29/libGDX-Internal-Assets-List/
+tasks.register('assetsList') {
+    group = 'assets'
+    description 'Packs assets.txt into the assets directory'
+
+    doLast {
+        def assetsFolder = new File(project.rootDir, "assets")
+        def assetsFile = new File(assetsFolder, "assets.txt")
+
+        logger.info("Updating $assetsFile with the list of assets...")
+        assetsFile.withWriter { writer ->
+            fileTree(assetsFolder)
+                    .collect { assetsFolder.relativePath(it) }
+                    .each { writer.writeLine(it) }
+        }
+    }
+}
+
+// Writes the appVersion (defined in version.gradle) into assets/version.txt
+tasks.register('assetsVersion') {
+    group = 'assets'
+    description 'Packs version assembly information into the assets directory'
+
+    doLast {
+        def assetsFolder = new File(project.rootDir, "assets")
+        def versionInformation = new File(assetsFolder, "version.txt")
+        String version = project.ext.appVersion
+
+        logger.info("Updating $versionInformation to version $version...")
+        versionInformation.write(version)
+    }
+}

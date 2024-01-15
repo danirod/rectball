@@ -1,0 +1,116 @@
+/*
+ * Primes the version information for this project based on three version
+ * properties, as defined in the versioning model for this project that
+ * is available in the technical documentation.
+ *
+ * - The version family: indicates the slow version number, like 0.5, 0.6,
+ *   1.0 or 1.2. It indicates the sprint that this version is part of.
+ * - The build number: this number grows a lot during development and
+ *   is some sort of monotonic number that grows as development advances.
+ * - The version: it is the concatenation of the version family and the
+ *   build number, such as (0.5 + 314 => 0.5.314).
+ * Note: the build number is also used to generate the versionCode for the
+ * Android apps.
+ *
+ * Each element is derived from the following places, by descending priority:
+ * - Version family:
+ *   - versionFamily Gradle property.
+ *   - Fallbacks to "1.0"
+ * - Build number:
+ *   - If there is a Git repo and the checked out commit is pointed by a tag
+ *     with the vX.Y.Z (x,y,z : integer) format, then Z
+ *   - GITHUB_RUN_ID + GITHUB_RUN_OFFSET environment variables, if integers
+ *   - GITHUB_RUN_ID environment variable, if integer
+ *   - buildNumber Gradle property.
+ *   - Fallbacks to "1".
+ * - Version:
+ *   - If there is a Git repo and the checked out commit is pointed by a tag
+ *     with the vX.Y.Z (x,y,z : integer) format, then X.Y.Z
+ *   - If the build number is set and not a fallback, then family.build
+ *     (for instance, family=0.5, buildNumber=430, then version=0.5.430)
+ *     (respects family fallback, family=ø, buildNumber=200, version=1.0.200)
+ *   - If the build number is a fallback, then family (for instance,
+ *     family=0.5, buildNumber=ø, then version=0.5)
+ */
+import java.util.Optional as Joptional
+
+// Useful boxed number functions
+private static Joptional<Integer> parseInt(String k) {
+    return (k?.isInteger()) ? Joptional.of(k.toInteger()) : Joptional.<Integer>empty()
+}
+private static Joptional<Integer> intEnvVar(String key) {
+    return Joptional.ofNullable(System.getenv(key)).flatMap(this::parseInt)
+}
+private Joptional<String> prop(String key) {
+    return Joptional.ofNullable(providers.gradleProperty(key).getOrNull())
+}
+private Joptional<Integer> intProp(String key) {
+    return prop(key).flatMap(this::parseInt)
+}
+
+// Interact with the underlying Git repository.
+private static List<String> getGitTags() {
+    var process = "git tag --points-at HEAD".execute()
+    process.waitFor()
+    if (process.exitValue() == 0) {
+        return process.text.readLines()
+    }
+    return Collections.emptyList()
+}
+private static boolean validGitVersionTag(String tag) {
+    return tag.matches('v\\d+.\\d+.\\d+')
+}
+private static Joptional<String> getVersionFromGit() {
+    return Joptional.ofNullable(getGitTags()
+            .find(this::validGitVersionTag))
+            .map { v -> v.substring(1) }
+}
+private static Joptional<Integer> getBuildNumberFromGit() {
+    return getVersionFromGit().map { version -> version.split('\\.').last().toInteger() }
+}
+private static Joptional<String> getVersionFamilyFromGit() {
+    return getVersionFromGit().map { version -> version.split('\\.').take(2).join('.') }
+}
+
+// Interact with GitHub Actions
+private static Joptional<Integer> getGitHubRunId() {
+    return intEnvVar("GITHUB_RUN_ID")
+}
+private static Joptional<Integer> getGitHubRunIdWithOffset() {
+    return intEnvVar("GITHUB_RUN_ID").map { runId ->
+        intEnvVar("GITHUB_RUN_OFFSET").ifPresent {  offset -> runId += offset }
+        return runId
+    }
+}
+
+// Returns boxed versions of the three assembly components based on the rules.
+private Joptional<String> versionFamily() {
+    return getVersionFamilyFromGit() | { prop('versionFamily') }
+}
+private Joptional<Integer> buildNumber() {
+    return getBuildNumberFromGit() | { getGitHubRunIdWithOffset() } | { intProp('buildNumber') }
+}
+private String appVersion() {
+    return getVersionFromGit().orElseGet {
+        var family = versionFamily().orElse("1.0")
+        buildNumber().ifPresent { build -> family += ".${build}" }
+        return family
+    }
+}
+
+// Set the Gradle properties for this project.
+project.ext.versionFamily = versionFamily().orElse("1.0")
+project.ext.buildNumber = buildNumber().orElse(1)
+project.ext.appVersion = appVersion()
+
+// Provide a debug task that dumps the version information
+tasks.register('assemblyInformation') {
+    group 'verification'
+    description 'Print the assembly information into the command line'
+
+    doLast {
+        println("Version family: $project.ext.versionFamily")
+        println("Build number: $project.ext.buildNumber")
+        println("App version: $project.ext.appVersion")
+    }
+}

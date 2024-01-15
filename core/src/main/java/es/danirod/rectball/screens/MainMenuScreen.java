@@ -54,11 +54,7 @@ public class MainMenuScreen extends AbstractScreen {
             grid = new MainMenuGrid(game);
         }
         if (versionInformation == null) {
-            String text = game.getContext().getVersion() + "." + game.getContext().getBuildNumber();
-            if (Character.isDigit(text.charAt(0))) {
-                text = "v" + text;
-            }
-            versionInformation = new Label(text, game.getAppSkin(), "small", "white");
+            versionInformation = new Label(game.getVersion(), game.getAppSkin(), "small", "white");
             versionInformation.setFontScale(0.75f);
         }
         table.add(grid).pad(30f).expand().fillX().row();

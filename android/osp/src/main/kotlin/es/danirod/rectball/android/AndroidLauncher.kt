@@ -26,9 +26,4 @@ class AndroidLauncher : BaseAndroidLauncher() {
     override val marketplace by lazy { Marketplace.NullMarketplace() }
 
     override val wakelock by lazy { AndroidWakelock(this) }
-
-    override val version = BuildConfig.VERSION_NAME
-
-    override val buildNumber = BuildConfig.VERSION_CODE
-
 }

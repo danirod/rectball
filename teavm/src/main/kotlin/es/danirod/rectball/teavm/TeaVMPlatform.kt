@@ -16,30 +16,13 @@
  */
 package es.danirod.rectball.teavm
 
-import com.badlogic.gdx.Gdx
 import es.danirod.rectball.Platform
 import es.danirod.rectball.platform.GameServices
 import es.danirod.rectball.platform.Marketplace
 import es.danirod.rectball.platform.Wakelock
 
 class TeaVMPlatform : Platform {
-
-    private val properties: Map<String, String> by lazy {
-        val content = Gdx.files.internal("version.properties").readString()
-        val map = mutableMapOf<String, String>()
-        content.lineSequence().filter { line -> !line.startsWith('#') && line.contains('=') }
-            .forEach { line ->
-                val parts = line.split('=')
-                map[parts[0]] = parts[1]
-            }
-        map
-    }
-
     override val gameServices = GameServices.NullGameServices()
     override val marketplace = Marketplace.NullMarketplace()
     override val wakelock = Wakelock.NullWakelock()
-    override val version: String
-        get() = properties["appVersion"] ?: "nightly"
-    override val buildNumber: Int
-        get() = properties["appBuildNumber"]?.toInt() ?: 0
 }

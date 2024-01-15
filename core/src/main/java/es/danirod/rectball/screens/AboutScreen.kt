@@ -26,7 +26,7 @@ import es.danirod.rectball.RectballGame
 class AboutScreen(game: RectballGame) : MenuScreen(game) {
 
     private val credits: String by lazy {
-        val version = "Rectball ${game.context.version}"
+        val version = "Rectball ${game.version}"
         val credits = Gdx.files.internal("credits.txt").readString("UTF-8")
         "$version\n$credits"
     }

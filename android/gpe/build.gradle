@@ -6,9 +6,6 @@ android {
             assets.setSrcDirs(['../../assets', 'assets'])
         }
     }
-    defaultConfig {
-        versionName rectballVersion
-    }
 }
 
 dependencies {

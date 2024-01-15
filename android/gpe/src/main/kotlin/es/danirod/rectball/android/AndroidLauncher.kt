@@ -28,11 +28,6 @@ class AndroidLauncher : BaseAndroidLauncher() {
     override val marketplace = AndroidMarketplace(this, "Google Play", "https://play.google.com/store/apps/details?id=es.danirod.rectball.android")
 
     override val wakelock = AndroidWakelock(this)
-
-    override val version = BuildConfig.VERSION_NAME
-
-    override val buildNumber = BuildConfig.VERSION_CODE
-
     override fun onStart() {
         super.onStart()
         gpg.resumeSession()
