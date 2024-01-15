@@ -74,9 +74,9 @@ Replace `X` with `osp` for the open source version or `gpe` for the Google Play 
 ## JPackage cannot pack Rectball ("The first number in an app-version cannot be zero or negative")
 
 JPackage refuses to create an .app for macOS because macOS doesn't let apps have a zero as first version number.
-Until I release Rectball 1.0, the workaround is to hardcode version 1.0.0 when building the application:
+Until I release Rectball 1.0, the workaround is to hardcode version 1.0 when building the application:
 
-    ./gradlew -PrectballVersionFull=1.0.0 lwjgl3:jpackage
+    ./gradlew -PversionFamily=1.0 lwjgl3:jpackage
 
 ## Application signing on Android
 
