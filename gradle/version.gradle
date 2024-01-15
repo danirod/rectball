@@ -19,8 +19,8 @@
  * - Build number:
  *   - If there is a Git repo and the checked out commit is pointed by a tag
  *     with the vX.Y.Z (x,y,z : integer) format, then Z
- *   - GITHUB_RUN_ID + GITHUB_RUN_OFFSET environment variables, if integers
- *   - GITHUB_RUN_ID environment variable, if integer
+ *   - GITHUB_RUN_NUMBER + GITHUB_RUN_OFFSET environment variables, if integers
+ *   - GITHUB_RUN_NUMBER environment variable, if integer
  *   - buildNumber Gradle property.
  *   - Fallbacks to "1".
  * - Version:
@@ -74,10 +74,10 @@ private static Joptional<String> getVersionFamilyFromGit() {
 
 // Interact with GitHub Actions
 private static Joptional<Integer> getGitHubRunId() {
-    return intEnvVar("GITHUB_RUN_ID")
+    return intEnvVar("GITHUB_RUN_NUMBER")
 }
 private static Joptional<Integer> getGitHubRunIdWithOffset() {
-    return intEnvVar("GITHUB_RUN_ID").map { runId ->
+    return intEnvVar("GITHUB_RUN_NUMBER").map { runId ->
         intEnvVar("GITHUB_RUN_OFFSET").ifPresent {  offset -> runId += offset }
         return runId
     }

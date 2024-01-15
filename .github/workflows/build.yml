@@ -5,10 +5,10 @@ on:
       - master
 
 env:
-  # Build number: the last build number manually set was 436. First GitHub Actions run that automates
-  # setting build numbers is 244. Therefore, add 193 to GitHub run number to let GitHub Actions
-  # provide the game build number for the artifacts (244 + 193 = 437)
-  GITHUB_RUN_OFFSET: 193
+  # This will be added to GITHUB_RUN_NUMBER to build a version code that continues from where
+  # I started bumping the version code and build numbers manually. (Note: sometimes I may
+  # subtract 1 from here if a Git push went wrong but I don't want to bump the version code).
+  GITHUB_RUN_OFFSET: 192
 
 jobs:
   assembly-information:
