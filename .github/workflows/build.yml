@@ -46,7 +46,7 @@ jobs:
           name: rectball-nightly-lwjgl3
           path: lwjgl3/build/lib/*.jar
   lwjgl3-darwin-x86_64:
-    runs-on: macOS-latest
+    runs-on: macOS-13
     needs: assembly-information
     steps:
       - name: Clone project
@@ -62,13 +62,36 @@ jobs:
       - name: Compile and package the application for macOS
         run: |
           ./gradlew clean
-          ./gradlew lwjgl3:build
           ./gradlew -PversionFamily=1.0 lwjgl3:jpackageImage
           hdiutil create -volname Rectball -srcfolder lwjgl3/build/jpackage -ov -format UDZO lwjgl3/build/jpackage/rectball.dmg
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: rectball-nightly-darwin-x86_64
+          path: lwjgl3/build/jpackage/rectball.dmg
+  lwjgl3-darwin-aarch64:
+    runs-on: macos-13-xlarge
+    needs: assembly-information
+    steps:
+      - name: Clone project
+        uses: actions/checkout@v4
+      - name: Configure JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+        # Note: I am hardcoding the versionFamily to 1.0 because macOS does
+        # not allow versions starting with zero on its applications.
+      - name: Compile and package the application for macOS
+        run: |
+          ./gradlew clean
+          ./gradlew -PversionFamily=1.0 lwjgl3:jpackageImage
+          hdiutil create -volname Rectball -srcfolder lwjgl3/build/jpackage -ov -format UDZO lwjgl3/build/jpackage/rectball.dmg
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: rectball-nightly-darwin-aarch64
           path: lwjgl3/build/jpackage/rectball.dmg
   lwjgl3-linux-gnu-x86_64:
     runs-on: ubuntu-latest
