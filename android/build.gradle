@@ -30,6 +30,7 @@ configure(subprojects - project(':android:core')) {
             targetSdkVersion 34
             versionCode project.ext.buildNumber
             versionName project.ext.appVersion
+            setProperty("archivesBaseName", "rectball-$versionName")
             multiDexEnabled true
         }
         compileOptions {
