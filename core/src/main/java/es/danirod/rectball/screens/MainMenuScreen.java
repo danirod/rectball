@@ -16,101 +16,86 @@
  */
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
-
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
-import es.danirod.rectball.scene2d.game.BackgroundActor;
+import es.danirod.rectball.scene2d.FractionalScreenViewport;
 import es.danirod.rectball.scene2d.ui.ConfirmDialog;
 import es.danirod.rectball.scene2d.ui.MainMenuGrid;
 import es.danirod.rectball.scene2d.ui.MessageDialog;
 
 public class MainMenuScreen extends AbstractScreen {
 
-    private MainMenuGrid grid = null;
+    private final MainMenuGrid grid;
 
-    private Label versionInformation = null;
+    private final Label version;
+
+    private final ConfirmDialog askTutorial;
+
+    private final ConfirmDialog askInputMethod;
+
+    private final MessageDialog closeDialog;
 
     public MainMenuScreen(RectballGame game) {
         super(game);
+        this.grid = new MainMenuGrid(game);
+        this.version = new Label(game.getVersion(), game.getAppSkin(), "small", "white");
+        this.askTutorial = askTutorial("main.ask_tutorial");
+        this.askInputMethod = askTutorial("main.ask_input_method");
+        this.closeDialog = tutorialCancel();
     }
-
-    @Override
-    public void dispose() {
-        grid = null;
-    }
-
-    @Override
-    public void setUpInterface(Table table) {
-        if (grid == null) {
-            grid = new MainMenuGrid(game);
-        }
-        if (versionInformation == null) {
-            versionInformation = new Label(game.getVersion(), game.getAppSkin(), "small", "white");
-            versionInformation.setFontScale(0.75f);
-        }
-        table.add(grid).pad(30f).expand().fillX().row();
-        table.add(versionInformation).left().row();
-    }
-
-    private Stage backgroundLayer;
-    private BackgroundActor backgroundActor;
 
     @Override
     public void show() {
         super.show();
 
-        backgroundActor = new BackgroundActor(game.getBallAtlas());
-        backgroundActor.setColor(1f, 1f, 1f, 0.15f);
-        backgroundActor.setRotation(30f);
-        backgroundActor.setOrigin(Align.center);
-        backgroundLayer = new Stage(buildViewport());
-        backgroundLayer.addActor(backgroundActor);
-
-        InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(stage);
-        multiplexer.addProcessor(new MainMenuInputProcessor());
-        Gdx.input.setInputProcessor(multiplexer);
+        stage.addActor(grid);
+        stage.addActor(version);
 
         // On first run, show the tutorial.
         if (!game.getSettings().getTutorialAsked()) {
-            askTutorial("main.ask_tutorial").show(stage);
+            askTutorial.show(stage);
         } else if (!game.getSettings().getNewInputMethodAsked()) {
-            askTutorial("main.ask_input_method").show(stage);
+            askInputMethod.show(stage);
         }
+
+
+    }
+
+    private ScreenViewport screenViewport = new FractionalScreenViewport(480, 640);
+
+    @Override
+    Viewport buildViewport() {
+        return screenViewport;
     }
 
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        backgroundLayer.getViewport().update(width, height);
-        float larger = Math.max(width, height);
-        backgroundActor.setSize(larger * 2f, larger * 2f);
-        backgroundActor.setY(-larger / 2f);
+
+        // Reposition the grid.
+        grid.setSize(400f, grid.getPrefHeight());
+        center(grid);
+        center(askInputMethod);
+        center(askTutorial);
+        center(closeDialog);
+        version.setPosition(10, 10);
+    }
+
+    private void center(Actor actor) {
+        if (actor.getStage() != null) {
+            actor.setPosition(actor.getStage().getViewport().getWorldWidth() / 2, actor.getStage().getViewport().getWorldHeight() / 2, Align.center);
+        }
     }
 
     @Override
-    public void render(float delta) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
-            Gdx.app.exit();
-        }
+    void setUpInterface(Table table) {
 
-        Gdx.gl.glClearColor(RectballGame.BG_COLOR.r, RectballGame.BG_COLOR.g, RectballGame.BG_COLOR.b, RectballGame.BG_COLOR.a);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        backgroundLayer.act();
-        backgroundLayer.draw();
-
-        stage.act();
-        stage.draw();
     }
 
     private ConfirmDialog askTutorial(String resId) {
@@ -130,7 +115,7 @@ public class MainMenuScreen extends AbstractScreen {
                 game.player.playSound(SoundPlayer.SoundCode.FAIL);
                 game.getSettings().setTutorialAsked(true);
                 game.getSettings().setNewInputMethodAsked(true);
-                tutorialCancel().show(stage);
+                closeDialog.show(stage);
             }
         });
         return dialog;
@@ -146,22 +131,5 @@ public class MainMenuScreen extends AbstractScreen {
             }
         });
         return dialog;
-    }
-
-    private class MainMenuInputProcessor extends InputAdapter {
-
-        @Override
-        public boolean keyDown(int keycode) {
-            return keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE;
-        }
-
-        @Override
-        public boolean keyUp(int keycode) {
-            if (keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE) {
-                Gdx.app.exit();
-                return true;
-            }
-            return false;
-        }
     }
 }
