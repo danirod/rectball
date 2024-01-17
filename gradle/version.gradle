@@ -114,3 +114,13 @@ tasks.register('assemblyInformation') {
         println("App version: $project.ext.appVersion")
     }
 }
+
+tasks.register('assemblyInformationGithub') {
+    group 'verification'
+    description 'Does the same as assemblyInformation but prints in key-value format'
+
+    doLast {
+        println("build_number=$project.ext.buildNumber")
+        println("app_version=$project.ext.appVersion")
+    }
+}
