@@ -43,7 +43,7 @@ public class BoardActor extends Table {
 
     private final Set<BallActor> selection = new HashSet<>();
 
-    private final List<BallSelectionListener> subscribers = new ArrayList<>();
+    private BallSelectionListener selectionListener;
 
     private final Board board;
 
@@ -132,8 +132,8 @@ public class BoardActor extends Table {
         if (selection.size() == 4) {
             finishSelection();
         } else {
-            for (BallSelectionListener subscriber : subscribers)
-                subscriber.onSelectionFailed(new ArrayList<>(selection));
+            if (this.selectionListener != null)
+                this.selectionListener.onSelectionFailed(new ArrayList<>(selection));
             selection.clear();
         }
     }
@@ -153,17 +153,15 @@ public class BoardActor extends Table {
     private void finishSelection() {
         if (selection.size() != 4) throw new IllegalStateException("Select 4 balls first");
 
-        /* Check whether the selection is valid and provide the valid message to our subscribers. */
-        if (board.selection(getModelBalls())) {
-            for (BallSelectionListener subscriber : subscribers) {
-                subscriber.onSelectionSucceeded(new ArrayList<>(selection));
-            }
-        } else {
-            for (BallSelectionListener subscriber : subscribers) {
-                subscriber.onSelectionFailed(new ArrayList<>(selection));
+        /* Check whether the selection is valid and provide the valid message to our subscriber. */
+        if (this.selectionListener != null) {
+            List<BallActor> sel = new ArrayList<>(selection);
+            if (board.selection(getModelBalls())) {
+                this.selectionListener.onSelectionSucceeded(sel);
+            } else {
+                this.selectionListener.onSelectionFailed(sel);
             }
         }
-
         selection.clear();
     }
 
@@ -172,23 +170,14 @@ public class BoardActor extends Table {
      */
     public void clearSelection() {
         List<BallActor> unselectedBalls = new ArrayList<>(selection);
-        for (BallSelectionListener subscriber : subscribers)
-            subscriber.onSelectionCleared(unselectedBalls);
+        if (selectionListener != null) {
+            selectionListener.onSelectionFailed(unselectedBalls);
+        }
         selection.clear();
     }
 
-    /**
-     * Attach a new subscriber to this board. The subscriber will receive
-     * notifications about selection events happened in this board.
-     *
-     * @param subscriber subscriber that wants to be notified
-     */
-    public void addSubscriber(BallSelectionListener subscriber) {
-        subscribers.add(subscriber);
-    }
-
-    public void clearSubscribers() {
-        subscribers.clear();
+    public void setSelectionListener(BallSelectionListener listener) {
+        this.selectionListener = listener;
     }
 
     /**

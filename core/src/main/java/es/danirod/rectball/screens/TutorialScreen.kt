@@ -190,8 +190,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
             ))
 
             board.touchable = Touchable.enabled
-            board.clearSubscribers()
-            board.addSubscriber(object : DefaultBallSelectionListener() {
+            board.setSelectionListener(object : DefaultBallSelectionListener() {
                 override fun onSelectionSucceeded(selection: MutableList<BallActor>?) {
                     stopCombinationHelpAnimation()
 
@@ -214,8 +213,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
         }
 
         modalThatWasEasy = makeModal(tutorialStrings[6], okText) {
-            board.clearSubscribers()
-            board.addSubscriber(object : DefaultBallSelectionListener() {
+            board.setSelectionListener(object : DefaultBallSelectionListener() {
                 override fun onSelectionSucceeded(selection: MutableList<BallActor>?) {
                     stopCombinationHelpAnimation()
 
@@ -238,8 +236,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
         }
 
         modalBeatAHarderOne = makeModal(tutorialStrings[7], okText) {
-            board.clearSubscribers()
-            board.addSubscriber(object : DefaultBallSelectionListener() {
+            board.setSelectionListener(object : DefaultBallSelectionListener() {
                 override fun onSelectionSucceeded(selection: MutableList<BallActor>?) {
                     stopCombinationHelpAnimation()
 

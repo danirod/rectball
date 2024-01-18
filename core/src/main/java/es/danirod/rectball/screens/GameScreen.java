@@ -335,7 +335,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         // Add subscribers.
         hud.getTimer().addSubscriber(this);
         hud.getScore().setScoreListener(this);
-        board.addSubscriber(this);
+        board.setSelectionListener(this);
 
         table.add(hud).growX().align(Align.top).row();
         table.add(board).growX().expand().height(Value.percentWidth(1f)).align(Align.center).row();
