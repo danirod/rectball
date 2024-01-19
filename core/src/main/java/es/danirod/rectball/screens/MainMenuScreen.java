@@ -16,7 +16,12 @@
  */
 package es.danirod.rectball.screens;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
@@ -25,6 +30,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
 import es.danirod.rectball.scene2d.FractionalScreenViewport;
+import es.danirod.rectball.scene2d.game.BackgroundActor;
 import es.danirod.rectball.scene2d.ui.ConfirmDialog;
 import es.danirod.rectball.scene2d.ui.MainMenuGrid;
 import es.danirod.rectball.scene2d.ui.MessageDialog;
@@ -41,6 +47,8 @@ public class MainMenuScreen extends AbstractScreen {
 
     private final MessageDialog closeDialog;
 
+    private final BackgroundActor background;
+
     public MainMenuScreen(RectballGame game) {
         super(game);
         this.grid = new MainMenuGrid(game);
@@ -48,12 +56,16 @@ public class MainMenuScreen extends AbstractScreen {
         this.askTutorial = askTutorial("main.ask_tutorial");
         this.askInputMethod = askTutorial("main.ask_input_method");
         this.closeDialog = tutorialCancel();
+        this.background = new BackgroundActor(game.getBallAtlas());
     }
 
     @Override
     public void show() {
         super.show();
 
+        background.getColor().a = 0.1f;
+
+        stage.addActor(background);
         stage.addActor(grid);
         stage.addActor(version);
 
@@ -63,8 +75,6 @@ public class MainMenuScreen extends AbstractScreen {
         } else if (!game.getSettings().getNewInputMethodAsked()) {
             askInputMethod.show(stage);
         }
-
-
     }
 
     private ScreenViewport screenViewport = new FractionalScreenViewport(480, 640);
@@ -78,7 +88,9 @@ public class MainMenuScreen extends AbstractScreen {
     public void resize(int width, int height) {
         super.resize(width, height);
 
-        // Reposition the grid.
+        // Reposition the grid
+        background.setSize(stage.getWidth() + 64f, stage.getHeight() + 64f);
+        background.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
         grid.setSize(400f, grid.getPrefHeight());
         center(grid);
         center(askInputMethod);
