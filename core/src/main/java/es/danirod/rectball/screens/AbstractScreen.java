@@ -24,6 +24,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
+import es.danirod.rectball.scene2d.FractionalScreenViewport;
+import es.danirod.rectball.utils.SafeAreaCalculator;
+import es.danirod.rectball.utils.SafeAreaRenderer;
 
 import static es.danirod.rectball.Constants.STAGE_PADDING;
 import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
@@ -47,6 +50,10 @@ public abstract class AbstractScreen implements Screen {
      * Common table.
      */
     protected Table table = null;
+
+    private boolean renderDebug = false;
+
+    private SafeAreaRenderer debugInset = null;
 
     public AbstractScreen(RectballGame game) {
         this.game = game;
@@ -80,10 +87,17 @@ public abstract class AbstractScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
+            renderDebug = !renderDebug;
+        }
         Gdx.gl.glClearColor(RectballGame.BG_COLOR.r, RectballGame.BG_COLOR.g, RectballGame.BG_COLOR.b, RectballGame.BG_COLOR.a);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
+
+        if (renderDebug && debugInset != null) {
+            debugInset.render();
+        }
     }
 
     Viewport buildViewport() {
@@ -107,8 +121,15 @@ public abstract class AbstractScreen implements Screen {
 
     @Override
     public void show() {
+        Viewport v = buildViewport();
         if (stage == null) {
-            stage = new Stage(buildViewport(), game.getBatch());
+            stage = new Stage(v, game.getBatch());
+        }
+
+        if (v instanceof FractionalScreenViewport) {
+            FractionalScreenViewport fsv = (FractionalScreenViewport) v;
+            SafeAreaCalculator calc = new SafeAreaCalculator(game, stage, fsv);
+            debugInset = new SafeAreaRenderer(calc, fsv);
         }
 
         if (table != null) {

@@ -21,8 +21,8 @@ import kotlin.math.max
 import kotlin.math.min
 
 class FractionalScreenViewport(
-    private val desiredWidth: Int,
-    private val desiredHeight: Int,
+    val desiredWidth: Int,
+    val desiredHeight: Int,
 ) : ScreenViewport() {
 
     override fun update(
