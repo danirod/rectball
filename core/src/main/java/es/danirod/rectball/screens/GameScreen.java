@@ -345,8 +345,18 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         hud.getScore().setScoreListener(this);
         board.setSelectionListener(this);
 
-        table.add(hud).growX().width(Value.percentWidth(0.9f, table)).padBottom(20f).align(Align.top).row();
-        table.add(board).growX().expand().align(Align.bottom).row();
+        Value boardValue = new Value() {
+            @Override
+            public float get(Actor context) {
+                Rectangle safeArea = safeAreaCalculator.getSafeArea();
+                float idealWidth = MathUtils.clamp(safeArea.width - 80f, 440f, 640f);
+                return Math.min(idealWidth, safeArea.height - (hud.getHeight() + 80f));
+            }
+        };
+
+        table.add(hud).growX().minWidth(440f).prefWidth(Value.percentWidth(0.9f, table)).maxWidth(640f).pad(20f).align(Align.top).row();
+        table.add(board).growX().width(boardValue).height(boardValue)
+                .expand().align(Align.center).row();
         board.pack();
         hud.pack();
         table.pack();
@@ -390,7 +400,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         super.resize(width, height);
 
         if (safeAreaCalculator != null) {
-            Rectangle centerArea = safeAreaCalculator.getResizableArea();
+            Rectangle centerArea = safeAreaCalculator.getSafeArea();
             table.setPosition(centerArea.x, centerArea.y);
             table.setSize(centerArea.width, centerArea.height);
         }
