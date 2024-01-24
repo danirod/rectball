@@ -18,10 +18,11 @@ package es.danirod.rectball.scene2d.game
 
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
 import com.badlogic.gdx.scenes.scene2d.ui.Table
+import com.badlogic.gdx.scenes.scene2d.ui.Value
 import es.danirod.rectball.Constants
 import es.danirod.rectball.RectballGame
 
-class Hud(game: RectballGame): Table() {
+class Hud(game: RectballGame) : Table() {
 
     val timer: TimerActor = TimerActor(Constants.SECONDS, game.appSkin)
 
@@ -42,12 +43,12 @@ class Hud(game: RectballGame): Table() {
     init {
         timer.isRunning = false
 
-        defaults().uniform()
-
         add(help).size(60f)
         add(score).growX().fillY().spaceLeft(30f).spaceRight(30f)
         add(pause).size(60f)
         row()
-        add(timer).colspan(3).growX().fillY().height(20f)
+        add(timer).colspan(3).growX().fillY()
+            .width(Value.percentWidth(1f, this)).height(30f).spaceTop(10f)
+        pack()
     }
 }

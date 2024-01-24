@@ -17,7 +17,6 @@
 package es.danirod.rectball.scene2d.game;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
@@ -25,12 +24,8 @@ import com.badlogic.gdx.utils.Align;
 /**
  * This actor renders the score.
  */
-public class ScoreActor extends Group {
+public class ScoreActor extends Label {
 
-    /**
-     * The actual value that is rendered.
-     */
-    private final Label label;
     /**
      * The current value for this score.
      */
@@ -48,11 +43,10 @@ public class ScoreActor extends Group {
     private ScoreListener listener = null;
 
     public ScoreActor(Skin skin) {
-        label = new Label(getScore(), skin, "monospace2");
-        label.setAlignment(Align.center);
-        label.setFillParent(true);
-        label.setFontScale(6f);
-        addActor(label);
+        super("", skin, "monospace2");
+        setText(getScore());
+        setAlignment(Align.center, Align.center);
+        setFontScale(6f);
     }
 
     public void setScoreListener(ScoreListener listener) {
@@ -80,7 +74,7 @@ public class ScoreActor extends Group {
 
     public void setValue(int value) {
         this.value = value;
-        label.setText(getScore());
+        setText(getScore());
     }
 
     @Override
@@ -91,14 +85,14 @@ public class ScoreActor extends Group {
             int givenValue = Math.min(remainingValue, 2);
             remainingValue -= givenValue;
             value += givenValue;
-            label.setText(getScore());
+            setText(getScore());
         }
         if (goNuts) {
             if (nutTime < 1) {
-                label.setText(Integer.toString(MathUtils.random(1000, 9999)));
+                setText(Integer.toString(MathUtils.random(1000, 9999)));
                 nutTime += delta;
             } else {
-                label.setText(getScore());
+                setText(getScore());
                 goNuts = false;
                 nutTime = 0;
             }

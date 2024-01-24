@@ -16,6 +16,7 @@
  */
 package es.danirod.rectball.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -33,6 +34,7 @@ import com.badlogic.gdx.utils.Align;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.utils.viewport.Viewport;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer.SoundCode;
@@ -45,6 +47,7 @@ import es.danirod.rectball.model.CombinationFinder;
 import es.danirod.rectball.model.Coordinate;
 import es.danirod.rectball.model.ScoreCalculator;
 import es.danirod.rectball.platform.GameServices;
+import es.danirod.rectball.scene2d.FractionalScreenViewport;
 import es.danirod.rectball.scene2d.game.BallActor;
 import es.danirod.rectball.scene2d.game.BoardActor;
 import es.danirod.rectball.scene2d.game.Hud;
@@ -273,8 +276,13 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         board.addAction(board.showRegion(bounds));
     }
 
+    /* TODO: I am going to regret this. */
+    private Table table;
+
     @Override
     public void setUpInterface(Table table) {
+        this.table = table;
+        table.setFillParent(false);
         board = new BoardActor(game.getBallAtlas(), game.getAppSkin(), game.getState().getBoard());
 
         hud = new Hud(game);
@@ -337,9 +345,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         hud.getScore().setScoreListener(this);
         board.setSelectionListener(this);
 
-        table.add(hud).growX().align(Align.top).row();
-        table.add(board).growX().expand().height(Value.percentWidth(1f)).align(Align.center).row();
+        table.add(hud).growX().width(Value.percentWidth(0.9f, table)).padBottom(20f).align(Align.top).row();
+        table.add(board).growX().expand().align(Align.bottom).row();
         board.pack();
+        hud.pack();
         table.pack();
     }
 
@@ -373,6 +382,17 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     protected void escape() {
         if (!paused && !game.getState().isTimeout()) {
             pauseGame();
+        }
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+
+        if (safeAreaCalculator != null) {
+            Rectangle centerArea = safeAreaCalculator.getResizableArea();
+            table.setPosition(centerArea.x, centerArea.y);
+            table.setSize(centerArea.width, centerArea.height);
         }
     }
 
@@ -598,5 +618,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     @Override
     public void onScoreGoNuts() {
         game.player.playSound(SoundCode.PERFECT);
+    }
+
+    private FractionalScreenViewport fsv = new FractionalScreenViewport(480, 640);
+
+    @Override
+    Viewport buildViewport() {
+        return fsv;
     }
 }

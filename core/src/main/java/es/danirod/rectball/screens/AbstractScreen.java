@@ -52,8 +52,8 @@ public abstract class AbstractScreen implements Screen {
     protected Table table = null;
 
     private boolean renderDebug = false;
-
-    private SafeAreaRenderer debugInset = null;
+    protected SafeAreaCalculator safeAreaCalculator = null;
+    protected SafeAreaRenderer safeAreaRenderer = null;
 
     public AbstractScreen(RectballGame game) {
         this.game = game;
@@ -95,8 +95,8 @@ public abstract class AbstractScreen implements Screen {
         stage.act();
         stage.draw();
 
-        if (renderDebug && debugInset != null) {
-            debugInset.render();
+        if (renderDebug && safeAreaRenderer != null) {
+            safeAreaRenderer.render();
         }
     }
 
@@ -128,8 +128,8 @@ public abstract class AbstractScreen implements Screen {
 
         if (v instanceof FractionalScreenViewport) {
             FractionalScreenViewport fsv = (FractionalScreenViewport) v;
-            SafeAreaCalculator calc = new SafeAreaCalculator(game, stage, fsv);
-            debugInset = new SafeAreaRenderer(calc, fsv);
+            safeAreaCalculator = new SafeAreaCalculator(game, stage, fsv);
+            safeAreaRenderer = new SafeAreaRenderer(safeAreaCalculator, fsv);
         }
 
         if (table != null) {
