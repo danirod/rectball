@@ -21,6 +21,7 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
@@ -36,12 +37,14 @@ import es.danirod.rectball.SoundPlayer
 import es.danirod.rectball.model.BallColor
 import es.danirod.rectball.model.Bounds
 import es.danirod.rectball.model.CombinationFinder
+import es.danirod.rectball.scene2d.FractionalScreenViewport
 import es.danirod.rectball.scene2d.game.BallActor
 import es.danirod.rectball.scene2d.game.BoardActor
 import es.danirod.rectball.scene2d.game.Hud
 import es.danirod.rectball.scene2d.listeners.DefaultBallSelectionListener
 import es.danirod.rectball.scene2d.ui.ConfirmDialog
 import es.danirod.rectball.scene2d.ui.MessageDialog
+import kotlin.math.min
 
 class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
 
@@ -72,8 +75,18 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
 
     override fun setUpInterface(table: Table) {
         /* Hand assets. */
-        handNormalDrawable = TextureRegionDrawable(game.manager.get("hand-normal.png", Texture::class.java))
-        handHoverDrawable = TextureRegionDrawable(game.manager.get("hand-hover.png", Texture::class.java))
+        handNormalDrawable = TextureRegionDrawable(
+            game.manager.get(
+                "hand-normal.png",
+                Texture::class.java
+            )
+        )
+        handHoverDrawable = TextureRegionDrawable(
+            game.manager.get(
+                "hand-hover.png",
+                Texture::class.java
+            )
+        )
         hand = Image(handNormalDrawable)
 
         table.setFillParent(true)
@@ -85,17 +98,28 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
             score.isVisible = false
         }
 
-        board = BoardActor(game.ballAtlas, game.appSkin, game.state.board).apply {
-            touchable = Touchable.disabled
-            isTransform = true
-            isVisible = false
+        board =
+            BoardActor(game.ballAtlas, game.appSkin, game.state.board).apply {
+                touchable = Touchable.disabled
+                isTransform = true
+                isVisible = false
+            }
+
+        val boardValue: Value = object : Value() {
+            override fun get(context: Actor): Float {
+                val safeArea = safeAreaCalculator.getSafeArea()
+                val idealWidth = MathUtils.clamp(safeArea.width - 80f, 440f, 640f)
+                return min(idealWidth, (safeArea.height - (hud.height + 80f)))
+            }
         }
 
-        table.add(hud).growX().align(Align.top).row()
-        table.add(board).growX().expand().height(Value.percentWidth(1f)).align(
-            Align.center
-        ).row()
+        table.add(hud).growX().minWidth(440f)
+            .prefWidth(Value.percentWidth(0.9f, table)).maxWidth(640f).pad(20f)
+            .align(Align.top).row()
+        table.add(board).growX().width(boardValue).height(boardValue)
+            .expand().align(Align.center).row()
         board.pack()
+        hud.pack()
         table.pack()
 
         modalWelcome = makeModal(tutorialStrings[0], continueText) {
@@ -119,10 +143,16 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
             setVisibility(board = true, score = true, timer = true)
 
             /* Make the score presented by the score actor change every 100 ms. */
-            hud.score.addAction(Actions.forever(Actions.delay(0.1f, Actions.run {
-                hud.score.value += MathUtils.random(10000)
-                hud.score.value %= 10000
-            })))
+            hud.score.addAction(
+                Actions.forever(
+                    Actions.delay(
+                        0.1f,
+                        Actions.run {
+                            hud.score.value += MathUtils.random(10000)
+                            hud.score.value %= 10000
+                        })
+                )
+            )
 
             showModal(modalThisIsScore, Align.bottom)
         }
@@ -132,14 +162,16 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
             hud.score.clearActions()
             hud.score.value = 0
 
-            setBoardColors(listOf(
+            setBoardColors(
+                listOf(
                     "YBRYBY",
                     "RGYGYR",
                     "YYRRBB",
                     "RGRRBY",
                     "YRBRYR",
                     "BRRYRB",
-            ))
+                )
+            )
             showModal(modalThePointOfGame, Align.center)
         }
 
@@ -154,40 +186,24 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
                 setOrigin(38f, 171f)
             }
 
-            val oneCorner = board.getBall(2, 2)
-                .let { b -> Vector2(b.getX(Align.center), b.getY(Align.center))
-                .apply { board.localToStageCoordinates(this) }
-                    .apply { sub(38f, 171f) }
-            }
-            val otherCorner = board.getBall(3, 3)
-                .let { b -> Vector2(b.getX(Align.center), b.getY(Align.center))
-                .apply { board.localToStageCoordinates(this) }
-                .apply { sub(38f, 171f) }
-            }
-
-            hand.addAction(Actions.forever(
-                    Actions.sequence(
-                            Actions.moveTo(oneCorner.x, oneCorner.y, 0.5f),
-                            Actions.delay(0.25f),
-                            Actions.run { hand.drawable = handHoverDrawable },
-                            Actions.delay(0.25f),
-                            Actions.moveTo(otherCorner.x, otherCorner.y, 1f),
-                            Actions.delay(0.25f),
-                            Actions.run { hand.drawable = handNormalDrawable },
-                            Actions.delay(0.25f),
-                    )
-            ))
             stage.addActor(hand)
+            updateHandAction(hand)
         }
 
         modalWhatToDo = makeModal(tutorialStrings[5], okText) {
             /* Remove the hand. */
             hand.clearActions()
-            hand.addAction(Actions.sequence(
+            hand.addAction(
+                Actions.sequence(
                     Actions.run { hand.drawable = handNormalDrawable },
-                    Actions.moveTo(Constants.VIEWPORT_WIDTH.toFloat(), 0f, 0.5f),
+                    Actions.moveTo(
+                        Constants.VIEWPORT_WIDTH.toFloat(),
+                        0f,
+                        0.5f
+                    ),
                     Actions.removeActor(),
-            ))
+                )
+            )
 
             board.touchable = Touchable.enabled
             board.setSelectionListener(object : DefaultBallSelectionListener() {
@@ -198,14 +214,16 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
 
                     /* Next step */
                     showModal(modalThatWasEasy, Align.center)
-                    setBoardColors(listOf(
+                    setBoardColors(
+                        listOf(
                             "YBRYBY",
                             "RGYGYR",
                             "YYRBBB",
                             "RGYGBY",
                             "YRBRYR",
                             "BRRYRB",
-                    ))
+                        )
+                    )
                 }
             })
 
@@ -221,14 +239,16 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
 
                     /* Next step */
                     showModal(modalBeatAHarderOne, Align.center)
-                    setBoardColors(listOf(
+                    setBoardColors(
+                        listOf(
                             "YBRYBY",
                             "RBYGYR",
                             "YBGGBB",
                             "RYGRBY",
                             "YRBRYR",
                             "BRRYRB",
-                    ))
+                        )
+                    )
                 }
             })
 
@@ -255,13 +275,51 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
         }
     }
 
+    private fun updateHandAction(hand: Image) {
+        val oneCorner = board.getBall(2, 2)
+            .let { b ->
+                Vector2(b.getX(Align.center), b.getY(Align.center))
+                    .apply { board.localToStageCoordinates(this) }
+                    .apply { sub(38f, 171f) }
+            }
+        val otherCorner = board.getBall(3, 3)
+            .let { b ->
+                Vector2(b.getX(Align.center), b.getY(Align.center))
+                    .apply { board.localToStageCoordinates(this) }
+                    .apply { sub(38f, 171f) }
+            }
+
+        if (hand.stage == null) {
+            return
+        }
+
+        hand.clearActions()
+        hand.addAction(
+            Actions.forever(
+                Actions.sequence(
+                    Actions.moveTo(oneCorner.x, oneCorner.y, 0.5f),
+                    Actions.delay(0.25f),
+                    Actions.run { hand.drawable = handHoverDrawable },
+                    Actions.delay(0.25f),
+                    Actions.moveTo(otherCorner.x, otherCorner.y, 1f),
+                    Actions.delay(0.25f),
+                    Actions.run { hand.drawable = handNormalDrawable },
+                    Actions.delay(0.25f),
+                )
+            )
+        )
+    }
+
     override fun show() {
         super.show()
         showModal(modalWelcome, Align.center)
     }
 
     override fun render(delta: Float) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed((Input.Keys.ESCAPE))) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(
+                (Input.Keys.ESCAPE)
+            )
+        ) {
             showLeaveConfirmationDialog(stage)
         }
         super.render(delta)
@@ -318,7 +376,12 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
     }
 
     private fun showLeaveConfirmationDialog(stage: Stage) {
-        ConfirmDialog(game.appSkin, game.locale["tutorial.cancel"], game.locale["core.yes"], game.locale["core.no"]).apply {
+        ConfirmDialog(
+            game.appSkin,
+            game.locale["tutorial.cancel"],
+            game.locale["core.yes"],
+            game.locale["core.no"]
+        ).apply {
             setCallback(object : ConfirmDialog.ConfirmCallback {
                 override fun ok() {
                     game.player.playSound(SoundPlayer.SoundCode.SUCCESS)
@@ -329,11 +392,21 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
 
                     /* Remove any visible modals. */
                     listOf(
-                            modalWelcome, modalThisIsBoard, modalThisIsTimer, modalThisIsScore, modalThePointOfGame,
-                            modalWhatToDo, modalThatWasEasy, modalBeatAHarderOne, modalYouGotThis
+                        modalWelcome,
+                        modalThisIsBoard,
+                        modalThisIsTimer,
+                        modalThisIsScore,
+                        modalThePointOfGame,
+                        modalWhatToDo,
+                        modalThatWasEasy,
+                        modalBeatAHarderOne,
+                        modalYouGotThis
                     ).forEach { it.hide(null) }
 
-                    val modal = makeModal(game.locale["main.dismiss_tutorial"], game.locale["core.ok"]) {
+                    val modal = makeModal(
+                        game.locale["main.dismiss_tutorial"],
+                        game.locale["core.ok"]
+                    ) {
                         game.player.playSound(SoundPlayer.SoundCode.SUCCESS)
 
                         exitTutorial()
@@ -350,18 +423,22 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
     }
 
     private fun showModal(modal: MessageDialog, alignment: Int) {
-        val fadeAction = Actions.sequence(Actions.alpha(0f), Actions.fadeIn(0.1f))
+        val fadeAction =
+            Actions.sequence(Actions.alpha(0f), Actions.fadeIn(0.1f))
         modal.show(stage, fadeAction)
         currentModal = modal
 
         /* Position the modal depending on the given alignment. */
-        val modalX = (stage.width - modal.width) / 2
-        val modalY = when {
-            (alignment and Align.top) != 0 -> Constants.VIEWPORT_HEIGHT - modal.height - 20f
-            (alignment and Align.bottom) != 0 -> 20f
-            else -> (stage.height - modal.height) / 2
+        repositionModal(modal, alignment)
+    }
+
+    private fun repositionModal(modal: MessageDialog, verticalAlign: Int) {
+        modal.setX(stage.width / 2, Align.center)
+        when (verticalAlign) {
+            Align.top -> safeAreaCalculator.getSafeArea().let { a -> modal.setY(a.height + a.y - 30f, Align.top) }
+            Align.bottom -> safeAreaCalculator.getSafeArea().let { a -> modal.setY(a.y + 30f, Align.bottom) }
+            else -> modal.setY(stage.height / 2, Align.center)
         }
-        modal.setPosition(modalX, modalY)
     }
 
     private fun rewardPlayer(selection: List<BallActor>) {
@@ -407,17 +484,41 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
         game.locale["tutorial.guide.8"],
     )
 
-    private fun makeModal(text: String, buttonText: String, onDismiss: () -> Unit): MessageDialog =
-            MessageDialog(game.appSkin, text, buttonText).apply {
-                setCallback {
-                    game.player.playSound(SoundPlayer.SoundCode.SUCCESS)
-                    onDismiss()
-                }
+    private fun makeModal(
+        text: String,
+        buttonText: String,
+        onDismiss: () -> Unit
+    ): MessageDialog =
+        MessageDialog(game.appSkin, text, buttonText).apply {
+            setCallback {
+                game.player.playSound(SoundPlayer.SoundCode.SUCCESS)
+                onDismiss()
             }
+        }
 
     private fun setVisibility(board: Boolean, score: Boolean, timer: Boolean) {
         this.board.isVisible = board
         this.hud.score.isVisible = score
         this.hud.timer.isVisible = timer
     }
+
+    private val viewport = FractionalScreenViewport(480, 640)
+
+    override fun resize(width: Int, height: Int) {
+        super.resize(width, height)
+
+        // TODO: This breaks when maximizing and restoring
+        updateHandAction(hand)
+        repositionModal(modalWelcome, Align.center)
+        repositionModal(modalThisIsBoard, Align.top)
+        repositionModal(modalThisIsTimer, Align.bottom)
+        repositionModal(modalThisIsScore, Align.bottom)
+        repositionModal(modalThePointOfGame, Align.center)
+        repositionModal(modalWhatToDo, Align.top)
+        repositionModal(modalThatWasEasy, Align.center)
+        repositionModal(modalBeatAHarderOne, Align.center)
+        repositionModal(modalYouGotThis, Align.center)
+    }
+
+    override fun buildViewport() = viewport
 }
