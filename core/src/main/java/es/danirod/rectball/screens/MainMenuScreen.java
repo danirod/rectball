@@ -16,6 +16,8 @@
  */
 package es.danirod.rectball.screens;
 
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -69,6 +71,13 @@ public class MainMenuScreen extends AbstractScreen {
             askTutorial.show(stage);
         } else if (!game.getSettings().getNewInputMethodAsked()) {
             askInputMethod.show(stage);
+        }
+    }
+
+    @Override
+    protected void escape() {
+        if (Gdx.app.getType() == Application.ApplicationType.Android) {
+            Gdx.app.exit();
         }
     }
 
