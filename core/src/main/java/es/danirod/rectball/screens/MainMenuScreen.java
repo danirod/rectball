@@ -18,6 +18,7 @@ package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -100,7 +101,8 @@ public class MainMenuScreen extends AbstractScreen {
         center(askInputMethod);
         center(askTutorial);
         center(closeDialog);
-        version.setPosition(10, 10);
+        Rectangle safeArea = safeAreaCalculator.getSafeArea();
+        version.setPosition(10, safeArea.y + 10);
     }
 
     private void center(Actor actor) {
