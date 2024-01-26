@@ -16,8 +16,12 @@
  */
 package es.danirod.rectball.screens;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
+import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.model.Board;
 import es.danirod.rectball.scene2d.game.BoardActor;
@@ -43,7 +47,18 @@ public class LoadingBackScreen extends AbstractScreen {
         boardActor = new BoardActor(game.getBallAtlas(), game.getAppSkin(), board);
         Rectangle bounds = game.getState().getBoardBounds();
         boardActor.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
-        stage.addActor(boardActor);
+
+        Value boardValue = new Value() {
+            @Override
+            public float get(Actor context) {
+                Rectangle safeArea = safeAreaCalculator.getSafeArea();
+                float idealWidth = MathUtils.clamp(safeArea.width - 80f, 440f, 640f);
+                return Math.min(idealWidth, safeArea.height - (120f + 80f));
+            }
+        };
+
+        table.add(boardActor).growX().width(boardValue).height(boardValue).padTop(140f)
+                .expand().align(Align.center).row();
 
         // Hide all balls
         for (int i = 0; i < 6; i++)
@@ -62,14 +77,30 @@ public class LoadingBackScreen extends AbstractScreen {
                 })
         ));
     }
-    
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+
+        if (safeAreaCalculator != null) {
+            Rectangle centerArea = safeAreaCalculator.getSafeArea();
+            table.setPosition(centerArea.x, centerArea.y);
+            table.setSize(centerArea.width, centerArea.height);
+        }
+    }
+
     @Override
     public void render(float delta) {
         super.render(delta);
         if (canUpdate && game.manager.update(1000 / 120)) {
             canUpdate = false;
-            boardActor.remove();
-            game.finishLoading();
+            stage.addAction(Actions.sequence(
+                    Actions.delay(2f),
+                    Actions.run(() -> {
+                        boardActor.remove();
+                        game.finishLoading();
+                    })
+            ));
         } else {
             float progress = game.manager.getProgress();
             float ballPercentage = 1.0f / (6 * 6);
