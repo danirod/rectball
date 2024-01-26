@@ -219,9 +219,9 @@ public class RectballGame extends StateBasedGame {
 
     public void updateWakelock(boolean wakelock) {
         if (wakelock && settings.getKeepScreenOn()) {
-            // context.requestWakelock();
+            context.getWakelock().request();
         } else {
-            // context.clearWakelock();
+            context.getWakelock().clear();
         }
     }
 
