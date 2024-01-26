@@ -26,14 +26,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.I18NBundle;
-
 import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.scene2d.RectballSkin;
-import es.danirod.rectball.screens.AbstractScreen;
-import es.danirod.rectball.screens.GameScreen;
-import es.danirod.rectball.screens.LoadingBackScreen;
-import es.danirod.rectball.screens.LoadingScreen;
-import es.danirod.rectball.screens.MainMenuScreen;
+import es.danirod.rectball.screens.*;
 import es.danirod.rectball.settings.AppSettings;
 import es.danirod.rectball.settings.AppStatistics;
 

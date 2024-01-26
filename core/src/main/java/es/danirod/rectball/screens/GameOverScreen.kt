@@ -23,8 +23,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Value
 import com.badlogic.gdx.utils.Align
 import es.danirod.rectball.RectballGame
 import es.danirod.rectball.SoundPlayer
+import es.danirod.rectball.scene2d.FractionalScreenViewport
 import es.danirod.rectball.scene2d.listeners.ScreenPopper
 import es.danirod.rectball.scene2d.ui.GameSummary
+import java.util.*
 
 class GameOverScreen(game: RectballGame) : AbstractScreen(game) {
 
@@ -33,6 +35,8 @@ class GameOverScreen(game: RectballGame) : AbstractScreen(game) {
     private fun isHighScore() = game.state.score >= getHighScore()
 
     public override fun setUpInterface(table: Table) {
+        table.setFillParent(false)
+
         val gameOver = Label(game.locale["game_over.time_up"], game.appSkin, "large", "white").apply {
             setAlignment(Align.center)
             setFontScale(0.8f)
@@ -40,8 +44,8 @@ class GameOverScreen(game: RectballGame) : AbstractScreen(game) {
         val summary = GameSummary(game, isHighScore())
         table.add(gameOver).growX().row()
         table.add(summary).grow().row()
-        table.add(replayButton).height(80f).growX().space(15f).row()
-        table.add(quitButton).height(80f).growX().space(15f).row()
+        table.add(replayButton).height(80f).minWidth(440f).maxWidth(640f).space(15f).row()
+        table.add(quitButton).height(80f).minWidth(440f).maxWidth(640f).space(15f).row()
     }
 
     private val replayButton by lazy {
@@ -63,4 +67,14 @@ class GameOverScreen(game: RectballGame) : AbstractScreen(game) {
         game.player.playSound(SoundPlayer.SoundCode.FAIL)
         game.clearScreenStack()
     }
+
+    override fun resize(width: Int, height: Int) {
+        super.resize(width, height)
+        table.setSize(480f, 640f)
+        table.setPosition(stage.width / 2, stage.height / 2, Align.center)
+    }
+
+    private val screen = FractionalScreenViewport(480, 640)
+
+    override fun buildViewport() = screen
 }
