@@ -21,13 +21,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
-import es.danirod.rectball.scene2d.FractionalScreenViewport;
 import es.danirod.rectball.scene2d.game.BackgroundActor;
 import es.danirod.rectball.scene2d.ui.ConfirmDialog;
 import es.danirod.rectball.scene2d.ui.MainMenuGrid;
@@ -82,13 +78,6 @@ public class MainMenuScreen extends AbstractScreen {
         }
     }
 
-    private ScreenViewport screenViewport = new FractionalScreenViewport(480, 640);
-
-    @Override
-    Viewport buildViewport() {
-        return screenViewport;
-    }
-
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
@@ -109,11 +98,6 @@ public class MainMenuScreen extends AbstractScreen {
         if (actor.getStage() != null) {
             actor.setPosition(actor.getStage().getViewport().getWorldWidth() / 2, actor.getStage().getViewport().getWorldHeight() / 2, Align.center);
         }
-    }
-
-    @Override
-    void setUpInterface(Table table) {
-
     }
 
     private ConfirmDialog askTutorial(String resId) {

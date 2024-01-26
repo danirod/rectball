@@ -17,17 +17,11 @@
 package es.danirod.rectball.screens
 
 import com.badlogic.gdx.scenes.scene2d.Actor
-import com.badlogic.gdx.scenes.scene2d.ui.Container
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
-import com.badlogic.gdx.scenes.scene2d.ui.Label
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
-import com.badlogic.gdx.scenes.scene2d.ui.Table
-import com.badlogic.gdx.scenes.scene2d.ui.Value
+import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Scaling
 import es.danirod.rectball.Constants
 import es.danirod.rectball.RectballGame
-import es.danirod.rectball.scene2d.FractionalScreenViewport
 import es.danirod.rectball.scene2d.listeners.ScreenPopper
 
 /**
@@ -57,7 +51,9 @@ abstract class MenuScreen(game: RectballGame) : AbstractScreen(game) {
         fadeScrollBars = false
     }
 
-    override fun setUpInterface(table: Table) {
+    override fun show() {
+        super.show()
+
         table.top()
         table.row().padTop(20f).padBottom(20f).uniformY()
         table.add(backButton).padLeft(Constants.STAGE_PADDING.toFloat())
@@ -66,10 +62,6 @@ abstract class MenuScreen(game: RectballGame) : AbstractScreen(game) {
         table.add(getScrollPane()).maxWidth(480f * 1.5f).colspan(2).grow().align(Align.top)
         table.layout()
     }
-
-    private val fractional = FractionalScreenViewport(480, 640)
-
-    override fun buildViewport() = fractional
 
     /** The title to present in the top bar. */
     abstract fun getTitle(): String
@@ -83,7 +75,7 @@ abstract class MenuScreen(game: RectballGame) : AbstractScreen(game) {
     }
 
     override fun updateTablePadding() {
-        val pixelsPerViewport = fractional.unitsPerPixel
+        val pixelsPerViewport = viewport.unitsPerPixel
         val paddingTop = game.marginTop * pixelsPerViewport
         val paddingBottom = game.marginBottom * pixelsPerViewport
         val paddingLeft = game.marginLeft * pixelsPerViewport

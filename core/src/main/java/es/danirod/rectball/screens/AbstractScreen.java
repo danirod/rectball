@@ -20,8 +20,6 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
 import es.danirod.rectball.scene2d.FractionalScreenViewport;
@@ -38,42 +36,33 @@ import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
  * @author danirod
  */
 public abstract class AbstractScreen implements Screen {
-
-    final RectballGame game;
-
-    /**
-     * Common stage.
-     */
-    protected Stage stage = null;
-
-    /**
-     * Common table.
-     */
-    protected Table table = null;
+    protected final RectballGame game;
+    protected final Stage stage;
+    protected final Table table;
+    protected final FractionalScreenViewport viewport;
+    protected final SafeAreaCalculator safeAreaCalculator;
+    protected final SafeAreaRenderer safeAreaRenderer;
 
     private boolean renderDebug = false;
-    protected SafeAreaCalculator safeAreaCalculator = null;
-    protected SafeAreaRenderer safeAreaRenderer = null;
 
     public AbstractScreen(RectballGame game) {
         this.game = game;
+        this.viewport = new FractionalScreenViewport(480, 640);
+        this.table = new Table();
+        this.stage = new Stage(viewport, game.getBatch());
+        this.safeAreaCalculator = new SafeAreaCalculator(game, stage, viewport);
+        this.safeAreaRenderer = new SafeAreaRenderer(safeAreaCalculator, viewport);
+
+        table.setFillParent(true);
+        updateTablePadding();
+        stage.addActor(table);
     }
 
     @Override
     public void resize(int width, int height) {
-        stage.setViewport(buildViewport());
         stage.getViewport().update(width, height, true);
         updateTablePadding();
     }
-
-    /**
-     * This method sets up the visual layout for this screen. Child classes
-     * have to override this method and add to the provided table the widgets
-     * they want to show in the screen.
-     *
-     * @param table table that has been assigned to this screen.
-     */
-    abstract void setUpInterface(Table table);
 
     @Override
     public void pause() {
@@ -100,16 +89,6 @@ public abstract class AbstractScreen implements Screen {
         }
     }
 
-    Viewport buildViewport() {
-        boolean landscape = Gdx.graphics.getWidth() > Gdx.graphics.getHeight();
-        float ar = landscape ?
-                (float) Gdx.graphics.getWidth() / Gdx.graphics.getHeight() :
-                (float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
-        float width = (float) VIEWPORT_WIDTH;
-        float height = landscape ? width : width * ar;
-        return new FitViewport(width, height);
-    }
-
     public void updateTablePadding() {
         float pixelsPerViewport = (float) Gdx.graphics.getWidth() / VIEWPORT_WIDTH;
         float paddingTop = STAGE_PADDING + game.getMarginTop() / pixelsPerViewport;
@@ -121,27 +100,6 @@ public abstract class AbstractScreen implements Screen {
 
     @Override
     public void show() {
-        Viewport v = buildViewport();
-        if (stage == null) {
-            stage = new Stage(v, game.getBatch());
-        }
-
-        if (v instanceof FractionalScreenViewport) {
-            FractionalScreenViewport fsv = (FractionalScreenViewport) v;
-            safeAreaCalculator = new SafeAreaCalculator(game, stage, fsv);
-            safeAreaRenderer = new SafeAreaRenderer(safeAreaCalculator, fsv);
-        }
-
-        if (table != null) {
-            table.remove();
-        }
-
-        table = new Table();
-        table.setFillParent(true);
-        updateTablePadding();
-        stage.addActor(table);
-        setUpInterface(table);
-
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
         Gdx.input.setCatchKey(Input.Keys.ESCAPE, true);
         InputMultiplexer multi = new InputMultiplexer();
@@ -152,16 +110,13 @@ public abstract class AbstractScreen implements Screen {
 
     @Override
     public void hide() {
+        table.clear();
         Gdx.input.setInputProcessor(null);
     }
 
     @Override
     public void dispose() {
-        if (stage != null) {
-            stage.dispose();
-            stage = null;
-        }
-        table = null;
+        stage.dispose();
     }
 
     protected void escape() {

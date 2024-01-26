@@ -26,7 +26,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
-import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.Value
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
@@ -37,7 +36,6 @@ import es.danirod.rectball.SoundPlayer
 import es.danirod.rectball.model.BallColor
 import es.danirod.rectball.model.Bounds
 import es.danirod.rectball.model.CombinationFinder
-import es.danirod.rectball.scene2d.FractionalScreenViewport
 import es.danirod.rectball.scene2d.game.BallActor
 import es.danirod.rectball.scene2d.game.BoardActor
 import es.danirod.rectball.scene2d.game.Hud
@@ -73,7 +71,44 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
     private lateinit var handNormalDrawable: TextureRegionDrawable
     private lateinit var handHoverDrawable: TextureRegionDrawable
 
-    override fun setUpInterface(table: Table) {
+    private fun updateHandAction(hand: Image) {
+        val oneCorner = board.getBall(2, 2)
+            .let { b ->
+                Vector2(b.getX(Align.center), b.getY(Align.center))
+                    .apply { board.localToStageCoordinates(this) }
+                    .apply { sub(38f, 171f) }
+            }
+        val otherCorner = board.getBall(3, 3)
+            .let { b ->
+                Vector2(b.getX(Align.center), b.getY(Align.center))
+                    .apply { board.localToStageCoordinates(this) }
+                    .apply { sub(38f, 171f) }
+            }
+
+        if (hand.stage == null) {
+            return
+        }
+
+        hand.clearActions()
+        hand.addAction(
+            Actions.forever(
+                Actions.sequence(
+                    Actions.moveTo(oneCorner.x, oneCorner.y, 0.5f),
+                    Actions.delay(0.25f),
+                    Actions.run { hand.drawable = handHoverDrawable },
+                    Actions.delay(0.25f),
+                    Actions.moveTo(otherCorner.x, otherCorner.y, 1f),
+                    Actions.delay(0.25f),
+                    Actions.run { hand.drawable = handNormalDrawable },
+                    Actions.delay(0.25f),
+                )
+            )
+        )
+    }
+
+    override fun show() {
+        super.show()
+
         /* Hand assets. */
         handNormalDrawable = TextureRegionDrawable(
             game.manager.get(
@@ -273,45 +308,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
         modalYouGotThis = makeModal(tutorialStrings[8], okText) {
             exitTutorial()
         }
-    }
 
-    private fun updateHandAction(hand: Image) {
-        val oneCorner = board.getBall(2, 2)
-            .let { b ->
-                Vector2(b.getX(Align.center), b.getY(Align.center))
-                    .apply { board.localToStageCoordinates(this) }
-                    .apply { sub(38f, 171f) }
-            }
-        val otherCorner = board.getBall(3, 3)
-            .let { b ->
-                Vector2(b.getX(Align.center), b.getY(Align.center))
-                    .apply { board.localToStageCoordinates(this) }
-                    .apply { sub(38f, 171f) }
-            }
-
-        if (hand.stage == null) {
-            return
-        }
-
-        hand.clearActions()
-        hand.addAction(
-            Actions.forever(
-                Actions.sequence(
-                    Actions.moveTo(oneCorner.x, oneCorner.y, 0.5f),
-                    Actions.delay(0.25f),
-                    Actions.run { hand.drawable = handHoverDrawable },
-                    Actions.delay(0.25f),
-                    Actions.moveTo(otherCorner.x, otherCorner.y, 1f),
-                    Actions.delay(0.25f),
-                    Actions.run { hand.drawable = handNormalDrawable },
-                    Actions.delay(0.25f),
-                )
-            )
-        )
-    }
-
-    override fun show() {
-        super.show()
         showModal(modalWelcome, Align.center)
     }
 
@@ -502,8 +499,6 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
         this.hud.timer.isVisible = timer
     }
 
-    private val viewport = FractionalScreenViewport(480, 640)
-
     override fun resize(width: Int, height: Int) {
         super.resize(width, height)
 
@@ -519,6 +514,4 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
         repositionModal(modalBeatAHarderOne, Align.center)
         repositionModal(modalYouGotThis, Align.center)
     }
-
-    override fun buildViewport() = viewport
 }

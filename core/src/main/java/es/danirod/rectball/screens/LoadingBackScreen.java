@@ -18,8 +18,6 @@ package es.danirod.rectball.screens;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.model.Board;
 import es.danirod.rectball.scene2d.game.BoardActor;
@@ -39,16 +37,13 @@ public class LoadingBackScreen extends AbstractScreen {
     }
 
     @Override
-    void setUpInterface(Table table) {
+    public void show() {
+        super.show();
+
         boardActor = new BoardActor(game.getBallAtlas(), game.getAppSkin(), board);
         Rectangle bounds = game.getState().getBoardBounds();
         boardActor.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
         stage.addActor(boardActor);
-    }
-
-    @Override
-    public void show() {
-        super.show();
 
         // Hide all balls
         for (int i = 0; i < 6; i++)

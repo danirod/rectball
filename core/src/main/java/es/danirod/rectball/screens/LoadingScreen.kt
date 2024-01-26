@@ -17,7 +17,6 @@
 package es.danirod.rectball.screens
 
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
-import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
 import es.danirod.rectball.RectballGame
 import es.danirod.rectball.scene2d.ui.LoadingAnimation
@@ -26,15 +25,13 @@ class LoadingScreen(game: RectballGame?) : AbstractScreen(game) {
 
     private var canUpdate = false
 
-    public override fun setUpInterface(table: Table) {
+    override fun show() {
+        super.show()
         val load = LoadingAnimation(game.ballAtlas)
         table.add(load).size(100f).align(Align.center)
         load.syncColors()
         load.animate()
-    }
 
-    override fun show() {
-        super.show()
         canUpdate = false
         stage.addAction(Actions.sequence(
                 Actions.alpha(0f),

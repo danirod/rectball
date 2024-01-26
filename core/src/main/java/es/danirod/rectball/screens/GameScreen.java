@@ -16,7 +16,6 @@
  */
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -26,28 +25,14 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.badlogic.gdx.utils.viewport.Viewport;
 import es.danirod.rectball.Constants;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer.SoundCode;
 import es.danirod.rectball.gameservices.GameUploader;
-import es.danirod.rectball.gameservices.Leaderboard;
-import es.danirod.rectball.model.Ball;
-import es.danirod.rectball.model.BallColor;
-import es.danirod.rectball.model.Bounds;
-import es.danirod.rectball.model.CombinationFinder;
-import es.danirod.rectball.model.Coordinate;
-import es.danirod.rectball.model.ScoreCalculator;
-import es.danirod.rectball.platform.GameServices;
-import es.danirod.rectball.scene2d.FractionalScreenViewport;
+import es.danirod.rectball.model.*;
 import es.danirod.rectball.scene2d.game.BallActor;
 import es.danirod.rectball.scene2d.game.BoardActor;
 import es.danirod.rectball.scene2d.game.Hud;
@@ -56,6 +41,9 @@ import es.danirod.rectball.scene2d.game.TimerActor.TimerCallback;
 import es.danirod.rectball.scene2d.listeners.BallSelectionListener;
 import es.danirod.rectball.scene2d.ui.ConfirmDialog;
 import es.danirod.rectball.settings.StatSerializer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameScreen extends AbstractScreen implements TimerCallback, BallSelectionListener, ScoreListener {
 
@@ -149,6 +137,86 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     @Override
     public void show() {
         super.show();
+
+        table.setFillParent(false);
+        board = new BoardActor(game.getBallAtlas(), game.getAppSkin(), game.getState().getBoard());
+
+        hud = new Hud(game);
+
+        hud.getHelp().addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                // Don't act if the game hasn't started yet.
+                if (!hud.getTimer().isRunning() || game.getState().isTimeout()) {
+                    event.cancel();
+                    return;
+                }
+
+                // Don't do anything if there are less than 5 seconds.
+                if (hud.getTimer().getSeconds() <= 5 && game.getState().getWiggledBounds() == null) {
+                    game.player.playSound(SoundCode.FAIL);
+                    event.cancel();
+                    return;
+                }
+
+                // Wiggle a valid combination.
+                if (game.getState().getWiggledBounds() == null) {
+                    CombinationFinder finder = CombinationFinder.create(game.getState().getBoard());
+                    game.getState().setWiggledBounds(finder.getPossibleBounds().get(MathUtils.random(finder.getPossibleBounds().size() - 1)));
+                }
+                board.addAction(board.shake(game.getState().getWiggledBounds(), 10, 5, 0.1f));
+
+                if (!game.getState().isCheatSeen()) {
+                    // Subtract some time.
+                    float subtractedTime = 5f;
+                    final float step = subtractedTime / 10;
+                    stage.addAction(Actions.repeat(10, Actions.delay(0.01f,
+                            Actions.run(new Runnable() {
+                                @Override
+                                public void run() {
+                                    hud.getTimer().setSeconds(hud.getTimer().getSeconds() - step);
+                                }
+                            }))));
+                    game.getState().setCheatSeen(true);
+                }
+
+                event.cancel();
+            }
+        });
+
+        hud.getPause().addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.player.playSound(SoundCode.FAIL);
+                pauseGame();
+                event.cancel();
+            }
+        });
+
+        // Disable game until countdown ends.
+        board.setTouchable(Touchable.disabled);
+
+        // Add subscribers.
+        hud.getTimer().addSubscriber(this);
+        hud.getScore().setScoreListener(this);
+        board.setSelectionListener(this);
+
+        Value boardValue = new Value() {
+            @Override
+            public float get(Actor context) {
+                Rectangle safeArea = safeAreaCalculator.getSafeArea();
+                float idealWidth = MathUtils.clamp(safeArea.width - 80f, 440f, 640f);
+                return Math.min(idealWidth, safeArea.height - (hud.getHeight() + 80f));
+            }
+        };
+
+        table.add(hud).growX().minWidth(440f).prefWidth(Value.percentWidth(0.9f, table)).maxWidth(640f).pad(20f).align(Align.top).row();
+        table.add(board).growX().width(boardValue).height(boardValue)
+                .expand().align(Align.center).row();
+        board.pack();
+        hud.pack();
+        table.pack();
+
         game.updateWakelock(true);
 
         // Reset data
@@ -276,94 +344,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         board.addAction(board.showRegion(bounds));
     }
 
-    /* TODO: I am going to regret this. */
-    private Table table;
-
-    @Override
-    public void setUpInterface(Table table) {
-        this.table = table;
-        table.setFillParent(false);
-        board = new BoardActor(game.getBallAtlas(), game.getAppSkin(), game.getState().getBoard());
-
-        hud = new Hud(game);
-
-        hud.getHelp().addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                // Don't act if the game hasn't started yet.
-                if (!hud.getTimer().isRunning() || game.getState().isTimeout()) {
-                    event.cancel();
-                    return;
-                }
-
-                // Don't do anything if there are less than 5 seconds.
-                if (hud.getTimer().getSeconds() <= 5 && game.getState().getWiggledBounds() == null) {
-                    game.player.playSound(SoundCode.FAIL);
-                    event.cancel();
-                    return;
-                }
-
-                // Wiggle a valid combination.
-                if (game.getState().getWiggledBounds() == null) {
-                    CombinationFinder finder = CombinationFinder.create(game.getState().getBoard());
-                    game.getState().setWiggledBounds(finder.getPossibleBounds().get(MathUtils.random(finder.getPossibleBounds().size() - 1)));
-                }
-                board.addAction(board.shake(game.getState().getWiggledBounds(), 10, 5, 0.1f));
-
-                if (!game.getState().isCheatSeen()) {
-                    // Subtract some time.
-                    float subtractedTime = 5f;
-                    final float step = subtractedTime / 10;
-                    stage.addAction(Actions.repeat(10, Actions.delay(0.01f,
-                            Actions.run(new Runnable() {
-                                @Override
-                                public void run() {
-                                    hud.getTimer().setSeconds(hud.getTimer().getSeconds() - step);
-                                }
-                            }))));
-                    game.getState().setCheatSeen(true);
-                }
-
-                event.cancel();
-            }
-        });
-
-        hud.getPause().addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                game.player.playSound(SoundCode.FAIL);
-                pauseGame();
-                event.cancel();
-            }
-        });
-
-        // Disable game until countdown ends.
-        board.setTouchable(Touchable.disabled);
-
-        // Add subscribers.
-        hud.getTimer().addSubscriber(this);
-        hud.getScore().setScoreListener(this);
-        board.setSelectionListener(this);
-
-        Value boardValue = new Value() {
-            @Override
-            public float get(Actor context) {
-                Rectangle safeArea = safeAreaCalculator.getSafeArea();
-                float idealWidth = MathUtils.clamp(safeArea.width - 80f, 440f, 640f);
-                return Math.min(idealWidth, safeArea.height - (hud.getHeight() + 80f));
-            }
-        };
-
-        table.add(hud).growX().minWidth(440f).prefWidth(Value.percentWidth(0.9f, table)).maxWidth(640f).pad(20f).align(Align.top).row();
-        table.add(board).growX().width(boardValue).height(boardValue)
-                .expand().align(Align.center).row();
-        board.pack();
-        hud.pack();
-        table.pack();
-    }
-
     @Override
     public void hide() {
+        super.hide();
+
         game.updateWakelock(false);
 
         // The player is not playing anymore.
@@ -628,12 +612,5 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     @Override
     public void onScoreGoNuts() {
         game.player.playSound(SoundCode.PERFECT);
-    }
-
-    private FractionalScreenViewport fsv = new FractionalScreenViewport(480, 640);
-
-    @Override
-    Viewport buildViewport() {
-        return fsv;
     }
 }
