@@ -142,7 +142,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
 
         val boardValue: Value = object : Value() {
             override fun get(context: Actor): Float {
-                val safeArea = safeAreaCalculator.getSafeArea()
+                val safeArea = viewport.getSafeArea()
                 val idealWidth = MathUtils.clamp(safeArea.width - 80f, 440f, 640f)
                 return min(idealWidth, (safeArea.height - (hud.height + 80f)))
             }
@@ -431,9 +431,10 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
 
     private fun repositionModal(modal: MessageDialog, verticalAlign: Int) {
         modal.setX(stage.width / 2, Align.center)
+        val area = viewport.getSafeArea()
         when (verticalAlign) {
-            Align.top -> safeAreaCalculator.getSafeArea().let { a -> modal.setY(a.height + a.y - 30f, Align.top) }
-            Align.bottom -> safeAreaCalculator.getSafeArea().let { a -> modal.setY(a.y + 30f, Align.bottom) }
+            Align.top -> area.let { a -> modal.setY(a.height + a.y - 30f, Align.top) }
+            Align.bottom -> area.let { a -> modal.setY(a.y + 30f, Align.bottom) }
             else -> modal.setY(stage.height / 2, Align.center)
         }
     }

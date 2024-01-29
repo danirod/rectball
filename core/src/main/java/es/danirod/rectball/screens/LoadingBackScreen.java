@@ -51,7 +51,7 @@ public class LoadingBackScreen extends AbstractScreen {
         Value boardValue = new Value() {
             @Override
             public float get(Actor context) {
-                Rectangle safeArea = safeAreaCalculator.getSafeArea();
+                Rectangle safeArea = viewport.getSafeArea();
                 float idealWidth = MathUtils.clamp(safeArea.width - 80f, 440f, 640f);
                 return Math.min(idealWidth, safeArea.height - (120f + 80f));
             }
@@ -82,11 +82,9 @@ public class LoadingBackScreen extends AbstractScreen {
     public void resize(int width, int height) {
         super.resize(width, height);
 
-        if (safeAreaCalculator != null) {
-            Rectangle centerArea = safeAreaCalculator.getSafeArea();
-            table.setPosition(centerArea.x, centerArea.y);
-            table.setSize(centerArea.width, centerArea.height);
-        }
+        Rectangle centerArea = viewport.getSafeArea();
+        table.setPosition(centerArea.x, centerArea.y);
+        table.setSize(centerArea.width, centerArea.height);
     }
 
     @Override

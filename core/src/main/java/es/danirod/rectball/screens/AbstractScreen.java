@@ -16,18 +16,21 @@
  */
 package es.danirod.rectball.screens;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
 import es.danirod.rectball.scene2d.FractionalScreenViewport;
-import es.danirod.rectball.utils.SafeAreaCalculator;
-import es.danirod.rectball.utils.SafeAreaRenderer;
-
-import static es.danirod.rectball.Constants.STAGE_PADDING;
-import static es.danirod.rectball.Constants.VIEWPORT_WIDTH;
 
 /**
  * This is the base screen every screen has to inherit. It contains common
@@ -40,28 +43,28 @@ public abstract class AbstractScreen implements Screen {
     protected final Stage stage;
     protected final Table table;
     protected final FractionalScreenViewport viewport;
-    protected final SafeAreaCalculator safeAreaCalculator;
-    protected final SafeAreaRenderer safeAreaRenderer;
 
+    private final ShapeRenderer rendererDebug;
     private boolean renderDebug = false;
 
     public AbstractScreen(RectballGame game) {
         this.game = game;
-        this.viewport = new FractionalScreenViewport(480, 640);
+        this.viewport = new FractionalScreenViewport(game, 480, 640);
         this.table = new Table();
         this.stage = new Stage(viewport, game.getBatch());
-        this.safeAreaCalculator = new SafeAreaCalculator(game, stage, viewport);
-        this.safeAreaRenderer = new SafeAreaRenderer(safeAreaCalculator, viewport);
+        this.rendererDebug = new ShapeRenderer();
 
         table.setFillParent(true);
-        updateTablePadding();
         stage.addActor(table);
     }
 
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
-        updateTablePadding();
+        Gdx.app.log("AbstractScreen", "New scaling factor: " + viewport.getScalingFactor());
+        Gdx.app.log("AbstractScreen", "New window area: " + viewport.getWindowArea());
+        Gdx.app.log("AbstractScreen", "New safe area: " + viewport.getSafeArea());
+        Gdx.app.log("AbstractScreen", "New rectangle area: " + viewport.getDesiredArea());
     }
 
     @Override
@@ -84,18 +87,27 @@ public abstract class AbstractScreen implements Screen {
         stage.act();
         stage.draw();
 
-        if (renderDebug && safeAreaRenderer != null) {
-            safeAreaRenderer.render();
-        }
-    }
+        if (renderDebug) {
+            rendererDebug.setProjectionMatrix(viewport.getCamera().combined);
+            rendererDebug.begin(ShapeRenderer.ShapeType.Line);
 
-    public void updateTablePadding() {
-        float pixelsPerViewport = (float) Gdx.graphics.getWidth() / VIEWPORT_WIDTH;
-        float paddingTop = STAGE_PADDING + game.getMarginTop() / pixelsPerViewport;
-        float paddingBottom = STAGE_PADDING + game.getMarginBottom() / pixelsPerViewport;
-        float paddingLeft = STAGE_PADDING + game.getMarginLeft() / pixelsPerViewport;
-        float paddingRight = STAGE_PADDING + game.getMarginRight() / pixelsPerViewport;
-        table.pad(paddingTop, paddingLeft, paddingBottom, paddingRight);
+            /* Render window: this line should not be visible. */
+            Rectangle windowBounds = viewport.getWindowArea();
+            rendererDebug.setColor(Color.BLUE);
+            rendererDebug.rect(windowBounds.x, windowBounds.y, windowBounds.width, windowBounds.height);
+
+            /* Safe area window: this line should visible shall the screen have insets. */
+            Rectangle insetBounds = viewport.getSafeArea();
+            rendererDebug.setColor(Color.RED);
+            rendererDebug.rect(insetBounds.x, insetBounds.y, insetBounds.width, insetBounds.height);
+
+            /* Desired area: the actual viewport bounds. */
+            Rectangle desiredBounds = viewport.getDesiredArea();
+            rendererDebug.setColor(Color.GREEN);
+            rendererDebug.rect(desiredBounds.x, desiredBounds.y, desiredBounds.width, desiredBounds.height);
+
+            rendererDebug.end();
+        }
     }
 
     @Override
@@ -117,6 +129,7 @@ public abstract class AbstractScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        rendererDebug.dispose();
     }
 
     protected void escape() {

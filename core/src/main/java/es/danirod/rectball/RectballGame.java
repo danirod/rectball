@@ -99,7 +99,6 @@ public class RectballGame extends StateBasedGame {
         marginBottom = bottom;
         marginLeft = left;
         marginRight = right;
-        Gdx.app.log("RectballGame", "Insets have been set to: top=" + top + " bottom=" + bottom + " left=" + left + " right=" + right);
     }
 
     public float getMarginBottom() {

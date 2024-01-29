@@ -90,8 +90,8 @@ public class MainMenuScreen extends AbstractScreen {
         center(askInputMethod);
         center(askTutorial);
         center(closeDialog);
-        Rectangle safeArea = safeAreaCalculator.getSafeArea();
-        version.setPosition(10, safeArea.y + 10);
+        Rectangle safeArea = viewport.getSafeArea();
+        version.setPosition(safeArea.x + 10, safeArea.y + 10);
     }
 
     private void center(Actor actor) {

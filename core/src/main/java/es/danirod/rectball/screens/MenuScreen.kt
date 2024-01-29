@@ -73,13 +73,4 @@ abstract class MenuScreen(game: RectballGame) : AbstractScreen(game) {
         fill()
         pad(Constants.STAGE_PADDING.toFloat()).padTop(0f)
     }
-
-    override fun updateTablePadding() {
-        val pixelsPerViewport = viewport.unitsPerPixel
-        val paddingTop = game.marginTop * pixelsPerViewport
-        val paddingBottom = game.marginBottom * pixelsPerViewport
-        val paddingLeft = game.marginLeft * pixelsPerViewport
-        val paddingRight = game.marginRight * pixelsPerViewport
-        table.pad(paddingTop, paddingLeft, paddingBottom, paddingRight)
-    }
 }
