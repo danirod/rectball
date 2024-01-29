@@ -1,4 +1,18 @@
-[Unreleased]
+[0.5.451]
+- Fixed wakelock not actually being triggered on mobile.
+- Fixed the statistics screen showing durations as total seconds rather than as hh:mm:ss.
+- Fixed the game borders not rendering properly on a minor set of devices.
+- Cleans up code that became unused as of 0.5.448.
+
+[0.5.448]
+- Enhanced compatibility with small mobile screens. Fixes bugs related to elements not fitting in the screens.
+- Fixed the PC version to be resizable (Windows, macOS, X11, Wayland).
+
+[0.5.442]
+- Fixes the game settings screen sometimes not showing anything.
+- Fixes the game not starting on some phones after upgrading the app from an older version.
+
+[0.5.438]
 - Updated project structure to a regular libGDX project again.
 - Added desktop as a platform again, based on the newer LWJGL 3 backend.
 - Added support for packaging the game as a self-contained executable (jpackage).
