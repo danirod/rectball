@@ -23,7 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
 import es.danirod.rectball.RectballGame
-import java.util.Locale
+import kotlin.time.Duration.Companion.seconds
 
 class StatsTable(private val game: RectballGame, private val title: LabelStyle, private val data: LabelStyle) : Table() {
 
@@ -49,11 +49,11 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
             return best
         }
 
-        val highScore = game.statistics.highScore
-        if (highScore > 0) append(best, game.locale["statistics.best_score"], highScore.toString())
+        val highScore = DecimalValue(game.statistics.highScore)
+        if (highScore.hasValue()) append(best, game.locale["statistics.best_score"], highScore.toString())
 
-        val highTime = game.statistics.highTime
-        if (highTime > 0) append(best, game.locale["statistics.best_time"], secondsToTime(highTime))
+        val highTime = TimeValue(game.statistics.highTime)
+        if (highTime.hasValue()) append(best, game.locale["statistics.best_time"], highTime.toString())
 
         return best
     }
@@ -67,7 +67,7 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
             noData.setAlignment(Align.center)
             total.add(noData).colspan(2).fillX().expandX().padTop(10f).padBottom(10f).row()
         } else {
-            data.forEach { (key, value) -> if (value > 0) append(total, key, value.toString()) }
+            data.forEach { (key, value) -> append(total, key, value.toString()) }
         }
         return total
     }
@@ -129,28 +129,16 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
     }
 
     /** A map that pairs an statistic label into the value for that statistic label. */
-    private val totalStatistics: Map<String, Long>
+    private val totalStatistics: Map<String, Value>
         get() = mapOf(
-            game.locale["statistics.total_score"] to game.statistics.totalScore,
-            game.locale["statistics.total_combinations"] to game.statistics.totalCombinations,
-            game.locale["statistics.total_gems"] to game.statistics.totalGems,
-            game.locale["statistics.total_games"] to game.statistics.totalGames,
-            game.locale["statistics.total_time"] to game.statistics.totalTime,
-            game.locale["statistics.total_perfect"] to game.statistics.totalPerfects,
-            game.locale["statistics.total_hints"] to game.statistics.totalHints,
-        ).filterValues { it > 0 }
-
-    /** Converts the decimal [seconds] number of seconds to a sexagesimal value. */
-    private fun secondsToTime(seconds: Long): String {
-        val hrs = seconds / 3600
-        val min = seconds % 3600 / 60
-        val sec = seconds % 3600 % 60
-        return when {
-            hrs != 0L -> String.format(Locale.getDefault(), "%d:%02d:%02d", hrs, min, sec)
-            min != 0L -> String.format(Locale.getDefault(), "%d:%02d", min, sec)
-            else -> String.format(Locale.getDefault(), "%d", sec)
-        }
-    }
+            game.locale["statistics.total_score"] to DecimalValue(game.statistics.totalScore),
+            game.locale["statistics.total_combinations"] to DecimalValue(game.statistics.totalCombinations),
+            game.locale["statistics.total_gems"] to DecimalValue(game.statistics.totalGems),
+            game.locale["statistics.total_games"] to DecimalValue(game.statistics.totalGames),
+            game.locale["statistics.total_time"] to TimeValue(game.statistics.totalTime),
+            game.locale["statistics.total_perfect"] to DecimalValue(game.statistics.totalPerfects),
+            game.locale["statistics.total_hints"] to DecimalValue(game.statistics.totalHints),
+        ).filterValues { it.hasValue() }
 
     /** Sorts a [statistics] map by score, highest scores come first. */
     private fun sortStatsMap(statistics: Map<String, Long>) =
@@ -160,5 +148,23 @@ class StatsTable(private val game: RectballGame, private val title: LabelStyle, 
     private fun append(table: Table, name: String, value: String) {
         table.add(Label(name, data)).align(Align.left).fillX()
         table.add(Label(value, data)).align(Align.right).expandX().row()
+    }
+
+    private open class Value(val value: Long) {
+        fun hasValue() = value > 0
+    }
+
+    private class DecimalValue(value: Long): Value(value) {
+        override fun toString() = value.toString()
+    }
+
+    private class TimeValue(value: Long): Value(value) {
+        override fun toString() = value.seconds.toComponents { hh, mm, ss, _ ->
+            when {
+                hh > 0 -> String.format("%d:%02d:%02d h", hh, mm, ss)
+                mm > 0 -> String.format("%d:%02d m", mm, ss)
+                else -> String.format("%d s", ss)
+            }
+        }
     }
 }
