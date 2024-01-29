@@ -78,6 +78,7 @@ jobs:
   lwjgl3-darwin-aarch64:
     runs-on: macos-13-xlarge
     needs: assembly-information
+    if: ${{ startsWith(github.ref, 'refs/tags/') }}
     steps:
       - name: Clone project
         uses: actions/checkout@v4
