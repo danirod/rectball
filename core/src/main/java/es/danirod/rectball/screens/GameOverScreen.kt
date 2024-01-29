@@ -16,6 +16,7 @@
  */
 package es.danirod.rectball.screens
 
+import com.badlogic.gdx.scenes.scene2d.ui.Container
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Value
@@ -24,6 +25,7 @@ import es.danirod.rectball.RectballGame
 import es.danirod.rectball.SoundPlayer
 import es.danirod.rectball.scene2d.listeners.ScreenPopper
 import es.danirod.rectball.scene2d.ui.GameSummary
+import kotlin.math.min
 
 class GameOverScreen(game: RectballGame) : AbstractScreen(game) {
 
@@ -46,20 +48,20 @@ class GameOverScreen(game: RectballGame) : AbstractScreen(game) {
         }
     }
 
+    private val gameOver = Label(game.locale["game_over.time_up"], game.appSkin, "large", "white").apply {
+        setAlignment(Align.center)
+        setFontScale(0.8f)
+    }
+
+    private val summary = GameSummary(game, isHighScore())
+
     override fun show() {
         super.show()
-
         table.setFillParent(false)
-
-        val gameOver = Label(game.locale["game_over.time_up"], game.appSkin, "large", "white").apply {
-            setAlignment(Align.center)
-            setFontScale(0.8f)
-        }
-        val summary = GameSummary(game, isHighScore())
         table.add(gameOver).growX().row()
         table.add(summary).grow().row()
-        table.add(replayButton).height(80f).minWidth(440f).maxWidth(640f).space(15f).row()
-        table.add(quitButton).height(80f).minWidth(440f).maxWidth(640f).space(15f).row()
+        table.add(replayButton).height(80f).maxWidth(640f).growX().space(15f).row()
+        table.add(quitButton).height(80f).maxWidth(640f).growX().space(15f).row()
     }
 
     override fun escape() {
@@ -69,7 +71,9 @@ class GameOverScreen(game: RectballGame) : AbstractScreen(game) {
 
     override fun resize(width: Int, height: Int) {
         super.resize(width, height)
-        table.setSize(480f, 640f)
-        table.setPosition(stage.width / 2, stage.height / 2, Align.center)
+        viewport.getSafeArea().also { area ->
+            table.setSize(area.width - 40f, area.height - 40f)
+            table.setPosition(area.x + area.width / 2, area.y + area.height / 2, Align.center)
+        }
     }
 }

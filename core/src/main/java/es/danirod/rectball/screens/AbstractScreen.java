@@ -61,10 +61,6 @@ public abstract class AbstractScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
-        Gdx.app.log("AbstractScreen", "New scaling factor: " + viewport.getScalingFactor());
-        Gdx.app.log("AbstractScreen", "New window area: " + viewport.getWindowArea());
-        Gdx.app.log("AbstractScreen", "New safe area: " + viewport.getSafeArea());
-        Gdx.app.log("AbstractScreen", "New rectangle area: " + viewport.getDesiredArea());
     }
 
     @Override

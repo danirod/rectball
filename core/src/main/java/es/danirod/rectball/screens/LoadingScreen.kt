@@ -16,21 +16,26 @@
  */
 package es.danirod.rectball.screens
 
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.utils.Align
+import com.badlogic.gdx.utils.Pools
 import es.danirod.rectball.RectballGame
 import es.danirod.rectball.scene2d.ui.LoadingAnimation
 
-class LoadingScreen(game: RectballGame?) : AbstractScreen(game) {
+class LoadingScreen(game: RectballGame) : AbstractScreen(game) {
 
     private var canUpdate = false
 
+    private val loading = LoadingAnimation(game.ballAtlas).apply {
+        syncColors()
+    }
+
     override fun show() {
         super.show()
-        val load = LoadingAnimation(game.ballAtlas)
-        table.add(load).size(100f).align(Align.center)
-        load.syncColors()
-        load.animate()
+
+        stage.addActor(loading)
+        loading.animate()
 
         canUpdate = false
         stage.addAction(Actions.sequence(
@@ -38,6 +43,14 @@ class LoadingScreen(game: RectballGame?) : AbstractScreen(game) {
                 Actions.alpha(1f, FADE_SPEED),
                 Actions.run { canUpdate = true }
         ))
+    }
+
+    override fun resize(width: Int, height: Int) {
+        super.resize(width, height)
+        loading.setSize(100f, 100f)
+        val center = Pools.obtain(Vector2::class.java)
+        viewport.getDesiredArea().getCenter(center)
+        loading.setPosition(center.x, center.y, Align.center)
     }
 
     override fun render(delta: Float) {

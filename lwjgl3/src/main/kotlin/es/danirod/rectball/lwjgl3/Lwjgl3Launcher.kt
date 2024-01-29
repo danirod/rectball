@@ -26,12 +26,10 @@ fun main() {
     // This handles macOS support and helps on Windows.
     if (StartupHelper.startNewJvmIfRequired())
         return
-    val game = RectballGame(Lwjgl3Platform())
-    game.updateMargin(20, 20, 20, 20)
-    Lwjgl3Application(game, Lwjgl3ApplicationConfiguration().apply {
+    Lwjgl3Application(RectballGame(Lwjgl3Platform()), Lwjgl3ApplicationConfiguration().apply {
         setTitle("Rectball")
         setResizable(true)
-        setWindowedMode((480 + game.marginLeft + game.marginRight).toInt(), (640 + game.marginTop + game.marginBottom).toInt())
+        setWindowedMode(540, 720)
         setWindowIcon(*(arrayOf(128, 64, 32, 16).map { "libgdx$it.png" }.toTypedArray()))
     })
 }

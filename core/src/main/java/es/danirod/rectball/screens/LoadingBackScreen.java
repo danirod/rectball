@@ -44,6 +44,8 @@ public class LoadingBackScreen extends AbstractScreen {
     public void show() {
         super.show();
 
+        table.setFillParent(false);
+
         boardActor = new BoardActor(game.getBallAtlas(), game.getAppSkin(), board);
         Rectangle bounds = game.getState().getBoardBounds();
         boardActor.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
@@ -53,7 +55,7 @@ public class LoadingBackScreen extends AbstractScreen {
             public float get(Actor context) {
                 Rectangle safeArea = viewport.getSafeArea();
                 float idealWidth = MathUtils.clamp(safeArea.width - 80f, 440f, 640f);
-                return Math.min(idealWidth, safeArea.height - (120f + 80f));
+                return Math.min(idealWidth, safeArea.height - 180f);
             }
         };
 
@@ -93,7 +95,6 @@ public class LoadingBackScreen extends AbstractScreen {
         if (canUpdate && game.manager.update(1000 / 120)) {
             canUpdate = false;
             stage.addAction(Actions.sequence(
-                    Actions.delay(2f),
                     Actions.run(() -> {
                         boardActor.remove();
                         game.finishLoading();

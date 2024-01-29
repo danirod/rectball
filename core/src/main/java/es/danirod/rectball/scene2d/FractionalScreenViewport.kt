@@ -16,10 +16,10 @@
  */
 package es.danirod.rectball.scene2d
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import es.danirod.rectball.RectballGame
-import kotlin.math.max
 import kotlin.math.min
 
 class FractionalScreenViewport(
@@ -54,12 +54,11 @@ class FractionalScreenViewport(
         height -= (paddingBottom + paddingTop)
     }
 
-    fun getDesiredArea() = getWindowArea().let { window ->
-        val safeArea = getSafeArea()
-        val width = min(desiredWidth.toFloat(), safeArea.width)
-        val height = min(desiredHeight.toFloat(), safeArea.height)
-        val x = (window.width - width) / 2
-        val y = (window.height - height) / 2
+    fun getDesiredArea() = getSafeArea().let { safeArea ->
+        val width = desiredWidth.toFloat()
+        val height = desiredHeight.toFloat()
+        val x = (safeArea.width - width) / 2 + safeArea.x
+        val y = (safeArea.height - height) / 2 + safeArea.y
         Rectangle(x, y, width, height)
     }
 
@@ -79,18 +78,14 @@ class FractionalScreenViewport(
 
     private fun fractional(screenSize: Int, desiredSize: Int, paddingStart: Float, paddingEnd: Float): Float {
         var scalingFactor = 0.5f
+        val providedSize = screenSize - paddingStart - paddingEnd
         while (true) {
             val nextScalingFactor = scalingFactor + 0.5f
-
-            // Check if the next scaling factor will fit.
-            val expectedPaddingStart = paddingStart / nextScalingFactor
-            val expectedPaddingEnd = paddingEnd / nextScalingFactor
-            val screenSizeWithSafeArea = screenSize - expectedPaddingStart - expectedPaddingStart
-            val minimumSize = desiredSize * nextScalingFactor
-            if (minimumSize > screenSizeWithSafeArea) {
-                // Doesn't fit already
+            if ((desiredSize * nextScalingFactor) > providedSize) {
+                // Doesn't fit already, so use the previous step.
                 return scalingFactor
             } else {
+                // Use this step and try to use one bigger.
                 scalingFactor = nextScalingFactor
             }
         }

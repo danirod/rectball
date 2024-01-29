@@ -16,6 +16,7 @@
  */
 package es.danirod.rectball.screens
 
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.utils.Align
@@ -39,7 +40,7 @@ abstract class MenuScreen(game: RectballGame) : AbstractScreen(game) {
 
     private val backButton by lazy {
         ImageButton(game.appSkin, "back").apply {
-            pad(0f)
+            pad(10f)
             image.setScaling(Scaling.fit)
             imageCell.height(Value.percentHeight(1f, titleLabel))
             addListener(ScreenPopper(game))
@@ -47,20 +48,32 @@ abstract class MenuScreen(game: RectballGame) : AbstractScreen(game) {
     }
 
     /* It uses a function so that it can be lazily computed on screen load. */
-    private fun getScrollPane() = ScrollPane(getRootView(), game.appSkin).apply {
-        fadeScrollBars = false
+    private val scrollPane by lazy {
+        ScrollPane(rootView, game.appSkin).apply {
+            fadeScrollBars = false
+        }
+    }
+
+    private val rootView by lazy {
+        Container(getRoot()).apply {
+            fill()
+            padLeft(25f)
+            padRight(25f)
+            padTop(10f)
+        }
     }
 
     override fun show() {
         super.show()
 
+        table.setFillParent(false)
+
         table.top()
-        table.row().padTop(20f).padBottom(20f).uniformY()
-        table.add(backButton).padLeft(Constants.STAGE_PADDING.toFloat())
-        table.add(titleLabel).padRight(Constants.STAGE_PADDING.toFloat()).expandX()
+        table.row().uniformY()
+        table.add(backButton).height(30f).padBottom(15f)
+        table.add(titleLabel).height(30f).padBottom(15f).expandX()
         table.row()
-        table.add(getScrollPane()).maxWidth(480f * 1.5f).colspan(2).grow().align(Align.top)
-        table.layout()
+        table.add(scrollPane).colspan(2).grow().align(Align.top)
     }
 
     /** The title to present in the top bar. */
@@ -69,8 +82,20 @@ abstract class MenuScreen(game: RectballGame) : AbstractScreen(game) {
     /** The main widget to place in the application. */
     abstract fun getRoot(): Actor
 
-    private fun getRootView() = Container(getRoot()).apply {
-        fill()
-        pad(Constants.STAGE_PADDING.toFloat()).padTop(0f)
+    override fun resize(width: Int, height: Int) {
+        super.resize(width, height)
+
+        val windowArea = viewport.getWindowArea()
+        val safeArea = viewport.getSafeArea()
+        val desiredArea = viewport.getDesiredArea()
+        val marginTop = game.marginTop * viewport.unitsPerPixel
+
+        val realWidth = MathUtils.clamp(safeArea.width, desiredArea.width, desiredArea.width * 1.5f)
+
+        table.setSize(realWidth, windowArea.height)
+        table.setPosition(safeArea.x + (safeArea.width - realWidth) / 2, 0f)
+        table.getCell(backButton).padTop(marginTop + 15f)
+        table.getCell(titleLabel).padTop(marginTop + 15f)
+        rootView.padBottom(safeArea.y)
     }
 }

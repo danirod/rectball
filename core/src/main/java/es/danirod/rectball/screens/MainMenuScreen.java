@@ -19,9 +19,12 @@ package es.danirod.rectball.screens;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Pools;
+
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.SoundPlayer;
 import es.danirod.rectball.scene2d.game.BackgroundActor;
@@ -96,7 +99,10 @@ public class MainMenuScreen extends AbstractScreen {
 
     private void center(Actor actor) {
         if (actor.getStage() != null) {
-            actor.setPosition(actor.getStage().getViewport().getWorldWidth() / 2, actor.getStage().getViewport().getWorldHeight() / 2, Align.center);
+            Vector2 center = Pools.obtain(Vector2.class);
+            viewport.getDesiredArea().getCenter(center);
+            actor.setPosition(center.x, center.y, Align.center);
+            Pools.free(center);
         }
     }
 
