@@ -8,7 +8,7 @@ env:
   # This will be added to GITHUB_RUN_NUMBER to build a version code that continues from where
   # I started bumping the version code and build numbers manually. (Note: sometimes I may
   # subtract 1 from here if a Git push went wrong but I don't want to bump the version code).
-  GITHUB_RUN_OFFSET: 192
+  GITHUB_RUN_OFFSET: 292
 
 jobs:
   assembly-information:
