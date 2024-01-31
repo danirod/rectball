@@ -36,6 +36,7 @@ import es.danirod.rectball.SoundPlayer
 import es.danirod.rectball.model.BallColor
 import es.danirod.rectball.model.Bounds
 import es.danirod.rectball.model.CombinationFinder
+import es.danirod.rectball.model.GameState
 import es.danirod.rectball.scene2d.game.BallActor
 import es.danirod.rectball.scene2d.game.BoardActor
 import es.danirod.rectball.scene2d.game.Hud
@@ -45,6 +46,8 @@ import es.danirod.rectball.scene2d.ui.MessageDialog
 import kotlin.math.min
 
 class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
+
+    private val state = GameState()
 
     private lateinit var hud: Hud
 
@@ -134,7 +137,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
         }
 
         board =
-            BoardActor(game.ballAtlas, game.appSkin, game.state.board).apply {
+            BoardActor(game.ballAtlas, game.appSkin, state.board).apply {
                 touchable = Touchable.disabled
                 isTransform = true
                 isVisible = false
@@ -336,7 +339,7 @@ class TutorialScreen(game: RectballGame) : AbstractScreen(game) {
 
     private val watchdogTask: Timer.Task = object : Timer.Task() {
         override fun run() {
-            val finder = CombinationFinder.create(game.state.board)
+            val finder = CombinationFinder.create(state.board)
             finder.possibleBounds.forEach {
                 board.addAction(board.shake(it, 10f, 5, 0.1f))
             }

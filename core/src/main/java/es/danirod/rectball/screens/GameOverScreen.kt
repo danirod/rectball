@@ -23,15 +23,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Value
 import com.badlogic.gdx.utils.Align
 import es.danirod.rectball.RectballGame
 import es.danirod.rectball.SoundPlayer
+import es.danirod.rectball.model.GameState
 import es.danirod.rectball.scene2d.listeners.ScreenPopper
 import es.danirod.rectball.scene2d.ui.GameSummary
 import kotlin.math.min
 
-class GameOverScreen(game: RectballGame) : AbstractScreen(game) {
+class GameOverScreen(game: RectballGame, private val state: GameState) : AbstractScreen(game) {
 
     private fun getHighScore() = game.statistics.highScore
 
-    private fun isHighScore() = game.state.score >= getHighScore()
+    private fun isHighScore() = state.score >= getHighScore()
 
     private val replayButton by lazy {
         ImageTextButton(game.locale["game_over.play_again"], game.appSkin, "repeat").apply {
@@ -53,7 +54,7 @@ class GameOverScreen(game: RectballGame) : AbstractScreen(game) {
         setFontScale(0.8f)
     }
 
-    private val summary = GameSummary(game, isHighScore())
+    private val summary = GameSummary(game, state, isHighScore())
 
     override fun show() {
         super.show()

@@ -22,13 +22,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Scaling
 import es.danirod.rectball.RectballGame
+import es.danirod.rectball.model.GameState
 import kotlin.time.Duration.Companion.seconds
 
-class GameSummary(game: RectballGame, highScore: Boolean) : Table() {
+class GameSummary(game: RectballGame, state: GameState, highScore: Boolean) : Table() {
 
-    private val lastScoreValue = game.state.score.toString()
+    private val lastScoreValue = state.score.toString()
 
-    private val stateDuration = game.state.elapsedTime.toInt().seconds.toComponents { mm, ss, _ -> String.format("%d:%02d", mm, ss)}
+    private val stateDuration = state.elapsedTime.toInt().seconds.toComponents { mm, ss, _ -> String.format("%d:%02d", mm, ss)}
 
     private val clock = Image(game.appSkin, "icon_time")
     private val crown = Image(game.appSkin, "icon_crown").apply {

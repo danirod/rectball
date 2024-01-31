@@ -72,6 +72,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
      */
     private boolean askingLeave;
 
+    private final GameState state = new GameState();
+
     public GameScreen(RectballGame game) {
         super(game);
     }
@@ -139,7 +141,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         super.show();
 
         table.setFillParent(false);
-        board = new BoardActor(game.getBallAtlas(), game.getAppSkin(), game.getState().getBoard());
+        board = new BoardActor(game.getBallAtlas(), game.getAppSkin(), state.getBoard());
 
         hud = new Hud(game);
 
@@ -147,26 +149,26 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 // Don't act if the game hasn't started yet.
-                if (!hud.getTimer().isRunning() || game.getState().isTimeout()) {
+                if (!hud.getTimer().isRunning() || state.isTimeout()) {
                     event.cancel();
                     return;
                 }
 
                 // Don't do anything if there are less than 5 seconds.
-                if (hud.getTimer().getSeconds() <= 5 && game.getState().getWiggledBounds() == null) {
+                if (hud.getTimer().getSeconds() <= 5 && state.getWiggledBounds() == null) {
                     game.player.playSound(SoundCode.FAIL);
                     event.cancel();
                     return;
                 }
 
                 // Wiggle a valid combination.
-                if (game.getState().getWiggledBounds() == null) {
-                    CombinationFinder finder = CombinationFinder.create(game.getState().getBoard());
-                    game.getState().setWiggledBounds(finder.getPossibleBounds().get(MathUtils.random(finder.getPossibleBounds().size() - 1)));
+                if (state.getWiggledBounds() == null) {
+                    CombinationFinder finder = CombinationFinder.create(state.getBoard());
+                    state.setWiggledBounds(finder.getPossibleBounds().get(MathUtils.random(finder.getPossibleBounds().size() - 1)));
                 }
-                board.addAction(board.shake(game.getState().getWiggledBounds(), 10, 5, 0.1f));
+                board.addAction(board.shake(state.getWiggledBounds(), 10, 5, 0.1f));
 
-                if (!game.getState().isCheatSeen()) {
+                if (!state.isCheatSeen()) {
                     // Subtract some time.
                     float subtractedTime = 5f;
                     final float step = subtractedTime / 10;
@@ -177,7 +179,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                                     hud.getTimer().setSeconds(hud.getTimer().getSeconds() - step);
                                 }
                             }))));
-                    game.getState().setCheatSeen(true);
+                    state.setCheatSeen(true);
                 }
 
                 event.cancel();
@@ -221,26 +223,26 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // Reset data
         if (!game.isRestoredState()) {
-            game.getState().reset();
+            state.reset();
         } else {
             game.setRestoredState(false);
-            if (game.getState().isTimeout()) {
-                game.pushScreen(new GameOverScreen(game));
+            if (state.isTimeout()) {
+                game.pushScreen(new GameOverScreen(game, state));
             }
         }
 
         // The player is playing
-        game.getState().setPlaying(true);
-        hud.getScore().setValue(game.getState().getScore());
-        hud.getTimer().setSeconds(game.getState().getRemainingTime());
+        state.setPlaying(true);
+        hud.getScore().setValue(state.getScore());
+        hud.getTimer().setSeconds(state.getRemainingTime());
 
         paused = running = askingLeave = false;
 
-        if (!game.getState().isCountdownFinished()) {
+        if (!state.isCountdownFinished()) {
             countdown(2, new Runnable() {
                 @Override
                 public void run() {
-                    game.getState().setCountdownFinished(true);
+                    state.setCountdownFinished(true);
 
                     // Start the game unless the user is leaving or is paused.
                     if (!paused && !askingLeave) {
@@ -314,12 +316,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
      */
     private void generate(Bounds bounds) {
         // Generate new balls;
-        game.getState().getBoard().randomize(
+        state.getBoard().randomize(
                 new Coordinate(bounds.minX, bounds.minY),
                 new Coordinate(bounds.maxX, bounds.maxY));
 
         // Check the new board for valid combinations.
-        CombinationFinder newFinder = CombinationFinder.create(game.getState().getBoard());
+        CombinationFinder newFinder = CombinationFinder.create(state.getBoard());
         if (newFinder.getPossibleBounds().size() == 1) {
             // Only one combination? This is trouble.
             Bounds newCombinationBounds = newFinder.getCombination();
@@ -329,7 +331,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 // an infinite loop.
                 hud.getTimer().setRunning(false);
                 board.setColoured(false);
-                game.getState().resetBoard();
+                state.resetBoard();
                 board.addAction(Actions.sequence(
                         board.shake(10, 5, 0.05f),
                         Actions.run(new Runnable() {
@@ -351,7 +353,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         game.updateWakelock(false);
 
         // The player is not playing anymore.
-        game.getState().setPlaying(false);
+        state.setPlaying(false);
 
         // Just in case, remove any dialogs that might be forgotten.
         for (Actor actor : stage.getActors()) {
@@ -367,14 +369,14 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
         // If the timer is running, keep incrementing the timer.
         if (hud.getTimer().isRunning()) {
-            game.getState().addTime(delta);
-            game.getState().setRemainingTime(hud.getTimer().getSeconds());
+            state.addTime(delta);
+            state.setRemainingTime(hud.getTimer().getSeconds());
         }
     }
 
     @Override
     protected void escape() {
-        if (!paused && !game.getState().isTimeout()) {
+        if (!paused && !state.isTimeout()) {
             pauseGame();
         }
     }
@@ -399,12 +401,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         game.updateWakelock(false);
 
         // Show the pause dialog unless you have already stop the game.
-        if (!game.getState().isTimeout()) {
+        if (!state.isTimeout()) {
             showPauseDialog();
         }
 
         // If the game has started, pause it.
-        if (running && !game.getState().isTimeout()) {
+        if (running && !state.isTimeout()) {
             board.setColoured(false);
             board.setTouchable(Touchable.disabled);
             hud.getTimer().setRunning(false);
@@ -426,12 +428,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         //    countdown finishes, because the game is paused, the game does
         //    not start.
         // 2) The user was leaving the game during the countdown. Same.
-        if (!running && game.getState().isCountdownFinished()) {
+        if (!running && state.isCountdownFinished()) {
             running = true;
             game.player.playSound(SoundCode.SUCCESS);
         }
 
-        if (running && !game.getState().isTimeout()) {
+        if (running && !state.isTimeout()) {
             board.setColoured(true);
             board.setTouchable(Touchable.enabled);
             hud.getTimer().setRunning(true);
@@ -441,7 +443,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
     @Override
     public void pause() {
         // Put the bounds
-        game.getState().setBoardBounds(new Rectangle(board.getX(), board.getY(), board.getWidth(), board.getHeight()));
+        state.setBoardBounds(new Rectangle(board.getX(), board.getY(), board.getWidth(), board.getHeight()));
 
         // Show the pause dialog if it is not already visible.
         if (!paused) {
@@ -465,25 +467,25 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         game.getHaptics().vibrateMilliseconds(200);
 
         // Mark a combination that the user could do if he had enough time.
-        if (game.getState().getWiggledBounds() == null) {
-            CombinationFinder combo = CombinationFinder.create(game.getState().getBoard());
-            game.getState().setWiggledBounds(combo.getCombination());
+        if (state.getWiggledBounds() == null) {
+            CombinationFinder combo = CombinationFinder.create(state.getBoard());
+            state.setWiggledBounds(combo.getCombination());
         } else {
-            game.getState().incrementHints();
+            state.incrementHints();
         }
-        for (int y = 0; y < game.getState().getBoard().getSize(); y++) {
-            for (int x = 0; x < game.getState().getBoard().getSize(); x++) {
-                if (game.getState().getWiggledBounds() != null && !game.getState().getWiggledBounds().inBounds(x, y)) {
+        for (int y = 0; y < state.getBoard().getSize(); y++) {
+            for (int x = 0; x < state.getBoard().getSize(); x++) {
+                if (state.getWiggledBounds() != null && !state.getWiggledBounds().inBounds(x, y)) {
                     board.getBall(x, y).addAction(Actions.color(Color.DARK_GRAY, 0.15f));
                 }
             }
         }
 
 
-        StatSerializer.Companion.combine(game.getState(), game.getStatistics());
+        StatSerializer.Companion.combine(state, game.getStatistics());
 
         if (game.getContext().getGameServices().signedIn()) {
-            GameUploader uploader = new GameUploader(game.getState(), game.getContext().getGameServices());
+            GameUploader uploader = new GameUploader(state, game.getContext().getGameServices());
             uploader.submit();
         }
 
@@ -496,12 +498,12 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             @Override
             public void run() {
                 stage.getRoot().clearActions();
-                game.pushScreen(new GameOverScreen(game));
+                game.pushScreen(new GameOverScreen(game, state));
             }
         })));
 
         // Mark the game as finished.
-        game.getState().setTimeout(true);
+        state.setTimeout(true);
     }
 
     @Override
@@ -511,10 +513,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         for (BallActor selectedBall : selection)
             balls.add(selectedBall.getBall());
         final Bounds bounds = Bounds.fromBallList(balls);
-        boolean usedCheat = game.getState().getWiggledBounds() != null;
+        boolean usedCheat = state.getWiggledBounds() != null;
 
         if (usedCheat)
-            game.getState().incrementHints();
+            state.incrementHints();
 
         // Change the colors of the selected region.
         board.addAction(Actions.sequence(
@@ -528,19 +530,19 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                         generate(bounds);
                         board.syncColors();
                         // Reset the cheat
-                        game.getState().setCheatSeen(false);
-                        game.getState().setWiggledBounds(null);
+                        state.setCheatSeen(false);
+                        state.setWiggledBounds(null);
                     }
                 })
         ));
 
         // Give some score to the user.
-        ScoreCalculator calculator = new ScoreCalculator(game.getState().getBoard(), bounds);
+        ScoreCalculator calculator = new ScoreCalculator(state.getBoard(), bounds);
         int givenScore = calculator.calculate();
         if (usedCheat) {
             givenScore *= 0.75f;
         }
-        game.getState().addScore(givenScore);
+        state.addScore(givenScore);
         hud.getScore().giveScore(givenScore);
 
         // Put information about this combination in the stats.
@@ -549,10 +551,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         BallColor color = board.getBall(bounds.minX, bounds.minY).getBall().getColor();
 
         // When the user selects the entire board, it is a perfect.
-        int boardSize = game.getState().getBoard().getSize() - 1;
+        int boardSize = state.getBoard().getSize() - 1;
         boolean isPerfect = bounds.equals(new Bounds(0, 0, boardSize, boardSize));
 
-        game.getState().incrementCombinations(cols, rows, color, isPerfect);
+        state.incrementCombinations(cols, rows, color, isPerfect);
 
         if (isPerfect) {
             // Just display PERFECT on the screen.

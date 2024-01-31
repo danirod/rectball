@@ -24,20 +24,22 @@ import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.utils.Align;
 import es.danirod.rectball.RectballGame;
 import es.danirod.rectball.model.Board;
+import es.danirod.rectball.model.GameState;
 import es.danirod.rectball.scene2d.game.BoardActor;
 
 public class LoadingBackScreen extends AbstractScreen {
 
     private static final float FADE_SPEED = 0.15f;
-    private final Board board;
 
     private BoardActor boardActor;
 
     private boolean canUpdate;
 
+    private final GameState state;
+
     public LoadingBackScreen(RectballGame game) {
         super(game);
-        board = new Board(6);
+        state = new GameState();
     }
 
     @Override
@@ -46,8 +48,8 @@ public class LoadingBackScreen extends AbstractScreen {
 
         table.setFillParent(false);
 
-        boardActor = new BoardActor(game.getBallAtlas(), game.getAppSkin(), board);
-        Rectangle bounds = game.getState().getBoardBounds();
+        boardActor = new BoardActor(game.getBallAtlas(), game.getAppSkin(), state.getBoard());
+        Rectangle bounds = state.getBoardBounds();
         boardActor.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
 
         Value boardValue = new Value() {

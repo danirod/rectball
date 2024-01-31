@@ -44,9 +44,6 @@ public class RectballGame extends StateBasedGame {
     /** The Android activity that is currently displaying this game instance. */
     private final Platform context;
 
-    /** The game state is used during a game in order to pause and serialize it. */
-    private final GameState currentGame;
-
     /** The asset manager holds the resources required during the game. */
     public AssetManager manager;
 
@@ -76,13 +73,11 @@ public class RectballGame extends StateBasedGame {
 
     public RectballGame(Platform context) {
         this.context = context;
-        this.currentGame = new GameState();
         this.restoredState = false;
     }
 
     public RectballGame(Platform context, GameState state) {
         this.context = context;
-        this.currentGame = state;
         this.restoredState = true;
     }
 
@@ -198,10 +193,6 @@ public class RectballGame extends StateBasedGame {
     @Override
     public void dispose() {
         manager.dispose();
-    }
-
-    public GameState getState() {
-        return currentGame;
     }
 
     public boolean isRestoredState() {
