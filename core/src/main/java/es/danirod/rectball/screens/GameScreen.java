@@ -74,6 +74,8 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
 
     private final GameState state = new GameState();
 
+    private ConfirmDialog currentDialog = null;
+
     public GameScreen(RectballGame game) {
         super(game);
     }
@@ -94,6 +96,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 // The user wants to leave the game.
                 game.player.playSound(SoundCode.SUCCESS);
                 askingLeave = false;
+                currentDialog = null;
                 onTimeOut();
             }
 
@@ -102,11 +105,13 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 // The user wants to resume the game.
                 game.player.playSound(SoundCode.FAIL);
                 askingLeave = false;
+                currentDialog = null;
                 resumeGame();
             }
         });
 
         dialog.show(stage);
+        currentDialog = dialog;
         askingLeave = true;
     }
 
@@ -121,6 +126,7 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
                 // Continue
                 game.player.playSound(SoundCode.SELECT);
                 askingLeave = false;
+                currentDialog = null;
                 resumeGame();
             }
 
@@ -128,11 +134,13 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
             public void cancel() {
                 // Leave
                 game.player.playSound(SoundCode.SELECT);
+                currentDialog = null;
                 showLeaveDialog();
             }
         });
 
         dialog.show(stage);
+        currentDialog = dialog;
         askingLeave = true;
     }
 
@@ -388,6 +396,10 @@ public class GameScreen extends AbstractScreen implements TimerCallback, BallSel
         Rectangle centerArea = viewport.getSafeArea();
         table.setPosition(centerArea.x, centerArea.y);
         table.setSize(centerArea.width, centerArea.height);
+
+        if (currentDialog != null) {
+            currentDialog.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
+        }
     }
 
     /**
